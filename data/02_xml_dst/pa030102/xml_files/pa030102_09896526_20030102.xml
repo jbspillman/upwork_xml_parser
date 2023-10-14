@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005266A1-20030102-D00000.TIF SYSTEM "US20030005266A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005266A1-20030102-D00001.TIF SYSTEM "US20030005266A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005266A1-20030102-D00002.TIF SYSTEM "US20030005266A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005266A1-20030102-D00003.TIF SYSTEM "US20030005266A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005266A1-20030102-D00004.TIF SYSTEM "US20030005266A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005266A1-20030102-D00005.TIF SYSTEM "US20030005266A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005266</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896526</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>712</class>
+<subclass>220000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Multithreaded processor capable of implicit multithreaded execution of a single-thread program</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Haitham</given-name>
+<family-name>Akkary</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Sebastien</given-name>
+<family-name>Hily</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Hillsboro</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A device is presented including a first processor and a second processor. A number of memory devices are connected to the first processor and the second processor. A register buffer is connected to the first processor and the second processor. A trace buffer is connected to the first processor and the second processor. A number of memory instruction buffers are connected to the first processor and the second processor. The first processor and the second processor perform single threaded applications using multithreading resources. A method is also presented where a first thread is executed from a first processor. The first thread is also executed from a second processor as directed by the first processor. The second processor executes instructions ahead of the first processor. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates to multiprocessors, and more particularly to a method and apparatus for multithreaded execution of single-thread programs. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In many processing systems today, such as personal computers (PCs), single chip multiprocessors (CMP) play an important roll in executing multithreaded programs. The threads that these processors may process and execute are independent of each other. For instance, threads may be derived from independent programs or from the same program. Some threads are compiled creating threads that do not have dependencies between themselves. In a multi-threading environment, however, some single-thread applications may be too difficult to convert explicitly into multiple threads. Also, running existing single-thread binaries on multi-threading processor does not exploit the multi-threading capability of the chip.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The invention is illustrated by way of example and not by way of limitation in the figures of the accompanying drawings in which like references indicate similar elements. It should be noted that references to &ldquo;an&rdquo; or &ldquo;one&rdquo; embodiment in this disclosure are not necessarily to the same embodiment, and such references mean at least one. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates an embodiment of the invention. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a commit processor of an embodiment of the invention. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a speculative processor of an embodiment of the invention. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a store-forwarding buffer of an embodiment of the invention. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates a load-ordering buffer of an embodiment of the invention. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates an embodiment of the invention having a system. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates a block diagram of an embodiment of the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The invention generally relates to an apparatus and method to multithreaded execution of single-thread programs. Referring to the figures, exemplary embodiments of the invention will now be described. The exemplary embodiments are provided to illustrate the invention and should not be construed as limiting the scope of the invention. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates one embodiment of the invention comprising multiprocessor <highlight><bold>100</bold></highlight>. In one embodiment of the invention, multiprocessor <highlight><bold>100</bold></highlight> is a dual core single chip multiprocessor (CMP). Multiprocessor <highlight><bold>100</bold></highlight> further comprises commit central processing unit (CPU) <highlight><bold>110</bold></highlight>, speculative CPU <highlight><bold>120</bold></highlight>, register file buffer <highlight><bold>130</bold></highlight>, trace buffer <highlight><bold>140</bold></highlight>, load buffer <highlight><bold>150</bold></highlight> (also known as load ordering buffer), store buffer <highlight><bold>160</bold></highlight> (also known as store forwarding buffer), L1 cache <highlight><bold>175</bold></highlight>, L2 cache <highlight><bold>170</bold></highlight>, L0 instruction cache (I cache) <highlight><bold>180</bold></highlight>, and L0 data cache (D cache) <highlight><bold>190</bold></highlight>. In one embodiment of the invention L0 I cache <highlight><bold>180</bold></highlight> comprises two L0 I cache components. One of the L0 I cache <highlight><bold>180</bold></highlight> components is coupled to commit processor <highlight><bold>110</bold></highlight>, and the other L0 I cache <highlight><bold>180</bold></highlight> component is coupled to speculative processor <highlight><bold>120</bold></highlight>. In this embodiment of the invention, the two I cache components maintain duplicate information. In one embodiment of the invention, fetch requests are issued to L1 cache <highlight><bold>175</bold></highlight> from either of the L0 I cache <highlight><bold>180</bold></highlight> components. Lines fetched from L1 cache <highlight><bold>175</bold></highlight> are filled into L0 I cache <highlight><bold>180</bold></highlight> coupled to speculative processor <highlight><bold>120</bold></highlight> and commit processor <highlight><bold>110</bold></highlight>. It should be noted that embodiments of the invention may contain any combination of cache memory hierarchy without diverging from the scope of the invention. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In one embodiment of the invention, L0 D cache <highlight><bold>190</bold></highlight> comprises two L0 D cache components. One of the L0 D cache <highlight><bold>190</bold></highlight> components is coupled to commit processor <highlight><bold>110</bold></highlight>, and the other L0 D cache <highlight><bold>190</bold></highlight> component is coupled to speculative processor <highlight><bold>120</bold></highlight>. In this embodiment of the invention, the two L0 D cache components maintain duplicate information. In this embodiment of the invention, store instructions/commands (stores) associated with speculative processor <highlight><bold>120</bold></highlight> are not written into L0 D cache <highlight><bold>190</bold></highlight>. In this embodiment of the invention line read and write requests are issued to L1 cache <highlight><bold>175</bold></highlight> from either L0 D cache component. Lines fetched from L1 cache <highlight><bold>175</bold></highlight> are filled into L0 D cache <highlight><bold>190</bold></highlight> components coupled to commit processor <highlight><bold>110</bold></highlight> and speculative processor <highlight><bold>120</bold></highlight>. Stores issued from commit processor <highlight><bold>110</bold></highlight> are written into the L0 D cache component coupled to speculative processor <highlight><bold>120</bold></highlight>. By having exact copies of data in each L0 D cache component, internal snooping is not necessary. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> In one embodiment of the invention, register file buffer <highlight><bold>130</bold></highlight> comprises an integer register buffer and a predicate register file buffer. In one embodiment of the invention the integer register file buffer comprises a plurality of write ports, a plurality of checkpoints and at least one read port. The integer register file buffer is used to communicate register values from commit processor <highlight><bold>110</bold></highlight> to speculative processor <highlight><bold>120</bold></highlight>. In one embodiment of the invention, the integer register file buffer comprises eight (8) write ports, four (4) checkpoints, and one (1) read port to access any of the checkpointed contexts. In one embodiment of the invention, the integer register file buffer has an eight (8) register wide array and sixteen (16) rows. In one embodiment of the invention, the predicate register file buffer comprises a plurality of write ports, a plurality of checkpoints and at least one read port. The predicate register file buffer is used to communicate register values from commit processor <highlight><bold>110</bold></highlight> to speculative processor <highlight><bold>120</bold></highlight>.and a second level register file coupled to speculative processor <highlight><bold>120</bold></highlight>. In one embodiment of the invention, the predicate register file buffer comprises eight (8) write ports, four (4) checkpoints, and one (1) read port to access any of the checkpointed contexts. In one embodiment of the invention, the predicate register file buffer has an eight (8) register wide array and eight (8) rows. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates commit CPU <highlight><bold>110</bold></highlight>. In one embodiment of the invention, commit CPU <highlight><bold>110</bold></highlight> comprises decoder <highlight><bold>211</bold></highlight>, scoreboard <highlight><bold>214</bold></highlight>, register file <highlight><bold>212</bold></highlight>, and execution units <highlight><bold>213</bold></highlight>. Likewise, <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates speculative CPU <highlight><bold>120</bold></highlight>. In one embodiment of the invention, speculative CPU <highlight><bold>120</bold></highlight> comprises decoder <highlight><bold>321</bold></highlight>, scoreboard <highlight><bold>324</bold></highlight>, register file <highlight><bold>322</bold></highlight>, and execution units <highlight><bold>323</bold></highlight>. L2 cache <highlight><bold>170</bold></highlight> and L1 cache <highlight><bold>175</bold></highlight> are shared by commit CPU <highlight><bold>110</bold></highlight> and speculative CPU <highlight><bold>120</bold></highlight>. In one embodiment of the invention, multiprocessor <highlight><bold>100</bold></highlight> is capable of executing explicitly multithreaded programs. In another embodiment, multiprocessor <highlight><bold>100</bold></highlight> is capable of executing single-threaded applications while using a multi-thread environment without converting the single-threaded application to an explicit multiple-thread. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In one embodiment of the invention, program execution begins as a single thread on one of commit CPU <highlight><bold>110</bold></highlight> and speculative CPU <highlight><bold>120</bold></highlight>. In one embodiment of the invention, commit CPU <highlight><bold>110</bold></highlight> fetches, decodes, executes and updates register file <highlight><bold>212</bold></highlight>, as well as issue load instructions/commands (loads) and stores to memory as instructed by the program. As the instructions are decoded, commit CPU <highlight><bold>110</bold></highlight> may direct speculative CPU <highlight><bold>120</bold></highlight> to start executing a speculative thread at some program counter value. This program counter value may be the address of the next instruction in memory, or it may be supplied as a hint by a compiler. For example, a fork at a next instruction address may be a thread forked at a call instruction. Speculative CPU <highlight><bold>120</bold></highlight> continues its thread execution until a program counter in commit CPU <highlight><bold>110</bold></highlight> reaches the same point in the program execution for which the speculative thread program counter points. Therefore, commit CPU <highlight><bold>110</bold></highlight> fetches, issues and commits every instruction in the program, even when an instruction belongs to a speculative thread. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In one embodiment of the invention, the dual execution architecture of multiprocessor <highlight><bold>100</bold></highlight> has a benefit wherein speculative CPU <highlight><bold>120</bold></highlight>, executing farther in the program, provides highly efficient prefetch of instructions and data. Also, speculative CPU <highlight><bold>120</bold></highlight> determines the direction of many branches before the control flow of commit CPU <highlight><bold>110</bold></highlight> reaches these branches. In one embodiment of the invention, commit CPU <highlight><bold>110</bold></highlight> receives information on control flow direction from speculative CPU <highlight><bold>120</bold></highlight>, and therefore, commit CPU <highlight><bold>110</bold></highlight> can avoid branch prediction for many branches and the associated misprediction penalty. In one embodiment of the invention, dependent and adjacent instructions executed correctly by the speculative thread can have the results concurrently committed in one commit cycle by commit CPU <highlight><bold>110</bold></highlight>, saving time normally required to serially execute and propagate results between dependent instructions. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In one embodiment of the invention, input register values to the speculative thread are communicated through register buffer <highlight><bold>130</bold></highlight>. All values written into register file <highlight><bold>212</bold></highlight>, of commit CPU <highlight><bold>110</bold></highlight>, are also written into register file buffer <highlight><bold>130</bold></highlight>. In one embodiment of the invention when the speculative thread is spawned, a snapshot of register file <highlight><bold>212</bold></highlight> is available in register file buffer <highlight><bold>130</bold></highlight>, located between commit CPU <highlight><bold>110</bold></highlight> and speculative CPU <highlight><bold>120</bold></highlight>. Initially, when a speculative thread is started, none of speculative CPU <highlight><bold>120</bold></highlight>&apos;s registers have the input value stored in them. Input registers that are needed may be read on demand from register file buffer <highlight><bold>130</bold></highlight>. In one embodiment of the invention, scoreboard <highlight><bold>324</bold></highlight> in speculative CPU <highlight><bold>120</bold></highlight>&apos;s decode stage is used to keep track of which registers are loaded from register file buffer <highlight><bold>130</bold></highlight>, or written by the speculative thread. Those registers are valid in register file <highlight><bold>322</bold></highlight>. All other registers are read on demand from register file buffer <highlight><bold>130</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In one embodiment of the invention, input memory values to the speculative thread are read from the coherent cache hierarchy, allowing the speculative thread to access memory modified by the commit thread. In one embodiment of the invention, a cache coherency scheme is used where d-cache <highlight><bold>190</bold></highlight> is a write through cache, and L2 cache <highlight><bold>170</bold></highlight> is a write back cache using a MESI (M: modified; E: exclusive; S: shared; I: invalid) cache coherency protocol. One should note, however, that other cache coherency protocols may also be used in other embodiments of the invention. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Depending on the data flow in a particular program, commit CPU <highlight><bold>110</bold></highlight> may produce some register or memory input values after these inputs are read by the speculative thread. In one embodiment of the invention, to relax the limitations imposed by register and memory data flow, value prediction is used to provide initial input values to the speculative thread. In one embodiment of the invention, a simple value prediction method is used having passive prediction. In this embodiment, it is assumed that register and memory input values have already been produced by commit CPU <highlight><bold>110</bold></highlight> at the time the speculative thread is spawned. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In one embodiment of the invention, speculative results are written into register file <highlight><bold>322</bold></highlight> of CPU <highlight><bold>120</bold></highlight> as well as trace buffer <highlight><bold>140</bold></highlight>. In one embodiment of the invention, trace buffer <highlight><bold>140</bold></highlight> is a circular buffer implemented as an array with head and tail pointers. In one embodiment of the invention, the head and tail pointers have a wrap-around bit. In one embodiment of the invention, trace buffer <highlight><bold>140</bold></highlight> has an array with one read port and one write port. In this embodiment of the invention, each entry has enough bytes to store the results of a number of instructions at least equal in number to the issue width of commit CPU <highlight><bold>110</bold></highlight>. In this embodiment of the invention, each entry has a bit per instruction, with a second write port used to mark mispredicted loads. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In one embodiment of the invention, trace buffer <highlight><bold>140</bold></highlight> has one hundred-and-twenty-eight (128) entries that can each store results for six (6) instructions. In one embodiment of the invention, trace buffer <highlight><bold>140</bold></highlight> has four (4) partitions to support four (4) threads. In one embodiment of the invention, trace buffer <highlight><bold>140</bold></highlight> accommodates sixteen (16) bytes for storing two outputs per instruction, four (4) bytes to store renamed registers, and one (1) bit to mark if an instruction is a mispredicted load. In one embodiment of the invention, the mispredicted load bit can be set by six (6) write ports from load buffer <highlight><bold>150</bold></highlight>. In one embodiment of the invention, when a thread partition is full, speculative execution is continued to prefetch into LO I cache <highlight><bold>180</bold></highlight> and L0 D cache <highlight><bold>190</bold></highlight>, but results are not written into the trace buffer. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In one embodiment of the invention commit CPU <highlight><bold>110</bold></highlight> has scoreboard <highlight><bold>214</bold></highlight> that comprises one bit per register. In this embodiment of the invention, any modification of a register by commit CPU <highlight><bold>110</bold></highlight> between the fork point and the join point of a speculative thread causes the register scoreboard bit to be set. As commit CPU <highlight><bold>110</bold></highlight> retires the speculative thread results, it continuously keeps track in scoreboard <highlight><bold>214</bold></highlight> of all registers that are mispredicted. In this embodiment of the invention, instructions whose source register scoreboard bits are clear are safely committed into register file <highlight><bold>212</bold></highlight>. Such instructions, even if dependent, do not have to be executed. There are some exceptions, however, such as loads and stores. Load and store exceptions have to be issued to memory execution units <highlight><bold>213</bold></highlight> to service cache misses and to check for memory ordering violations. Results of branch execution are also sent from speculative CPU <highlight><bold>120</bold></highlight> to commit CPU <highlight><bold>110</bold></highlight>. Branch prediction in commit CPU <highlight><bold>110</bold></highlight> can be bypassed for some or all of the branches executed by speculative CPU <highlight><bold>120</bold></highlight>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In one embodiment of the invention loads and stores associated with commit processor <highlight><bold>110</bold></highlight> snoop load buffer <highlight><bold>150</bold></highlight>. In one embodiment of the invention, when an instruction is replayed or if an instruction is a mispredicted load, the instructions associated destination register bit is set in scoreboard <highlight><bold>214</bold></highlight>. When the instruction is clean, its destination register bit is cleared in scoreboard <highlight><bold>214</bold></highlight>. Note that an instruction is clean when its sources are clean. Scoreboard <highlight><bold>214</bold></highlight> is cleared when all speculative thread instructions are committed. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In one embodiment of the invention, speculative CPU <highlight><bold>120</bold></highlight> does not issue store instructions to memory. In this embodiment of the invention, store instructions are posted in store buffer <highlight><bold>160</bold></highlight> and load instructions are posted in load buffer <highlight><bold>150</bold></highlight>. In one embodiment of the invention, store buffer <highlight><bold>160</bold></highlight> is a fully associative store forwarding buffer. <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates the structure of store buffer <highlight><bold>160</bold></highlight> in one embodiment of the invention. In store buffer <highlight><bold>160</bold></highlight> (illustrated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>) each entry <highlight><bold>410</bold></highlight> comprises tag portion <highlight><bold>420</bold></highlight>, valid portion <highlight><bold>430</bold></highlight>, data portion <highlight><bold>440</bold></highlight>, store identification (ID) <highlight><bold>450</bold></highlight> and thread ID portion <highlight><bold>460</bold></highlight>. In one embodiment of the invention data portion <highlight><bold>440</bold></highlight> accommodates eight (8) bytes of data. In one embodiment of the invention valid portion <highlight><bold>430</bold></highlight> accommodates eight (8) bits. Store ID <highlight><bold>450</bold></highlight> is a unique store instruction ID of the last store instruction to write into an entry <highlight><bold>410</bold></highlight>. In one embodiment of the invention, speculative loads access store buffer <highlight><bold>160</bold></highlight> concurrently with L0 D cache <highlight><bold>190</bold></highlight> access. If the load hits a store instruction in store buffer <highlight><bold>160</bold></highlight>, L0 D cache <highlight><bold>190</bold></highlight> is bypassed and a load is read from store buffer <highlight><bold>160</bold></highlight>. In this case, store ID <highlight><bold>450</bold></highlight> is also read out with the data. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> In one embodiment of the invention, load data can be obtained by speculative processor <highlight><bold>120</bold></highlight> from either store buffer <highlight><bold>160</bold></highlight> or L0 D cache <highlight><bold>190</bold></highlight> associated with speculative processor <highlight><bold>120</bold></highlight>. In one embodiment of the invention, loads are posted into load buffer <highlight><bold>150</bold></highlight>. In this embodiment of the invention, when a load is posted, a mispredicted load bit is set in trace buffer <highlight><bold>140</bold></highlight> in case of load buffer <highlight><bold>150</bold></highlight> overflow. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> In one embodiment of the invention store buffer <highlight><bold>160</bold></highlight> has one hundred-and-twenty-eight (128) entries, where the entries are four (4) way set associative. In one embodiment of the invention, store buffer <highlight><bold>160</bold></highlight> has two (2) store and two (2) load ports. In one embodiment of the invention store buffer <highlight><bold>160</bold></highlight> allows a partial tag match using virtual addresses for forwarding, and a full physical tag match to validate forwarding store ID&apos;s. In one embodiment of the invention store buffer <highlight><bold>160</bold></highlight> stores data written in data portion <highlight><bold>440</bold></highlight> starting from the first byte to avoid alignment delay. In one embodiment of the invention store buffer <highlight><bold>160</bold></highlight> has a replacement policy that replaces the oldest store upon a store miss, otherwise it replaces a hit entry. In one embodiment of the invention thread ID <highlight><bold>460</bold></highlight> is an index to a partition in trace buffer <highlight><bold>140</bold></highlight>, and has a wrap around bit. In one embodiment of the invention, a global reset of thread entries is performed by using a thread ID content addressable memory (CAM) port (not shown). </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> In one embodiment of the invention, speculative loads are posted in load buffer <highlight><bold>150</bold></highlight>. In one embodiment of the invention, load buffer <highlight><bold>150</bold></highlight> is a set associate load buffer coupled to commit CPU <highlight><bold>110</bold></highlight>. <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates the structure of load buffer <highlight><bold>150</bold></highlight>. In load buffer <highlight><bold>150</bold></highlight> (illustrated in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>) each entry <highlight><bold>510</bold></highlight> comprises a tag portion <highlight><bold>520</bold></highlight>, an entry valid bit portion <highlight><bold>530</bold></highlight>, load ID <highlight><bold>540</bold></highlight>, and load thread ID <highlight><bold>550</bold></highlight>. In one embodiment of the invention, tag portion <highlight><bold>520</bold></highlight> comprises a partial address tag. In another embodiment, each entry <highlight><bold>510</bold></highlight> additionally has a store thread ID, a store ID, and a store valid bit (not shown). The Store ID is the ID of the forwarding store instruction if the load instruction has hit the store buffer <highlight><bold>160</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In one embodiment of the invention the store ID and/or load ID <highlight><bold>550</bold></highlight> is an index into an entry in trace buffer <highlight><bold>140</bold></highlight>, which is unique per instruction. In one embodiment of the invention the store valid bit is set to zero (&ldquo;0&rdquo;) if a load hits store buffer <highlight><bold>160</bold></highlight>. In this embodiment of the invention, the store valid bit is set to one (&ldquo;1&rdquo;) if the load missed store buffer <highlight><bold>160</bold></highlight>. In one embodiment of the invention, a replayed store that has a matching store ID clears (sets to &ldquo;0&rdquo;) the store valid bit and sets the mispredicted bit in the load entry in trace buffer <highlight><bold>140</bold></highlight>. In one embodiment of the invention, a later store in the program that matches tag portion <highlight><bold>520</bold></highlight> clears (sets to &ldquo;0&rdquo;) the store valid bit and sets the mispredicted bit in the load entry in trace buffer <highlight><bold>140</bold></highlight>. In one embodiment of the invention, a clean (not replayed) store that matches the store ID sets the store valid bit to &ldquo;1&rdquo; (one). In one embodiment of the invention, upon a clean (not replayed) load not matching any tag <highlight><bold>520</bold></highlight>, or a load matching tag <highlight><bold>520</bold></highlight> with the store valid bit clear (set to &ldquo;0&rdquo;), the pipeline is flushed, the mispredicted bit in the load entry in trace buffer <highlight><bold>140</bold></highlight> is set to one (&ldquo;1&rdquo;), and the load instruction is restarted. In one embodiment of the invention, when a load entry is retired, entry valid bit portion <highlight><bold>530</bold></highlight> is cleared. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In one embodiment of the invention, load buffer <highlight><bold>150</bold></highlight> has sixty-four (64) entries that are four (4) way set associative. In one embodiment of the invention, load buffer <highlight><bold>150</bold></highlight> has a policy that replaces an oldest load. In one embodiment of the invention a global reset of thread entries is performed by using a thread ID CAM port (not shown). </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> In one embodiment of the invention, commit CPU <highlight><bold>110</bold></highlight> issues all loads and stores to memory execution units <highlight><bold>213</bold></highlight> (address generation unit, load buffer, data cache), including loads that were correctly executed by speculative processor <highlight><bold>120</bold></highlight>. Valid load data with potentially dependent instructions could be committed, even when a load instruction issued by commit processor <highlight><bold>110</bold></highlight> misses L0 D cache <highlight><bold>190</bold></highlight>. In one embodiment of the invention, a load miss request is sent to L2 cache <highlight><bold>170</bold></highlight> to fill the line, but the return data is prevented from writing to register file <highlight><bold>212</bold></highlight>. In one embodiment of the invention, every load instruction accesses load buffer <highlight><bold>150</bold></highlight>. A load miss of load buffer <highlight><bold>150</bold></highlight> causes a pipeline flush and a restart of the load instruction and all instructions that follow it. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In one embodiment of the invention, stores also access load buffer <highlight><bold>150</bold></highlight>. In one embodiment of the invention, when an address matching store that also matches store ID <highlight><bold>540</bold></highlight>, validity bit <highlight><bold>530</bold></highlight> is set in an entry <highlight><bold>510</bold></highlight>. In this embodiment of the invention, a later store that hits an entry <highlight><bold>510</bold></highlight> invalidates the entry <highlight><bold>510</bold></highlight>. In this embodiment of the invention when a store invalidates an entry <highlight><bold>510</bold></highlight>, a load ID <highlight><bold>550</bold></highlight> is used to index trace buffer <highlight><bold>140</bold></highlight> to set the miss predicted load bit. In this embodiment of the invention when a load is fetched and the mispredicted load bit in trace buffer <highlight><bold>140</bold></highlight> is found to be set, a register bit is set in scoreboard <highlight><bold>214</bold></highlight>. This register scoreboard bit may also be called the load destination scoreboard bit. In this embodiment of the invention, this optimization reduces the number of flushes that occur as the result of load misses in load buffer <highlight><bold>150</bold></highlight>. One should note that commit CPU <highlight><bold>110</bold></highlight> concurrently reads trace buffer <highlight><bold>140</bold></highlight> and LO I cache <highlight><bold>180</bold></highlight>. In this embodiment of the invention, this concurrent read of trace buffer <highlight><bold>140</bold></highlight> and L0 I cache <highlight><bold>180</bold></highlight> enables setting a scoreboard register bit in scoreboard <highlight><bold>214</bold></highlight> for a mispredicted load instruction in time without having to stall the execution pipeline. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> In one embodiment of the invention &ldquo;replay mode&rdquo; execution starts at the first instruction of a speculative thread. When a partition in trace buffer <highlight><bold>140</bold></highlight> is becoming empty, replay mode as well as speculative thread execution are terminated. In one embodiment of the invention, instruction issue and register rename stages are modified as follows: no register renaming since trace buffer <highlight><bold>140</bold></highlight> supplies names; all instructions up to the next replayed instruction, including dependent instructions are issued; clean (not replayed) instructions are issued as no-operation (NOPs) instructions; all loads and stores are issued to memory, and clean instruction results are committed from trace buffer <highlight><bold>140</bold></highlight> to register file <highlight><bold>130</bold></highlight>. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates system having an embodiment of the invention. System <highlight><bold>600</bold></highlight> comprises multiprocessor <highlight><bold>100</bold></highlight> (see <cross-reference target="DRAWINGS">FIG. 1</cross-reference>), main memory <highlight><bold>610</bold></highlight>, north bridge <highlight><bold>620</bold></highlight>, hublink <highlight><bold>630</bold></highlight>, and south bridge <highlight><bold>640</bold></highlight>. Typically, the chief responsibility of north bridge <highlight><bold>620</bold></highlight> is the multiprocessor interface. In addition, north bridge <highlight><bold>620</bold></highlight> may also have controllers for an accelerated graphics port (AGP), memory <highlight><bold>610</bold></highlight>, and hub link <highlight><bold>630</bold></highlight>, among others. South bridge <highlight><bold>640</bold></highlight> is typically responsible for a hard drive controller, a universal serial bus (USB) host controller, an input/output (I/O) controller, and any integrated sound devices, amongst others. In one embodiment of the invention, multiprocessor <highlight><bold>100</bold></highlight> contains embodiments of the invention described above. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates a process for an embodiment of the invention. Process <highlight><bold>700</bold></highlight> begins with block <highlight><bold>170</bold></highlight> which, starts the execution of a program thread by a first processor, such as commit processor <highlight><bold>110</bold></highlight>. Block <highlight><bold>720</bold></highlight> performs fetching of commands by the first processor. Block <highlight><bold>730</bold></highlight> performs decoding of commands by the first processor. Block <highlight><bold>740</bold></highlight> instructs a second processor, such as speculative processor <highlight><bold>120</bold></highlight>, to begin program execution of the same thread as the first processor, but at a location further in the program stream. Block <highlight><bold>750</bold></highlight> begins execution of the program thread by the second processor. On block <highlight><bold>751</bold></highlight> the second processor fetches commands. In block <highlight><bold>752</bold></highlight>, the second processor performs decoding. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In block <highlight><bold>753</bold></highlight>, the second processor updates a register file. In block <highlight><bold>754</bold></highlight>, the second processor transmits control flow information to the first processor. In block <highlight><bold>760</bold></highlight>, the first processor updates a register file. Block <highlight><bold>770</bold></highlight> determines whether the first processor has reached the same point of execution as the second processor. If block <highlight><bold>770</bold></highlight> determines that the first processor has not yet reached the same point in the program, process <highlight><bold>700</bold></highlight> continues with block <highlight><bold>780</bold></highlight> to continue execution. If block <highlight><bold>770</bold></highlight> determines that the first processor has reached the same point in the execution as the second processor, block <highlight><bold>790</bold></highlight> determines if the program is complete. If block <highlight><bold>790</bold></highlight> determines that the program is complete, process <highlight><bold>700</bold></highlight> stops, otherwise, process <highlight><bold>700</bold></highlight> continues at A. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> With the use of embodiments of the invention discussed above, performance can be increased when executing single-threaded applications as a result of the speculative long-range multithreaded pre-fetch and pre-execution. The embodiments of the invention can be implemented with in-order and out-of-order multithreaded processors. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> The above embodiments can also be stored on a device or machine-readable medium and be read by a machine to perform instructions. The machine-readable medium includes any mechanism that provides (i.e., stores and/or transmits) information in a form readable by a machine (e.g., a computer). For example, a machine-readable medium includes read only memory (ROM); random access memory (RAM); magnetic disk storage media; optical storage media; flash memory devices; electrical, optical, acoustical or other form of propagated signals (e.g., carrier waves, infrared signals, digital signals, etc.). The device or machine-readable medium may include a solid state memory device and/or a rotating magnetic or optical disk. The device or machine-readable medium may be distributed when partitions of instructions have been separated into different machines, such as across an interconnection of computers. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> While certain exemplary embodiments have been described and shown in the accompanying drawings, it is to be understood that such embodiments are merely illustrative of and not restrictive on the broad invention, and that this invention not be limited to the specific constructions and arrangements shown and described, since various other modifications may occur to those ordinarily skilled in the art. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A apparatus comprising: 
+<claim-text>a first processor and a second processor; </claim-text>
+<claim-text>a plurality of memory devices coupled to the first processor and the second processor; </claim-text>
+<claim-text>a register buffer coupled to the first processor and the second processor; </claim-text>
+<claim-text>a trace buffer coupled to the first processor and the second processor; and </claim-text>
+<claim-text>a plurality of memory instruction buffers coupled to the first processor and the second processor; </claim-text>
+<claim-text>wherein the first processor and the second processor perform single threaded applications using multithreading resources. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the memory devices comprise of a plurality of cache devices. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first processor is coupled to at least one of a plurality of zero level (L0) data cache devices and at least one of a plurality of L0 instruction cache devices, and the second processor is coupled to at least one of the plurality of L0 data cache devices and at least one of the plurality of L0 instruction cache devices. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein each of the plurality of L0 data cache devices having exact copies of data cache instructions, and each of the plurality of L0 instruction cache devices having exact copies of instruction cache instructions. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the plurality of memory instruction buffers includes at least one store forwarding buffer and at least one load-ordering buffer. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, the at least one store forwarding buffer comprising a structure having a plurality of entries, each of the plurality of entries having a tag portion, a validity portion, a data portion, a store instruction identification (ID) portion, and a thread ID portion. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, the at least one load ordering buffer comprising a structure having a plurality of entries, each of the plurality of entries having a tag portion, an entry validity portion, a load identification (ID) portion, and a load thread ID portion. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, each of the plurality of entries further having a store thread ID portion, a store instruction ID portion, and a store instruction validity portion. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, the trace buffer is a circular buffer having an array with head and tail pointers, the head and tail pointers having a wrap-around bit. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, the register buffer comprising an integer register buffer and a predicate register buffer. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method comprising: 
+<claim-text>executing a plurality of instructions in a first thread by a first processor; and </claim-text>
+<claim-text>executing the plurality of instructions in the first thread by a second processor as directed by the first processor, the second processor executing the plurality of instructions ahead of the first processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further including: 
+<claim-text>transmitting control flow information from the second processor to the first processor, the first processor avoiding branch prediction by receiving the control flow information; and </claim-text>
+<claim-text>transmitting results from the second processor to the first processor, the first processor avoiding executing a portion of instructions by committing the results of the portion of instructions into a register file from a trace buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>duplicating memory information in separate memory devices for independent access by the first processor and the second processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>clearing a store validity bit and setting a mispredicted bit in a load entry in the trace buffer if a replayed store instruction has a matching store identification (ID) portion. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>setting a store validity bit if a store instruction that is not replayed matches a store identification (ID) portion. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>flushing a pipeline, setting a mispredicted bit in a load entry in the trace buffer and restarting a load instruction if one of the load is not replayed and does not match a tag portion in a load buffer, and the load instruction matches the tag portion in the load buffer while a store valid bit is not set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>executing a replay mode at a first instruction of a speculative thread; </claim-text>
+<claim-text>terminating the replay mode and the execution of the speculative thread if a partition in the trace buffer is approaching an empty state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>supplying names from the trace buffer to preclude register renaming; </claim-text>
+<claim-text>issuing all instructions up to a next replayed instruction including dependent instructions; </claim-text>
+<claim-text>issuing instructions that are not replayed as no-operation (NOPs) instructions; </claim-text>
+<claim-text>issuing all load instructions and store instructions to memory; </claim-text>
+<claim-text>committing non-replayed instructions from the trace buffer to the register file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>clearing a valid bit in an entry in a load buffer if the load entry is retired. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. An apparatus comprising a machine-readable medium containing instructions which, when executed by a machine, cause the machine to perform operations comprising: 
+<claim-text>executing a first thread from a first processor; and </claim-text>
+<claim-text>executing the first thread from a second processor as directed by the first processor, the second processor executing instructions ahead of the first processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>transmitting control flow information from the second processor to the first processor, the first processor avoiding branch prediction by receiving the control flow information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>duplicating memory information in separate memory devices for independent access by the first processor and the second processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>clearing a store validity bit and setting a mispredicted bit in a load entry in the trace buffer if a replayed store instruction has a matching store identification (ID) portion. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>setting a store validity bit if a store instruction that is not replayed matches a store identification (ID) portion. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>flushing a pipeline, setting a mispredicted bit in a load entry in the trace buffer and restarting a load instruction if one of the load is not replayed and does not match a tag portion in a load buffer, and the load instruction matches the tag portion in the load buffer while a store valid bit is not set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>executing a replay mode at a first instruction of a speculative thread; </claim-text>
+<claim-text>terminating the replay mode and the execution of the speculative thread if a partition in the trace buffer is approaching an empty state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>supplying names from the trace buffer to preclude register renaming; </claim-text>
+<claim-text>issuing all instructions up to a next replayed instruction including dependent instructions; </claim-text>
+<claim-text>issuing instructions that are not replayed as no-operation (NOPs) instructions; </claim-text>
+<claim-text>issuing all load instructions and store instructions to memory; </claim-text>
+<claim-text>committing non-replayed instructions from the trace buffer to the register file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>clearing a valid bit in an entry in a load buffer if the load entry is retired. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. A system comprising: 
+<claim-text>a first processor; </claim-text>
+<claim-text>a second processor; </claim-text>
+<claim-text>a bus coupled to the first processor and the second processor; </claim-text>
+<claim-text>a main memory coupled to the bus; </claim-text>
+<claim-text>a plurality of local memory devices coupled to the first processor and the second processor; </claim-text>
+<claim-text>a register buffer coupled to the first processor and the second processor; </claim-text>
+<claim-text>a trace buffer coupled to the first processor and the second processor; and </claim-text>
+<claim-text>a plurality of memory instruction buffers coupled to the first processor and the second processor, </claim-text>
+<claim-text>wherein the first processor and the second processor perform single threaded applications using multithreading resources. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, the local memory devices comprise a plurality of cache devices. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 30</dependent-claim-reference>, the first processor is coupled to at least one of a plurality of zero level (L0) data cache devices and at least one of a plurality of L0 instruction cache devices, and the second processor is coupled to at least one of the plurality of L0 data cache devices and at least one of the plurality of L0 instruction cache devices. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein each of the plurality of L0 data cache devices having exact copies of data cache instructions, and each of the plurality of L0 instruction cache devices having exact copies of instruction cache instructions. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, the first processor and the second processor each sharing a first level (L1) cache device and a second level (L2) cache device. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the plurality of memory instruction buffers includes at least one store forwarding buffer and at least one load ordering buffer. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference>, the at least one store forwarding buffer including a structure having a plurality of entries, each of the plurality of entries having a tag portion, a validity portion, a data portion, a store instruction identification (ID) portion, and a thread ID portion.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>7</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005266A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005266A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005266A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005266A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005266A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005266A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

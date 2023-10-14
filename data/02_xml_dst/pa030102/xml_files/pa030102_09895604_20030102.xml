@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005253A1-20030102-D00000.TIF SYSTEM "US20030005253A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005253A1-20030102-D00001.TIF SYSTEM "US20030005253A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005253A1-20030102-D00002.TIF SYSTEM "US20030005253A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005253A1-20030102-D00003.TIF SYSTEM "US20030005253A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005253A1-20030102-D00004.TIF SYSTEM "US20030005253A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005253</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895604</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F013/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>169000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>711</class>
+<subclass>167000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Method for adaptive arbitration of requests for memory access in a multi-stage pipeline engine</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Ming-Hao</given-name>
+<family-name>Liao</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Hsin-Chu City</city>
+<country-code>TW</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Hung-Ta</given-name>
+<family-name>Pai</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Taichung Hsien</city>
+<country-code>TW</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>TOWNSEND AND TOWNSEND AND CREW, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>TWO EMBARCADERO CENTER</address-1>
+<address-2>EIGHTH FLOOR</address-2>
+<city>SAN FRANCISCO</city>
+<state>CA</state>
+<postalcode>94111-3834</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">In a method for adaptive arbitration of requests for accessing a memory unit in a multi-stage pipeline engine that includes a plurality of request queues corresponding to the stages of the pipeline engine, each of the request queues is assigned to one of a high-priority group and a low-priority group in accordance with operating state of the memory unit. The request queues in the high-priority group are then processed prior to the request queues in the low-priority group. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The invention relates to a method for adaptive arbitration of requests for memory access in a multi-stage pipeline engine, more particularly to a method for adaptive arbitration of requests for accessing a memory unit in a multi-stage pipeline engine that can reduce the occurrence of idling or stalling in the multi-stage pipeline engine. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> A pipeline architecture is commonly found in integrated circuit designs. When processing 3D graphic digital data, generation of 3D graphics includes the steps of geometry and image rendering. Since movement and operation of a large amount of pixel data are needed during processing, a 3D pipeline engine is utilized for increasing throughput of 3D commands. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> conventional n-stage pipeline engine <highlight><bold>10</bold></highlight> includes an arbiter <highlight><bold>110</bold></highlight>, a memory unit <highlight><bold>12</bold></highlight> for storing different types of data, such as red, green and blue pixel values, alphavalue, Z value, texture data, etc., and a plurality of request queues <highlight><bold>131</bold></highlight>, <highlight><bold>131</bold></highlight>&prime;, <highlight><bold>131</bold></highlight>&Prime; and data buffers <highlight><bold>130</bold></highlight>, <highlight><bold>130</bold></highlight>&prime;, <highlight><bold>130</bold></highlight>&Prime; for increasing efficiency of the n-stage pipeline engine <highlight><bold>10</bold></highlight>. The different types of data are accessed in different stages of the n-stage pipeline engine <highlight><bold>10</bold></highlight>. For each request of data access, one of the request queues and a corresponding one of the data buffers are used. The request queue and the corresponding data buffer can be located in different stages, such as the request queue A <highlight><bold>131</bold></highlight> and the data buffer A <highlight><bold>130</bold></highlight>, and the request queue B <highlight><bold>131</bold></highlight>&prime; and the data buffer B <highlight><bold>130</bold></highlight>&prime;, or in the same stage, such as the request queue C <highlight><bold>131</bold></highlight>&Prime; and the data buffer C <highlight><bold>130</bold></highlight>&Prime;, of the n-stage pipeline engine <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In the example of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the second and (n&minus;3)<highlight><superscript>th </superscript></highlight>stages in the n-stage pipeline engine <highlight><bold>10</bold></highlight> have the request queue A <highlight><bold>131</bold></highlight> and the request queue B <highlight><bold>131</bold></highlight>&prime;, respectively, for storing a request therein. When the arbiter <highlight><bold>110</bold></highlight> serves the request, data associated with the request are read from the memory unit <highlight><bold>12</bold></highlight>. The fourth and (n&minus;2)<highlight><superscript>th </superscript></highlight>stages in the n-stage pipeline engine <highlight><bold>10</bold></highlight> have the data buffer A <highlight><bold>130</bold></highlight> and the data buffer B <highlight><bold>130</bold></highlight>&prime;, respectively, for storing the data that is associated with the request. The n<highlight><superscript>th </superscript></highlight>stage in the n-stage pipeline engine <highlight><bold>10</bold></highlight> has the request queue C <highlight><bold>131</bold></highlight>&Prime; and the data buffer C <highlight><bold>130</bold></highlight>&Prime;. When the memory unit <highlight><bold>12</bold></highlight> is busy or in a memory bound state, the data buffer C <highlight><bold>130</bold></highlight>&Prime; stores data to be written to the memory unit <highlight><bold>12</bold></highlight> so as to minimize stalling while waiting for data access. Furthermore, when the operational speed of the second stage in the n-stage pipeline engine <highlight><bold>10</bold></highlight> is faster than that of the third stage in the n-stage pipeline engine <highlight><bold>10</bold></highlight>, the output data from the second stage cannot be received instantly by the third stage, thereby resulting in stalling at the second stage. Therefore, a data buffer, such as a pixel FIFO <highlight><bold>15</bold></highlight>, which is located between the second and third stages, is used to store pixel data from the second stage to minimize stalling at the second stage. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The arbiter <highlight><bold>110</bold></highlight> assigns a fixed priority to the request queues <highlight><bold>131</bold></highlight>, <highlight><bold>131</bold></highlight>&prime;, <highlight><bold>131</bold></highlight>&Prime; in a known manner. The order of the request queues <highlight><bold>131</bold></highlight>, <highlight><bold>131</bold></highlight>&prime;, <highlight><bold>131</bold></highlight>&Prime; is determined according to locations of the corresponding data buffers in the n-stage pipeline engine <highlight><bold>10</bold></highlight>. The arbiter <highlight><bold>110</bold></highlight> assigns the high-priority request queue to that whose associated data buffer is located farthest from an upstream end of the n-stage pipeline engine <highlight><bold>10</bold></highlight>. The following are some of the drawbacks of the fixed priority scheme of the arbiter <highlight><bold>110</bold></highlight>: </paragraph>
+<paragraph id="P-0008" lvl="2"><number>&lsqb;0008&rsqb;</number> 1. Since the arbiter <highlight><bold>110</bold></highlight> does not consider the nature of memory requests and the state of the memory unit <highlight><bold>12</bold></highlight>, reduced utilization of the memory unit <highlight><bold>12</bold></highlight> can result. </paragraph>
+<paragraph id="P-0009" lvl="2"><number>&lsqb;0009&rsqb;</number> 2. Since the arbiter <highlight><bold>110</bold></highlight> assigns a fixed priority to minimize stalling of the n-stage pipeline engine, bubbling (many stages in the n-stage pipeline engine <highlight><bold>10</bold></highlight> are idle) may occur when a data buffer located in an upstream side of the n-stage pipeline engine <highlight><bold>10</bold></highlight> is empty and another data buffer located in a downstream side of the n-stage-pipeline engine <highlight><bold>10</bold></highlight> is not empty. </paragraph>
+<paragraph id="P-0010" lvl="7"><number>&lsqb;0010&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, when the data buffer B <highlight><bold>130</bold></highlight>&prime; located in the (n&minus;2)<highlight><superscript>th </superscript></highlight>stage is empty and the data buffer C <highlight><bold>130</bold></highlight>&Prime; located in the n<highlight><superscript>th </superscript></highlight>stage is not empty, the arbiter <highlight><bold>110</bold></highlight> processes data stored in the data buffer C <highlight><bold>130</bold></highlight>&Prime; until the data buffer C <highlight><bold>130</bold></highlight>&Prime; is empty, thereby resulting in idling of the (n&minus;2)<highlight><superscript>th </superscript></highlight>stage. When the data buffer C <highlight><bold>130</bold></highlight>&Prime; is empty, due to the idling of the (n&minus;2)<highlight><superscript>th </superscript></highlight>stage that results in the data buffer B <highlight><bold>130</bold></highlight>&prime; still being empty, the (n&minus;1)<highlight><superscript>th</superscript></highlight>, n<highlight><superscript>th </superscript></highlight>stages will be idle. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Therefore, the object of the present invention is to provide a method for adaptive arbitration of requests for memory access in a multi-stage pipeline engine that can reduce the occurrence of idling or stalling in the pipeline engine. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> According to the present invention, a method is adapted for adaptive arbitration of requests for accessing a memory unit in a multi-stage pipeline engine that includes a plurality of request queues corresponding to the stages of the pipeline engine. The method comprises the steps of: </paragraph>
+<paragraph id="P-0013" lvl="2"><number>&lsqb;0013&rsqb;</number> (a) assigning each of the request queues to one of a high-priority group and a low-priority group in accordance with operating state of the memory unit; and </paragraph>
+<paragraph id="P-0014" lvl="2"><number>&lsqb;0014&rsqb;</number> (b) processing the request queues in the high-priority group prior to the request queues in the low-priority group. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Other features and advantages of the present invention will become apparent in the following detailed description of the preferred embodiment with reference to the accompanying drawings, of which: </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic circuit block diagram illustrating a conventional n-stage pipeline engine; </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow chart illustrating how an arbiter of the pipeline engine assigns the request queues into a high-priority group and a low-priority group in the preferred embodiment of a method for adaptive arbitration of requests for memory access according to this invention; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart illustrating how the arbiter processes the request queues when the memory unit is in a memory bound state in accordance with the method of the preferred embodiment; and </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow chart illustrating how the arbiter processes the request queues when the memory unit is not in the memory bound state in accordance with the method of the preferred embodiment.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The preferred embodiment of a method according to the present invention is shown in FIGS. <highlight><bold>2</bold></highlight> to <highlight><bold>4</bold></highlight>. The method of the preferred embodiment is to be applied to the conventional n-stage pipeline engine <highlight><bold>10</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and is adapted for adaptive arbitration of requests for accessing the memory unit <highlight><bold>12</bold></highlight> in the conventional n-stage pipeline engine <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, there is shown a flow chart to illustrate how the arbiter <highlight><bold>110</bold></highlight> assigns the request queues to one of a high-priority group and a low-priority group according to the method of the preferred embodiment. In step <highlight><bold>20</bold></highlight>, the arbiter <highlight><bold>110</bold></highlight> detects whether the memory unit <highlight><bold>12</bold></highlight> is in a memory bound state. Then, in step <highlight><bold>21</bold></highlight>, when the memory unit <highlight><bold>12</bold></highlight> is in the memory bound state, the arbiter <highlight><bold>110</bold></highlight> detects whether a number of requests in each of the request queues <highlight><bold>131</bold></highlight> is greater than a predetermined threshold. The detection is conducted from a downstream end of the pipeline engine <highlight><bold>10</bold></highlight> to an upstream end of the pipeline engine <highlight><bold>10</bold></highlight>. In step <highlight><bold>22</bold></highlight>, for the request queues <highlight><bold>131</bold></highlight> that have the number of requests therein greater than the predetermined threshold, the arbiter <highlight><bold>110</bold></highlight> assigns such request queues <highlight><bold>131</bold></highlight> to the high-priority group. In step <highlight><bold>22</bold></highlight>, for the request queues <highlight><bold>131</bold></highlight> that have the number of requests therein not greater than the predetermined threshold, the arbiter <highlight><bold>110</bold></highlight> assigns such request queues <highlight><bold>131</bold></highlight> to the low-priority group. It is noted that the predetermined threshold can vary for the different request queues in the method of the preferred embodiment. In step <highlight><bold>24</bold></highlight>, when the memory unit <highlight><bold>12</bold></highlight> is not in the memory bound state, the arbiter <highlight><bold>110</bold></highlight> detects whether a service waiting time for each of the request queues <highlight><bold>131</bold></highlight> is greater than a predetermined waiting threshold. The detection is conducted from a downstream end of the pipeline engine <highlight><bold>10</bold></highlight> to an upstream end of the pipeline engine <highlight><bold>10</bold></highlight>. If yes, the flow proceeds to step <highlight><bold>22</bold></highlight>. In step <highlight><bold>25</bold></highlight>, after step <highlight><bold>24</bold></highlight>, for the other request queues that have the service waiting time thereof not greater than the predetermined waiting threshold, the arbiter <highlight><bold>110</bold></highlight> detects whether a volume of data associated with each of the other request queues, is greater than a predetermined volume threshold. If yes, the flow goes to step <highlight><bold>22</bold></highlight>. Otherwise, the flow proceeds to step <highlight><bold>23</bold></highlight>. It should be noted that the predetermined waiting and volume thresholds can be designed so as to be different for the different request queues in the method of the preferred embodiment. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> If the priority of a queue is changed, the queue is added to the respective priority group behind the last queue in said priority group. Otherwise, the queue maintains its position in the original priority group. Referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, there is shown a flow chart to illustrate how the arbiter <highlight><bold>110</bold></highlight> processes the request queues <highlight><bold>131</bold></highlight> when the memory unit <highlight><bold>12</bold></highlight> is in the memory bound state according to the method of the preferred embodiment. In step <highlight><bold>30</bold></highlight>, the arbiter <highlight><bold>110</bold></highlight> initially inspects whether the high-priority group is empty. Then, in step <highlight><bold>31</bold></highlight>, when the high-priority group is not empty, the arbiter <highlight><bold>110</bold></highlight> inspects whether a first request queue in the high-priority group is empty. If yes, the first request queue is moved to the last position in the high-priority group (step <highlight><bold>37</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. In step <highlight><bold>32</bold></highlight>, when the first request queue in the high-priority group is not empty, the arbiter <highlight><bold>110</bold></highlight> serves a first request in the first request queue in the high-priority group. In step <highlight><bold>33</bold></highlight>, the arbiter <highlight><bold>110</bold></highlight> inspects whether a page miss event occurred during serving. If yes, the first request queue is moved to the last position in the high-priority group (step <highlight><bold>37</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. Otherwise, the flow goes back to step <highlight><bold>31</bold></highlight>. In step <highlight><bold>34</bold></highlight>, when the high-priority group is empty, the arbiter <highlight><bold>110</bold></highlight> inspects whether a first request queue in the low-priority group is empty. If yes, the first request queue is moved to the last position in the low-priority group (step <highlight><bold>38</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. In step <highlight><bold>35</bold></highlight>, when the first request queue in the low-priority group is not empty, the arbiter <highlight><bold>110</bold></highlight> serves a first request in the first request queue in the low-priority group. In step <highlight><bold>36</bold></highlight>, the arbiter <highlight><bold>110</bold></highlight> inspects whether a page miss event occurred during serving. If yes, the first request queue is moved to the last position in the low-priority group (step <highlight><bold>38</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. Otherwise, the flow goes back to step <highlight><bold>34</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, there is shown a flow chart to illustrate how the arbiter <highlight><bold>110</bold></highlight> processes the request queues <highlight><bold>131</bold></highlight> when the memory unit <highlight><bold>12</bold></highlight> is not in the memory bound state according to the method of the preferred embodiment. In step <highlight><bold>40</bold></highlight>, the arbiter <highlight><bold>110</bold></highlight> initially inspects whether the high-priority group is empty. Then, in step <highlight><bold>41</bold></highlight>, when the high-priority group is not empty, the arbiter <highlight><bold>110</bold></highlight> inspects whether a first request queue in the high-priority group is empty. If yes, the first request queue is moved to the last position in the high-priority group (step <highlight><bold>45</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. In step <highlight><bold>42</bold></highlight>, when the first request queue in the high-priority group is not empty, the arbiter <highlight><bold>110</bold></highlight> serves a first request in the first request queue in the high-priority group, the first request queue is moved to the last position in the high-priority group (step <highlight><bold>45</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. In step <highlight><bold>43</bold></highlight>, when the high-priority group is empty, the arbiter <highlight><bold>110</bold></highlight> inspects whether a first request queue in the low-priority group is empty. If yes, the first request queue is moved to the last position in the low-priority group (step <highlight><bold>46</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. In step <highlight><bold>44</bold></highlight>, when the first request queue in the low-priority group is not empty, the arbiter <highlight><bold>110</bold></highlight> serves a first request in the first request queue in the low-priority group, the first request queue is moved to the last position in the low-priority group (step <highlight><bold>46</bold></highlight>), and the flow goes back to step <highlight><bold>20</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, when the data buffer C <highlight><bold>130</bold></highlight>&Prime; is not empty but the service waiting time of the request queue B <highlight><bold>131</bold></highlight>&prime; is greater than the predetermined waiting threshold, the arbiter <highlight><bold>110</bold></highlight> processes the request queue B <highlight><bold>131</bold></highlight>&prime; prior to the request queue <highlight><bold>131</bold></highlight>&Prime; according to the method of this invention. Therefore, the occurrence of stalling as encountered in the prior art can be reduced. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> While the present invention has been described in connection with what is considered the most practical and preferred embodiment, it is understood that this invention is not limited to the disclosed embodiment but is intended to cover various arrangements included within the spirit and scope of the broadest interpretation so as to encompass all such modifications and equivalent arrangements. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for adaptive arbitration of requests for accessing a memory unit in a multi-stage pipeline engine that includes a plurality of request queues corresponding to the stages of the pipeline engine, comprising the steps of: 
+<claim-text>(a) assigning each of the request queues to one of a high-priority group and a low-priority group in accordance with operating state of the memory unit; and </claim-text>
+<claim-text>(b) processing the request queues in the high-priority group prior to the request queues in the low-priority group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein step (a) includes the sub-steps of: 
+<claim-text>(a-1) detecting whether the memory unit is in a memory bound state; and </claim-text>
+<claim-text>(a-2) when the memory unit is in the memory bound state, detecting a number of requests in each of the request queues, wherein the request queues that have the number of requests therein greater than a predetermined threshold are assigned to the high-priority group, and the request queues that have the number of requests therein not greater than the predetermined threshold are assigned to the low-priority group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein step (a) includes the sub-steps of: 
+<claim-text>(a-1) detecting whether the memory unit is in a memory bound state; and </claim-text>
+<claim-text>(a-2) when the memory unit is not in the memory bound state, detecting a service waiting time for each of the request queues, wherein the request queues that have the service waiting time thereof greater than a predetermined waiting threshold are assigned to the high-priority group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein step (a) further includes the sub-step of: 
+<claim-text>(a-3) after step (a-2), for the other request queues that have the service waiting time thereof not greater than the predetermined waiting threshold, detecting a volume of data associated with each of the other request queues, wherein the request queues that have the associated volume of data thereof greater than a predetermined volume threshold are assigned to the high-priority group, and the request queues that have the associated volume of data thereof not greater than the predetermined volume threshold are assigned to the low-priority group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein step (b) includes the sub-steps of: 
+<claim-text>(b-1) inspecting whether the high-priority group is empty; </claim-text>
+<claim-text>(b-2) upon detection that the high-priority group is not empty, inspecting whether a first request queue in the high-priority group is empty; and </claim-text>
+<claim-text>(b-3) upon detection that the first request queue in the high-priority group is not empty, serving a first request in the first request queue in the high-priority group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein step (b) further includes the sub-steps of: 
+<claim-text>(b-4) inspecting whether a page miss event occurred during serving; </claim-text>
+<claim-text>(b-5) when no page miss event occurred during serving, proceeding back to sub-step (b-3) to continue serving of other requests in the first request queue in the high-priority group; and </claim-text>
+<claim-text>(b-6) repeating step (a) when serving of the first request queue in the high-priority group is completed, or when the page miss event occurred during serving. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein step (b) further includes the step of: 
+<claim-text>(b-4) repeating step (a) after serving the first request in the first request queue in the high-priority group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein step (b) includes the sub-steps of: 
+<claim-text>(b-1) inspecting whether the high-priority group is empty; </claim-text>
+<claim-text>(b-2) upon detection that the high-priority queue group is empty, inspecting whether a first request queue in the low-priority group is empty; and </claim-text>
+<claim-text>(b-3) upon detection that the first request queue in the low-priority group is not empty, serving a first request in the first request queue in the low-priority group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein step (b) further includes the sub-steps of: 
+<claim-text>(b-4) inspecting whether a page miss event occurred during serving; </claim-text>
+<claim-text>(b-5) when no page miss event occurred during serving, proceeding back to sub-step (b-3) to continue serving of other requests in the first request queue in the low-priority group; and </claim-text>
+<claim-text>(b-6) repeating step (a) when serving of the first request queue in the low-priority group is completed, or when the page miss event occurred during serving. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein step (b) further includes the step of: 
+<claim-text>(b-4) repeating step (a) after serving the first request in the first request queue in the low-priority group.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005253A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005253A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005253A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005253A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005253A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

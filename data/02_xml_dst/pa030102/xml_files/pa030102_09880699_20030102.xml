@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002666A1-20030102-D00000.TIF SYSTEM "US20030002666A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002666A1-20030102-D00001.TIF SYSTEM "US20030002666A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002666A1-20030102-D00002.TIF SYSTEM "US20030002666A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002666A1-20030102-D00003.TIF SYSTEM "US20030002666A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002666A1-20030102-D00004.TIF SYSTEM "US20030002666A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002666</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09880699</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010613</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>380</class>
+<subclass>042000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>METHOD AND APPARATUS FOR CREATING A MESSAGE DIGEST USING A PARALLEL,
+ONE-WAY HASH ALGORITHM</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Richard</given-name>
+<middle-name>J.</middle-name>
+<family-name>Takahashi</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Phoenix</city>
+<state>AZ</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>SCHWEGMAN, LUNDBERG, WOESSNER &amp; KLUTH, P.A.</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 2938</address-1>
+<city>MINNEAPOLIS</city>
+<state>MN</state>
+<postalcode>55402</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A one-way hash algorithm is implemented in hardware and/or software. The hash algorithm creates a message digest from an input message. During one 16-operation round of the hash algorithm, a front computation process (<highlight><bold>202, </bold></highlight>FIG. <highlight><bold>2</bold></highlight>) computes a portion of a first operation. Then a systolic computation process (<highlight><bold>204, </bold></highlight>FIG. <highlight><bold>2</bold></highlight>) computes the remainder of the first operation and the next fifteen operations to complete the round. The systolic computation process pre-calculates (<highlight><bold>325, </bold></highlight>FIG. <highlight><bold>3</bold></highlight>) a portion of the next round in parallel with the completion of the current round. Because the systolic computation process has a shallower logic depth, and because certain calculations are done in parallel, an approximately four times reduction in the time to compute one round can be achieved. In one embodiment, the message digest computed by the hash algorithm is identical to a message digest computed using a conventional MD5 implementation, when given the same input message. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">TECHNICAL FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to methods and apparatus for computing condensed representations of messages or data files, and more particularly to methods and apparatus for computing message digests using a one-way hash algorithm. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Hash functions have been widely used in modern cryptography to produce compressed data, message digests, fingerprints, and checksums, among other things. A hash function is a mathematical function that takes a variable-length input string, and converts it to a fixed-length output string. The output string is called a hash value, which typically is smaller than the input string. A &ldquo;one-way&rdquo; hash function is a hash function that works in one direction, meaning that it is easy to compute a hash value from an input string, but it is difficult to generate a second input string that hashes to the same value. Bruce Schneier, Applied Cryptography, at 429-59 (1996) includes a detailed discussion of various one-way hash algorithms. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> A commonly used, one-way hash algorithm is &ldquo;MD5&rdquo;, where MD stands for &ldquo;message digest.&rdquo; MD5 was developed by Ron L. Rivest, and is described in detail in his paper entitled &ldquo;The MD5 Message Digest Algorithm,&rdquo; RFC 1321 (April 1992). </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> When an arbitrarily large input message is input into MD5, the algorithm produces a 128-bit output called a &ldquo;fingerprint&rdquo; or &ldquo;message digest&rdquo; of the input message. MD5 sequentially processes message blocks of 512 bits when computing a message digest. If a message is not a multiple of 512 bits, then MD5 first pads the message to make the message a multiple of 512 bits. The padded message is then processed by MD5 as n 512-bit blocks, M<highlight><subscript>l</subscript></highlight>, . . . , M<highlight><subscript>n</subscript></highlight>, where each block is composed of sixteen 32-bit words or sub-blocks, W<highlight><subscript>j</subscript></highlight>, 0&lt;&equals;j&lt;&equals;15. The main loop of MD5 processes each 512-bit block one at a time, and continues for as many 512-bit blocks as are in the message. The output of the algorithm is a set of four 32-bit words, which concatenate to form a single 128-bit message digest. A four-word buffer (A, B, C, D) is used to compute the message digest, where each of A, B, C, and D is a 32-bit register, and the registers are initialized to particular values. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The main loop of MD5 has four &ldquo;rounds,&rdquo; r (0&lt;&equals;r&lt;&equals;3), where each round includes sixteen operations. Accordingly, sixty-four operations, i (0&lt;&equals;i&lt;&equals;63), are performed for each message block. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> During each operation, a non-linear function (NLF) is performed on three of four 32-bit variables stored in A, B, C, and D. Then the operation adds the NLF output to the fourth variable, a sub-block, W<highlight><subscript>j</subscript></highlight>, of the message, and a constant word, k<highlight><subscript>i</subscript></highlight>. The operation then performs a left circular shift of a variable number of bits, s<highlight><subscript>i</subscript></highlight>, and adds the result to the contents of one of A, B, C or D. Finally, that sum replaces the contents of one of A, B, C or D, and the next operation is performed. The NLF used for the operations in each round (i.e., each set of 16 sequential operations) is different from the NLF used in the previous round. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> After the fourth round, the main loop repeats for the next message block, until the last block, M<highlight><subscript>n</subscript></highlight>, has been processed. After processing the last block, the message digest is the 128-bit string represented by the concatenated words stored in A, B, C, and D. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> MD5 can be performed by software or within an application specific integrated circuit (ASIC), where the operations are performed using hardware-implemented logic gates. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a simplified, logical block diagram of one MD5 operation, in accordance with the prior art. Registers A, B, C, and D are represented by blocks <highlight><bold>102</bold></highlight>, <highlight><bold>104</bold></highlight>, <highlight><bold>106</bold></highlight>, <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> During one operation, a non-linear function <highlight><bold>112</bold></highlight> (NLF<highlight><subscript>r</subscript></highlight>) is applied to three of the variables stored in registers A, B, C, and D. In the example round shown, the three variables input into NLF <highlight><bold>112</bold></highlight> are the variables stored in B <highlight><bold>104</bold></highlight>, C <highlight><bold>106</bold></highlight>, and D <highlight><bold>108</bold></highlight>, although the input variables could differ for other rounds. The result is added, by a first full adder <highlight><bold>114</bold></highlight>, to the contents of register A <highlight><bold>102</bold></highlight>. A second full adder <highlight><bold>116</bold></highlight> adds the output of the first full adder <highlight><bold>114</bold></highlight> to the appropriate sub-block, W<highlight><subscript>j</subscript></highlight>, for the round and operation being performed. A third full adder <highlight><bold>118</bold></highlight> then adds the output of the second full adder <highlight><bold>116</bold></highlight> to the appropriate constant word, k<highlight><subscript>i</subscript></highlight>, for the round and operation being performed. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> A shifter <highlight><bold>120</bold></highlight> then circularly left shifts the output of the third full adder <highlight><bold>118</bold></highlight> by the appropriate number of bits, s<highlight><subscript>i</subscript></highlight>, for the round and operation being performed. Finally, the contents of register B <highlight><bold>104</bold></highlight> is added, by a fourth full adder <highlight><bold>122</bold></highlight>, to the output of shifter <highlight><bold>120</bold></highlight>. The output of full adder <highlight><bold>122</bold></highlight> is then added to the contents of register B <highlight><bold>104</bold></highlight>, and that sum is placed in register A <highlight><bold>102</bold></highlight>, for use during the next operation. The next operation will then use a different message sub-block, W<highlight><subscript>j</subscript></highlight>, constant word, k<highlight><subscript>i</subscript></highlight>, and number of shifts, s<highlight><subscript>i</subscript></highlight>, in the left circular shift operation. In addition, the next operation will input the contents of different registers into NLF <highlight><bold>112</bold></highlight> and adders <highlight><bold>114</bold></highlight>, <highlight><bold>122</bold></highlight>. Finally, the result will be placed in a different register. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> During the four rounds associated with one message block, the logic blocks illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> are cycled through sixty-four times. Further, the total number of cycles through the logic of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is 64&times;n, where n is the number of 512-bit blocks in the message. Each cycle through the logic corresponds to one clock cycle, and the clock frequency is limited by the various delays associated with the gates and other logical components. The logic depth of the operation illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is rather substantial, because the logic includes computationally complex full adders, among other elements. Accordingly, the cumulative delay associated with this design is long, and consequently the clock frequency must be fairly low. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> As the desire to compress data faster increases, communication systems increasingly place more stringent demands on the computation speed of cryptographic algorithms. Accordingly, what are needed are one-way hash algorithms and apparatus, which produce the same output as MD5 in less time. Further, what are needed are an MD5 compatible hash algorithm and apparatus, which have less logic depth than the standard MD5 implementation.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWING </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a simplified, logical block diagram of one MD5 operation, in accordance with the prior art; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a simplified, logical block diagram corresponding to one round of sixteen operations, in accordance with one embodiment of the present invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a flowchart of a method for creating a message digest, in accordance with one embodiment of the present invention; and </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates an electronic device in which the embodiments of the invention may be practiced, in accordance with one embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Various embodiments of the present invention provide a one-way has algorithm and apparatus, which produce the identical message digest as MD5, given the same input message, but in nearly half the time necessary using the standard MD5 implementation. In various embodiments, this is accomplished by separately computing part of the first operation of a 16-operation round using a front computation process, and computing the remaining operations of the round using a very fast systolic computation process. Because it has fewer delays in its logic, the systolic computation process can be performed using a clock rate that is approximately twice the clock rate possible using the standard MD5 implementation. In addition, the systolic computation process computes portions of adjacent operations in parallel. Accordingly, the time to compute each 16-operation round is reduced, using the various embodiments, to nearly half the time necessary to compute each 16-operation round using the standard MD5 implementation. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Similar to MD5, when an input message of any arbitrary length of bits is input into the algorithm of one of the various embodiments, the algorithm produces a 128-bit output, referred to herein as a message digest. Although the term &ldquo;message digest&rdquo; has been used to indicate the output result of the algorithm, such terminology is not meant to limit the various embodiments to specific applications. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In one embodiment, the method of the present invention sequentially processes blocks of 512 bits when computing a message digest. If a message is not a multiple of 512 bits, then the algorithm first pads the message to make the message a multiple of 512 bits. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The padded message is then processed by MD5 as n 512-bit blocks, M<highlight><subscript>l</subscript></highlight>, . . . , M<highlight><subscript>n</subscript></highlight>, where each block is composed of sixteen 32-bit words or sub-blocks, W<highlight><subscript>j </subscript></highlight>(0&lt;&equals;j &lt;&equals;15). The main loop of MD5 processes each 512-bit block one at a time, and continues for as many 512-bit blocks as are in the message. The output of the algorithm is a set of four 32-bit words, which concatenate to form a single 128-bit message digest. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> A four-word buffer (A, B, C, D) is used to compute the message digest, where each of A, B, C, and D is a 32-bit register. These registers are initialized to particular values, which are the same initialization values as are used in the standard MD5 implementation. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> As described previously, the main loop of MD5 has four rounds, r (0&lt;&equals;r&lt;&equals;3), where each round includes sixteen operations. Accordingly, sixty-four operations, i (0&lt;&equals;i&lt;&equals;63), are performed for each message block. An &ldquo;operation&rdquo; is defined herein as a set of processes that operates on a word of the sequence of input words derived from the message. In one embodiment, the set of processes associated with each operation are described in the next paragraph. For one word, the set of processes culminates in the replacement of one of the registers A, B, C or D with a result that is calculated during the set of processes for that word. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> During each operation, the set of processes includes the following, in one embodiment. First, a non-linear function (NLF) is performed on three of four 32-bit variables stored in A, B, C, and D. Then the operation adds the NLF output to the fourth variable, a sub-block, W<highlight><subscript>j</subscript></highlight>, of the message (i.e., a word of the message), and a constant word, k<highlight><subscript>i</subscript></highlight>. The operation then performs a left circular shift of a variable number of bits, s<highlight><subscript>i</subscript></highlight>, and adds the result to the contents of one of A, B, C or D. Finally, that sum replaces the contents of one of A, B, C or D. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In one embodiment, part of the first operation of a 16-operation round is separately computed using a front computation process, and the remaining operations of the round are computed using a very fast systolic computation process. This systolic computation process, which is described in detail below, performs portions of consecutive operations in parallel. This parallel processing, along with a more shallow logic depth per operation, enable the time to compute each round to be substantially reduced, because a faster clock frequency can be used for the systolic computation process. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The NLF used for the operations in each round (i.e., each set of 16 sequential operations) is different from the NLF used in the previous round. Each NLF takes as input three 32-bit words and produce as output one 32-bit word. The four NLFs are defined as follows, and are the same as the NLFs used in the standard MD5 implementation: </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> F(X,Y,Z)&equals;(X AND Y) OR ((NOT X) AND Z) (for round 1:0&lt;&equals;i&lt;&equals;15) </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> G(X,Y,Z)&equals;(X AND Z) OR (Y AND (NOT Z)) (for round 2:16&lt;&equals;i&lt;&equals;31) </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> H(X,Y,Z)&equals;X XOR Y XOR Z (for round 3:32&lt;&equals;i&lt;&equals;47) </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> I(X,Y,Z)&equals;Y XOR (X OR (NOT Z)) (for round 4:48&lt;&equals;i&lt;&equals;63). </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The main loop of the algorithm is performed as described below. First, the values in the four registers of the buffer (A, B, C, D) are retained and copied into four 32-bit variables a, b, c, and d, so that a&equals;A, b&equals;B, c&equals;C, and d&equals;D. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Each of the four rounds is then performed by applying the following logic, which is the same logic as is used in the standard MD5 implementation. In the functions below, W<highlight><subscript>j </subscript></highlight>represents the jth sub-block of the message (0&lt;&equals;j&lt;&equals;15), &lt;&lt;&lt;s<highlight><subscript>i </subscript></highlight>represents a left circular shift of s bits, and &ldquo;&plus;&rdquo; denotes the addition of words. The actual values for W<highlight><subscript>j</subscript></highlight>, k<highlight><subscript>i</subscript></highlight>, and s<highlight><subscript>i </subscript></highlight>for each operation, i, are found in the &ldquo;List of Operations&rdquo; table, below. </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> Round 1: For i&equals;0 to 15, </paragraph>
+<paragraph id="P-0033" lvl="3"><number>&lsqb;0033&rsqb;</number> FF(a,b,c,d, W<highlight><subscript>j</subscript></highlight>, s<highlight><subscript>i</subscript></highlight>, k<highlight><subscript>i</subscript></highlight>) denotes the operation </paragraph>
+<paragraph id="P-0034" lvl="3"><number>&lsqb;0034&rsqb;</number> a&equals;b&plus;((a&plus;F(b,c,d)&plus;W<highlight><subscript>j</subscript></highlight>&plus;k<highlight><subscript>i</subscript></highlight>)&lt;&lt;&lt;s<highlight><subscript>i</subscript></highlight>). </paragraph>
+<paragraph id="P-0035" lvl="2"><number>&lsqb;0035&rsqb;</number> Round 2: For i&equals;16 to 31, </paragraph>
+<paragraph id="P-0036" lvl="3"><number>&lsqb;0036&rsqb;</number> GG(a,b,c,d, W<highlight><subscript>j</subscript></highlight>, s<highlight><subscript>i</subscript></highlight>, k<highlight><subscript>i</subscript></highlight>) denotes the operation </paragraph>
+<paragraph id="P-0037" lvl="3"><number>&lsqb;0037&rsqb;</number> a&equals;b&plus;((a&plus;G(b,c,d)&plus;W<highlight><subscript>j</subscript></highlight>&plus;k<highlight><subscript>i</subscript></highlight>)&lt;&lt;&lt;s<highlight><subscript>i</subscript></highlight>). </paragraph>
+<paragraph id="P-0038" lvl="2"><number>&lsqb;0038&rsqb;</number> Round 3: For i&equals;32 to 47, </paragraph>
+<paragraph id="P-0039" lvl="3"><number>&lsqb;0039&rsqb;</number> HH(a,b,c,d, W<highlight><subscript>j</subscript></highlight>, s<highlight><subscript>i</subscript></highlight>, k<highlight><subscript>i</subscript></highlight>) denotes the operation </paragraph>
+<paragraph id="P-0040" lvl="3"><number>&lsqb;0040&rsqb;</number> a&equals;b&plus;((a&plus;H(b,c,d)&plus;W<highlight><subscript>j</subscript></highlight>&plus;k<highlight><subscript>i</subscript></highlight>)&lt;&lt;&lt;s<highlight><subscript>i</subscript></highlight>). </paragraph>
+<paragraph id="P-0041" lvl="2"><number>&lsqb;0041&rsqb;</number> Round 4: For i&equals;48 to 63, </paragraph>
+<paragraph id="P-0042" lvl="3"><number>&lsqb;0042&rsqb;</number> II(a,b,c,d, W<highlight><subscript>j</subscript></highlight>, s<highlight><subscript>i</subscript></highlight>, k<highlight><subscript>i</subscript></highlight>) denotes the operation </paragraph>
+<paragraph id="P-0043" lvl="3"><number>&lsqb;0043&rsqb;</number> a&equals;b&plus;((a&plus;I(b,c,d)&plus;W<highlight><subscript>j</subscript></highlight>&plus;k<highlight><subscript>i</subscript></highlight>)&lt;&lt;&lt;s<highlight><subscript>i</subscript></highlight>). </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> During each round, r (0&lt;&equals;r&lt;&equals;3), the three variables operated upon by the NLF, the message sub-block, W<highlight><subscript>j</subscript></highlight>, the constant word, k<highlight><subscript>i</subscript></highlight>, and the number of shifts, s<highlight><subscript>i</subscript></highlight>, in the left circular shift operation change from operation to operation. For each round and operation, these operations are performed sequentially as follows, where the operations listed below are identical to the 64 operations used in the standard MD5 implementation. The operation number, i (0&lt;&equals;i&lt;&equals;63), are listed to the left of each operation.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>List of Operations</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>Round 1 (r &equals; 0):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="70PT" align="right"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>0.</entry>
+<entry>FF(a,b,c,d, W<highlight><subscript>0</subscript></highlight>, 7, d76aa478)</entry>
+</row>
+<row>
+<entry>1.</entry>
+<entry>FF(d,a,b,c, W<highlight><subscript>1</subscript></highlight>, 12, e8c7b756)</entry>
+</row>
+<row>
+<entry>2.</entry>
+<entry>FF(c,d,a,b, W<highlight><subscript>2</subscript></highlight>, 17, 242070db)</entry>
+</row>
+<row>
+<entry>3.</entry>
+<entry>FF(b,c,d,a, W<highlight><subscript>3</subscript></highlight>, 22, c1bdceee)</entry>
+</row>
+<row>
+<entry>4.</entry>
+<entry>FF(a,b,c,d, W<highlight><subscript>4</subscript></highlight>, 7, f57c0faf)</entry>
+</row>
+<row>
+<entry>5.</entry>
+<entry>FF(d,a,b,c, W<highlight><subscript>5</subscript></highlight>, 12, 4787c62a)</entry>
+</row>
+<row>
+<entry>6.</entry>
+<entry>FF(c,d,a,b, W<highlight><subscript>6</subscript></highlight>, 17, a8304613)</entry>
+</row>
+<row>
+<entry>7.</entry>
+<entry>FF(b,c,d,a, W<highlight><subscript>7</subscript></highlight>, 22, fd469501)</entry>
+</row>
+<row>
+<entry>8.</entry>
+<entry>FF(a,b,c,d, W<highlight><subscript>8</subscript></highlight>, 7, 698098d8)</entry>
+</row>
+<row>
+<entry>9.</entry>
+<entry>FF(d,a,b,c, W<highlight><subscript>9</subscript></highlight>, 12, 8b44f7af)</entry>
+</row>
+<row>
+<entry>10.</entry>
+<entry>FF(c,d,a,b, W<highlight><subscript>10</subscript></highlight>, 17, ffff5bb1)</entry>
+</row>
+<row>
+<entry>11.</entry>
+<entry>FF(b,c,d,a, W<highlight><subscript>11</subscript></highlight>, 22, 895cd7be)</entry>
+</row>
+<row>
+<entry>12.</entry>
+<entry>FF(a,b,c,d, W<highlight><subscript>12</subscript></highlight>, 7, 6b901122)</entry>
+</row>
+<row>
+<entry>13.</entry>
+<entry>FF(d,a,b,c, W<highlight><subscript>13</subscript></highlight>, 12, fd987193)</entry>
+</row>
+<row>
+<entry>14.</entry>
+<entry>FF(c,d,a,b, W<highlight><subscript>14</subscript></highlight>, 17, a679438e)</entry>
+</row>
+<row>
+<entry>15.</entry>
+<entry>FF(b,c,d,a, W<highlight><subscript>15</subscript></highlight>, 22, 49b40821)</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>Round 2 (r &equals; 1):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="70PT" align="right"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>16.</entry>
+<entry>GG(a,b,c,d, W<highlight><subscript>1</subscript></highlight>, 5, f61e2562)</entry>
+</row>
+<row>
+<entry>17.</entry>
+<entry>GG(d,a,b,c, W<highlight><subscript>6</subscript></highlight>, 9, c040b340)</entry>
+</row>
+<row>
+<entry>18.</entry>
+<entry>GG(c,d,a,b, W<highlight><subscript>11</subscript></highlight>, 14, 265e5a51)</entry>
+</row>
+<row>
+<entry>19.</entry>
+<entry>GG(b,c,d,a, W<highlight><subscript>0</subscript></highlight>, 20, e9b6c7aa)</entry>
+</row>
+<row>
+<entry>20.</entry>
+<entry>GG(a,b,c,d, W<highlight><subscript>5</subscript></highlight>, 5, d62f105d)</entry>
+</row>
+<row>
+<entry>21.</entry>
+<entry>GG(d,a,b,c, W<highlight><subscript>10</subscript></highlight>, 9, 02441453)</entry>
+</row>
+<row>
+<entry>22.</entry>
+<entry>GG(c,d,a,b, W<highlight><subscript>15</subscript></highlight>, 14, d8a1e681)</entry>
+</row>
+<row>
+<entry>23.</entry>
+<entry>GG(b,c,d,a, W<highlight><subscript>4</subscript></highlight>, 20, e7d3fbc8)</entry>
+</row>
+<row>
+<entry>24.</entry>
+<entry>GG(a,b,c,d, W<highlight><subscript>9</subscript></highlight>, 5, 21e1cde6)</entry>
+</row>
+<row>
+<entry>25.</entry>
+<entry>GG(d,a,b,c, W<highlight><subscript>14</subscript></highlight>, 9, c33707d6)</entry>
+</row>
+<row>
+<entry>26.</entry>
+<entry>GG(c,d,a,b, W<highlight><subscript>3</subscript></highlight>, 14, f4d50d87)</entry>
+</row>
+<row>
+<entry>27.</entry>
+<entry>GG(b,c,d,a, W<highlight><subscript>8</subscript></highlight>, 20, 455a14ed)</entry>
+</row>
+<row>
+<entry>28.</entry>
+<entry>GG(a,b,c,d, W<highlight><subscript>13</subscript></highlight>, 5, a9e3e905)</entry>
+</row>
+<row>
+<entry>29.</entry>
+<entry>GG(d,a,b,c, W<highlight><subscript>2</subscript></highlight>, 9, fcefa3f8)</entry>
+</row>
+<row>
+<entry>30.</entry>
+<entry>GG(c,d,a,b, W<highlight><subscript>7</subscript></highlight>, 14, 676f02d9)</entry>
+</row>
+<row>
+<entry>31.</entry>
+<entry>GG(b,c,d,a, W<highlight><subscript>12</subscript></highlight>, 20, 8d2a4c8a)</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>Round 3 (r &equals; 2):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="70PT" align="right"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>32.</entry>
+<entry>HH(a,b,c,d, W<highlight><subscript>5</subscript></highlight>, 4, fffa3942)</entry>
+</row>
+<row>
+<entry>33.</entry>
+<entry>HH(d,a,b,c, W<highlight><subscript>8</subscript></highlight>, 11, 8771f681)</entry>
+</row>
+<row>
+<entry>34.</entry>
+<entry>HH(c,d,a,b, W<highlight><subscript>11</subscript></highlight>, 16, 6d9d6122)</entry>
+</row>
+<row>
+<entry>35.</entry>
+<entry>HH(b,c,d,a, W<highlight><subscript>14</subscript></highlight>, 23, fde5380c)</entry>
+</row>
+<row>
+<entry>36.</entry>
+<entry>HH(a,b,c,d, W<highlight><subscript>1</subscript></highlight>, 4, a4beea44)</entry>
+</row>
+<row>
+<entry>37.</entry>
+<entry>HH(d,a,b,c, W<highlight><subscript>4</subscript></highlight>, 11, 4bdecfa9)</entry>
+</row>
+<row>
+<entry>38.</entry>
+<entry>HH(c,d,a,b, W<highlight><subscript>7</subscript></highlight>, 16, f6bb4b60)</entry>
+</row>
+<row>
+<entry>39.</entry>
+<entry>HH(b,c,d,a, W<highlight><subscript>10</subscript></highlight>, 23, bebfbc70)</entry>
+</row>
+<row>
+<entry>40.</entry>
+<entry>HH(a,b,c,d, W<highlight><subscript>13</subscript></highlight>, 4, 289b7ec6)</entry>
+</row>
+<row>
+<entry>41.</entry>
+<entry>HH(d,a,b,c, W<highlight><subscript>0</subscript></highlight>, 11, eaa127fa)</entry>
+</row>
+<row>
+<entry>42.</entry>
+<entry>HH(c,d,a,b, W<highlight><subscript>3</subscript></highlight>, 16, d4ef3085)</entry>
+</row>
+<row>
+<entry>43.</entry>
+<entry>HH(b,c,d,a, W<highlight><subscript>6</subscript></highlight>, 23, 04881d05)</entry>
+</row>
+<row>
+<entry>44.</entry>
+<entry>HH(a,b,c,d, W<highlight><subscript>9</subscript></highlight>, 4, d9d4d039)</entry>
+</row>
+<row>
+<entry>45.</entry>
+<entry>HH(d,a,b,c, W<highlight><subscript>12</subscript></highlight>, 11, e6db99e5)</entry>
+</row>
+<row>
+<entry>46.</entry>
+<entry>HH(c,d,a,b, W<highlight><subscript>15</subscript></highlight>, 16, 1fa27cf8)</entry>
+</row>
+<row>
+<entry>47.</entry>
+<entry>HH(b,c,d,a, W<highlight><subscript>2</subscript></highlight>, 23, c4ac5665)</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>Round 4 (r &equals; 3):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="70PT" align="right"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>48.</entry>
+<entry>II(a,b,c,d, W<highlight><subscript>0</subscript></highlight>, 6, f4292244)</entry>
+</row>
+<row>
+<entry>49.</entry>
+<entry>II(d,a,b,c, W<highlight><subscript>7</subscript></highlight>, 10, 432aff97)</entry>
+</row>
+<row>
+<entry>50.</entry>
+<entry>II(c,d,a,b W<highlight><subscript>14</subscript></highlight>, 15, ab9423a7)</entry>
+</row>
+<row>
+<entry>51.</entry>
+<entry>II(b,c,d,a, W<highlight><subscript>5</subscript></highlight>, 21, fc93a039)</entry>
+</row>
+<row>
+<entry>52.</entry>
+<entry>II(a,b,c,d, W<highlight><subscript>12</subscript></highlight>, 6, 655b59c3)</entry>
+</row>
+<row>
+<entry>53.</entry>
+<entry>II(d,a,b,c, W<highlight><subscript>3</subscript></highlight>, 10, 8f0ccc92)</entry>
+</row>
+<row>
+<entry>54.</entry>
+<entry>II(c,d,a,b W<highlight><subscript>10</subscript></highlight>, 15, ffeff47d)</entry>
+</row>
+<row>
+<entry>55.</entry>
+<entry>II(b,c,d,a, W<highlight><subscript>1</subscript></highlight>, 21, 85845dd1)</entry>
+</row>
+<row>
+<entry>56.</entry>
+<entry>II(a,b,c,d, W<highlight><subscript>8</subscript></highlight>, 6, 6fa87e4f)</entry>
+</row>
+<row>
+<entry>57.</entry>
+<entry>II(d,a,b,c, W<highlight><subscript>15</subscript></highlight>, 10, fe2ce6e0)</entry>
+</row>
+<row>
+<entry>58.</entry>
+<entry>II(c,d,a,b W<highlight><subscript>6</subscript></highlight>, 15, a3014314)</entry>
+</row>
+<row>
+<entry>59.</entry>
+<entry>II(b,c,d,a, W<highlight><subscript>13</subscript></highlight>, 21, 4e0811a1)</entry>
+</row>
+<row>
+<entry>60.</entry>
+<entry>II(a,b,c,d, W<highlight><subscript>4</subscript></highlight>, 6, f7537e82)</entry>
+</row>
+<row>
+<entry>61.</entry>
+<entry>II(d,a,b,c, W<highlight><subscript>11</subscript></highlight>, 10, bd3af235)</entry>
+</row>
+<row>
+<entry>62.</entry>
+<entry>II(c,d,a,b W<highlight><subscript>2</subscript></highlight>, 15, 2ad7d2bb)</entry>
+</row>
+<row>
+<entry>63.</entry>
+<entry>II(b,c,d,a, W<highlight><subscript>9</subscript></highlight>, 21, eb86d391)</entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> After round 4 has been completed, a, b, c, and d are added to the retained contents of A, B, C, and D (i.e., the contents before this message block was processed), respectively. The main loop then repeats for the next message block, until the last block, M<highlight><subscript>n</subscript></highlight>, has been processed. After processing the last block, the message digest is the 128-bit string represented by the concatenated words stored in A, B, C, and D. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a simplified, logical block diagram corresponding to one round of sixteen operations, in accordance with one embodiment of the present invention. The logic for performing one round includes two major logic blocks: a front computation block <highlight><bold>202</bold></highlight> and a systolic computation block <highlight><bold>204</bold></highlight>. The variable t (0&lt;&equals;t&lt;&equals;15) indicates which operation is being performed within a round, r (0&lt;&equals;r&lt;&equals;3). Accordingly, the operation number, i, is equal to t&times;r. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The front computation block <highlight><bold>202</bold></highlight> performs a portion of the first operation (i.e., t&equals;0) for each round. The systolic computation block <highlight><bold>204</bold></highlight> performs a remainder of the first operation, and each of the fifteen subsequent operations (i.e., 1&lt;&equals;t&lt;&equals;15) that comprise the round. In one embodiment, the front computation block <highlight><bold>202</bold></highlight> is clocked at a first clock frequency (e.g., 200 MHz), and the systolic computation block <highlight><bold>204</bold></highlight> is clocked at a second, faster clock frequency (e.g., 400 MHz). </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The first clock frequency can be approximately equal to the clock frequency used in a standard MD5 implementation. This first clock frequency is limited, on the high end, by the delays associated with the logic within the front computation block <highlight><bold>202</bold></highlight>. The second clock frequency can be approximately equal to twice the clock frequency used in a standard MD5 implementation, because the delays associated with the systolic computation block <highlight><bold>204</bold></highlight> are substantially less than the delays associated with performing one standard MD5 operation. Accordingly, the various embodiments of the present invention are able to compute one 16-operation round in nearly half the time it takes to compute a round using a standard MD5 implementation. Where a standard MD5 implementation uses 64 clock cycles at a particular clock frequency, the various embodiments of the present invention use the equivalent of approximately 34 clock cycles at the particular clock frequency. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> In one embodiment, it takes one clock cycle to complete the front computation portion <highlight><bold>202</bold></highlight>, and one clock cycle (potentially at a higher frequency) to complete each iteration through the systolic computation portion <highlight><bold>204</bold></highlight>. In other embodiments, it could take more that one clock cycle to complete either or both the front computation and/or systolic computation portions. In other words, during a particular round, the front computation portion <highlight><bold>202</bold></highlight> is performed during one or more clock cycles, and each iteration of the systolic computation portion <highlight><bold>204</bold></highlight> is performed during one or more subsequent clock cycles. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> Referring again to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, registers A, B, C, and D are represented by blocks <highlight><bold>206</bold></highlight>, <highlight><bold>208</bold></highlight>, <highlight><bold>210</bold></highlight>, <highlight><bold>212</bold></highlight>. When a round begins, the front computation portion <highlight><bold>202</bold></highlight> is performed first. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> During the front computation portion <highlight><bold>202</bold></highlight>, a first non-linear function block <highlight><bold>214</bold></highlight> (NLF<highlight><subscript>r</subscript></highlight>) is applied to the contents of registers B <highlight><bold>208</bold></highlight>, C <highlight><bold>210</bold></highlight>, and D <highlight><bold>212</bold></highlight>. During the first round (r&equals;0), the appropriate NLF to use is F(X,Y,Z)&equals;(X AND Y) OR ((NOT X) AND Z), where X&equals;B, Y&equals;C, and Z&equals;D. A first carry save adder <highlight><bold>216</bold></highlight> (CSA) adds the output of NLF <highlight><bold>214</bold></highlight> to W<highlight><subscript>j </subscript></highlight>and k<highlight><subscript>i</subscript></highlight>. For example, during the first operation of the first round, W<highlight><subscript>j</subscript></highlight>&equals;W<highlight><subscript>0 </subscript></highlight>and k<highlight><subscript>i</subscript></highlight>&equals;d76aa478 (See the &ldquo;List of Operations&rdquo; table, above). First CSA <highlight><bold>216</bold></highlight> is a three-input/two-output carry save adder, in one embodiment. In other embodiments, multiple CSAs and/or full adders could be used to add the three inputs. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> A second CSA <highlight><bold>218</bold></highlight> then adds the output of the first CSA <highlight><bold>216</bold></highlight> to the contents of register A <highlight><bold>206</bold></highlight>. In one embodiment, second CSA <highlight><bold>218</bold></highlight> also is a three-input/two-output carry save adder, although multiple CSAs and/or full adders could be used to add the three inputs, in other embodiments. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> During the front computation portion <highlight><bold>202</bold></highlight>, a variable, v, is set to a value of 1. The variable roughly indicates which operation, within a particular round, is being performed. Although the first operation has not yet been completed, setting v to the value of 1 enables the logic in the systolic computation portion <highlight><bold>204</bold></highlight> to perform correctly. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> The systolic computation portion <highlight><bold>204</bold></highlight> is then performed. First, a multiplexer <highlight><bold>220</bold></highlight>, is used to select, as input, either the output of the front computation portion <highlight><bold>202</bold></highlight>, or values generated within the systolic computation portion <highlight><bold>204</bold></highlight>. When v&equals;1, multiplexer <highlight><bold>220</bold></highlight> selects the output of the front computation portion <highlight><bold>202</bold></highlight>, which includes a sum and a carry produced by CSA <highlight><bold>218</bold></highlight>. Multiplexer <highlight><bold>220</bold></highlight> then passes the sum and carry to a first fall adder <highlight><bold>222</bold></highlight>. When v&gt;1, multiplexer <highlight><bold>220</bold></highlight> selects a stored output of a second fall adder <highlight><bold>232</bold></highlight> and a stored result produced by a second NLF block <highlight><bold>236</bold></highlight>, and passes those values to the first full adder <highlight><bold>222</bold></highlight>. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> The first full adder <highlight><bold>222</bold></highlight> adds the two values received from multiplexer <highlight><bold>220</bold></highlight>. Shifter <highlight><bold>224</bold></highlight> then circularly left shifts the output of first full adder <highlight><bold>222</bold></highlight> by a variable number of bits, s<highlight><subscript>i</subscript></highlight>, which has a value that depends on the number of the operation, i, being performed. For example, during the first operation, i&equals;0, of the first round, r&equals;0, s<highlight><subscript>i</subscript></highlight>&equals;7 bits. During the second operation, i&equals;1, of the first round, s<highlight><subscript>i</subscript></highlight>&equals;12 bits, and so on (See the &ldquo;List of Operations&rdquo; table, above). In one embodiment, shifter <highlight><bold>224</bold></highlight> is implemented as a hard-wired shift. In another embodiment, shifter <highlight><bold>224</bold></highlight> is implemented through logic, or is performed using software. Although a left circular shift is used in one embodiment, the same result could also be achieved using a right circular shift of a complementary number of bits. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> A third full adder <highlight><bold>226</bold></highlight> then adds the output of shifter <highlight><bold>224</bold></highlight> to the contents of register B <highlight><bold>208</bold></highlight>. The output of third full adder <highlight><bold>226</bold></highlight> represents the final result of an operation. Accordingly, for example, if the operation is the first operation of a first round, the output represents FF(a,b,c,d,W<highlight><subscript>0</subscript></highlight>,7,d76aa478). If the operation is the second operation of the first round, the output represents FF(d,a,b,c,W<highlight><subscript>1</subscript></highlight>,12,e8c7b756) (See the &ldquo;List of Operations&rdquo; table, above). </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> The output of third full adder <highlight><bold>226</bold></highlight> corresponds to the result produced by full adder <highlight><bold>122</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>) used in a standard MD5 implementation. As <cross-reference target="DRAWINGS">FIG. 1</cross-reference> indicates, in the standard MD5 implementation, that result is added to the contents of register A <highlight><bold>102</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>). However, in one embodiment of the present invention, the result is temporarily stored as variable BNEW <highlight><bold>228</bold></highlight>. The later incorporation of BNEW <highlight><bold>228</bold></highlight> into the four-word register A, B, C, and D will be explained below. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> In one embodiment, a portion of the next operation is computed in parallel with blocks <highlight><bold>220</bold></highlight>-<highlight><bold>226</bold></highlight>, which represent a portion of the preceding operation. Specifically, a third CSA <highlight><bold>230</bold></highlight> is used to add the contents of register D <highlight><bold>212</bold></highlight> to W<highlight><subscript>j </subscript></highlight>and k<highlight><subscript>i&plus;1</subscript></highlight>. For example, during the second operation of the first round, W<highlight><subscript>j</subscript></highlight>&equals;W<highlight><subscript>1 </subscript></highlight>and k<highlight><subscript>i&plus;1</subscript></highlight>&equals;e8c7b756 (See the &ldquo;List of Operations&rdquo; table, above). Third CSA <highlight><bold>230</bold></highlight> is a three-input/two-output carry save adder, in one embodiment. In other embodiments, multiple CSAs and/or fill adders could be used to add the three inputs. A second full adder <highlight><bold>232</bold></highlight> adds the outputs of the third CSA <highlight><bold>230</bold></highlight> (i.e., it incorporates the carry into the sum). The output of the second full adder <highlight><bold>232</bold></highlight> is temporarily held in register TEMP<highlight><bold>1</bold></highlight> <highlight><bold>234</bold></highlight>, until the systolic computation block <highlight><bold>204</bold></highlight> is clocked for the next cycle. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Another portion of the next operation is performed when a second NLF block <highlight><bold>236</bold></highlight> is applied to the output of the third full adder <highlight><bold>226</bold></highlight> (i.e., BNEW), and the contents of register B <highlight><bold>208</bold></highlight> and register C <highlight><bold>210</bold></highlight>. The appropriate NLF to use is the same as the NLF used for the first NLF block <highlight><bold>214</bold></highlight>. Accordingly, during the first round, the appropriate NLF to use is F(X,Y,Z)&equals;(X AND Y) OR ((NOT X) AND Z), where X&equals;BNEW, Y&equals;B, and Z&equals;C. The output of NLF <highlight><bold>236</bold></highlight> is temporarily held in register TEMP<highlight><bold>2</bold></highlight> <highlight><bold>238</bold></highlight>, until the systolic computation block <highlight><bold>204</bold></highlight> is clocked for the next cycle. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Concurrently with clocking the systolic computation block <highlight><bold>204</bold></highlight> for the next cycle, the contents of registers B <highlight><bold>208</bold></highlight>, C <highlight><bold>210</bold></highlight>, D <highlight><bold>212</bold></highlight>, and A <highlight><bold>206</bold></highlight> are replaced, so that A&equals;D, D&equals;C, C&equals;B, and B&equals;BNEW <highlight><bold>128</bold></highlight>. These new register values are then available for the next cycle. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> The variable v is then incremented by 1. If v is less than 16, but greater than 1, then multiplexer <highlight><bold>220</bold></highlight> selects, as input, the values within TEMP<highlight><bold>1</bold></highlight> <highlight><bold>234</bold></highlight> and TEMP<highlight><bold>2</bold></highlight> <highlight><bold>238</bold></highlight>, and the systolic computation block <highlight><bold>204</bold></highlight> completes the next operation, as described above. The procedure then iterates until all of the round&apos;s operations have been performed. If v&equals;16, then the front computation portion <highlight><bold>202</bold></highlight> is again performed for the next round, as described above, and the procedure iterates until all four rounds have been performed. After adding the results from the four rounds to retained contents of A, B, C, and D, the entire procedure then iterates for each remaining message block. Once all message blocks have been processed, the message digest is the concatenation of the contents of registers A, B, C, and D. In one application, the message digest can then be input into a verification or signature algorithm (e.g., DSA), or can otherwise be stored, transmitted, or used to compute a value that has some usefulness. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> The above description indicates that a portion of one operation is performed in parallel with a portion of a next operation (i.e., some of the processes involved in each operation are performed in parallel). The remaining processes of the next operation are performed later. When the embodiment is implemented using logic, the portion of one operation and the portion of the next operation are completed during a first clock cycle, and the remaining processes of the next operation are completed during the next clock cycle. When one of the operations is the first operation of a round, the initial portion of the operation is performed during a preceding clock cycle (i.e., it is performed before performing the remaining processes of the first operation). </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> Using the embodiment shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the critical path through the majority of operations (1&lt;&equals;t&lt;&equals;15) includes multiplexer <highlight><bold>220</bold></highlight>, shifter <highlight><bold>224</bold></highlight>, two full adders <highlight><bold>222</bold></highlight> and <highlight><bold>226</bold></highlight>, NLF <highlight><bold>236</bold></highlight>, and register setup time. Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, using a conventional MD5 implementation, the critical path for each operation includes NLF <highlight><bold>112</bold></highlight>, four full adders <highlight><bold>114</bold></highlight>, <highlight><bold>116</bold></highlight>, <highlight><bold>118</bold></highlight>, <highlight><bold>122</bold></highlight>, shifter <highlight><bold>120</bold></highlight>, and register setup time. Because the critical path for the embodiment shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> includes only two full adders for most operations, as opposed to four full adders in the critical path for a conventional MD5 implementation, the logic depth and the amount of time to process a full message is substantially reduced from the conventional MD5 implementation. With nearly half the logic depth, and the ability to roughly double the clock frequency during the systolic portion <highlight><bold>204</bold></highlight> of each round, the embodiments of the present invention can compute a message digest in approximately one quarter the time necessary for a conventional MD5 implementation to compute a message digest. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a flowchart of a method for creating a message digest, in accordance with one embodiment of the present invention. It would be obvious to one of skill in the art, that the method could be entirely or partially accomplished in an integrated circuit (e.g., an ASIC) and/or by software. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The method begins, in block <highlight><bold>302</bold></highlight>, by padding the message for which a message digest is to be computed, if necessary. As described previously, if a message is not a multiple of 512 bits, then the method first pads the message with a single &ldquo;1&rdquo; and as many zeros are necessary to make the message a multiple of 512 bits, except that the last 64 bits of the last 512-bit block are reserved for the length, l, of the original message. The padded message is then processed by the algorithm as n 512-bit blocks, M<highlight><subscript>l</subscript></highlight>, . . . , M<highlight><subscript>n</subscript></highlight>. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> In block <highlight><bold>304</bold></highlight>, registers A, B, C, and D are initialized. In one embodiment, these registers are initialized to be the same values as the predetermined set of initialization values used in MD5. These values are as follows, in hexadecimal: </paragraph>
+<paragraph id="P-0067" lvl="2"><number>&lsqb;0067&rsqb;</number> A&equals;01234567 </paragraph>
+<paragraph id="P-0068" lvl="2"><number>&lsqb;0068&rsqb;</number> B&equals;89abcdef </paragraph>
+<paragraph id="P-0069" lvl="2"><number>&lsqb;0069&rsqb;</number> C&equals;fedcba98 </paragraph>
+<paragraph id="P-0070" lvl="2"><number>&lsqb;0070&rsqb;</number> D&equals;76543210 </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> The outside loop of the algorithm (blocks <highlight><bold>306</bold></highlight>-<highlight><bold>338</bold></highlight>), which sequentially selects each message block, M<highlight><subscript>l</subscript></highlight>, . . . , M<highlight><subscript>n</subscript></highlight>, then begins. In block <highlight><bold>306</bold></highlight>, the next message block, M<highlight><subscript>x</subscript></highlight>, is selected for processing, and divided into sixteen 32-bit words, W<highlight><subscript>0</subscript></highlight>, W<highlight><subscript>1</subscript></highlight>, . . . , W<highlight><subscript>15 </subscript></highlight>where W<highlight><subscript>0 </subscript></highlight>is the left-most word. During the first iteration of the outside loop that includes blocks <highlight><bold>306</bold></highlight>-<highlight><bold>338</bold></highlight>, the &ldquo;next block&rdquo; is block M<highlight><subscript>l</subscript></highlight>. In block <highlight><bold>308</bold></highlight>, a variable r, which indicates which round the algorithm is computing, is then set to a value of 0, and an operation variable i, which indicates which operation is being performed of the 64 operations per message block, is also set to a value of 0. In block <highlight><bold>309</bold></highlight>, the contents of registers A, B, C, and D are retained for later use. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> The middle loop of the algorithm (blocks <highlight><bold>310</bold></highlight>-<highlight><bold>336</bold></highlight>), which steps through the four rounds for one message block, then begins. Referring also to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the front computation process is initiated, which begins the calculations for the first operation within a round. First, in block <highlight><bold>310</bold></highlight>, a first NLF (e.g., NLF<highlight><subscript>r </subscript></highlight><highlight><bold>214</bold></highlight>) is applied to the contents of registers B <highlight><bold>208</bold></highlight>, C <highlight><bold>210</bold></highlight>, and D <highlight><bold>212</bold></highlight>. Next, in block <highlight><bold>312</bold></highlight>, the sum of the NLF output, W<highlight><subscript>j</subscript></highlight>, k<highlight><subscript>i</subscript></highlight>, and the contents of register A <highlight><bold>206</bold></highlight> is computed. For ease of description, this sum is referred to as &ldquo;SUM0.&rdquo; In one embodiment, SUM<highlight><bold>0</bold></highlight> is computed using one or more carry save adders (e.g., adders <highlight><bold>216</bold></highlight>, <highlight><bold>218</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). The front computation process is completed, in one embodiment, by setting the variable v to a value of 1, in block <highlight><bold>314</bold></highlight>, where the variable v roughly indicates which operation, within a particular round, is being performed. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> The inner loop of the algorithm (blocks <highlight><bold>316</bold></highlight>-<highlight><bold>332</bold></highlight>), which represents the systolic computation process (e.g., block <highlight><bold>204</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>) of a particular round, then begins. First, the variable v is evaluated, in block <highlight><bold>316</bold></highlight>, to determine if it is equal to 1. In one embodiment, this evaluation is performed by multiplexer <highlight><bold>220</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>). If v is equal to 1, then the multiplexer selects the outputs of the front computation process (e.g., the outputs of adder <highlight><bold>218</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>) as the inputs to the inner loop calculations. If v is not equal to 1, then the multiplexer selects the outputs of other inner loop components (e.g., registers TEMP<highlight><bold>1</bold></highlight> <highlight><bold>234</bold></highlight> and TEMP<highlight><bold>2</bold></highlight> <highlight><bold>238</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>) as the inputs to the inner loop calculations. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> The sum of the multiplexer outputs is calculated in either block <highlight><bold>318</bold></highlight> or <highlight><bold>320</bold></highlight>. For ease of description, this sum is referred to as &ldquo;SUM1.&rdquo; If v equals 1, then SUM<highlight><bold>1</bold></highlight>&equals;SUM<highlight><bold>0</bold></highlight> is calculated, in block <highlight><bold>318</bold></highlight>. Thus, in one embodiment, SUM<highlight><bold>1</bold></highlight> represents the sum calculated by the front computation process after the carry has been incorporated. If v is not equal to 1, then SUM<highlight><bold>1</bold></highlight>&equals;NLF<highlight><subscript>r </subscript></highlight>(BNEW)&plus;SUM<highlight><bold>2</bold></highlight> is calculated, in block <highlight><bold>320</bold></highlight>. As will be described below, SUM<highlight><bold>2</bold></highlight>&equals;W<highlight><subscript>j</subscript></highlight>&plus;k<highlight><subscript>i&plus;1</subscript></highlight>&plus;D was pre-calculated during a previous round (see block <highlight><bold>325</bold></highlight>). In one embodiment, SUM<highlight><bold>1</bold></highlight> represents the sum of TEMP<highlight><bold>1</bold></highlight> <highlight><bold>234</bold></highlight> and TEMP<highlight><bold>2</bold></highlight> <highlight><bold>238</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>), and SUM<highlight><bold>1</bold></highlight> is calculated by a full adder (e.g., adder <highlight><bold>222</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). In block <highlight><bold>322</bold></highlight>, SUM<highlight><bold>1</bold></highlight> is then circularly left shifted by the appropriate number of bits, s<highlight><subscript>i</subscript></highlight>, for the operation. For ease of description the shifted version of SUM<highlight><bold>1</bold></highlight> is referred to as &ldquo;RESULT.&rdquo; In one embodiment, the circular shift is performed by a shifter (e.g., shifter <highlight><bold>224</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> RESULT is then added, in block <highlight><bold>324</bold></highlight>, to the contents of register B (<highlight><bold>208</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). In one embodiment, this sum is calculated by a full adder (e.g., adder <highlight><bold>226</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>), and is temporarily stored in a register (e.g., register <highlight><bold>228</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>) as variable BNEW. BNEW is the result of the end of an operation, and will later be stored in register <highlight><bold>208</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>), after the registers have been rotated. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> A portion of a next operation is calculated in parallel with any or all of blocks <highlight><bold>316</bold></highlight>-<highlight><bold>326</bold></highlight>, by calculating &ldquo;SUM2,&rdquo; which equals the sum of W<highlight><subscript>j</subscript></highlight>, k<highlight><subscript>i&plus;1</subscript></highlight>, and the contents of register D <highlight><bold>212</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>), in block <highlight><bold>325</bold></highlight>. In one embodiment, this calculation is performed by adders <highlight><bold>230</bold></highlight>, <highlight><bold>232</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>). By pre-calculating this value for the next operation in parallel with the current operation, the critical path for each operation performed in the systolic computation portion is reduced. Accordingly, the time to calculate each round is reduced. Another portion of the next operation is then calculated, in block <highlight><bold>326</bold></highlight>, when a second NLF (e.g., NLF<highlight><subscript>r </subscript></highlight><highlight><bold>236</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>) is applied to BNEW, and the contents of registers B <highlight><bold>208</bold></highlight> and C <highlight><bold>210</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>). </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> In one embodiment, the operation variable, i, is then incremented by 1, in block <highlight><bold>327</bold></highlight>. In other embodiments, i could be incremented at an earlier or later time. The registers A, B, C, and D are then rotated or replaced, in block <highlight><bold>328</bold></highlight>, so that A&equals;D, D&equals;C, and C&equals;B, and B&equals;BNEW (i.e., the result from the previous operation). The variable v is then incremented by 1, in block <highlight><bold>330</bold></highlight>, and a determination is made, in block <highlight><bold>332</bold></highlight>, whether the variable v&equals;16. If not, it indicates that the round has not yet completed, and the procedure repeats the inner loop, as shown. Specifically, the multiplexer will be called upon to pass the values through that are necessary to perform the next operation. If the variable v&equals;16, it indicates that the round is completed. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> If the round is completed, then, in block <highlight><bold>337</bold></highlight>, the contents of registers A, B, C, and D are added to the values previously retained in block <highlight><bold>309</bold></highlight>. A determination is then made, in block <highlight><bold>334</bold></highlight>, whether the variable r is less than 3. If so, it indicates that one or more rounds must still be completed for the message block. In that case, the variable r is incremented by 1 in block <highlight><bold>336</bold></highlight>, and the procedure repeats the middle loop, as shown. Specifically, the front computation process will again be performed for the next round&apos;s first operation, and then the systolic computation process will be performed for the remaining fifteen operations. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> If the fourth round is completed, a determination is made, in block <highlight><bold>338</bold></highlight>, whether all message blocks, M<highlight><subscript>l</subscript></highlight>, . . . , M<highlight><subscript>n</subscript></highlight>, that comprise the message have been processed. If not, then the process repeats the outer loop, as shown. Specifically, the next message block is selected and divided, and the four rounds (i.e., 64 operations) are performed for the next message block. If all message blocks have been processed, then the method ends. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> The above description indicates that the algorithm operates on input words, specifically 32-bit words. In other embodiments, the algorithm could be adapted to operate on larger or smaller words. In addition, in one embodiment, the algorithm and/or the system within which the algorithm operates could be adapted to receive message bits in a serial manner, rather than a parallel manner. In such an embodiment, a sequence of serial bits could be fed into one or more registers (e.g., registers A, B, C, and D, or other registers), and once the register is filled to the register size, the word could be processed as described above. The next set of serial bits would then be loaded into the register, and the process would repeat. Accordingly, in one embodiment, the algorithm could include performing a serial to parallel conversion process, prior to performing a round that operates on the set of serial bits that comprise a word. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> In one embodiment, some or all of the algorithm operations are performed within an ASIC, where the operations are performed using logic. In other embodiments, some or all of the algorithm operations are performed using software. </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> The various embodiments could be used in many different types of devices. For example, they could be used in wired or wireless communication devices (e.g., radios, pagers, cellular or conventional telephones), &ldquo;smart cards,&rdquo; PCICM cards, access tokens, routers, switches, and any other device that utilizes a one-way hash algorithm. These examples are provided for purposes of illustration and are not intended to limit the use of the various embodiments in other applications. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> The message to be processed could originate at a particular device. For example, the message could be stored within a device or could be generated in real time by the device (e.g., voice data from the device&apos;s user). Alternatively, the message could be received from a remote device. In addition, the message digest calculated using the various embodiments could be stored, used or consumed internally by a device, or it could be transmitted to another device for storage and/or processing. </paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates an electronic device in which the embodiments of the invention may be practiced, in accordance with one embodiment of the present invention. Device <highlight><bold>400</bold></highlight> includes integrated circuit <highlight><bold>402</bold></highlight>, computer readable storage medium <highlight><bold>404</bold></highlight>, and external interface <highlight><bold>406</bold></highlight>, in one embodiment. </paragraph>
+<paragraph id="P-0085" lvl="0"><number>&lsqb;0085&rsqb;</number> When all or part of the methods of the various embodiments are implemented in hardware, integrated circuit <highlight><bold>402</bold></highlight> includes one or more ASICs, each of which include the logic for performing all or part of the one-way hash function (e.g., the front computation logic block <highlight><bold>202</bold></highlight> and the systolic computation logic block <highlight><bold>204</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). In such an embodiment, device <highlight><bold>400</bold></highlight> may also include a processor (not shown), which places the input message block in a format that is useable by the ASIC. For example, a processor may be used to pad the message, divide the message into blocks, and/or initialize various registers. The A, B, C, D registers could be implemented in integrated circuit <highlight><bold>402</bold></highlight>, a processor, computer readable storage medium <highlight><bold>404</bold></highlight>, or another device. </paragraph>
+<paragraph id="P-0086" lvl="0"><number>&lsqb;0086&rsqb;</number> The message and/or message blocks could be stored in a memory device, such as computer readable storage medium <highlight><bold>404</bold></highlight>, or the message and/or message blocks could be received through external interface <highlight><bold>406</bold></highlight>. Computer readable storage medium <highlight><bold>404</bold></highlight> could be, for example, RAM, ROM, hard drive, CD, magnetic disk, disk drive, a combination of these types of storage media, and/or other types of storage media that are well known to those of skill in the art. When all or part of the methods of the various embodiments are implemented in software, computer readable storage medium <highlight><bold>404</bold></highlight> also could be used to store computer executable instructions, which carry out all or part of the methods, when executed. In such an embodiment, integrated circuit <highlight><bold>402</bold></highlight> could be a microprocessor, ASIC or another type of integrated circuit capable of executing the computer executable instructions. In other embodiments, where storage of computer executable instructions, message data, message digests, or other data is not necessary, device <highlight><bold>400</bold></highlight> may not include storage medium <highlight><bold>404</bold></highlight>. </paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number> External interface <highlight><bold>406</bold></highlight> could be, for example, a user interface (e.g., a keyboard, speaker, or other input device) or an interface to a wired or wireless external network, system or device. External interface <highlight><bold>406</bold></highlight> could be used to receive input messages and/or message blocks, and/or could be used to transmit or receive message digests, digital signatures, or verification or other data that was generated using an embodiment of the present invention. Data received and/or transmitted by external interface <highlight><bold>406</bold></highlight> could be sent to or received from, respectively, either or both integrated circuit <highlight><bold>402</bold></highlight> and/or storage medium <highlight><bold>404</bold></highlight>. In other embodiments, where transmission or receipt of message data, message digests or other data is not necessary, device <highlight><bold>400</bold></highlight> may not include external interface <highlight><bold>406</bold></highlight>. </paragraph>
+<paragraph id="P-0088" lvl="7"><number>&lsqb;0088&rsqb;</number> Conclusion </paragraph>
+<paragraph id="P-0089" lvl="0"><number>&lsqb;0089&rsqb;</number> Various embodiments of a one-way hash algorithm have been described. The various embodiments can be used to produce a message digest that is identical to a message digest produced by MD5, given the same input message. However, the algorithms of the various embodiments produce the message digest using the equivalent of approximately half the clock cycles and less logic depth than MD5. </paragraph>
+<paragraph id="P-0090" lvl="0"><number>&lsqb;0090&rsqb;</number> In the foregoing detailed description, reference is made to the accompanying drawings, which form a part hereof, and in which are shown by way of illustration specific embodiments in which the invention may be practiced. These embodiments are described in sufficient detail to enable those skilled in the art to practice the invention. </paragraph>
+<paragraph id="P-0091" lvl="0"><number>&lsqb;0091&rsqb;</number> It will be appreciated by those of ordinary skill in the art that any arrangement, which is calculated to achieve the same purpose, may be substituted for the specific embodiment shown. In addition, although certain applications of the embodiments have been listed above, the embodiments could be incorporated into any other application that could benefit from the use of a one-way hash algorithm. The various embodiments could also be used, with or without modifications, as compatible, alternative implementations of other hash algorithms. For example, but not by way of limitation, the embodiments could be used as compatible algorithms to future MD5 implementations. Therefore, all such applications and alternative implementations are intended to fall within the spirit and scope of the present invention. </paragraph>
+<paragraph id="P-0092" lvl="0"><number>&lsqb;0092&rsqb;</number> This application is intended to cover any adaptations or variations of the present invention. The foregoing detailed description is, therefore, not to be taken in a limiting sense, and it will be readily understood by those skilled in the art that various other changes in the details, materials, and arrangements of the parts and steps, which have been described and illustrated in order to explain the nature of this invention, may be made without departing from the spirit and scope of the invention as expressed in the adjoining claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for creating a message digest from a message, wherein a sequence of input words is derived from the message, and the method comprises: 
+<claim-text>performing a portion of an operation, wherein the operation is a set of processes that operates on a word of the sequence; </claim-text>
+<claim-text>performing a portion of a next operation in parallel with performing the portion of the operation, wherein the next operation is a set of processes that operates on a next word of the sequence; and </claim-text>
+<claim-text>repeating performing the portion of the operation and performing the portion of the next operation until processes have been performed that sequentially operate on all remaining words of the sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the operation comprises: 
+<claim-text>performing a non-linear function on three of four variables stored in three of four registers; </claim-text>
+<claim-text>adding an output of the non-linear function to the word, a constant word, and a fourth variable of the four variables, resulting in a first sum; </claim-text>
+<claim-text>circularly shifting the first sum by a number of bits, resulting in a shifted result; </claim-text>
+<claim-text>adding the shifted result to contents of one of the four registers, resulting in a second sum; and </claim-text>
+<claim-text>replacing contents of one of the four registers with the second sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising: 
+<claim-text>temporarily storing the second sum, resulting in a stored sum, and </claim-text>
+<claim-text>wherein replacing the contents of one of the four registers comprises replacing the contents with the stored sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein performing the portion of the next operation comprises: 
+<claim-text>performing a non-linear function on three of four variables; and </claim-text>
+<claim-text>adding together the next word, a constant word, and a fourth variable of the four variables, resulting in a first sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further comprising performing remaining processes of the next operation after performing the portion of the next operation. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein performing the remaining processes comprises: 
+<claim-text>adding an output of the non-linear function to the first sum, resulting in a second sum; </claim-text>
+<claim-text>circularly shifting the second sum by a number of bits, resulting in a shifted result; and </claim-text>
+<claim-text>adding the shifted result to one of the four variables. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein when the operation is a first operation being performed on a first word of the sequence, the method further comprises: 
+<claim-text>performing a second portion of the operation before performing the portion of the operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the second portion of the operation comprises: 
+<claim-text>performing a non-linear function on three of four variables stored in three of four registers; and </claim-text>
+<claim-text>adding an output of the non-linear function to the word, a constant word, and a fourth variable of the four variables, resulting in a first sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the first portion of the operation comprises: 
+<claim-text>circularly shifting the first sum by a number of bits, resulting in a shifted result; </claim-text>
+<claim-text>adding the shifted result to contents of one of the four registers, resulting in a second sum; and </claim-text>
+<claim-text>replacing contents of one of the four registers with the second sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein performing the portion of the operation and performing the portion of the next operation are completed during a first clock cycle, and the method further comprises performing remaining processes of the next operation during a next clock cycle. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein performing the portion of the first operation is completed during a first clock cycle, and when the operation is a first operation being performed on a first word of the sequence, the method further comprises: 
+<claim-text>performing a second portion of the operation during a preceding clock cycle. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the message comprises one or more 512-bit blocks, each of which includes sixteen 32-bit words, and the message digest includes 128 bits. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the message digest is identical to another message digest computed by MD5, given a same message. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A computer readable medium having computer executable instructions stored thereon for performing a method for creating a message digest from a message, wherein a sequence of input words is derived from the message, and the method comprises: 
+<claim-text>performing a portion of an operation, wherein the operation is a set of processes that operates on a word of the sequence; </claim-text>
+<claim-text>performing a portion of a next operation in parallel with performing the portion of the operation, wherein the next operation is a set of processes that operates on a next word of the sequence; and </claim-text>
+<claim-text>repeating performing the portion of the operation and performing the portion of the next operation until processes have been performed that sequentially operate on all remaining words of the sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the operation comprises: 
+<claim-text>performing a non-linear function on three of four variables stored in three of four registers; </claim-text>
+<claim-text>adding an output of the non-linear function to the word, a constant word, and a fourth variable of the four variables, resulting in a first sum; </claim-text>
+<claim-text>circularly shifting the first sum by a number of bits, resulting in a shifted result; </claim-text>
+<claim-text>adding the shifted result to contents of one of the four registers, resulting in a second sum; and </claim-text>
+<claim-text>replacing contents of one of the four registers with the second sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein performing the portion of the next operation comprises: 
+<claim-text>performing a non-linear function on three of four variables; and </claim-text>
+<claim-text>adding together the next word, a constant word, and a fourth variable of the four variables, resulting in a first sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the method further comprises performing remaining processes of the next operation after performing the portion of the next operation. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein performing the remaining processes comprises: 
+<claim-text>adding an output of the non-linear function to the first sum, resulting in a second sum; </claim-text>
+<claim-text>circularly shifting the second sum by a number of bits, resulting in a shifted result; and </claim-text>
+<claim-text>adding the shifted result to one of the four variables. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein when the operation is a first operation being performed on a first word of the sequence, the method further comprises: 
+<claim-text>performing a second portion of the operation before performing the portion of the operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the second portion of the operation comprises: 
+<claim-text>performing a non-linear function on three of four variables stored in three of four registers; and </claim-text>
+<claim-text>adding an output of the non-linear function to the word, a constant word, and a fourth variable of the four variables, resulting in a first sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein the first portion of the operation comprises: 
+<claim-text>circularly shifting the first sum by a number of bits, resulting in a shifted result; </claim-text>
+<claim-text>adding the shifted result to contents of one of the four registers, resulting in a second sum; and </claim-text>
+<claim-text>replacing contents of one of the four registers with the second sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein performing the portion of the operation and performing the portion of the next operation are completed during a first clock cycle, and the method further comprises performing remaining processes of the next operation during a next clock cycle. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein performing the portion of the first operation is completed during a first clock cycle, and when the operation is a first operation being performed on a first word of the sequence, the method further comprises: 
+<claim-text>performing a second portion of the operation during a preceding clock cycle. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the message comprises one or more 512-bit blocks, each of which includes sixteen 32-bit words, and the message digest includes 128 bits. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The computer readable medium as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the message digest is identical to another message digest computed by MD5, given a same message. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. An integrated circuit for creating a message digest from a message, wherein a sequence of input words is derived from the message, and the integrated circuit comprises: 
+<claim-text>a first logic block which performs a portion of an operation during a clock cycle, wherein the operation is a set of processes that operates on a word of the sequence, performs a portion of a next operation during the clock cycle, wherein the next operation is a set of processes that operates on a next word of the sequence, and repeats performing the portion of the operation and performing the portion of the next operation until processes have been performed that sequentially operate on all remaining words of the sequence, </claim-text>
+<claim-text>wherein additional passes through the first logic block are made until calculations have been performed that sequentially operate on all remaining words of the sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein the first logic block comprises: 
+<claim-text>a non-linear function block, which receives three of four variables; and </claim-text>
+<claim-text>one or more first adders, which add together the next word, a constant word, and a fourth variable of the four variables, resulting in a first sum; </claim-text>
+<claim-text>a second adder, which adds an output of the non-linear function block to the first sum, resulting in a second sum; </claim-text>
+<claim-text>a shifter, coupled to the second adder, which circularly shifts the second sum by a number of bits, resulting in a shifted result; and </claim-text>
+<claim-text>a third adder, coupled to the shifter, which adds the shifted result to one of the four variables. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, further comprising: 
+<claim-text>a multiplexer, coupled to the second adder, which passes the output of the non-linear function and the first sum to the second adder. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, further comprising: 
+<claim-text>a second logic block, coupled to the first logic block, which performs a second portion of the operation during a preceding clock cycle. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the second logic block comprises: 
+<claim-text>a non-linear function block, which receives three of four variables stored in three of four registers; and </claim-text>
+<claim-text>one or more first adders, coupled to the non-linear function block, which add an output of the non-linear function block to the word, a constant word, and a fourth variable of the four variables, resulting in a first sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein the message comprises one or more 512-bit blocks, each of which includes sixteen 32-bit words, and the message digest includes 128 bits. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein the message digest is identical to another message digest computed by MD5, given a same message. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. An integrated circuit for creating a message digest from a message, wherein a sequence of input words is derived from the message, and the integrated circuit comprises: 
+<claim-text>a front computation logic block, which performs a portion of a first operation within a round of multiple operations during one or more clock cycles, wherein the first operation is a set of processes that operates on a word of the sequence; and </claim-text>
+<claim-text>a systolic computation logic block, coupled to the front computation logic block, which performs a second portion of the first operation during one or more subsequent clock cycles, and performs a portion of a next operation during the one or more subsequent clock cycles, wherein the next operation is a set of processes that operates on a next word of the sequence, and the systolic computation block iterates until remaining operations within the round of multiple operations are completed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 33</dependent-claim-reference>, wherein the front computation logic block comprises: 
+<claim-text>a non-linear function block, which receives three of four variables stored in three of four registers; and </claim-text>
+<claim-text>one or more first adders, coupled to the non-linear function block, which add an output of the non-linear function block to the word, a constant word, and a fourth variable of the four variables, resulting in a first sum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 33</dependent-claim-reference>, wherein the systolic computation logic block comprises: 
+<claim-text>a non-linear function block, which receives three of four variables; and </claim-text>
+<claim-text>one or more first adders, which add together the next word, a constant word, and a fourth variable of the four variables, resulting in a first sum; </claim-text>
+<claim-text>a second adder, which adds an output of the non-linear function block to the first sum, resulting in a second sum; </claim-text>
+<claim-text>a shifter, coupled to the second adder, which circularly shifts the second sum by a number of bits, resulting in a shifted result; and </claim-text>
+<claim-text>a third adder, coupled to the shifter, which adds the shifted result to one of the four variables. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The integrated circuit as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 33</dependent-claim-reference>, wherein the message digest is identical to another message digest computed by MD5, given a same message. </claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. An electronic device comprising: 
+<claim-text>an integrated circuit, which creates a message digest from a message, wherein a sequence of input words is derived from the message, and the message digest is created by performing a portion of an operation, wherein the operation is a set of processes that operates on a word of the sequence, performing a portion of a next operation in parallel with performing the portion of the operation, wherein the next operation is a set of processes that operates on a next word of the sequence, and repeating performing the portion of the operation and performing the portion of the next operation until processes have been performed that sequentially operate on all remaining words of the sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The electronic device as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the integrated circuit is a processor, and the electronic device further comprises: 
+<claim-text>a computer readable medium, coupled to the integrated circuit, which has computer executable instructions stored thereon that cause the processor to perform the portion of the operation, perform the portion of the next operation, and repeat performing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The electronic device as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the integrated circuit comprises: 
+<claim-text>a first logic block, which performs the portion of the operation during a clock cycle, performs the portion of the next operation during the clock cycle, and repeats performing the portion of the operation and performing the portion of the next operation until processes have been performed that sequentially operate on all remaining words of the sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. The electronic device as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 39</dependent-claim-reference>, wherein the integrated circuit further comprises: 
+<claim-text>a second logic block, coupled to the first logic block, which performs a second portion of the operation during a preceding clock cycle. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. The electronic device as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, further comprising: 
+<claim-text>an external interface, which transmits the message digest. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. The electronic device as claimed in <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, further comprising: 
+<claim-text>an external interface, which transmits data that was generated from the message digest.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002666A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002666A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002666A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002666A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002666A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004970A1-20030102-D00000.TIF SYSTEM "US20030004970A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004970A1-20030102-D00001.TIF SYSTEM "US20030004970A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004970A1-20030102-D00002.TIF SYSTEM "US20030004970A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004970A1-20030102-D00003.TIF SYSTEM "US20030004970A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004970</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894073</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>200000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method for releasing update locks on rollback to savepoint</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Julie</given-name>
+<middle-name>Ann</middle-name>
+<family-name>Watts</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Morgan Hill</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>SAWYER LAW GROUP</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. Box 51418</address-1>
+<city>Palo Alto</city>
+<state>CA</state>
+<postalcode>94303</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method for selectively releasing locks when rolling back to a savepoint includes: providing at least one savepoint in a transaction, where at least one lock is assigned to the at least one savepoint and at least one lock is assigned to the transaction; rolling back the transaction to the at least one savepoint; and releasing the at least one lock assigned to the at least one savepoint, where the at least one lock assigned to the transaction is maintained. Locks which are to persist until commit are assigned to the transaction. Locks which are to be released when rolled back to a savepoint are assigned to the savepoint. When a rollback to the savepoint occurs, locks assigned to the savepoint are released while locks assigned to the transaction are maintained. In this manner, selective release of locks is provided without incurring unduly burdensome overhead. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to database systems, and more particularly to transactions performed on database systems. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> In relational database management systems (RDBMS), a &ldquo;transaction&rdquo; refers to an exchange between a workstation and a program, two workstations, or two programs that accomplish a particular action or result. The transaction begins when the exchange begins and ends when commitment is made to the particular action or result. Several conventional RDBMS support sub-transactions through the use of savepoints. Savepoints are created between the beginning of the transaction and the commit. The savepoints allow modifications made to data since a savepoint to be undone. This is referred to herein as &ldquo;rollback to a savepoint&rdquo;. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> For example, assume that a user, through a workstation and/or application, accesses a RDBMS for a travel agency. The user wishes to book airline, hotel, and rental car reservations. The user researches available flights and books airline reservations. A first savepoint is established. The user further researches available hotels and books hotel reservations. A second savepoint is established. The user then researches available rental cars but cannot find a suitable reservation which matches the hotel reservation. The user may then roll back to the first savepoint to search for a different hotel. The data modified the first savepoint are undone so that the user can book reservations at a different hotel. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> For transactions to occur with integrity, two transactions must be prevented from updating the same piece of data at the same time. Locks on the data being updated are typically used. For example, if user A, performing transaction A, is updating data pertaining to reservations for an airline flight, a lock is established on the airline flight data. With this lock, user B, performing transaction B, is prevented from updating the same airline flight data at the same time as user A, and must wait until transaction A completes and releases the lock. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Similarly, for transactions to read data with integrity, a read transaction must be prevented from seeing data that has been changed by an updating transaction but not yet committed, and be allowed to see data that has been changed by an updating transaction as soon as it is committed. Locks on the data being read are typically used. For example, if user A, performing transaction A, is updating data pertaining to reservations for an airline flight, a lock is established on the airline flight data. User B, performing read transaction B, cannot read that data until transaction A completes and releases the lock. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> If a read transaction requires read stability or read repeatability for the duration of the transaction, read locks are held until the read transaction is completed. Thus, if transaction C is a read transaction that reads airline reservation information and that requires read stability or repeatability, transaction C will establish locks on all data read. Another transaction, D, wishing to update the airline reservation information, must wait for read transaction C to complete and release the lock. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> When rollback to savepoint occurs, one must consider locks acquired since the savepoint. Those locks taken to provide read stability or repeatability of data read since the savepoint must not be released, while those locks taken to keep the changes, now being rolled back, from being seen by other transactions may be released. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Accordingly, there exists a need for a method for selectively releasing locks when rolling back to a savepoint. The method should not incur unduly burdensome overhead. The present invention addresses such a need. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A method for selectively releasing locks when rolling back to a savepoint includes: providing at least one savepoint in a transaction, where at least one lock is assigned to the at least one savepoint and at least one lock is assigned to the transaction; rolling back the transaction to the at least one savepoint; and releasing the at least one lock assigned to the at least one savepoint, where the at least one lock assigned to the transaction is maintained. Locks which are to persist until commit are assigned to the transaction. Locks which are to be released when rolled back to a savepoint are assigned to the savepoint. When a rollback to the savepoint occurs, locks assigned to the savepoint are released while locks assigned to the transaction are maintained. In this manner, selective release of locks is provided without incurring unduly burdensome overhead.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE FIGURES </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a flowchart illustrating a preferred embodiment of a method for selectively releasing locks when rolling back to a savepoint in accordance with the present invention. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flowchart illustrating a preferred embodiment of the method for selectively releasing locks when rolling back through a sequence of savepoints in accordance with the present invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a preferred embodiment of a system which utilizes the method for selectively releasing locks when rolling back to a savepoint in accordance with the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The present invention provides a method for selectively releasing locks when rolling back to a savepoint. The following description is presented to enable one of ordinary skill in the art to make and use the invention and is provided in the context of a patent application and its requirements. Various modifications to the preferred embodiment will be readily apparent to those skilled in the art and the generic principles herein may be applied to other embodiments. Thus, the present invention is not intended to be limited to the embodiment shown but is to be accorded the widest scope consistent with the principles and features described herein. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The method in accordance with the present invention utilizes the concept of savepoint-transaction teams. Locks which are to persist until commit are assigned to the transaction. Locks which are released when rolled back to a savepoint are assigned to the savepoint. When a roll back to the savepoint occurs, the locks assigned to the savepoint are released while the locks assigned to the transaction are maintained. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> To more particularly describe the features of the present invention, please refer to <cross-reference target="DRAWINGS">FIGS. 1 through 3</cross-reference> in conjunction with the discussion below. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a flowchart illustrating a preferred embodiment of a method for selectively releasing locks when rolling back to a savepoint in accordance with the present invention. First, at least one savepoint in a transaction is provided, via step <highlight><bold>102</bold></highlight>, where the at least one lock is assigned to the at least one savepoint and at least one lock is assigned to the transaction. In the preferred embodiment, locks which are to persist until commit are assigned to the transaction, and locks which are to be released when rolled back to the at least one savepoint is assigned to the at least one savepoint. When the transaction is rolled back to the at least one savepoint, via step <highlight><bold>104</bold></highlight>, the at least one lock assigned to the at least one savepoint is released, via step <highlight><bold>106</bold></highlight>, while the at least one lock assigned to the transaction is maintained. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> For example, using the RDBMS for a travel agency example above, assume that the user wishes to book airline, hotel, and rental car reservations. The user researches available flights and books airline reservations. Locks acquired are assigned to the transaction. When the user is done with the airline reservations, a savepoint is established. The savepoint and the transaction becomes a team. The user then researches available hotels. Data which are to be updated in booking the hotel reservations are locked with &ldquo;update locks&rdquo;. Data which are read by the user in booking the hotel reservations are also locked with &ldquo;read locks&rdquo;. The update locks are assigned to the savepoint, and the read locks are assigned to the transaction, via step <highlight><bold>102</bold></highlight>. Assume further that the user researches available hotels for a companion but cannot find a suitable reservation. The user then rolls back to the savepoint to change the hotel reservation, via step <highlight><bold>104</bold></highlight>. In rolling back to the savepoint, the update locks assigned to the savepoint are released, while the read locks assigned to the transaction are maintained, via step <highlight><bold>106</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In addition to rolling back to the most recent savepoint, as illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the method in accordance with the present invention may also be used with a sequence of savepoints, where the transaction is rolled back through more than one savepoint. In this scenario, as each savepoint in the sequence is established, it joins the savepoint-transaction team. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flowchart illustrating a preferred embodiment of the method for selectively releasing locks when rolling back through a sequence of savepoints in accordance with the present invention. First, a sequence of savepoints in a transaction is provided, via step <highlight><bold>202</bold></highlight>, where at least one lock is assigned to each of the savepoints and at least one lock is assigned to the transaction. When the transaction is rolled back to one of the sequence of savepoints, via step <highlight><bold>204</bold></highlight>, the at least one lock assigned to the one of the sequence of savepoints is released, and the at least one lock assigned to each subsequent savepoint is also released, via step <highlight><bold>206</bold></highlight>. The at least one lock assigned to the transaction and at least one lock assigned to preceding savepoints are maintained. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> For example, using the RDBMS for a travel agency example above, the user wishes to book airline, hotel, and rental car reservations. The user books the airline reservations, and the locks acquired are assigned to the transaction. When the user is done with the airline reservations, a first savepoint is established. The first savepoint and the transaction become a team. The user researches available hotels and books hotel reservations. A first set of update locks acquired after the first savepoint is assigned to the first savepoint. A first set of read locks acquired after the first savepoint is assigned to the transaction. When the user is done with the hotel reservations, a second savepoint is established. The second savepoint is added to the team. The user then researches available rental cars. A second set of update locks acquired after the second savepoint is assigned to the second savepoint. A second set of read locks acquired after the second savepoint is assigned to the transaction. The first and second savepoints create a sequence of savepoints, via step <highlight><bold>202</bold></highlight>. If the user later discovers that he/she cannot find a suitable rental car which matches the hotel reservation, then the user rolls back to the first savepoint to search for a different hotel, via step <highlight><bold>204</bold></highlight>. In rolling back to the first savepoint, the first set of update locks assigned to the first savepoint is released, via step <highlight><bold>206</bold></highlight>. The second savepoint is a subsequent savepoint. Thus, in rolling back to the first savepoint, the second set of update locks assigned to the second savepoint is also released. The first and second sets of read locks assigned to the transaction are maintained. In this example, there are no savepoints preceding the first savepoint. However, it there was, then the set of locks assigned to the preceding savepoint is maintained as well, via step <highlight><bold>206</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a preferred embodiment of a system which utilizes the method for selectively releasing locks when rolling back to a savepoint in accordance with the present invention. The system comprises a relational data system <highlight><bold>308</bold></highlight> (RDS) and a data manager <highlight><bold>310</bold></highlight>. The data manager <highlight><bold>310</bold></highlight> performs the tasks requested by a user <highlight><bold>302</bold></highlight>, a workstation <highlight><bold>304</bold></highlight>, or an application <highlight><bold>306</bold></highlight>. The RDS <highlight><bold>308</bold></highlight> functions as an interface between the user <highlight><bold>302</bold></highlight>, workstation <highlight><bold>304</bold></highlight>, or application <highlight><bold>306</bold></highlight> and the data manager <highlight><bold>310</bold></highlight>. The system also comprises a log manager <highlight><bold>312</bold></highlight>, a recovery manager <highlight><bold>314</bold></highlight>, and a lock manager <highlight><bold>316</bold></highlight>. The log manager <highlight><bold>312</bold></highlight> maintains a log of tasks performed in the system. The recovery manager <highlight><bold>314</bold></highlight> manages rollbacks to savepoints and other tasks, such as transaction commit and system restart. The lock manager <highlight><bold>316</bold></highlight> manages data locks. In the preferred embodiment, the method in accordance with the present invention is implemented as software at the data manager <highlight><bold>310</bold></highlight> and the recovery manager <highlight><bold>314</bold></highlight>. However, it may be implemented in other ways without departing from the spirit and scope of the present invention. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In the preferred embodiment, as the user <highlight><bold>302</bold></highlight>, workstation <highlight><bold>304</bold></highlight>, or application <highlight><bold>306</bold></highlight>, through the RDS <highlight><bold>308</bold></highlight>, progresses in a transaction, the data manager <highlight><bold>310</bold></highlight> requests locks from the lock manager <highlight><bold>316</bold></highlight> where appropriate. The lock manager <highlight><bold>316</bold></highlight> then creates and maintains the locks. The present invention relies on the capacity of the lock manager <highlight><bold>316</bold></highlight> to grant otherwise incompatible locks to both the transaction and the savepoint(s) by virtue of the fact that the transaction and the savepoint(s) are a team. When a savepoint is established, the data manager <highlight><bold>310</bold></highlight> assigns subsequent locks to either the savepoint or the transaction. All savepoints and data modifications are logged to the recovery log by the data manager <highlight><bold>310</bold></highlight> using the services of the log manager <highlight><bold>312</bold></highlight>. When a rollback to savepoint occurs, the recovery manager <highlight><bold>314</bold></highlight> receives the request and advises the data manager <highlight><bold>310</bold></highlight> to perform the rollback. The data manager <highlight><bold>310</bold></highlight> then applies undo log records previously written to the recovery log by the log manager <highlight><bold>312</bold></highlight> until the savepoint log record is encountered. The data manager <highlight><bold>310</bold></highlight> requests the lock manager <highlight><bold>316</bold></highlight> to release locks assigned to the savepoint and subsequent savepoints. The locks assigned to the transaction and preceding savepoints continue to be maintained by the lock manager <highlight><bold>316</bold></highlight> until commit. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Although the present invention is described in the context of the system illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, one of ordinary skill in the art will understand that the method can be utilized by other systems without departing from the spirit and scope of the present invention. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In the preferred embodiment, a savepoint may be subsequently released, for example, when it becomes clear the user will not rollback to the savepoint. When the savepoint is released, the method in accordance with the present invention may handle the locks assigned to the savepoint in one of two ways. The locks may be reassigned to the savepoint immediately preceding the released savepoint, or the knowledge of the released savepoints are maintained for purposes of releasing the locks if rollback to the preceding savepoint should occur. Other ways are possible without departing from the spirit and scope of the present invention. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> A method for selectively releasing locks when rolling back to a savepoint has been disclosed. The method utilizes the concept of savepoint-transaction teams. Locks which are to persist until commit are assigned to the transaction. Locks which are to be released when rolled back to a savepoint are assigned to the savepoint. When a roll back to the savepoint occurs, the locks assigned to the savepoint are released while the locks assigned to the transaction are maintained. In this manner, selective release of locks is provided without incurring unduly burdensome overhead. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Although the present invention has been described in accordance with the embodiments shown, one of ordinary skill in the art will readily recognize that there could be variations to the embodiments and those variations would be within the spirit and scope of the present invention. Accordingly, many modifications may be made by one of ordinary skill in the art without departing from the spirit and scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for selectively releasing locks on data, comprising the steps of: 
+<claim-text>(a) providing at least one savepoint in a transaction, wherein at least one lock is assigned to the at least one savepoint and at least one lock is assigned to the transaction; </claim-text>
+<claim-text>(b) rolling back the transaction to the at least one savepoint; and </claim-text>
+<claim-text>(c) releasing the at least one lock assigned to the at least one savepoint, wherein the at least one lock assigned to the transaction is maintained. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the providing step (a) comprises: 
+<claim-text>(a1) providing a sequence of savepoints in the transaction, wherein at least one lock is assigned to each of the savepoints and the at least one lock is assigned to the transaction. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the rolling step (b) comprises: 
+<claim-text>(b1) rolling back the transaction to one of a sequence of savepoints. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the releasing step (c) comprises: 
+<claim-text>(c1) releasing at least one lock assigned to one of a sequence of savepoints to which the transaction is rolled back; and </claim-text>
+<claim-text>(c2) releasing at least one lock assigned to subsequent savepoints, wherein the at least one lock assigned to the transaction and at least one lock assigned to preceding savepoints are maintained. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further comprising: 
+<claim-text>(c3) releasing another of the sequence of savepoints. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further comprising: 
+<claim-text>(c4) reassigning at least one lock assigned to the another of the sequence of savepoints to a preceding savepoint. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further comprising: 
+<claim-text>(c4) maintaining knowledge of the released another of the sequence of savepoints, such that if the transaction is rolled back to a preceding savepoint, the at least one lock assigned to the released another of the sequence of savepoints is released. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A method for selectively releasing locks on data, comprising the steps of: 
+<claim-text>(a) providing a sequence of savepoints in a transaction, wherein at least one lock is assigned to each of the savepoints and at least one lock is assigned to the transaction; </claim-text>
+<claim-text>(b) rolling back the transaction to one of the sequence of savepoints; </claim-text>
+<claim-text>(c) releasing the at least one lock assigned to the one of the sequence of savepoints; and </claim-text>
+<claim-text>(d) releasing the at least one lock assigned to subsequent savepoints, wherein the at least one lock assigned to the transaction and the at least one lock assigned to preceding savepoints are maintained. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A computer readable medium with program instructions for selectively releasing locks on data, comprising the instructions for: 
+<claim-text>(a) providing at least one savepoint in a transaction, wherein at least one lock is assigned to the at least one savepoint and at least one lock is assigned to the transaction; </claim-text>
+<claim-text>(b) rolling back the transaction to the at least one savepoint; and </claim-text>
+<claim-text>(c) releasing the at least one lock assigned to the at least one savepoint, wherein the at least one lock assigned to the transaction is maintained. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The medium of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the providing instruction (a) comprises instructions for: 
+<claim-text>(a1) providing a sequence of savepoints in the transaction, wherein at least one lock is assigned to each of the savepoints and the at least one lock is assigned to the transaction. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The medium of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the rolling instruction (b) comprises instructions for: 
+<claim-text>(b1) rolling back the transaction to one of a sequence of savepoints. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The medium of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the releasing instruction (c) comprises instructions for: 
+<claim-text>(c1) releasing at least one lock assigned to one of a sequence of savepoints to which the transaction is rolled back; and </claim-text>
+<claim-text>(c2) releasing at least one lock assigned to subsequent savepoints, wherein the at least one lock assigned to the transaction and at least one lock assigned to preceding savepoints are maintained. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The medium of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further comprising instructions for: 
+<claim-text>(c3) releasing another of the sequence of savepoints. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The medium of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, further comprising instructions for: 
+<claim-text>(c4) reassigning at least one lock assigned to the another of the sequence of savepoints to a preceding savepoint. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The medium of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, further comprising instructions for: 
+<claim-text>(c4) maintaining knowledge of the released another of the sequence of savepoints, such that if the transaction is rolled back to a preceding savepoint, the at least one lock assigned to the released another of the sequence of savepoints is released. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A computer readable medium with program instructions for selectively releasing locks on data, comprising the instructions for: 
+<claim-text>(a) providing a sequence of savepoints in a transaction, wherein at least one lock is assigned to each of the savepoints and at least one lock is assigned to the transaction; </claim-text>
+<claim-text>(b) rolling back the transaction to one of the sequence of savepoints; </claim-text>
+<claim-text>(c) releasing the at least one lock assigned to the one of the sequence of savepoints; and </claim-text>
+<claim-text>(d) releasing the at least one lock assigned to subsequent savepoints, wherein the at least one lock assigned to the transaction and the at least one lock assigned to preceding savepoints are maintained. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A system, comprising: 
+<claim-text>a transaction, wherein at least one lock is assigned to the transaction; and </claim-text>
+<claim-text>at least one savepoint associated with the transaction, wherein at least one lock is assigned to the at least one savepoint, wherein in a rollback to the at least one savepoint, the at least one lock assigned to the at least one savepoint is released, wherein the at least one lock assigned to the transaction is maintained. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A system, comprising: 
+<claim-text>a data manager for performing tasks on data, wherein the tasks comprise: 
+<claim-text>providing at least one savepoint in a transaction, </claim-text>
+<claim-text>assigning at least one lock to the at least one savepoint, </claim-text>
+<claim-text>assigning at least one lock to the transaction, </claim-text>
+<claim-text>responding to a recovery manager request for a rollback to the at least one savepoint by undoing operations performed since the at least one savepoint according to a log, and </claim-text>
+<claim-text>requesting to a lock manager for release of the at least one lock assigned to the at least one savepoint; </claim-text>
+</claim-text>
+<claim-text>the lock manager for creating and maintaining the at least one lock assigned to the at least one savepoint and the at least one lock assigned to the transaction, and for releasing the at least one lock assigned to the at least one savepoint when the transaction is rolled back to the at least one savepoint; </claim-text>
+<claim-text>a log manager for storing information on the tasks in the log, wherein the log comprises information concerning data and schema modifications, and the at least one savepoint; and </claim-text>
+<claim-text>the recovery manager, wherein the recovery manager processes the request for the rollback to the at least one savepoint by advising the data manager of the request.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004970A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004970A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004970A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004970A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

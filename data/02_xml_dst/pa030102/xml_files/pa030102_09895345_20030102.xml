@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005189A1-20030102-D00000.TIF SYSTEM "US20030005189A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005189A1-20030102-D00001.TIF SYSTEM "US20030005189A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005189A1-20030102-D00002.TIF SYSTEM "US20030005189A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005189A1-20030102-D00003.TIF SYSTEM "US20030005189A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005189A1-20030102-D00004.TIF SYSTEM "US20030005189A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005189</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895345</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F013/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>710</class>
+<subclass>033000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method for improving inline compression bandwidth for high speed buses</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Kenneth</given-name>
+<middle-name>Mark</middle-name>
+<family-name>Wilson</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Robert</given-name>
+<middle-name>Bruce</middle-name>
+<family-name>Aglietti</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>HEWLETT-PACKARD COMPANY</name-1>
+<name-2>Intellectual Property Administration</name-2>
+<address>
+<address-1>P.O. Box 272400</address-1>
+<city>Fort Collins</city>
+<state>CO</state>
+<postalcode>80527-2400</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method for inline bus data compression and decompression is disclosed. In one embodiment, data is selected for transfer via a data bus, the data is divided into byte sized divisions of the bus width, and each byte is compressed by an individual compression engine. The data is then properly sequenced, aligned and recombined and further transmitted in its compressed state. When required to be decompressed, the compressed data is again divided into bytes of compressed data, each byte being decompressed individually, and then restored to the bus in its uncompressed form, in essence, in the reverse order of the compression process. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to the field of computer memory management. Specifically, the present invention relates to a method and system for improving inline compression and decompression in computer bus operations. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> As the gap between hard drive access time and memory access time increases, it is increasingly desirable to locate more data in memory. This is increasingly important because the size of applications and data sets are increasing at a faster rate than the density of main memory. Furthermore, systems with multiprocessors may have many programs running simultaneously with each program having a relatively small number of pages of instructions and data in main memory. Hence, page faults may occur frequently. One way to increase the effective storage capacity of main memory is to compress its contents. However, conventional computer systems may be unable to efficiently manage the compressed data in main memory. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> In typical computer operations, data is in near-constant motion in and out of memory; between memory and processors or between other sources and destinations. As computers have gotten faster, the speed demands of compression/decompression engines have increased enormously. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Most conventional compression engines are capable of operating at data bus speeds but not at the bandwidth of, for example, a modern memory bus. This limitation slows down memory bus operations by adding latency to each transaction. A number of techniques have been employed to work around the speed loss associated with both compression and decompression. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> One common technique uses multiple compression/decompression engines which are each fed pieces of any given memory packet. Typically, the packet pieces are equally sized and very large, commonly on the order of one kilobyte or even larger. These large data &ldquo;chunks&rdquo; emerge from the compression engine at roughly the same compression ratio but with significant lag in comparison to bus speed. The piece sizes can vary from transaction to transaction, causing the compression engines to almost never be used at full efficiency and, more importantly, the size of compressed data blacks varies with every transaction, putting huge demands on buffers and significantly reducing overall speed. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> What is needed then, is a means of inline compression/decompression of data transmitted in computer buses that fully exploits the speed of available compression engines and exerts minimal impact on the speed and bandwidth of bus transactions as well as minimizing increased complexity of bus structures. A further need exists for such a means to efficiently use resources, such as the memory required for a table specifying the locations of the compressed data and on the compression/decompression engines themselves. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The present invention provides a method for the inline compression and decompression of data transmitted in computer buses that fully exploits the speed of available compression engines and exerts minimal impact on the speed and bandwidth of bus transactions. In addition, the implementation of embodiments of the disclosed invention minimize the need for increased complexity of bus structures. Furthermore, the disclosed invention can allow the efficient use of resources, such as the memory required for a table specifying the locations of the compressed data and efficient use of the compression/decompression engines themselves. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> A method for inline bus data compression and decompression is disclosed. In one embodiment, data is selected for transfer via a data bus, the data is divided into byte sized divisions of the bus width, and each byte is compressed by an individual compression engine. The data is then properly sequenced, aligned and recombined and further transmitted in its compressed state. When required to be decompressed, the compressed data is again divided into bytes of compressed data, each byte being decompressed individually, and then restored to the bus in its uncompressed form, in essence, in the reverse order of the compression process. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> These and other objects and advantages of the present invention will become obvious to those of ordinary skill in the art after having read the following detailed description of the preferred embodiments which are illustrated in the various drawing figures. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The operation of this invention can be best visualized by reference to the drawings. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a typical computer and bus architecture in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a typical inline data compression/decompression operation in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a memory bus inline compression/decompression operation in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a memory bus inline compression/decompression operation in accordance with one embodiment of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">SPECIFICATION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Reference will now be made in detail to the preferred embodiments of the invention, examples of which are illustrated in the accompanying drawings. While the invention will be described in conjunction with the preferred embodiments, it will be understood that they are not intended to limit the invention to these embodiments. On the contrary, the invention is intended to cover alternatives, modifications and equivalents, which may be included within the spirit and scope of the invention as defined by the appended claims. Furthermore, in the following detailed description of the present invention, numerous specific details are set forth in order to provide a thorough understanding of the present invention. However, it will be obvious to one of ordinary skill in the art that the present invention may be practiced without these specific details. In other instances, well-known methods, procedures, components, and circuits have not been described in detail so as not to unnecessarily obscure aspects of the present invention. Some portions of the detailed descriptions that follow are presented in terms of procedures, logic blocks, processing, and other symbolic representations of operations on data bits within a computer. These descriptions and representations are the means used by those skilled in the data processing arts to most effectively convey the substance of their work to others skilled in the art. A procedure, logic block, process, etc., is here, and generally, conceived to be a self-consistent sequence of steps or instructions leading to a desired result. The steps are those requiring physical manipulations of physical quantities. Usually, though not necessarily, these quantities take the form of electrical or magnetic signals capable of being stored, transferred, combined, compared, and otherwise manipulated in a computer system. It has proven convenient at times, principally for reasons of common usage, to refer to these signals as bits, bytes, values, elements, symbols, characters, terms, numbers, or the like. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> It should be borne in mind, however, that all of these and similar terms are to be associated with the appropriate physical quantities and are merely convenient labels applied to these quantities. Unless specifically stated otherwise as apparent from the following discussions, it is appreciated that throughout the present invention, discussions utilizing terms such as &ldquo;setting,&rdquo; &ldquo;storing,&rdquo; &ldquo;scanning,&rdquo; &ldquo;receiving,&rdquo; &ldquo;sending,&rdquo; &ldquo;disregarding,&rdquo; &ldquo;entering,&rdquo; or the like, refer to the action and processes of a computer system or similar intelligent electronic computing device, that manipulates and transforms data represented as physical (electronic) quantities within the computer system&apos;s registers and memories into other data similarly represented as physical quantities within the computer system memories or registers or other such information storage, transmission </paragraph>
+</section>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> This discussion of this embodiment of the present invention addresses inline compression/decompression of computer data. Inline compression/decompression is accomplished while data is en route in a computer bus. In typical computer operations, data is in near-constant motion in and out of memory, between memory and processors or between other sources and destinations. As processing speeds have increased, the demand for speed of memory input and output (I/O) compression/decompression engines has also increased, enormously. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Compression is now being used for wide high speed buses such as memory buses. The only way to avoid delays when performing compression on a memory bus, of course, is to do so at bus speeds. Most conventional compression/decompression engines are capable of operating at data bus speeds but not at the bandwidth of a modern data bus. This limitation slows down data bus operations and a number of techniques have been employed to work around the speed loss associated with both compression and decompression. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Typical implementations of compression/decompression engines are as hardware devices that operate between source and destination devices. They can be completely autonomous or they can be controlled by the operating system (OS). An understanding of these concepts and others presented in this embodiment of the present invention can best be understood by reference to the figures. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a typical computer system. As shown, a general purpose computer, <highlight><bold>100</bold></highlight>, comprises bus <highlight><bold>150</bold></highlight>, connecting processor <highlight><bold>101</bold></highlight>, non-volatile ROM <highlight><bold>102</bold></highlight>, RAM <highlight><bold>103</bold></highlight> and some form of data storage <highlight><bold>104</bold></highlight>, all contained within optional enclosure <highlight><bold>100</bold></highlight>. The computer also likely comprises an optional display device <highlight><bold>105</bold></highlight>, some form of user input such as keyboard <highlight><bold>106</bold></highlight> and cursor control <highlight><bold>107</bold></highlight> and possibly other signal input/output circuits <highlight><bold>108</bold></highlight>. Compression/decompression may be handled by dedicated hardware engine <highlight><bold>110</bold></highlight>. If compression and decompression are controlled by software, that software is likely to be resident in ROM <highlight><bold>102</bold></highlight> or in the OS loaded into memory from data storage device <highlight><bold>104</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Another possible arrangement, in this embodiment of the present invention, is the possible placement of compression/decompression engine <highlight><bold>110</bold></highlight> in series with RAM <highlight><bold>103</bold></highlight>&prime; bus connection. However placed, the inline compression/decompression concepts presented here are the same. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a typical inline compression/decompression technique that uses a single compression/decompression engine, <highlight><bold>201</bold></highlight>, to process data blocks being transmitted in a bus. Because typical compression engines can best process a small block of data at any one time, data associated with any particular transaction is fragmented into &ldquo;digestible&rdquo; pieces. Most compression/decompression engines perform best processing a single byte of data at a time. Since bus transactions are rarely one byte in width, typical schemes buffer the data to be compressed/decompressed and then perform the compression/decompression as a separate operation independent of the bus. The resulting data is them stored in yet another buffer before being sent to its destination. This is not the best solution since it adds a long latency before compression/decompression is not performed at bus speeds. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Previous architectures, when a data block to be compressed/decompressed is too large in size, have reduced the size of the block by dividing the data by successive factors of two. Reducing the size of the data block reduces the latency of compression/decompression when trying to find a small amount of data, since only the section of the original data block with the requested data must be compressed or decompressed. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> A common compression/decompression technique that uses multiple compression engines feeds each engine a piece of any given data packet. Typically, the packet pieces are of equal size and emerge from the compression engine at roughly the same compression ratio. Unfortunately, as in common techniques using a single engine, the compressed data piece sizes vary and the compression engines are almost never used at full efficiency. Furthermore, compression and decompression both add varying latency with larger processed data blocks, increasing the demand on buffering to maintain proper sequencing and alignment in the engines&apos; output. The embodiment of the present invention discussed here presents two methods describing inline compression/decompression that use multiple parallel compression engines and allow the operations to occur at high bus speeds with minimal buffering and latency in each transaction. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Most modern hardware compression engines operate most efficiently when fed a byte-sized data block for each compression operation, much smaller than is typically employed by modern buses. <cross-reference target="DRAWINGS">FIGS. 3 and 4</cross-reference> illustrate two different methods of in-line compression/decompression without reducing memory bus bandwidth. The examples shown in the figures are for a four-byte-wide bus, but can be used for any bus width. An important concept presented in this embodiment of the present invention is that, instead of dividing a packet into equal pieces in a large scale, the packet can be divided into equal size pieces along byte boundaries. Existing compression engines can work at bus speed, but only a width of one byte. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates the operation of parallel compression engines that each compress a single byte of the bus bandwidth at a time in any compression transaction. Bytes are most commonly eight bits in length. A 32 bit bus width would thus require four compression engines to continuously compress one byte at a time and a 64 bit wide bus would require eight compression engines. In <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, compression engines <highlight><bold>301</bold></highlight>-<highlight><bold>304</bold></highlight> are shown each being fed a single byte of a four byte wide (32 bit) data bus data transaction (t<highlight><bold>1</bold></highlight>, t<highlight><bold>2</bold></highlight>, etc.). It must be noted here that the transaction may be thousands of bytes long. In the example in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, each engine processes every fourth byte of bus width. Engine <highlight><bold>303</bold></highlight>, for example, processes bytes <highlight><bold>2</bold></highlight> and <highlight><bold>6</bold></highlight> of transaction t<highlight><bold>1</bold></highlight>. Decompression would work, essentially, in the reverse. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> After compression, the resultant data, in this embodiment, is dependant upon the incoming data (t<highlight><bold>1</bold></highlight>, t<highlight><bold>2</bold></highlight>, t<highlight><bold>3</bold></highlight>, t<highlight><bold>4</bold></highlight>, etc.) and the compression algorithm used. The example in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows a 2:1 compression ratio. This means that bytes <highlight><bold>2</bold></highlight> of compressed data blocks C<highlight><bold>1</bold></highlight> and C<highlight><bold>2</bold></highlight> contain the compressed data from byte <highlight><bold>2</bold></highlight> of t<highlight><bold>1</bold></highlight>, t<highlight><bold>2</bold></highlight>, t<highlight><bold>3</bold></highlight>, and t<highlight><bold>4</bold></highlight>. As each byte emerges, from the compression engine (C<highlight><bold>1</bold></highlight>, C<highlight><bold>2</bold></highlight>, etc.) it must be properly sequenced and aligned in buffers so that the transaction placed on the bus contains the full bus width of data. This means that there may be some bus cycles where there is no data on the bus at the output of the compressors since compressed data produces fewer bytes to be transferred. Therefore, the incoming uncompressed data is allowed to operate at full bus bandwidth, but the outgoing compressed data operates at the bus bandwidth divided by the compression ratio; at one half bus bandwidth in the example. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> further shows each byte width of the bus feeding one compressor/decompressor. For this example, this means every fourth byte is compressed by each compression engine. This slows down the response time of the bus by only the latency of the compression engine, and does not decrease bandwidth. Since the compressor is working at bus speeds, no buffering is required of data before it is compressed. However, a small amount of buffering is required at the output of the compressor to make sure that each compressor places one byte on the bus at the same time. This is required because there are fewer bytes at the output of a compressor than at the input and the compressed bytes need to be aligned to guarantee correct, coordinated, decompression. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Decompression, in this embodiment of the present invention, would be effected in the reverse process of compression. A small amount of buffering would be required to properly sequence and align compressed data prior to decompression. Since some realignment might be required after decompression, some downstream buffering might be required there, as well. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates another method for use of multiple compression engines that reduces added latency. Here, each memory bus transaction (t<highlight><bold>1</bold></highlight>, t<highlight><bold>2</bold></highlight>, etc) is fed, in byte-sized blocks, to only one compression engine, <highlight><bold>401</bold></highlight>, <highlight><bold>402</bold></highlight>, etc. Compression is accomplished by bus transaction. Each compressor is fed the number of bytes supported by the bus width. This requires buffering of one or two transactions for each compressor in order to operate at full bus speeds and possibly has a more complicated bus connection. While this method may show some advantages for complicated bus structures, in most cases the better method is the one shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The foregoing descriptions of specific embodiments of the present invention have been presented for purposes of illustration and description. They are not intended to be exhaustive or to limit the invention to the precise forms disclosed, and obviously many modifications and variations are possible in light of the above teaching. The embodiments were chosen and described in order to best explain the principles of the invention and its practical application, to thereby enable others skilled in the art to best utilize the invention and various embodiments with various modifications as are suited to the particular use contemplated. It is intended that the scope of the invention be defined by the claims appended hereto and their equivalents. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for compressing data for transfer over a computer bus, said method comprising the steps of: 
+<claim-text>a) transmitting said data in said computer bus in one or more data packets; </claim-text>
+<claim-text>b) dividing said data packets into smaller data units along byte-width boundaries of said computer bus; </claim-text>
+<claim-text>c) compressing said data in said data packets; and, </claim-text>
+<claim-text>d) transmitting said compressed data in said computer bus. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said data is selected in response to the requirements of a computer program. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said step of compressing said data is performed at bus speeds. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said step of compressing said data is accomplished by dedicated hardware compression devices. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said step of storing said compressed data is accomplished in computer memory. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said step of dividing said data packets into smaller units results in said smaller units being data bytes. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said step of compressing said data is performed by a different compression device for each of said data bytes. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein said step of compressing said data is performed concurrently by each compression device. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said step of compressing said data is performed by one compression device for all of said data bytes from a single data bus transaction. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein said step of compressing said data from said data bus transaction is performed concurrently with compression of data bytes from other data bus transactions. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method for decompressing data in a computer bus, said method comprising the steps of: 
+<claim-text>a) selecting compressed data in said computer bus; </claim-text>
+<claim-text>b) decompressing said selected data in said computer bus; </claim-text>
+<claim-text>c) combining said decompressed data into larger data units; and, </claim-text>
+<claim-text>d) transmitting said decompressed data in said computer bus. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said step of selecting said data is performed in response to the requirements of a computer program. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said step of combining said decompressed data bytes into larger data units results in full bus-width data packets. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said method of decompressing said compressed data is accomplished by dedicated hardware decompression devices. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said step of decompressing said data is performed at bus speeds. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said step of decompressing said data is accomplished by a single decompression device for each data bus transaction. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method described in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said step of decompressing said data is accomplished concurrently by one decompression device for each byte width of uncompressed data. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A system for compressing and decompressing data in a computer bus, comprising: 
+<claim-text>a computer, comprising a computer bus; </claim-text>
+<claim-text>data being transmitted in said computer bus; </claim-text>
+<claim-text>a source for said transmitted data; </claim-text>
+<claim-text>a destination for said transmitted data; and, a plurality of compression/decompression engines, wherein said compression/decompression engines each compress and decompress one byte of data at a time. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said data is selected for compression or decompression in response to the requirements of a computer program. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said data is compressed or decompressed at bus speeds. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said compression/decompression engines are dedicated hardware devices. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said data source is a form of computer memory. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said data destination is a form of computer memory. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said data bytes are divisions of larger data blocks. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein each compression/decompression engine operates concurrently with other compression/decompression engines. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said data is compressed by one compression/decompression engine for all of said data bytes from a single data bus transaction. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein compression of said data from said data bus transaction is performed concurrently with compression of data bytes from other data bus transactions. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A system as described in <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein decompression of said data from said data bus transaction is performed concurrently with decompression of data bytes from other data bus transactions.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005189A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005189A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005189A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005189A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005189A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

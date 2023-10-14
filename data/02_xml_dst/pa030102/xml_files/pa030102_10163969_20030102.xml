@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002484A1-20030102-D00000.TIF SYSTEM "US20030002484A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002484A1-20030102-D00001.TIF SYSTEM "US20030002484A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002484A1-20030102-D00002.TIF SYSTEM "US20030002484A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002484A1-20030102-D00003.TIF SYSTEM "US20030002484A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002484</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10163969</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020606</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L012/66</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>370</class>
+<subclass>352000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>401000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Content delivery network map generation using passive measurement data</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60296375</doc-number>
+<document-date>20010606</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Avraham</given-name>
+<middle-name>T.</middle-name>
+<family-name>Freedman</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Elkins Park</city>
+<state>PA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>AKAMAI TECHNOLOGIES, INC.</name-1>
+<name-2>ATTENTION:DAVID H. JUDSON</name-2>
+<address>
+<address-1>500 TECHNOLOGY SQUARE</address-1>
+<city>CAMBRIDGE</city>
+<state>MA</state>
+<postalcode>02139</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A routing method operative in a content delivery network (CDN) where the CDN includes a request routing mechanism for routing clients to subsets of edge servers within the CDN. According to the routing method, TCP connection data statistics are collected are edge servers located within a CDN region. The TCP connection data statistics are collected as connections are established between requesting clients and the CDN region and requests are serviced by those edge servers. Periodically, e.g., daily, the connection data statistics are provdied from the edge servers in a region back to the request routing mechanism. The TCP connection data statistics are then used by the request routing mechanism in subsequent routing decisions and, in particular, in the map generation processes. Thus, for example, the TCP connection data may be used to determine whether a given quality of service is being obtained by routing requesting clients to the CDN region. If not, the request routing mechanism generates a map that directs requesting clients away from the CDN region for a given time period or until the quality of service improves. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application is based on and claims priority from Provisional Application Serial No. 60/296,375, filed Jun. 6, 2001.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> 1. Technical Field </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The present invention relates generally to high-performance, fault-tolerant HTTP, streaming media and applications delivery in a content delivery network (CDN). </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> It is well-known to deliver HTTP and streaming media using a content delivery network (CDN). A CDN is a network of geographically distributed content delivery nodes that are arranged for efficient delivery of digital content (e.g., Web content, streaming media and applications) on behalf of third party content providers. A request from a requesting end user for given content is directed to a &ldquo;best&rdquo; replica, where &ldquo;best&rdquo; usually means that the item is served to the client quickly compared to the time it would take to fetch it from the content provider origin server. An entity that provides a CDN is sometimes referred to as a content delivery network service provider or CDNSP. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Typically, a CDN is implemented as a combination of a content delivery infrastructure, a request-routing mechanism, and a distribution infrastructure. The content delivery infrastructure usually comprises a set of &ldquo;surrogate&rdquo; origin servers that are located at strategic locations (e.g., Internet network access points, Internet Points of Presence, and the like) for delivering copies of content to requesting end users. The request-routing mechanism allocates servers in the content delivery infrastructure to requesting clients in a way that, for web content delivery, minimizes a given client&apos;s response time and, for streaming media delivery, provides for the highest quality. The distribution infrastructure consists of on-demand or push-based mechanisms that move content from the origin server to the surrogates. An effective CDN serves frequently-accessed content from a surrogate that is optimal for a given requesting client. In a typical CDN, a single service provider operates the request-routers, the surrogates, and the content distributors. In addition, that service provider establishes business relationships with content publishers and acts on behalf of their origin server sites to provide a distributed delivery system. A commercial CDN service that provides web content and media streaming is provided by Akamai Technologies, Inc. of Cambridge, Mass. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> A typical CDN edge server includes commodity hardware, an operating system such as Linux, a TCP/IP connection manager, a cache, and one or more applications that provide various functions such as cache management, logging, and other control routines that facilitate the content delivery techniques implemented by the CDNSP at the server. In an illustrative case, the operating system kernel is Linux-based and tracks and provides access to per session and aggregate TCP/IP information, such as per-system number of packets, bytes sent and received, number of retransmits, and the like. The TCP connection information that is available from monitoring the operating system kernel has not been fully mined for its potential value, especially to CDN service providers. TCP stream state data, however, generates implicit information about the state of the network. Thus, for example, packet retransmissions can indicate congestion within the network. An estimated round-trip-time (RTT) derived from TCP connection information indicates latency to a remote host. Early FIN message receipt can indicate a dropped connection. A lower window size than usual can indicate instability in topological path. Each session&apos;s overall and smaller time-scale throughput is one of the best measures of actual end-user performance. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It would be desirable to be able to use edge server CDN statistics in other CDN control processes. </paragraph>
+</section>
+<section>
+<heading lvl="1">BRIEF SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> According to the invention, TCP connection information resulting from prior CDN mapping decisions to a given edge server region (or to a given edge server therein) is logged, aggregated, and then used to improve subsequent routing of client requests to servers in a content delivery network. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> More generally, it is an object of the invention to use passive measurement data to facilitate the generation or evaluation of client-to-server request routing maps in a content delivery network. Passive measurement data is logged at CDN edge server machines, preferably on a per-connection basis or a per HTTP connection basis. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> It is another more specific object of the invention to collect TCP connection information from CDN edge servers to allow network performance to be correlated with particular hosts or address blocks, allowing for improved maps to be generated during the CDN map generation process. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> According to the present invention, TCP statistics data from remote machines is logged and delivered back to a central location and used by a CDN to generate request routing maps, such as an IP block to CDN region map. This enables the CDN map to be modified as a function of passive measurement data that reflects how well the CDN request routing mechanism actually mapped prior web requests. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The present invention generally describes a routing method operative in a content delivery network having a request routing mechanism for routing clients to edge servers. At a given edge server located within a CDN region, data associated with one or more connections that have been established between requesting clients and the CDN region is collected. That data is then provided back to the request routing mechanism, where it is used is a subsequent routing decision. Preferably the data is per HTTP connection data collection from a configurable percentage of client requests that are serviced by the given edge server. This TCP connection data preferably is aggregated with similar data from other edge servers in the CDN region before being passed back to the CDN request routing mechanism. This enables the request routing mechanism to make new maps based on an accurate view as to how well given connections are being serviced within the CDN region. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In a more detailed, yet illustrative embodiment, a routing method is operative in a content delivery network (CDN) where the CDN includes a request routing mechanism for routing clients to subsets of edge servers within the CDN. According to the routing method, TCP connection data statistics are collected are edge servers located within a CDN region comprising a subset of edge servers. The TCP connection data statistics are collected as connections are established between requesting clients and the CDN region and requests are serviced by those edge servers. Either in real-time or delayed (e.g., hourly or daily), the detailed and/or summarized connection data statistics are provided from the edge servers in a region back to the request routing mechanism. The TCP connection data statistics are then used by the request routing mechanism in subsequent routing decisions and, in particular, in the map generation processes. Thus, for example, the TCP connection data may be used to determine whether a given quality of service is being obtained by routing requesting clients to the CDN region. If not, the request routing mechanism generates a map that directs requesting clients away from the CDN region for a given time period or until the quality of service improves. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The foregoing has outlined some of the more pertinent objects and features of the present invention. These objects should be construed to be merely illustrative of some of the more prominent features and applications of the invention. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> For a more complete understanding of the present invention and the advantages thereof, reference should be made to the following Detailed Description taken in connection with the accompanying drawings, in which: </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagram of a known content delivery network in which the present invention may be implemented; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a simplified diagram of a two level request routing mechanism used in the content delivery network of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a simplified diagram of a typical CDN edge server that has been modified to include the TCP statistics monitoring process according to the present invention; and </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is an simplified diagram of how TCP data is logged, aggregated and then delivered to a CDN request routing mechanism in an illustrative embodiment of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As seen in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, an Internet content delivery infrastructure usually comprises a set of &ldquo;surrogate&rdquo; origin servers <highlight><bold>102</bold></highlight> that are located at strategic locations (e.g., Internet network access points, and the like) for delivering copies of content to requesting end users <highlight><bold>119</bold></highlight>. A surrogate origin server is defined, for example, in IETF Internet Draft titled &ldquo;Requirements for Surrogates in the HTTP&rdquo; dated Aug. 9, 2000, which is incorporated herein by reference. The request-routing mechanism <highlight><bold>104</bold></highlight> allocates servers <highlight><bold>102</bold></highlight> in the content delivery infrastructure to requesting clients in a way that, for web content delivery, minimizes a given client&apos;s response time and, for streaming media delivery, provides for the highest quality. The distribution infrastructure consists of on-demand or push-based mechanisms that move content from the origin server to the surrogates. A CDN service provider (CDNSP) may organize sets of surrogate origin servers as a &ldquo;region.&rdquo; In this type of arrangement, a CDN region <highlight><bold>106</bold></highlight> typically comprises a set of one or more content servers that share a common backend, e.g., a LAN, and that are located at or near an Internet access point. Thus, for example, a typical CDN region may be co-located within an Internet Service Provider (ISP) Point of Presence (PoP) <highlight><bold>108</bold></highlight>. A representative CDN content server is a Pentium-based caching appliance running an operating system (e.g., Linux, Windows NT, Windows 2000) and having suitable RAM and disk storage for CDN applications and content delivery network content (e.g., HTTP content, streaming media and applications). Such content servers are sometimes referred to as &ldquo;edge&rdquo; servers as they are located at or near the so-called outer reach or &ldquo;edges&rdquo; of the Internet. The CDN typically also includes network agents <highlight><bold>109</bold></highlight> that monitor the network as well as the server loads. These network agents are typically co-located at third party data centers or other locations. Map maker software <highlight><bold>107</bold></highlight> receives data generated from the network agents and periodically creates maps that dynamically associate IP addresses (e.g., the IP addresses of client-side local name servers) with the CDN regions. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In one service offering, available from Akamai Technologies, Inc. of Cambridge, Mass., content is marked for delivery from the CDN using a content migrator or rewrite tool <highlight><bold>106</bold></highlight> operated, for example, at a participating content provider server. Tool <highlight><bold>106</bold></highlight> rewrites embedded object URLs to point to the CDNSP domain. A request for CDN-enabled content is resolved through a CDNSP-managed DNS to identify a &ldquo;best&rdquo; region, and then to identify an edge server within the region that is not overloaded and that is likely to host the requested content. An illustrative request routing technique is described in U.S. Pat. No. 6,108,703, which is incorporated by reference. Instead of using content provider-side migration (e.g., using the tool <highlight><bold>106</bold></highlight>), a participating content provider may simply direct the CDNSP to serve an entire domain (or subdomain) by a DNS directive (e.g., a CNAME). In such case, the CDNSP may provide object-specific metadata to the CDN content servers to determine how the CDN content servers will handle a request for an object being served by the CDN. Metadata, as used herein, refers to the set of control options and parameters for an object (e.g., coherence information, origin server identity information, load balancing information, customer code, other control codes, etc.), and such information may be provided to the CDN content servers via a configuration file, in HTTP headers, or in other ways. An object URL that is served from the CDN in this manner need not be modified by the content provider. When a request for the object is made, for example, by having an end user navigate to a site and select the URL, a customer&apos;s DNS system directs the name query (for a domain in the URL) to the CDNSP DNS request routing mechanism. Once an edge server is identified, the browser passes the object request to the server, which applies the metadata supplied from a configuration file or HTTP response headers to determine how the object will be handled. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The CDNSP may operate a metadata transmission system <highlight><bold>116</bold></highlight> comprising a set of one or more servers to enable metadata to be provided to the CDNSP content servers. The system <highlight><bold>116</bold></highlight> may comprise at least one control server <highlight><bold>118</bold></highlight>, and one or more staging servers <highlight><bold>120</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><italic>n, </italic></highlight>each of which is typically an HTTP server (e.g., Apache). Metadata is provided to the control server <highlight><bold>118</bold></highlight> by the CDNSP or the content provider (e.g., using a secure extranet application) and periodically delivered to the staging servers <highlight><bold>120</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><italic>n. </italic></highlight>The staging servers deliver the metadata to the CDN content servers as necessary. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> As illustrated in <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> dynamic DNS system <highlight><bold>200</bold></highlight> such as described generally above directs each user web request <highlight><bold>202</bold></highlight> to the optimal server <highlight><bold>204</bold></highlight> for content delivery. In one approach, a &ldquo;top level&rdquo; map <highlight><bold>206</bold></highlight> directs a specific request to one of a given number of server regions, while a &ldquo;low level&rdquo; map <highlight><bold>208</bold></highlight> further directs the request to a given server within a region. Thus, for example, the top level map <highlight><bold>206</bold></highlight> may associate each Internet IP address block with a CDN server region that can deliver content to clients in that block most quickly. To prepare for generating this map, mapping agents (e.g., one per CDN server region) may collect the following information: (a) IP blocks (a list of IP address blocks currently in use in the Internet), (b) load (per-IP block measurements of the amount of web load currently being handled by the CDN, (c) communication costs (e.g., a table listing the measured communication cost for each &lcub;IP block, CDN server region&rcub; pair, and (d) capacity (e.g., an aggregate server and network capacity of each CDN server region). A combination of different methods may be used to put together the list of IP blocks representing all of the leaf networks (e.g., endpoint LAN&apos;s on the global Internet): BGP peering, harvesting information from network registration databases (e.g., RIPE, APNIC and ARIN), and random traceroutes into very large blocks (e.g., UUNET). The load on the CDN generated by each IP block may be determined by gathering and aggregating measurements from the CDN content servers. One or more different communication costs may be used to determine the cost of communication between an IP block and a CDN server region: network health of server region (e.g., a binary metric indicating that the region is up or down), ASPATH length between the block and the server region (e.g., as supplied by BGP), round trip time (RTT) between the region&apos;s mapping agent and a given point in the IP block, packet loss rate between the region&apos;s mapping agent and the given point in the IP block, geographic distance, and perhaps others. These metrics may be combined into a single cost metric for each IP block, server region pair, with the priority, or weighting, of each individual metric set to be proportional to its position on the list. Two types of capacity measurement may be made: total server capacity in each region and physical network capacity in each region. The server capacity is determined, for example, from the number of servers currently up in a region. Physical network capacity is determined, for example, with packet pair measurements. Region capacity may be calculated as a given function (e.g., the minimum) of these two measurements. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> As noted above, the top level map <highlight><bold>206</bold></highlight> maps each IP block to an optimal CDN server region. One technique for generating the top level map involves identifying a number of candidate regions for each IP block (e.g., based on the &lcub;IP block, server region&rcub; communication costs), generating a bipartite graph using all of the measured and collected network information (e.g., with one side of the graph representing each of the IP blocks and the other side representing CDN server regions), and then running a min-cost flow algorithm on the graph. Each IP block node is labeled with its measured load, which is treated as the &ldquo;flow&rdquo; coming from that node. Running the algorithm results in an optimal assignment of IP block load to server regions. This assignment is the top level map, which is generated periodically and then delivered to the dynamic DNS request routing mechanism. The above map generation process is merely exemplary and is not meant to limit the present invention of course. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a typical machine configuration for a CDN content server. Typically, the content server <highlight><bold>300</bold></highlight> is a Pentium-based caching appliance running an operating system kernel <highlight><bold>302</bold></highlight> (e.g., based on Linux), a file system cache <highlight><bold>304</bold></highlight>, CDN control software <highlight><bold>306</bold></highlight>, TCP connection manager <highlight><bold>308</bold></highlight>, and disk storage <highlight><bold>310</bold></highlight>. CDN control software <highlight><bold>306</bold></highlight>, among other things, is useful to create an object cache <highlight><bold>312</bold></highlight> for popular objects being served by the CDN. In operation, the content server <highlight><bold>300</bold></highlight> receives end user requests for http content, determines whether the requested object is present in the hot object cache or the disk storage, serves the requested object (if it is present) via http, or it establishes a connection to another content server or an origin server to attempt to retrieve the requested object upon a cache miss. According to the invention, the CDN software <highlight><bold>306</bold></highlight> also includes a logging routine, called TCPStats <highlight><bold>314</bold></highlight>, which in an illustrative embodiment logs a record for every TCP connection made to/by the machine on which this software is running in addition to connections made to/by the CDN software process itself. Generalizing, the TCPStats process logs arbitrary pieces of information about a TCP connection. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In an illustrative embodiment as shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, each edge server <highlight><bold>400</bold></highlight> in a region runs one or more monitoring processes <highlight><bold>402</bold></highlight>, and an instance of a query process <highlight><bold>404</bold></highlight>. A monitoring process monitors the health of the local machine and the network to which it is connected; another monitoring process monitors the hits and bytes served by the CDN software running on the machine. The TCP statistics monitoring is preferably performed by one of these monitoring processes <highlight><bold>402</bold></highlight>. Generally, the TCP statistics data is collected by that process and made available to the local instance of the query process <highlight><bold>404</bold></highlight>. Periodically, a central instance of the query process <highlight><bold>406</bold></highlight> running on an aggregator machine <highlight><bold>408</bold></highlight> (typically somewhere else in the network) makes a request to the local instance of the query process. There may be a hierarchy of aggregators, depending on the size and scope of the network deployment. When requested, the query process collects tables of data from machines in the same region (typically within a given data center) and relays them to the aggregator machine <highlight><bold>408</bold></highlight>, which accumulates and stores the data. According to the invention, the TCP statistics data is then supplied to the CDN request routing mechanism <highlight><bold>410</bold></highlight> to facilitate future mapping decisions. Data preferably is delivered between machines over a secure connection, which can be implemented with known software tools. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Generalizing, TCPStats data aggregated from the CDN content servers is used in subsequent revisions to a given map, e.g., the IP block to CDN region map. In particular, the TCPStats data provides an additional refinement to the map making process to provide a map that includes passive measurement data about how a given number of individual requests were previously routed by the CDN request routing mechanism. This feedback mechanism enables a more accurate map to be generated in the future based, in part, on an after-the-fact evaluation of how well earlier CDN mapping decisions routed prior requests, preferably on an aggregate basis, as evidenced by the actual TCP statistics logged at the CDN content servers within a given region. If, for example, those statistics illustrate that prior mapping decisions with respect to a given region did not provide a sufficient quality of service, then the map making process can be modified appropriately. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> As a specific example, assume that TCPStats data is aggregated on a per machine and per region basis. This data enables a given process to monitor the health of the region itself, especially if the data is used in conjunction with other historical data. The TCPStats data provides detailed information about the quality of the connections to the various machines in the region. If that data establishes that connections to the region (in general, or for a specific IP block mapped to the region) are receiving a quality of service below a given threshold, the map making algorithm may then bias requests away from that region for a given time period or until the connectivity data shows improvement. As another example, assume that the map generation process identifies two (2) regions that appear equally good for handling a given request. In such case, the TCPStats data can be used as a tiebreaker. In addition, the TCPStats data may be used to provide an indication of how well the mapping algorithm performed over a given time period (e.g., daily). Of course, the above examples are merely exemplary and should not be taken to limit the scope of the present invention, which should be broadly construed to cover the use of the TCP Stats passive measurement data to facilitate the generation or evaluation of client-to-server request routing maps in a content delivery network. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The TCP/IP protocol&apos;s fully-reliable transport model and intricate congestion control mechanisms allow a CDNSP to gather a great deal of useful information. The following is representative. Thus, on a per client x server x URL basis, the CDNSP can determine, for example: the number of bytes transmitted, the duration of connection (including the duration of each phase of the connection), loss seen in the connection, latency between client and server as measured and used, variance in latency seen between the client and server, the maximum/average measurements of the size of the network connection between the client and server, overall and instantaneous throughput, window size and the like. In an illustrative embodiment, TCP statistics across three (3) axes (client, server, and URL) are collected by the TCPStats process and is used to provide a profiling tool for every connection. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> More specifically, TCP statistics entries may include one or more of the following fields (familarity with the TCP/IP protocol is assumed): </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> Time initial SYN packet was received (sent): this is the time the first packet on the connection was received (if the connection came from a remote client) or sent (if a connection is being established to a remote server). The time is expressed in sec.msec, where sec is number of seconds since a Unix epoch and msec is the number of milliseconds since the beginning of that second. All other times preferably are offsets from this time. </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> Local IP address:port: the IP address of the machine that the CDN software runs on, which is specified in the 4 byte dotted quad notation (w.x.y.z) followed by a colon (:) and the local IP port number. </paragraph>
+<paragraph id="P-0034" lvl="2"><number>&lsqb;0034&rsqb;</number> Direction: a single character identifier that tells if the connection was made local to remote machine (&lsquo;&gt;&rsquo;) or remote to local machine (&lsquo;&lt;&rsquo;). </paragraph>
+<paragraph id="P-0035" lvl="2"><number>&lsqb;0035&rsqb;</number> Remote IP address:port: IP address of the remote machine in 4 byte format, a colon, and the remote IP port number. </paragraph>
+<paragraph id="P-0036" lvl="2"><number>&lsqb;0036&rsqb;</number> Number of packets received. </paragraph>
+<paragraph id="P-0037" lvl="2"><number>&lsqb;0037&rsqb;</number> Number of packets sent. </paragraph>
+<paragraph id="P-0038" lvl="2"><number>&lsqb;0038&rsqb;</number> Number of duplicate packets sent (retransmits). </paragraph>
+<paragraph id="P-0039" lvl="2"><number>&lsqb;0039&rsqb;</number> Total bytes sent. </paragraph>
+<paragraph id="P-0040" lvl="2"><number>&lsqb;0040&rsqb;</number> Total bytes received. </paragraph>
+<paragraph id="P-0041" lvl="2"><number>&lsqb;0041&rsqb;</number> Total duplicates bytes sent and received. </paragraph>
+<paragraph id="P-0042" lvl="2"><number>&lsqb;0042&rsqb;</number> Max Smooth Round Trip Time (SRTT) during the connection (in msec). </paragraph>
+<paragraph id="P-0043" lvl="2"><number>&lsqb;0043&rsqb;</number> Min Smooth Round Trip Time during the connection. </paragraph>
+<paragraph id="P-0044" lvl="2"><number>&lsqb;0044&rsqb;</number> Log of RTT estimates obtained and/or summary statistics. </paragraph>
+<paragraph id="P-0045" lvl="1"><number>&lsqb;0045&rsqb;</number> Log of calculated SRTT values and/or summary statistics. </paragraph>
+<paragraph id="P-0046" lvl="1"><number>&lsqb;0046&rsqb;</number> Time spent in each phase of the states associated with the TCP connection: </paragraph>
+<paragraph id="P-0047" lvl="2"><number>&lsqb;0047&rsqb;</number> From begin until ESTABLISHED: the elapsed time from the receipt of the initial SYN from the client (the second field in the log entry) until the ACK of the initial SYN-ACK is received by the CDN software process. In the case of a forward connection, this is the time from SYN send until the SYN-ACK was received by the remote server. This and all other delta times below are expressed as msec, the number of milliseconds from the connection begin time (SYN time, as described above). </paragraph>
+<paragraph id="P-0048" lvl="2"><number>&lsqb;0048&rsqb;</number> Time from begin until FIN_WAIT: The elapsed time between when the connection began and when the connection got into the FIN_WAIT state (zero if not applicable). </paragraph>
+<paragraph id="P-0049" lvl="2"><number>&lsqb;0049&rsqb;</number> Time from begin until FIN_WAIT1 state (zero if not applicable). </paragraph>
+<paragraph id="P-0050" lvl="2"><number>&lsqb;0050&rsqb;</number> Time from begin until FIN_WAIT2 state (zero if not applicable). </paragraph>
+<paragraph id="P-0051" lvl="2"><number>&lsqb;0051&rsqb;</number> Time from begin until CLOSING state (zero if not applicable). </paragraph>
+<paragraph id="P-0052" lvl="2"><number>&lsqb;0052&rsqb;</number> Time from begin until the last ACK was received (zero if not applicable). </paragraph>
+<paragraph id="P-0053" lvl="2"><number>&lsqb;0053&rsqb;</number> Time from begin until WAIT state (zero if not applicable). </paragraph>
+<paragraph id="P-0054" lvl="1"><number>&lsqb;0054&rsqb;</number> &num; Duplicate ACK&apos;s sent </paragraph>
+<paragraph id="P-0055" lvl="1"><number>&lsqb;0055&rsqb;</number> Max window size (in bytes) </paragraph>
+<paragraph id="P-0056" lvl="1"><number>&lsqb;0056&rsqb;</number> Number of Times the RTO timer expired </paragraph>
+<paragraph id="P-0057" lvl="1"><number>&lsqb;0057&rsqb;</number> Delayed ACK count </paragraph>
+<paragraph id="P-0058" lvl="1"><number>&lsqb;0058&rsqb;</number> Average window size </paragraph>
+<paragraph id="P-0059" lvl="1"><number>&lsqb;0059&rsqb;</number> Average IP TTL observed </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> TCPStats data is generated by any convenient mechanism. The Linux operating system kernel provides some of this data directly. In particular, the kernel keeps track and provides access to aggregate information including per-system number of packets, bytes sent and received, and number of retransmits, among other things. To facilitate TCP statistics collection, the operating system kernel preferably is modified to provide access to per-connection statistics. The modified code keeps track of that information per-connection (in the kernel) and provides an interface for an application to mark a connection as interesting and to get its connection information when the connection is complete. Preferably, the application also implements per-HTTP connection statistics. This requires marking a TCP connection with the beginning and end points of an HTTP request. The kernel keeps track of bytes sent/received for the duration of the request and provides statistics to the application upon request. This allows a more accurate estimation of per-connection bandwidth than is possible with per-connection statistics because many TCP connections are allowed to stay open (in an HTTP persistent connection state) after the HTTP response has been sent, in the hopes another request will reuse the established connection. In contrast, just looking at bytes sent/total time is not as accurate a measure, as the per connection time will reduce the apparent bandwidth by a significant amount. In an illustrative embodiment, these statistics are provided by the kernel to user space preferably through a device file interface, which is a standard way for the kernel to communicate with an application. The statistics themselves preferably are kept in a circular memory buffer so that the kernel does not run out of memory even if the logging application lags behind. Preferably, the application is designed to read all available statistics out of the kernel at a configurable interval (e.g., once per second) and to write statistics into a log for a configurable fraction of all requests (e.g., 1%). This allows the application to obtain a statistical sample of all of traffic served from the machine. Preferably, the application marks when it is sending and receiving data to get better bandwidth measurements. More information about the TCP/IP protocol and the Linux operating system kernel can be obtained from the following resources: Stevens, TCP/IP Illustrated Volume 1: The Protocols. Addison-Wesley, and Beck, et al., Linux Kernel Internals, Second Edition. Addison-Wesley. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> Other techniques for collecting the TCP statistics information may also be used. Thus, for example, the CDN edge server may be provisioned with a tcpdump process and a filter to look at the TCP packet headers and collect information from them (such as retransmission, and the like). This is a less invasive approach than modifying the kernel, but it does creates additional load onto the server. In this embodiment, the filter needs to keep track of state such as open connections and also needs to deduce retransmissions, and the like, from the packets it sees going across the wire. Alternatively, the CDN server process can simply gather information about the TCP state of open sockets and log such data along with other connection data. The preferred approach, as described above, is instrument the kernel to stream TCP state information to a separate user-space process that collects it, processes it, and then feeds the data back to the request routing mechanism as appropriate. </paragraph>
+<paragraph id="P-0062" lvl="7"><number>&lsqb;0062&rsqb;</number> Variants </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> In an alternate embodiment, the CDNSP can cause TCP statistics data to be generated for a given region (or to a particular prefix), irrespective of whether the region is suspected of being good or bad-performing. In this embodiment, the system generates a random mapping of a given request, which causes measurements to be made at the respective region so that performance of the region can be evaluated. This provides a network monitoring method. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The CDNSP may perform given filtering in an edge region to analyze the TCP statistics and look for unusual performance issues on, for example, a per CIDR block, per prefix, per AS, or other basis. The results of such filtering may then be fed back to generate control commands to the request routing mechanism (e.g., &ldquo;stop mapping Sprint (AS1239)&rdquo;). </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The CDNSP may also obtain TCP statistics from a customer origin server and use such information to find a best customer region. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> Of course, one of ordinary skill in the art will also appreciate that the techniques of monitoring connection data and using that information to influence a routing decision as described herein may be extended beyond the use with CDN request routing mechanisms to general IP traffic routing mechanisms.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">Having described my invention, what I claim is as follows: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A routing method operative in a content delivery network having a request routing mechanism for routing clients to edge servers, comprising: 
+<claim-text>at a given edge server located within a CDN region, collecting data associated with one or more connections that have been established between requesting clients and the CDN region; </claim-text>
+<claim-text>providing the data to the request routing mechanism; and </claim-text>
+<claim-text>using the data in a new routing decision. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the data is TCP connection data. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the TCP connection data is aggregated over a given time period. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the TCP connection data is aggregated with connection data from each of the edge servers co-located in the CDN region over the given time period. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the step of using the data comprises: 
+<claim-text>determining whether a given quality of service is being obtained by routing requesting clients to the CDN region; and </claim-text>
+<claim-text>if the given quality of service is not being obtained, generating the new routing decision to bias requesting clients away from the CDN region. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The routing methd as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the step of using the data comprises: 
+<claim-text>if first and second CDN regions are best able to service a given client request, generating the new routing decision to bias the given client request to the CDN region with data associated with a higher quality of service. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the data is collected on a per connection basis. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein the data is collected on a per HTTP connection basis. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the data is collected for a configurable percentage of client requests to the given edge server. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A routing method operative in a content delivery network having a request routing mechanism for routing clients to edge servers, comprising: 
+<claim-text>at edge servers located within a CDN region, collecting TCP connection data statistics as connections are established between requesting clients and the CDN region and requests are serviced by the edge servers; </claim-text>
+<claim-text>providing the TCP connection data statistics from the edge servers to the request routing mechanism; </claim-text>
+<claim-text>at the request routing mechanism, using the TCP connection data statistics to determine whether a given quality of service is being obtained by routing requesting clients to the CDN region; and </claim-text>
+<claim-text>if the given quality of service is not being obtained, directing requesting clients away from the CDN region. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The routing method as described in claim lo wherein the requesting clients are directed away from the CDN region until the TCP connection data statistics indicate that the given quality of service is being obtained. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The routing method as described in claim lo wherein the TCP connection data statistics are collected on a per connection basis. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The routing method as described in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the TCP connection data statistics are collected on a per HTTP connection basis. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The routing method as described in claim lo wherein the TCP connection data is collected for a configurable percentage of client requests to a given edge server. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method operative in a content delivery network request routing mechanism that generates maps for use in directing client requests to subsets of CDN servers, comprising: 
+<claim-text>receiving TCP connection data statistics from one or more subsets of CDN servers; and </claim-text>
+<claim-text>using the TCP connection data statistics in generating a client-to-CDN server mapping. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the TCP connection data statistics are generated on a per connection basis. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the TCP connection data statistics are generated on a per HTTP connection basis. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the TCP connection data statistics are collected for a configurable percentage of client requests to a given edge server in a subset of CDN servers. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. In a content delivery network request routing mechanism that generates maps for use in directing client requests to subsets of CDN servers, the improvement comprising: 
+<claim-text>code for receiving TCP connection data statistics from one or more subsets of CDN servers; and </claim-text>
+<claim-text>code for using the TCP connection data statistics in generating a client-to-CDN server mapping.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002484A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002484A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002484A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002484A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005271A1-20030102-D00000.TIF SYSTEM "US20030005271A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005271A1-20030102-D00001.TIF SYSTEM "US20030005271A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005271A1-20030102-D00002.TIF SYSTEM "US20030005271A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005271</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10222014</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020815</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>712</class>
+<subclass>237000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method using a hardware embedded run-time optimizer</title-of-invention>
+</technical-information>
+<continuity-data>
+<continuations>
+<continuation-of>
+<parent-child>
+<child>
+<document-id>
+<doc-number>10222014</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20020815</document-date>
+</document-id>
+</child>
+<parent>
+<document-id>
+<doc-number>09252170</doc-number>
+<document-date>19990218</document-date>
+<country-code>US</country-code>
+</document-id>
+</parent>
+<parent-status>GRANTED</parent-status>
+<parent-patent>
+<document-id>
+<doc-number>6453411</doc-number>
+<country-code>US</country-code>
+</document-id>
+</parent-patent>
+</parent-child>
+</continuation-of>
+</continuations>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Wei</given-name>
+<middle-name>C.</middle-name>
+<family-name>Hsu</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Cupertino</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Manuel</given-name>
+<family-name>Benitez</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Cupertino</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>HEWLETT-PACKARD COMPANY</name-1>
+<name-2>Intellectual Property Administration</name-2>
+<address>
+<address-1>P. O. Box 272400</address-1>
+<city>Fort Collins</city>
+<state>CO</state>
+<postalcode>80527-2400</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The inventive mechanism has a run-time optimization system (RTOS) embedded in hardware. When the code is first moved into Icache, a threshold value is set into a counter associated with the instruction or instruction bundle of the particular cache line of the Icache. Each time the instruction or instruction bundle is executed and retired, the counter is decremented by one. When the counter reaches zero, a trap is generated to inform that the code is hot. A trace selector will form a trace starting from the hot instruction (or instruction bundle) from the Icache line. The Icache maintains branch history information for the instructions in each cache line which is used to determine whether a branch should be predicted as taken or fall through. After the trace is formed, it is optimized and stored into a trace memory portion of the physical memory. The mapping between the original code of the trace and the optimized trace in the trace memory is maintained in a mapping table. The processor consults the mapping table to lead the execution to the optimized code in trace memory. Thus, subsequent execution uses the code in trace memory. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">CROSS-REFERENCE TO RELATED APPLICATIONS </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This is a continuation of copending and commonly assigned U.S. patent application entitled SYSTEM AND METHOD USING A HARDWARE EMBEDDED RUN-TIME OPTIMIZER, Ser. No. 09/252,170, filed Feb. 18, 1999, which is hereby incorporated by reference herein. Reference is made to the following commonly assigned U.S. patent entitled EFFICIENT MAPPING TO OPTIMIZED CODE FOR PROCESSOR EMBEDDED RUN-TIME OPTIMIZER, U.S. Pat. No. 6,185,669, issued Feb. 6, 2001, which is hereby incorporated by reference herein, and copending and commonly assigned U.S. patent application entitled FAST INSTRUCTION PROFILING AND EFFECTIVE TRACE SELECTION, Ser. No. 09/252,567, filed Feb. 18, 1999, which is hereby incorporated by reference herein.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This application relates in general to run-time optimizers, and in specific to hardware embedded run-time optimizer. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> A run-time optimizer is an adaptive software system that transparently optimizes applications at run-time. The optimizer rewrites the binary code of an application on-the-fly to achieve a higher execution efficiency. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> depicts prior art run-time optimizer <highlight><bold>30</bold></highlight>. The control loop <highlight><bold>31</bold></highlight> begins execution of a block of program code via emulation performed by the profiling emulator <highlight><bold>32</bold></highlight>. The profiling aspect of emulator <highlight><bold>32</bold></highlight> allows the control loop <highlight><bold>31</bold></highlight> to track the number of times the particular block of code has been executed via emulation. Note that a run-time optimization system is different from a run-time binary translation system, in that the latter is for architecture migration while the former is to decrease execution time. The run-time optimization system is using the emulator <highlight><bold>32</bold></highlight> for profiling in order to guide optimizations, i.e. the code is running on its native system. After a predetermined number of executions via emulation, the control loop <highlight><bold>31</bold></highlight> designates the block of code as hot code, and desirable for optimization. The control loop <highlight><bold>31</bold></highlight> then activates trace selector <highlight><bold>33</bold></highlight> to translate the block of code. The trace selector <highlight><bold>33</bold></highlight> forms a trace of the instructions that comprise the block of code by following the instructions in the block. When a branch instruction is encountered, the trace selector makes a prediction as to whether the branch is taken or falls through. If the selector decides the branch is mostly taken, then the trace is formed by extending the code from the branch target block. If the selector decides not to take the branch, then the branch falls through, and the trace continues within the fall through block. The trace terminates at a backward branch predicted to be taken or when the trace becomes sufficiently large. After the trace is completed, the code is rewritten with machine dependent and machine independent optimizations. The optimized code is then placed into the code cache <highlight><bold>34</bold></highlight>. The next time the control loop <highlight><bold>31</bold></highlight> encounters a condition to execute this block of code, then the control loop <highlight><bold>31</bold></highlight> will execute the code in the code cache <highlight><bold>34</bold></highlight> and not emulate the code via emulator <highlight><bold>32</bold></highlight>. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, if the target of a branch which is taken to exit trace <highlight><bold>1</bold></highlight>, as shown by branch instruction <highlight><bold>41</bold></highlight>, then control is returned to the run-time system RTS <highlight><bold>30</bold></highlight> and to control loop <highlight><bold>31</bold></highlight>, which determines if the target resides in the code cache. If the target resides in code cache, then the control loop <highlight><bold>31</bold></highlight> modifies the target of the branch instruction <highlight><bold>41</bold></highlight> to be the trace <highlight><bold>2</bold></highlight> <highlight><bold>42</bold></highlight> in code cache as shown by branch instruction <highlight><bold>43</bold></highlight>. This modification is called backpatching. Thus, if the exit of the trace is already translated, then the branch is backpatched such that a subsequent execution will directly branch to the new trace without returning to the control loop. Backpatching increases the speed of execution of the code, as returning to the RTS significantly slows down execution time. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> A problem with <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is that an emulator is required to perform profiling, i.e. the emulated code is used to determine which code is hot. Emulation is very slow, usually 50-200 times slower than native execution speed. Consequently, there is a large time penalty for determining which code is hot. Moreover, the quality of optimization is often determined by the quality of the selected trace. Poor trace selection can be costly, for example, predicting a branch not to be taken means the remainder of the block code is traced and optimized, and if mispredicted, then that tracing and optimizing of the code subsequent to the branch is wasted. Branch misprediction can be minimized by maintaining a long history of branching outcomes, which is formed by continually emulating the code block. Thus, the prior art RTS either incurs a time penalty from emulation to build a good history or incurs a time penalty from branch misprediction. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Another problem with the prior art RTS is that it cannot backpatch an indirect branch. The RTS cannot backpatch an indirect branch because the target address is unknown. The target address is typically in a register or memory location and not written directly in code. Thus, the RTS will shift control back to the control loop <highlight><bold>31</bold></highlight> to determine whether the target address has been translated, which is expensive in terms of time. The prior art has attempted to minimize this problem by inlining a code sequence to search a smaller lookup table in the optimized traces, however, these mechanism still incur high overhead. Examples of indirect branches are return branches and switch branches. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> A further problem with the prior art RTS is that it attempts to translate any code that is deemed hot based on a small threshold. This problem is referred to as complex and less reliable. There are some traces that are difficult to translate, but, without a translation, the execution of the trace would be performed by software simulation or emulation. Since emulation is slow, all hot code is translated. Some traces are very difficult to translate. For example, it is difficult to translate a trace with branches in the delay slot of another branch. The requirement of translating all hot code increases the translation time and complexity. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A further problem with the prior art RTS is that it will handle only user code and not operating system (OS) code. This is because the RTS is layered between the user application and the OS, and thus will not handle privileged instructions and addressing modes. In the prior art, the RTS is attached to user processes. Since the prior art RTS cannot be attached to the OS, it does not handle OS code. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Therefore, there is a need in the art for a RTS that does not require emulation for profiling, can handle indirect branches without returning control to a control loop, can refuse translation of difficult code and will handle OS code. </paragraph>
+</section>
+<section>
+<heading lvl="1">BRIEF SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> These and other objects, features and technical advantages are achieved by a system and method which embeds the control loop in hardware and, thus, does not require emulation for profiling, can handle indirect branches, will not translate difficult code, and will handle OS code. The inventive run-time optimization system (RTOS) places the control loop in the hardware and the translation/optimization components in the firmware, which are both below the OS level. Hence, the OS code can also be optimization candidates. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The inventive RTOS handles execution profiling and transfers execution to optimized traces automatically. This would allow code to run at faster native speed instead of slower emulation. Since the code is running faster, the threshold for selecting a hot trace could be set much higher than the prior art. This would also avoid generating traces for relatively infrequent code paths. Moreover, a higher threshold would enable the selection of better traces. Thus, a processor desires to execute a block of instructions, the processor first examines the Icache to determine whether the block is present. If not, the block is moved from memory to Icache. When the code is first moved into Icache, a threshold value is set into a counter associated with the particular instruction or instruction bundle (a group of instructions that can be issued together in the same cycle) of the Icache. Each time the instruction or instruction bundle is executed and retired, the counter is decremented by one. When the counter reaches zero, a trap is generated and the instruction (or instruction bundle) is designated as hot code. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> After the trap is generated to firmware, a trace selector forms a trace of the hot code. The trace is followed to determine the location of the target, i.e., the next instruction. The Icache maintains branch history information for the instructions in each cache line. This branch history is used to determine whether a branch should be predicted (as thus treated) as taken or to fall through. If the branch is predicted to fall through, then the subsequent instruction bundle is the next instruction. If the branch is predicted to be taken, the target instruction is the next instruction. After the trace is completed, it is optimized and stored into a trace memory portion of the physical memory. The mapping of the starting address of the original trace to the location of the optimized trace in Trace Memory (TM) is maintained in the IP-to-TM Table. The instruction fetch unit consults the IP-to-TM Table to decide whether the execution should continue with an optimized trace in the TM. There is an IP-to-TM cache in the instruction fetch unit to speed up the access of the IP-to-TM Table. The processor consults the IP-to-TM cache prior to examining the Icache. Therefore, upon subsequent execution of this code, the processor examines the IP-to-TM cache, which then points to the trace memory location. Thus, the code in the trace memory is executed instead of the original binary code. Note that if the code has not been optimized, the processor will execute the original code in the Icache. Note that the instruction from the TM (Trace Memory) will also be moved into the Icache before execution, not just the original code. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Since the inventive RTOS uses hardware managed trace address mapping, the complexity of backpatching may be eliminated. This also avoids reserving registers for passing arguments in trampoline code used in backpacking that may introduce a register spilling penalty. Furthermore, the inventive RTOS can significantly reduce the cost of handling indirect branches. Since the non-optimized code runs at native speeds, the indirect branch is allowed to execute which returns control to native code. Note that a hardware (or processor) table lookup is significantly faster than a software (or emulator) table lookup. For example, a search of the IP-to TM cache may require one cycle, whereas a software lookup of a table would require from 10 to 1000 cycles. The software lookup is expensive because the current architecture states must be saved before returning to the software RTS (Run-Time System). </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The inventive RTOS uses hardware to directly process non-trace code, which significantly improves the reliability of the dynamic optimizer. The dynamic translator can choose not to translate some difficult traces and leave them unchanged in the original code, since this code will be executed at native speeds. Therefore, the time penalty for not optimized code is much lower than compared with the prior art software emulation. Specifically, a decision in the prior art RTOS not to optimize code, meant that the code would be executed at emulator speeds. Note that in the prior art, all hot code is optimized. Furthermore, the reliability aspects are improved because less code would need to be translated, and thus fewer problems from translation will be introduced into the program application. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The inventive RTOS is controlled at the processor and at the firmware level, which is below the OS. Therefore, the inventive RTOS can handle OS code. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Therefore, it is a technical advantage of the present invention to have the run-time optimization system (RTOS) embedded into the hardware. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> It is another technical advantage of the present invention that the embedded RTOS does not require software emulation for code profiling to determine hot code. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> It is further technical advantage of the present invention that the embedded RTOS can substantially reduce the cost of handling indirect branches. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> It is further technical advantage of the present invention that the embedded RTOS can elect not to translate difficult code, and run such code at native speeds. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> It is further technical advantage of the present invention that the embedded RTOS can handle OS code in addition to user application codes. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The foregoing has outlined rather broadly the features and technical advantages of the present invention in order that the detailed description of the invention that follows may be better understood. Additional features and advantages of the invention will be described hereinafter which form the subject of the claims of the invention. It should be appreciated by those skilled in the art that the conception and the specific embodiment disclosed may be readily utilized as a basis for modifying or designing other structures for carrying out the same purposes of the present invention. It should also be realized by those skilled in the art that such equivalent constructions do not depart from the spirit and scope of the invention as set forth in the appended claims.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts the inventive run-time optimization system (RTOS) that has its control loop embedded in hardware; </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a version of the inventive RTOS of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> configured to run without backpatching; </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> depicts a high level block diagram of a computer system adapted to implement the inventive RTOS of <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference>; </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> depicts a prior art software emulation RTS; and </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> depicts a prior art backpatching mechanism that is used with the system of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts the inventive run-time optimization system (RTOS) <highlight><bold>100</bold></highlight> that is embedded in hardware. RTOS <highlight><bold>100</bold></highlight> has the control of the optimization in hardware and hardware is used to detect hot code, as well as execute both optimized and non-optimized code. Hardware also notifies the firmware via traps. The RTOS <highlight><bold>100</bold></highlight> uses firmware to handle trace selection, code optimization, and trace memory management, each of which require complex analysis. The balance of work between hardware and firmware is an important aspect of the inventive RTOS. The inventive RTOS distributes the different aspects of the RTOS work to the mechanism, i.e. hardware or firmware, best suited to handle the work. Thus, the inventive RTOS has both hardware and firmware aspects. The operation of RTOS <highlight><bold>100</bold></highlight> is transparent to the user, as control moves between hardware and firmware without user involvement. Note that firmware is microcode in ROM. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> The RTOS <highlight><bold>100</bold></highlight> uses the instruction cache (Icache) <highlight><bold>101</bold></highlight> of the processor <highlight><bold>301</bold></highlight> to determine which code is hot code. Associated with the Icache <highlight><bold>101</bold></highlight> is a counter <highlight><bold>102</bold></highlight> and a few bits that are used to hold the branch history information associated with each instruction or instruction bundle in the Icache <highlight><bold>101</bold></highlight>. A preferred embodiment is to have the Icache <highlight><bold>101</bold></highlight> holds multiple instructions per cache line, thus multiple counters <highlight><bold>102</bold></highlight> and registers <highlight><bold>103</bold></highlight> would be associated with each cache line. The number of cache lines is processor dependent, for example a Pentium II has 16K of Icache which is organized into 512 cache lines. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The RTOS uses the trace memory <highlight><bold>105</bold></highlight> to hold the traces of the optimized instructions. Note that trace memory <highlight><bold>105</bold></highlight> is a portion of RAM memory <highlight><bold>303</bold></highlight>. RAM <highlight><bold>303</bold></highlight> also includes IP-to-TM mapping table (TM table) <highlight><bold>106</bold></highlight>. This table list the mapping of the original IP of a trace to the location in the TM <highlight><bold>105</bold></highlight> which correspond to the optimized trace. The RTOS uses IP-to-TM cache <highlight><bold>104</bold></highlight>, which is a TLB-like structure in the instruction fetch unit to accelerate mapping table access. The IP-to-TM cache <highlight><bold>104</bold></highlight> holds a smaller portion of the most active entries in the TM mapping table. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The RTOS uses firmware <highlight><bold>108</bold></highlight> to perform tasks which require complex analysis. Trace selector <highlight><bold>109</bold></highlight> forms traces of instructions, and includes branch prediction. The operation of this component and its interaction with the other RTOS components is explained in the related, co-pending application entitled, FAST INSTRUCTION PROFILING AND EFFECTIVE TRACE SELECTION, by Hsu et al., Ser. No. 09/252,567, filed Feb. 18, 1999, which is hereby incorporated by reference. Optimizer <highlight><bold>110</bold></highlight> optimizes the trace determined by trace selector <highlight><bold>109</bold></highlight>. The optimized code is then placed into the trace memory <highlight><bold>105</bold></highlight>, which is managed by trace memory manager <highlight><bold>111</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Execution pipeline <highlight><bold>107</bold></highlight> depicts sequence of execution of an instruction by processor <highlight><bold>301</bold></highlight>. The first stage is the instruction pointer generation (IPG) <highlight><bold>112</bold></highlight>. This stage delivers an instruction pointer (IP) to Icache <highlight><bold>101</bold></highlight>. The IP may come from several places, for example, as a corrected target address from a branch misprediction, as a predicted branch addresses, or as a next sequential address. When an instruction pointer (IP) in the user application (not shown) indicates that a particular instruction is to be executed, the processor first checks IP-to-TM cache <highlight><bold>104</bold></highlight> to determine whether the instruction is a starting location of a block which has been optimized and the optimized version resides in trace memory (TM) <highlight><bold>105</bold></highlight>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> If it exists in IP-to-TM cache <highlight><bold>104</bold></highlight>, the processor then retrieves the location of the optimized instruction in trace memory <highlight><bold>105</bold></highlight>, and executes the optimized instruction. If it does not exist, then the processor examines Icache <highlight><bold>101</bold></highlight> to determine if the instruction is in Icache. If it exists in Icache <highlight><bold>101</bold></highlight>, then the processor executes the instruction. If it does not exist, then the processor retrieves the instruction from memory <highlight><bold>303</bold></highlight>, and places the instruction into Icache <highlight><bold>101</bold></highlight>. This is performed in fetch stage FET <highlight><bold>113</bold></highlight> of the pipeline. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> When the instruction is first moved into Icache <highlight><bold>101</bold></highlight>, a threshold value is set into counter <highlight><bold>102</bold></highlight> associated with the particular instruction or instruction bundle in Icache <highlight><bold>101</bold></highlight>. Each time the cache line is retired from the execution pipeline <highlight><bold>107</bold></highlight>, i.e. execution is complete, counter <highlight><bold>102</bold></highlight> is decremented by one and branch history <highlight><bold>103</bold></highlight> is updated. When counter <highlight><bold>102</bold></highlight> reaches zero, a trap is generated and the instruction is designated as hot code. Note that the preferred threshold is between approximately 50 to approximately 200. Thus, the counters can be 8 bits. For comparison, the prior art threshold is as small as 5. Note that in the instruction fetch stage, a fetch address can come from several different sources, e.g. as calculated from fall through address such as (current-IP&plus;1-line) or (current-TM&plus;1-line), as a predicted taken branch target address in from some branch prediction hardware, or as a target address forwarded from a mispredicted branch detected at the end of execution stage. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The trap invokes firmware <highlight><bold>108</bold></highlight>. Trace selector <highlight><bold>109</bold></highlight> forms a trace based on the starting instruction bundle and any surmised branch predictions which have been determined from branch history information <highlight><bold>103</bold></highlight>. The termination of a trace will be driven by a set of heuristics including the length of the trace, the number of conditional branches encountered, the probability of accumulated branch predictions and other considerations. A trace may terminate at an indirect branch, since the target address is not known. However, the trace selector may decide to grow the trace by predicting its most recent target from some hardware branch predictor such as RTB (Branch Target Buffer). For a return branch, the trace selector would know the return address if the call instruction is in the trace, if the call instruction is not in the trace, the trace selector can predict the call site using the top address of the RSB (Return Stack Buffer). The BTB is described in &ldquo;Branch Prediction Strategies and Branch Target Buffer Design&rdquo;, IEEE, Computer, January, 1984, which is hereby incorporated by reference. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Note that since traces (as well as any instruction either in the original binary or in the TM) are also brought into Icache <highlight><bold>101</bold></highlight> before being executed, the profiling and trace selection may end up generating a trace on top of an existing trace. Traces can be identified, since their addresses are preserved memory (e.g. RAM), and are accessible by the RTOS. When trace lines are moved into Icache <highlight><bold>101</bold></highlight>, their counters do not get initialized, thus they do not participate in profiling. Alternatively, if traces do participate in profiling, trace selector <highlight><bold>109</bold></highlight> can check whether this trace is considered &ldquo;good&rdquo;. For example, if a trace has a frequent early exit, the trace may need to be regenerated. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> After the trace has been formed, optimizer <highlight><bold>110</bold></highlight> will operate on the trace. The optimizer may perform any of the following optimizations: prefetch insertion (both Icache and Dcache), inlining/outlining and calling overhead reduction, instruction polarity padding, bundle compression using compact templates, unnecessary stop bits elimination, converting ST-LD (with same address) to ST-copy, convert LD-LD (with same address) to LD-copy, and constant propagation and assertion propagation. This list is by way of example only. Other optimizations may be performed so long as the processor would deliver an identical architecture state to the original binary application when traps/exceptions are raised. Once the selected trace is optimized, it is written into trace memory <highlight><bold>105</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Trace memory manager <highlight><bold>108</bold></highlight> maintains the trace memory <highlight><bold>105</bold></highlight>. The trace memory can be divided into several chunks. Traces are written into the current chunk at the next available address. When a chunk is filled up, the next chunk becomes the current chunk. When there is no chunks available, one of the existing chunks will be evicted. When a chunk is evicted, all the traces in that chunk become invalid. This will in turn trigger the elimination of address mapping entries from TM mapping table <highlight><bold>106</bold></highlight> and IP-to-TM cache <highlight><bold>104</bold></highlight>. Also, invalid traces existing in Icache <highlight><bold>101</bold></highlight> will also be purged. Note that before a chuck is evicted, the trace manager ensures that no threads or processes are executing any of the trace in the evicted chunk. When a processor is interrupted, and the processor is executing in a trace, the processor will go back to its original binary instruction when it resumes. Thus, the trace manager forces each executing thread/process out of the trace memory by sending an interrupt signal to the processor(s). Once the entries in IP-to-TM cache <highlight><bold>104</bold></highlight> have been purged, no new threads and processes can enter the chunk to be evicted. Thus, the evicted chunk can then be reused. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Note that trace locality can be implemented by trace memory manager <highlight><bold>111</bold></highlight>. Trace memory manager <highlight><bold>111</bold></highlight> would track the frequency of usage of traces in the mapping cache, and periodically reorganize the traces in trace memory <highlight><bold>105</bold></highlight> in such a manner that both sequential and temporal locality can be improved. For example, if trace A branches to trace B more frequently, then trace B will be placed next to trace A in trace memory <highlight><bold>105</bold></highlight>. Note that if the hardware support PC-relative branches in traces to generate original IP addresses, relocating traces will be much easier. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> If the next fetch address is a trace address, either a fall through from a trace address or the branch target is a trace, the fetch unit can bypass the regular instruction translation and retrieve the optimized code from trace memory <highlight><bold>105</bold></highlight>. This operation is explained in the related, co-pending patent application entitled EFFICIENT MAPPING TO OPTIMIZED CODE FOR PROCESSOR EMBEDDED RUN-TIME OPTIMIZERS, by Benitez et al. (HP&num; 10981004-1), which is hereby incorporated by reference. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> In the expansion stage or EXP stage <highlight><bold>114</bold></highlight>, the instructions are decoded and PC relative branch target addresses are calculated. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> REN stage <highlight><bold>115</bold></highlight> translates logical (virtual) register into physical registers. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> REG stage <highlight><bold>116</bold></highlight> accesses the registers and delivers operands to all execution units. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> EXE stage <highlight><bold>117</bold></highlight> executes the instruction. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The detection stage or DET <highlight><bold>118</bold></highlight> is the stage of the pipeline where the processor can check to see whether. an instruction contains a trap or exception. If so, then the processor reports to the operating system, unless the trap or exception is associated with an address in trace memory, then it is reported to firmware. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The last stage of the pipeline is the write back or WRB <highlight><bold>119</bold></highlight>. In this stage, executed instructions are retired from the pipeline. At this point counter <highlight><bold>102</bold></highlight> associated with the instruction would be decremented and the associated branch history information <highlight><bold>103</bold></highlight> would be updated. Updating the branch history allows for an accurate history as a speculative execution is performed. Note that this stage is also referred to as the retirement stage. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts the inventive run-time optimization system (RTOS) <highlight><bold>200</bold></highlight> that is embedded in hardware, and is configured to operate without backpatching. Note that Icache <highlight><bold>101</bold></highlight> and counter <highlight><bold>102</bold></highlight> are also embedded in hardware. For exception or fault, the trace-entering IP-address <highlight><bold>201</bold></highlight> can be used to figure out the original IP address. This simplifies the trace memory management work, as the trace exit branches can be maintained as IP addresses. Thus, transition from trace to original binary is relatively easy. Moreover, when a trace is removed, the trace manager does not need to reinsert trampoline code (unbackpatch) at every incoming branch site. Furthermore, access protection for traces can be enforced on the IP-to-TM cache, as the only way to branch to a trace is to go through the IP-to-TM mapping. Block <highlight><bold>201</bold></highlight> stores the most recent trace entering IP address. The block <highlight><bold>201</bold></highlight> is a register that holds the most current IP address that enters the TM memory. This IP address is used to calculate the branch address in the trace. Note that most conditional branches are PC relative and not TM relative. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> Note that PC-relative branches in traces may need special treatment since they are now relative to trace memory locations rather than to the original virtual IP address. This treatment may be provided by backpatching. However, backpatching makes trace memory management very difficult. For example, suppose trace A has an exit branch which jumps to trace B. Once this branch is backpatched, trace A and trace B are bound together. If trace B is part of a chunk that is to be evicted from the trace memory, then the respective branch in trace A must be unbackpatched. However, if PC-relative branches generate target addresses in the original IP addresses, then backpatching is not needed, and all traces are &ldquo;relocatable&rdquo;, i.e. removing one trace would not affect others. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> The target address of PC-relative branches in traces is computed in the context of original IP addresses instead of trace memory addresses. This is achieved by remembering the trace entering IP address in block <highlight><bold>201</bold></highlight> at EXP stage <highlight><bold>114</bold></highlight>. The branch unit uses this IP address in block <highlight><bold>201</bold></highlight> as the base address for calculating a PC-relative branch target address for traces (instructions from TM). The offset in those PC-relative branch instructions in traces is generated based on the trace entering IP address. Thus, a branched-to-trace can be entered uniformly from going through the IP-to-TM cache instead of backpatching. For a PC-relative branch instruction in a trace, the manager <highlight><bold>111</bold></highlight> would use the respective entering IP address instead of the current trace address as the current PC location for target address calculation. The offset in PC-relative branches needs to be adjusted relative to the entering of IP address. This is done during trace translation/optimization time by the trace selector. The following table illustrates the address offset adjustment work. Note that the offsets are adjusted, relative to the entering IP address <highlight><bold>1000</bold></highlight>. Further note that this table is by way of example only, and other values could be used.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="98PT" align="center"/>
+<colspec colname="2" colwidth="119PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Original Binary</entry>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="63PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="left"/>
+<colspec colname="2" colwidth="119PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>taken/</entry>
+<entry>Adjusted branch offset in the trace</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="6">
+<colspec colname="1" colwidth="28PT" align="center"/>
+<colspec colname="2" colwidth="35PT" align="left"/>
+<colspec colname="3" colwidth="35PT" align="left"/>
+<colspec colname="4" colwidth="42PT" align="center"/>
+<colspec colname="5" colwidth="35PT" align="center"/>
+<colspec colname="6" colwidth="42PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>bundle</entry>
+<entry>branch</entry>
+<entry>not</entry>
+<entry></entry>
+<entry>old bundle</entry>
+<entry>exit branch</entry>
+</row>
+<row>
+<entry>address</entry>
+<entry>offset</entry>
+<entry>taken</entry>
+<entry>TM address</entry>
+<entry>address</entry>
+<entry>offset</entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>1000</entry>
+<entry>br &plus;300</entry>
+<entry>not taken</entry>
+<entry>1</entry>
+<entry>1000</entry>
+<entry>br &plus;300</entry>
+</row>
+<row>
+<entry>1001</entry>
+<entry>br &plus;500</entry>
+<entry>taken</entry>
+<entry>2</entry>
+<entry>1001</entry>
+<entry>br &plus;2</entry>
+</row>
+<row>
+<entry>1501</entry>
+<entry>br &plus;200</entry>
+<entry>not taken</entry>
+<entry>3</entry>
+<entry>1501</entry>
+<entry>br &plus;701</entry>
+</row>
+<row>
+<entry>1502</entry>
+<entry>br &plus;1500</entry>
+<entry>taken</entry>
+<entry>4</entry>
+<entry>1502</entry>
+<entry>br &plus;503</entry>
+</row>
+<row>
+<entry>3002</entry>
+<entry>br &plus;100</entry>
+<entry>not taken</entry>
+<entry>5</entry>
+<entry>3002</entry>
+<entry>br &plus;2102</entry>
+</row>
+<row>
+<entry>3003</entry>
+<entry>br 2003</entry>
+<entry>taken</entry>
+<entry>6</entry>
+<entry>3003</entry>
+<entry>br &plus;0</entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> As shown in the above table, the left side portion depicts parts of the original binary with the branch offsets listed from the current address and an indication as to whether the branches are likely to be taken or fall through. The trace selector builds a trace from these portions, as shown on the right side of the above table. The instructions of the trace are predicted to operate sequentially. Thus, TM 1 would fall through to TM 2, and so on. However, if the predicted behavior of the instruction is incorrect, i.e. mispredicted, then the trace will be exited. The target of the trace instruction is the opposite of the predicted target of the original binary. For example, TM 2 holds old bundle address <highlight><bold>1001</bold></highlight>. The trace is built with the prediction that the branch will be taken. Hence, TM 3 contains old bundle address <highlight><bold>1501</bold></highlight>. A misprediction indicates that the branch will not be taken, and thus will fall through, i.e. from address <highlight><bold>1001</bold></highlight> to <highlight><bold>1002</bold></highlight>. Thus, the exit branch offset is &plus;2, which when added to the entering IP address of <highlight><bold>1000</bold></highlight> will yield the correct IP address of <highlight><bold>1002</bold></highlight>. Another example for the table is as follows. TM 5 holds old bundle address <highlight><bold>3002</bold></highlight>. The trace is built with the prediction that the branch will not be taken, hence TM 6 contains old bundle address <highlight><bold>3003</bold></highlight>. A misprediction indicates that the branch will be taken, and thus will jump from address <highlight><bold>3002</bold></highlight> to <highlight><bold>3102</bold></highlight> via the offset of &plus;100. Thus, the exit branch offset is &plus;2102, which, when added to the entering IP address of <highlight><bold>1000</bold></highlight>, will yield the correct IP address of <highlight><bold>3102</bold></highlight>. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> If all trace exit target addresses are generated from instructions in traces that are in the original IP form, then no backpatch is needed. The fetch address lookup process is also simplified, since only the fall through address calculation may generated a trace address, TAC/RSB and branch misprediction will all generate IP addresses. In this way, all branch target addresses forwarded to the IPG stage are in their original IP addresses. Such addresses will uniformly go through the IP-to-TM cache to transfer to traces if a match is found. This is further discussed in co-pending and commonly assigned U.S. Patent Applications entitled EFFICIENT MAPPING TO OPTIMIZED CODE FOR PROCESSOR EMBEDDED RUN-TIME OPTIMIZER (HP No. 10981004-1), which is hereby incorporated by reference. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates computer system <highlight><bold>300</bold></highlight> adapted to use the present invention. Central processing unit (CPU) <highlight><bold>301</bold></highlight> is coupled to bus <highlight><bold>302</bold></highlight>. Note that Icache <highlight><bold>101</bold></highlight>, counter <highlight><bold>102</bold></highlight>, and IP-to-TM cache <highlight><bold>104</bold></highlight> are parts of processor CPU <highlight><bold>301</bold></highlight>. In addition, bus <highlight><bold>302</bold></highlight> is coupled to random access memory (RAM) <highlight><bold>303</bold></highlight>, read only memory (ROM) <highlight><bold>304</bold></highlight>, input/output (I/O) adapter <highlight><bold>305</bold></highlight>, communications adapter <highlight><bold>311</bold></highlight>, user interface adapter <highlight><bold>308</bold></highlight>, and display adapter <highlight><bold>309</bold></highlight>. Note, ROM <highlight><bold>304</bold></highlight> may be PROM, EPROM, or EEPROM. Also note, RAM <highlight><bold>303</bold></highlight> may be SRAM, DRAM, or SDRAM. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> RAM <highlight><bold>303</bold></highlight> and ROM <highlight><bold>304</bold></highlight> hold user and system data and programs as is well known in the art. I/O adapter <highlight><bold>305</bold></highlight> connects storage devices <highlight><bold>306</bold></highlight>, such as a hard drive or a CD ROM drive, to the computer system. Communications adaption <highlight><bold>311</bold></highlight> is adapted to couple the computer system to a local, wide-area, or Internet network <highlight><bold>312</bold></highlight>. User interface adapter <highlight><bold>308</bold></highlight> couples user input devices, such as keyboard <highlight><bold>313</bold></highlight> and pointing device <highlight><bold>307</bold></highlight>, to computer system <highlight><bold>300</bold></highlight>. Finally, display adapter <highlight><bold>309</bold></highlight> is driven by CPU <highlight><bold>301</bold></highlight> to control the display on display device <highlight><bold>310</bold></highlight>. CPU <highlight><bold>301</bold></highlight> may be any general purpose CPU, such as an HP PA-8200. However, the present invention is not restricted by the architecture of CPU <highlight><bold>301</bold></highlight> as long as CPU <highlight><bold>301</bold></highlight> supports the inventive operations as described herein. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Although the present invention and its advantages have been described in detail, it should be understood that various changes, substitutions and alterations can be made herein without departing from the spirit and scope of the invention as defined by the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for optimizing a portion of a program during run-time of the program, the system comprising: 
+<claim-text>a hardware portion for detecting which instructions of the program are more frequently executed and maintaining a history of targets chosen by branch instructions of the program; </claim-text>
+<claim-text>a software portion for forming an optimized trace of instructions from the most frequently executed instructions and using the history in making branch predictions for branch instructions encountered in forming the trace; and </claim-text>
+<claim-text>a trace memory portion that stores the optimized trace. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>a table memory portion that stores a map of instruction pointers of the program to corresponding addresses in the trace memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the software portion further comprises: 
+<claim-text>a trace manager that controls usage of the trace memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the software portion comprises: 
+<claim-text>an optimizer which performs at least one predetermined optimization on the trace to form the optimized trace. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the hardware portion comprises: 
+<claim-text>a processor cache for holding a mapping of instruction pointers to addresses of optimized trace instructions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein 
+<claim-text>the hardware portion includes an instruction cache with a first portion that maintains a plurality of values, each indicating a number of executions of a particular instruction of the program, and a second portion that stores information detailing performance of branch instructions of the program; and </claim-text>
+<claim-text>the software portion includes a trace selector that forms the trace and is invoked when the one value of the plurality of values reaches a predetermined number, and the trace selector begins the trace with the instruction associated with the one counter and ends the trace with an instruction selected by a predetermined criteria. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method for optimizing a portion of a program during run-time of the program, the method comprising the steps of: 
+<claim-text>detecting via hardware, which instructions of the program are more frequently executed; </claim-text>
+<claim-text>maintaining, via hardware, a history of targets chosen by branch instructions of the program; </claim-text>
+<claim-text>forming, via software, an optimized trace of instructions from the most frequently executed instructions, wherein the step of forming includes the step of using the history in making branch predictions for branch instructions encountered in forming the trace; and </claim-text>
+<claim-text>storing the optimized trace in a trace memory portion. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising the step of: 
+<claim-text>storing a map of instruction pointers of the program to corresponding addresses in the trace memory in a table memory portion. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising the step of: 
+<claim-text>controlling, via software, usage of the trace memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising the step of: 
+<claim-text>performing at least one predetermined optimization on the trace to form the optimized trace. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising the step of: 
+<claim-text>storing, via a processor cache, a mapping of instruction pointers to addresses of optimized trace instructions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the hardware includes an instruction cache with a first portion that maintains a plurality of values, each indicating a number of executions of a particular instruction of the program, and a second portion that stores information detailing performance of branch instructions of the program; and 
+<claim-text>the software includes a trace selector that forms the trace and is invoked when one value of the plurality of values reaches a predetermined number and the trace selector begins the trace with the instruction associated with the one counter and ends the trace with an instruction selected by a predetermined criteria.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005271A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005271A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005271A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

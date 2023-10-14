@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005414A1-20030102-D00000.TIF SYSTEM "US20030005414A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005414A1-20030102-D00001.TIF SYSTEM "US20030005414A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005414A1-20030102-D00002.TIF SYSTEM "US20030005414A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005414A1-20030102-D00003.TIF SYSTEM "US20030005414A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005414</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10155825</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020523</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/44</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>717</class>
+<subclass>128000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>717</class>
+<subclass>130000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>717</class>
+<subclass>131000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Program execution stack signatures</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60293864</doc-number>
+<document-date>20010524</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Scott</given-name>
+<middle-name>Clementson</middle-name>
+<family-name>Elliott</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Hillsboro</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Kenneth</given-name>
+<middle-name>A.</middle-name>
+<family-name>Gengler</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>STOEL RIVES LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>900 SW FIFTH AVENUE</address-1>
+<address-2>SUITE 2600</address-2>
+<city>PORTLAND</city>
+<state>OR</state>
+<postalcode>97204</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A digital computer call stack or combined call stack and data stack is traced and analyzed following the occurrence of an unhandled exception or crash. Stack frame sizes and other artifacts are used to form a distinctive stack signature that generally reflects execution of the program up to the point of failure, without being finely detailed. Stack signatures can be associated with program bugs, and stack signatures collected from other failure instances, at other times or on other machines, can be conveniently compared for recognizing particular types of failures, without access to source code and without detailed study of memory dumps. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">RELATED APPLICATIONS </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application is a continuation of and claims priority from U.S. Provisional Application No. 60/293,864 filed May 24, 2001. The provisional application is incorporated herein by this reference.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">COPYRIGHT NOTICE </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> &copy; 2002 TechTracker.com, Inc. A portion of the disclosure of this patent document contains material which is subject to copyright protection. The copyright owner has no objection to the facsimile reproduction by anyone of the patent document or the patent disclosure, as it appears in the Patent and Trademark Office patent file or records, but otherwise reserves all copyright rights whatsoever. 37 CFR &sect; 1.71(d). </paragraph>
+</section>
+<section>
+<heading lvl="1">TECHNICAL FIELD </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> This invention pertains to operation of digital computers and, in particular, to the creation, collection and use of information associated with unhandled exceptions caused by one or more &ldquo;bugs&rdquo; in an executable program. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Unfortunately, computer programs &ldquo;crash&rdquo; all too often, usually for reasons that are not apparent. Despite extensive testing during development, beta testing, bug reporting procedures and the like, the reality is that even relatively mature software often contains &ldquo;bugs&rdquo;&mdash;the popular term for a flaw in the program code. Bugs are constantly being discovered, reported, collected, analyzed and in many cases fixed in a subsequent release, update or patch to the code. Still, in many application programs, especially complicated programs such as word processors, bugs remain that in some situations can cause a program to &ldquo;crash&rdquo;&mdash;the vernacular term for an unhandled exception. In other words, these are situations where an exception has occurred during execution of a program, and there is no exception handler code registered to deal with the exception. The result is that the program simply stops executing&mdash;it has crashed. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The typical response to a mysterious program crash (remonstrations aside), is to restart the failed program, and attempt to recover the user&apos;s data, sometimes by means of a backup file. Restarting the program, however, necessarily changes the state of the computer such that information about the state when the crash occurred is lost. That information might have been useful in identifying the bug that caused the crash. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Indeed, it is known in prior art to capture machine state information for use in debugging a program, or otherwise attempting to determine the cause of a crash. When a program stops executing (abnormally), this fact can be recognized and used to trigger a capture of the machine state. The current contents of RAM, processor registers, stack contents, etc. can be stored for later analysis. Sometimes an experienced, skilled artisan can study this information, like a detective at a crime scene, and discern something about the cause of the mishap. It is a difficult and labor intensive undertaking. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In the event of another crash of the same program, perhaps at another time or on another computer, there is no convenient way to determine whether the second crash might have the same or a similar etiology as the first. The detailed state of the second machine (or the same machine at the time of the second crash) will likely be quite different from the state at the time of the first crash. Only another painstaking, detailed study of the machine state might reveal some association with the first crash. At the other extreme, it would be easy, for example, to record the program&apos;s instruction pointer value at the time of a crash, and then compare that value at the time of the second crash to see if the address is the same. This method would fail if a program&apos;s instructions were loaded at different addresses, and it is utterly context-insensitive. Even though it identifies the location where the program was executing instructions, it is unaffected by how the program got there. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Most methods concentrate on describing the crash in ways that could be meaningful to diagnose it, but ignore the usefulness of concisely characterizing it so that crash events can be categorized, collated, and studied statistically. This is not intended to aid in diagnosis per se, but it certainly could help manage such tasks. If a particular &ldquo;bug&rdquo; could be distinguished as being widespread, for example, it might warrant more attention than another. For this purpose, a precise description of the actual failure is not necessarily desirable. Commonly, programs crash because they tried to access a memory address that did not exist, an attribute too vague to aid categorization. Such crashes often occur within faultless code operating on defective data, so that even the actual location of the failure could be misleading. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> What is needed is a way to identify or characterize a program crash, or more specifically, the current state of a computer thread at the time of a crash, that is easy to determine and recognize. It would be especially useful to have a way to describe that state so that a programmer could programmatically recognize a meaningfully similar state, whether it occurs on the same computer, a different computer, or even within a completely different program. A method that could generically characterize the instantaneous state of a thread at any arbitrary time would be more than adequate for this need, since it could therefore characterize the state of any crashed thread. It could, further, characterize the state of other non-crashed threads in the same program or other programs on the same machine, if desired for further study. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The invention endeavors to digest the call and/or data stack of an arbitrary program thread in order to generate a signature that characterizes its present state, sensitive to the path by which it reached its present state. The execution stack signature that this procedure generates is not required to concretely describe any aspect of the thread or its stack; rather the signature provides a moniker or alias that is predictably-similar when it describes threads in similar states and predictably-different when it describes threads in different states. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> One aspect of the present invention is a method and computer program implementation for capturing and describing a program&apos;s state as precisely or as generally as may be required for a particular application. For example, it may be too vague to be useful to report merely that a word processor crashed when the user inserted a page break. There may be many other circumstances that would help to distinguish or identify the particular failure. On the other hand, a complete &ldquo;core dump&rdquo; (to borrow an old term) would provide so much detailed information that virtually no other crash will &ldquo;match&rdquo; that information. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The present invention includes the concept of a &ldquo;stack signature&rdquo; that is not unduly precise, yet provides an abstract indication of a program thread&apos;s current state at the time of a crash, or any arbitrary time, and how it arrived there. The &ldquo;stack&rdquo; is a well-known feature of most von Neumann architecture computers. There can be more than one stack, and stacks can be variously implemented in hardware registers, RAM, etc. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> In one embodiment of the present invention, the stack signature is derived from the entire stack, so that it reflects at least at a high level, the control flow from the start of execution of the program of interest. It is not itself a correlation technique, but a transformation whose output can be subjected to correlation techniques, both common established methods and experimental ones. It therefore enables the use of a wide range of study and examination to which a crash or other event is not intrinsically applicable. The stack signature can be simple enough for even an untrained observer to &ldquo;match&rdquo; or correlate one stack signature with another by inspection. For longer or more complex signatures, various correlation techniques can be used for matching or categorizing signatures. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Another important aspect of the invention is that the stack signature methodology is versatile enough that the level of precision can be adjusted even after the signature has been recorded. The primary method calls for tracing the program&apos;s call-stack and/or data-stack, and collecting a pattern of chosen metrics, which can include, for example, the sizes of stack frames, specific return addresses, or the general identity of the code to which those addresses belong. For example, an address can be associated with particular library. This type of information&mdash;what library was called&mdash;is an example of a &ldquo;broad brush&rdquo; picture of program flow; it reflects something useful about program flow, but is not unduly detailed. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Word processing programs are just one example of a type of application program that is widely used and complex enough to contain bugs that can cause the program to crash unexpectedly. The present invention is applicable to all kinds of computer programs that are executable on a von Neumann type of processor platform that implements a stack architecture. One common example of such a platform is Intel&apos;s x-86 series of processors and their progeny, e.g. Pentium&reg; microprocessors, etc. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Additional aspects and advantages of this invention will be apparent from the following detailed description of preferred embodiments thereof, which proceeds with reference to the accompanying drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an example of an error message resulting from abnormal termination of an application program apparently due to an unhandled exception. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a first example of a map of a combined call stack and data stack. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart illustrating a method of generating a stack frame signature. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a first example of a stack frame signature. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a second example of a stack frame signature. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a third example of a stack frame signature. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a fourth example of a stack frame signature.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> We want to distinguish the states that an arbitrary program thread might be in when various types of failures occur. We would benefit from the ability to characterize the state of a program&apos;s threads in general, as this would enable us to do so when a program failure occurs. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Put another way, we want to be able to recognize a failure as being (probably) the same failure mode or due to the same bug when it occurs on another run or another machine. But specific state is too specific; it will never match. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Program stacks are well known in computer science. A common type of stack is the call stack. A call stack generally holds a return address for returning to the calling program after the called program (or function, driver, module etc.) has completed its work, as well as a saved copy of the calling program&apos;s base pointer&mdash;i.e., a pointer to the first or &ldquo;base&rdquo; location on the stack associated with the calling program. The call stack can also be used to pass parameters to the callee program as is well known. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Some systems refer to the stack as beginning at the &ldquo;top&rdquo; and expanding &ldquo;down&rdquo; toward the &ldquo;bottom&rdquo; as more entries are pushed onto the stack. Others have the stack beginning initially at the &ldquo;bottom&rdquo; and expanding upward as more items are pushed onto the stack. Thus the bottom of the stack is fixed and the top of the stack moves up and down. The &ldquo;current top of stack&rdquo; is the next location above the last entry made (or reserved) by the currently executing module. This convention will be used in the present description, as well as the drawing figures and the appended claims. The stack convention is arbitrary, however, and the present invention is not limited to application in any particular platform or environment. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Some machines also implement one or more data stacks, typically used for temporary storage of intermediate data or results. The program simply &ldquo;pushes&rdquo; such data onto the stack as convenient, and &ldquo;pops&rdquo; it off when needed. This approach is customarily used where the number of available hardware registers is quite limited, as in some microprocessors and microcontrollers. Commonly, however, the call and data stacks are combined into a single stack, as illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. The present invention compiles metrics from whatever stack or stacks are present, as its primary goal find attributes that are predictably consistent for a particular path of execution. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Stacks can be implemented in various ways, e.g. using hardware registers, random access memory, etc. Details of stack implementation are well known and beyond the scope of the present invention. The principles of the invention are applicable to virtually any stack implementation as will become more apparent below. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Often an unhandled exception results in a screen display message of the type shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>&mdash;sometimes called the &ldquo;dreaded box of death.&rdquo; While the type of exception&mdash;in this example an access violation&mdash;and the address where it occurred may be useful to a developer in some cases, it says nothing about how the execution arrived at this unfortunate state. (It has also been suggested that the content of such messages is almost useless by definition, because if the operating system had useful information about the crash, it would remedy the situation.) </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The present invention is directed in part to capturing more context surrounding the crash, so that other crashes might be recognized as having occurred under the same or a similar context. This recognition, in turn, at least suggests that the &ldquo;matching&rdquo; crash might be a result of the same bug that caused the first crash (or something similar). </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> To achieve this, the principal goal of the invention is to produce a signature by tracing the thread&apos;s stack, accumulating metrics which are predictably-consistent artifacts of the program&apos;s behavior. These artifacts needn&apos;t be deliberate, nor is it necessary that they be individually distinctive. Accumulating these metrics together in combination establishes the uniqueness of each signature, and the uniqueness is made more robust if it is sensitive to the ordering of these metrics. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> One simple metric that yields robust signatures is the distance between adjacent stack frames (essentially the &ldquo;size&rdquo; of each frame). A typical program function declares a stack frame for itself immediately upon being invoked, always declaring as much space as it might need. While this quantity is doubtless not individually unique, it is consistent for every invocation of that particular function, and so it meets our criteria and helps form a robust signature by accumulation. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The representation of the signature offers opportunities for enhancement. If we will only be interested in exact matches, we could form a signature by simply appending the metrics together and hashing it to form a fixed-length checksum; this method would be about as robust as the chosen hashing function, which could be as simple as a CRC32 or as sophisticated as a SHA-1. To enable more sophisticated analysis, we can transform the ordered list into a string. There exist many elaborate and powerful string-collation and analysis techniques, and this transformation would enable us to exploit them instead of devising our own. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> simple example of a combined stack <highlight><bold>10</bold></highlight> is shown, extending over locations <highlight><bold>1</bold></highlight> to <highlight><bold>16</bold></highlight>. This type of arrangement is similar to that found in an Intel platform, for example, where the Intel CPU has a register called the Extended Base Pointer (&ldquo;EBP&rdquo;) that points to the current top of the stack. In the Intel stack, the top element contains the EBP for the previous stack frame. Referring again to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, starting from the top of the stack, a first frame is employed by function &ldquo;Sub.&rdquo; The first frame extends from location <highlight><bold>14</bold></highlight> to location <highlight><bold>11</bold></highlight>. Location <highlight><bold>11</bold></highlight> saves the previous or calling function&apos;s (here, &ldquo;Main&rdquo;) base pointer. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> The top of the next frame is location <highlight><bold>10</bold></highlight>; it stores the return address provided by the calling program Main. This second frame extends from location <highlight><bold>10</bold></highlight> to location <highlight><bold>3</bold></highlight>, where it stores a saved base pointer. Location <highlight><bold>2</bold></highlight> has Main&apos;s return address and so on. The first and second stack frames (measured from the top) are 4 and 8 cells apart, respectively. The distance between one stack frame and the next is the sum of all the items pushed onto the stack between nested function calls. A simple way to describe this stack, or portion of a stack, is an ordered list, in this case &ldquo;<highlight><bold>4</bold></highlight>-<highlight><bold>8</bold></highlight>&rdquo; indicating two adjacent frames, having sizes <highlight><bold>4</bold></highlight> and <highlight><bold>8</bold></highlight> respectively. Enclosing the string in delimiters, like parentheses, permits the ends of the stack to be clearly denoted. For this example, the string would then read &ldquo;(<highlight><bold>4</bold></highlight>-<highlight><bold>8</bold></highlight>).&rdquo; The same principle is easily applied to a program with more and larger stack frames. For example, such an ordered list might be &ldquo;(<highlight><bold>280</bold></highlight>-<highlight><bold>312</bold></highlight>-<highlight><bold>242</bold></highlight>-<highlight><bold>4</bold></highlight>-<highlight><bold>728</bold></highlight>-<highlight><bold>449</bold></highlight>-<highlight><bold>233</bold></highlight>-<highlight><bold>18</bold></highlight>-<highlight><bold>385</bold></highlight>).&rdquo; These kinds of ordered lists are examples of stack frame signatures in accordance with the present invention. As the reader can see, these are relatively easy to create and to compare to one another. Stack frame signatures are not limited to a list of frame sizes. Additional information can be useful, but what is important here is to be sensitive to attributes influenced by the thread&apos;s execution path yet insensitive to other influences like the contents of specific variables, quantity of free memory, or the current date &amp; time. To illustrate, a stack trace can be used to collect return addresses, but that specific information is excessively precise for present purposes. The same program, executing at another time or on another machine, may load program modules at arbitrarily different locations so that the program may not traverse the same addresses even if it executes the same sequence of instructions. Consequently, a stack frame signature comprising return addresses will likely not find a match, even when comparing runs that executed completely identical paths of instructions. Similarly, recording the value of the instruction pointer at the time of failure will not help where instructions are loaded at different addresses, and in any event, this value is unaffected by how the program arrived there; it provides no historical context. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Return addresses, however, can be used to identify a module (library, executable, or other code file) to which the calling code belongs. The actual numerical addresses are ephemeral, again because each time the program is loaded, those numbers may change. Module locations may change or they simply might not be known at a later time. But the address is meaningful at the time of its discovery because it refers to a location, probably a code module, at which the program eventually expected to continue execution. It can consequently be used to identify the module to which that address refers. This can be obtained, for example in Microsoft Windows OS, by a system call, providing the address as an argument. The identity or type of module can be used to determine whether or not to include the metrics of a particular frame (call) in a stack frame signature. If we do not want our signature to sense differences solely attributable to different versions of the operating system, for example, we could first identify each module as described above, and censor from the signature any information associated with modules provided by the operating system. This is optional, though, as it is just as valid to regard as significant all attributes of all frames. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> To illustrate, <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows a simple stack frame signature. The parentheses delimit the ends of the stack. In this example, the frame sizes are encoded using base <highlight><bold>36</bold></highlight> simply to make the data structure more compact and easier to inspect. Nine frames are represented. Next we compare the frame signature of <cross-reference target="DRAWINGS">FIG. 5</cross-reference> to that of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. Assume that these signatures reflect crashes of the same application program on two different computers. The two signatures are identical except for the fourth symbol, which has the value &ldquo;14&rdquo; in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> and <highlight><bold>5</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. If it were determined, for example, that the fourth symbol (frame) was a call to a video board, the difference in frame sizes might be attributed to the software on the two video boards, which may be from different vendors. That frame size has nothing to do with the application program under study. So by identifying the general type or library of a given module, one can choose whether or not to include it in the frame signature. Here, where we want to recognize similar failure modes of the application program, omission of the fourth symbol would leave signatures that match. That symbol (frame size) could simply be omitted from the signature; or it could be replaced by a generic symbol, as a frame place holder that would allow the signatures to match. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In other situations, it may be useful for categorizing failures to know the identity or type of module called in each frame. This information can be included in the frame signature. For example, suppose there are code libraries A, B and C loaded. A stack frame signature can be constructed as illustrated in <cross-reference target="DRAWINGS">FIG. 7</cross-reference> where each symbol, indicating the corresponding frame size, also includes another symbol, here the superscripts &ldquo;A&rdquo; and &ldquo;C,&rdquo; indicating the corresponding module library. The symbols without superscripts can indicate calls to functions within the application program under study. The reader will by now appreciate that such signatures can easily be compared and examined to identify patterns or common characteristics. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates additional features and potential applications of stack frame signatures. Here, a portion (substring) <highlight><bold>72</bold></highlight> of the signature matches a substring of the signature of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. In the case of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, the program crashed at the end of that string, in the frame having length &ldquo;N&rdquo; (assuming the signature string runs from bottom to top of stack). In <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, the same substring <highlight><bold>72</bold></highlight> appears, but the program continued to execute thereafter (for another dozen frames). More user data, in other words signatures of scores or even hundreds of other crashes of the same program can be compared to help determine the implications of this difference. For example, if 98% of a larger sample of signatures match the substring of <cross-reference target="DRAWINGS">FIG. 5</cross-reference> but not the longer signature of <cross-reference target="DRAWINGS">FIG. 6</cross-reference> different conclusions may be drawn. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> also illustrates other features. First, the connector between the symbols H and <highlight><bold>7</bold></highlight>, i.e., the equal sign, differs from the other connectors and is used here to signify a break in the stack trace or stack frame chain. This is further discussed below. The other notable feature of <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is the repeating sequence &ldquo;C-<highlight><bold>24</bold></highlight>-C-<highlight><bold>24</bold></highlight>-C-<highlight><bold>24</bold></highlight>&rdquo; etc. This type of repeating pattern can reflect a program logic loop or a recursion failure mode in which a module keeps calling itself recursively, and declaring more stack space, until it runs out of space. Such patterns are easy to recognize and to match. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow chart illustrating a method of forming a frame stack signature associated with a particular program thread in accordance with the invention. Referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the method begins at step <highlight><bold>42</bold></highlight> where the present invention is invoked. It can be called at any time to capture a stack frame signature. One way to implement the invention is as an enhancement to a pre-existing &ldquo;debugger&rdquo; program. Alternatively, it can be implemented stand-alone or integrated with other tools. In a presently preferred embodiment, the invention is implemented in executable code, and it is registered with the target operating system so that the operating system will launch the stack signature program (&ldquo;SSP&rdquo;) responsive to abnormal termination of an application program. In step <highlight><bold>44</bold></highlight>, the SSP finds the stack pointer, indicating the current top of stack. Next it finds the base pointer in the current frame, step <highlight><bold>46</bold></highlight>, which can be done using known stack trace methods. From these pointers, or similar stack trace tools, the size of the current stack is determined in step <highlight><bold>48</bold></highlight>. This datum can form the first item in the signature as illustrated above. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Other metrics are captured, optionally, in step <highlight><bold>50</bold></highlight>. These can include, for example, the current frame module name, type or library. Indicia responsive to such additional metrics can be included in the signature data. As mentioned above, such further metrics can also be used to modify or filter the signature data, for example with regard to calls to drivers or other modules that may be irrelevant for present purposes. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Referring again to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, step <highlight><bold>52</bold></highlight> calls for tracing the next frame, by which we mean at least locating the next base pointer. In decision block <highlight><bold>54</bold></highlight> we check whether the next base pointer is valid. For example, does it point to another location on the stack (valid), or does it contain zero or point somewhere else (invalid). If it is valid, test for end of stack <highlight><bold>56</bold></highlight>, and if true, return <highlight><bold>60</bold></highlight>. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> If the next base pointer is invalid at test <highlight><bold>54</bold></highlight>, there is a break in the chain of stack frames. This can occur, for example, where a function call did not adhere to standard or customary programming practices with regard to the stack. The present method will then single step to the next stack location (proceeding top to bottom in this illustration), step <highlight><bold>64</bold></highlight>, and test <highlight><bold>66</bold></highlight> whether that location contains a valid base pointer. If not, we single step to the next location, loop <highlight><bold>67</bold></highlight>, and so on until we find the next valid pointer. That defines the next frame for present purposes, and we determine its size in step <highlight><bold>68</bold></highlight>. Again, other metrics about this frame can be captured as well, step <highlight><bold>70</bold></highlight>, such as the identity of its library or the general type of function. Still referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, we again test for end-of-stack, step <highlight><bold>72</bold></highlight>, and if true return <highlight><bold>60</bold></highlight>. If this is not the bottom frame in the stack, we loop back to continue to process, preferably until we parse through the entire stack. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Of course, some stacks may be quite long. This is not necessarily a problem, and long signatures can be used, but the relevance of lower (older) frames in a long stack with regard to the ultimate failure of the subject program may be attenuated or null. Accordingly, one could choose to truncate a stack frame signature to some arbitrary length, at the risk of losing some potentially useful information. Whatever method is employed to truncate, it must be predictable so that the truncation of identical signatures does not yield differing results. A simple, effective method would be to retain fixed-length excerpts of the starting and ending portions of the signature, two areas likely to be of interest. If we intend to employ the signature to test only for exact matches, we could hash it to a fixed-length checksum, so that the significance of the length of the intermediate data is how it impacts the final checksum. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> It will be obvious to those having skill in the art that many changes may be made to the details of the above-described embodiments of this invention without departing from the underlying principles thereof. The scope of the present invention should, therefore, be determined only by the following claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of forming a stack signature responsive to execution of a computer program in a digital computer, the method comprising the steps of: 
+<claim-text>halting execution of the computer program; </claim-text>
+<claim-text>tracing the program&apos;s call stack to determine a series of stack frames resulting from execution of the program; </claim-text>
+<claim-text>capturing a selected metric with respect to each stack frame in the series; </claim-text>
+<claim-text>encoding each captured metric into a corresponding symbol; and </claim-text>
+<claim-text>assembling the series of encoded symbols into an ordered list thereby forming a stack frame signature that reflects generally the execution of the computer program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selected metric comprises a length of each of the stack frames. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selected metric comprises an identifier of a generic type of callee module corresponding to each of the stack frames. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selected metric comprises an identifier of a specific callee code module corresponding to each of the stack frames. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selected metric comprises an identifier of a callee library associated with of each of the stack frames. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selected metric comprises an indication of a system call as applicable to each of the stack frames. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selected metric comprises an indication of a peripheral driver module call as applicable to each of the stack frames. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> and further including delimiting the series of encoded symbols so as to indicate the start and the end of the call stack. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> and further comprising filtering the stack frame signature by deleting symbols corresponding to stack frames associated with predetermined callee code modules. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> and further comprising filtering the stack frame signature by deleting symbols corresponding to stack frames associated with selected types of modules. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> and further comprising filtering the stack frame signature by deleting symbols corresponding to stack frames associated with system calls. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> and further comprising filtering the stack frame signature by deleting symbols corresponding to stack frames associated with calls to peripheral drivers. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> and further comprising truncating the stack frame signature so as to preserve only a selected portion of the signature. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> and wherein said encoding includes transforming the captured metric into a representation that is more compact than a binary representation, thereby facilitating human inspection and recognition of the stack frame signature. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method of assessing a computer program under actual working conditions comprising the steps of: 
+<claim-text>executing the computer program multiple times under actual working conditions; </claim-text>
+<claim-text>in response to each unhandled exception encountered during execution of the computer program, creating a corresponding stack frame signature to characterize the state of the program; and </claim-text>
+<claim-text>comparing the stack frame signatures to determine which unhandled exceptions are likely to have resulted from similar features. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein said comparing the stack frame signatures includes identifying at least one category of stack frame signatures based on a common attribute. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the common attribute is that the stack frame signatures are identical. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the common attribute is that each of the stack frame signatures reflects a series of frames having correspondingly equal sizes. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the common attribute is an identical substring. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein each stack frame signature comprises a series of symbols, each symbol representing a predetermined attribute of a corresponding stack frame, and the series of symbols including at least one symbol responsive to each frame of the program stack. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein said comparing the stack frame signatures includes searching for a matching substring. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein said comparing the stack frame signatures includes first filtering the stack frame signatures so as to remove indicia of certain predetermined types of calls. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A method of assessing a computer program according to <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein said types of calls include driver calls. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A stack frame signature data structure encoded in machine-readable form for characterizing an unhandled exception caused by a computer program, the stack frame signature comprising a series of symbols, each symbol responsive to a predetermined attribute of a corresponding stack frame. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A stack frame signature according to <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> wherein the series of symbols includes at least one symbol responsive to each frame of at least a portion of the program stack. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. A stack frame signature according to <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> comprising a linear array of symbols, each symbol encoding a respective length of a corresponding one of the stack frames determined from tracing the call stack, so that the stack frame signature broadly reflects execution of the application program independent of specific address information. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. A stack frame signature computer program encoded in machine-readable form for execution on a platform comprising: 
+<claim-text>registry means for registering the stack frame signature program in an operating system so that the operating system will launch the stack frame signature program responsive to abnormal termination of an application program; </claim-text>
+<claim-text>means for tracing the application program&apos;s call stack to determine a series of stack frames resulting from execution of the application program up to the termination; </claim-text>
+<claim-text>means for collecting a size metric of each stack frame in the series; </claim-text>
+<claim-text>means for encoding each size metric into a corresponding symbol; and </claim-text>
+<claim-text>means for assembling the series of symbols so as to form a stack frame signature.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005414A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005414A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005414A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005414A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

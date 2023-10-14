@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002467A1-20030102-D00000.TIF SYSTEM "US20030002467A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002467A1-20030102-D00001.TIF SYSTEM "US20030002467A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002467A1-20030102-D00002.TIF SYSTEM "US20030002467A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002467A1-20030102-D00003.TIF SYSTEM "US20030002467A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002467A1-20030102-D00004.TIF SYSTEM "US20030002467A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002467A1-20030102-D00005.TIF SYSTEM "US20030002467A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002467</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895655</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04Q007/24</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>370</class>
+<subclass>338000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>474000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>476000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Internet protocol framing using radio link protocol</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Nikolai</given-name>
+<middle-name>K.N.</middle-name>
+<family-name>Leung</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Takoma Park</city>
+<state>MD</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>QUALCOMM Incorporated</name-1>
+<name-2>Attn: Patent Department</name-2>
+<address>
+<address-1>5775 Morehouse Drive</address-1>
+<city>San Diego</city>
+<state>CA</state>
+<postalcode>92121-1714</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Techniques for supporting IP framing with lower computational load are disclosed herein. In one aspect, IP packets are partitioned into RLP frames. Subsequently, the IP packets, partitioned into RLP frames, are transmitted on a wireless data link employing RLP. In another aspect, received RLP frames are reconstructed into IP packets. The RLP framing is used to supply frame boundaries for the reconstructed IP packets. These aspects have the benefit of using the underlying frame transmission and framing properties of RLP, thus minimizing computational load associated with framing, transmitting, and receiving IP packets. The techniques described herein apply equally to both access points and access terminals. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates generally to communications, and more specifically to a novel and improved method and apparatus for generating Internet Protocol framing using the Radio Link Protocol. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Background </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Wireless communication systems are widely deployed to provide various types of communication such as voice, data, and so on. These systems may be based on code division multiple access (CDMA), time division multiple access (TDMA), or some other modulation techniques. A CDMA system provides certain advantages over other types of systems, including increased system capacity. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> A CDMA system may be designed to support one or more CDMA standards such as (1) the &ldquo;TIA/EIA-95-B Mobile Station-Base Station Compatibility Standard for Dual-Mode Wideband Spread Spectrum Cellular System&rdquo; (the IS-95 standard), (2) the &ldquo;TIA/EIA-98-C Recommended Minimum Standard for Dual-Mode Wideband Spread Spectrum Cellular Mobile Station&rdquo; (the IS-98 standard), (3) the standard offered by a consortium named &ldquo;3rd Generation Partnership Project&rdquo; (3GPP) and embodied in a set of documents including Document Nos. 3G TS 25.211, 3G TS 25.212, 3G TS 25.213, and 3G TS 25.214 (the W-CDMA standard), (4) the standard offered by a consortium named &ldquo;3rd Generation Partnership Project 2&rdquo; (3GPP2) and embodied in a set of documents including &ldquo;TR-45.5 Physical Layer Standard for cdma2000 Spread Spectrum Systems,&rdquo; the &ldquo;C.S0005-A Upper Layer (Layer 3) Signaling Standard for cdma2000 Spread Spectrum Systems,&rdquo; and the &ldquo;C.S0024 cdma2000 High Rate Packet Data Air Interface Specification&rdquo; (the cdma2000 standard), and (5) some other standards. These named standards are incorporated herein by reference. A system that implements the High Rate Packet Data specification of the cdma2000 standard is referred to herein as a high data rate (HDR) system. The HDR system is documented in TIA/EIA-IS-856, &ldquo;CDMA2000 High Rate Packet Data Air Interface Specification&rdquo;, and incorporated herein by reference. Proposed wireless systems also provide a combination of HDR and low data rate services (such as voice and fax services) using a single air interface. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> An example of a wireless data communication system that does not employ CDMA is the GPRS system, another standard offered by the 3GPP, embodied in a set of documents including 3G TS 23.060 and related documents (the GPRS standard). </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Data systems commonly employ the Internet Protocol (IP) to facilitate data transfer. Systems employing IP send data in packets, and rely on the layer below IP, the link layer, to keep track of packet framing&mdash;that is, the start and end of each IP packet. Some CDMA systems, such as those employing the IS-95 standard, run IP on the Point-to-Point Protocol (PPP). PPP, in turn, uses a framing protocol named High Data Link Control (HDLC). For more information on using HDLC for PPP, see IETF RFC 1662. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In addition to utilizing a framing protocol, such as HDLC, PPP may run on a lower level protocol. For example, cdma2000 systems run PPP over Radio Link Protocol Type 3, hereinafter RLP. For details on cdma2000 data services, see generally the TIA/EIA/IS-707 family of documents, &ldquo;Data Service Options for Spread Spectrum Systems.&rdquo; For details on RLP specifically, reference TIA/EIA/IS-707-A-2.10, &ldquo;Data Service Options for Spread Spectrum Systems: Radio Link Protocol Type 3.&rdquo; (the RLP standard) RLP provides an octet stream transport service over forward and reverse traffic channels. RLP is unaware of higher layer framing: it operates on a featureless octet stream, delivering octets in the order received. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In HDLC framing, flags are used to identify the start and end of a packet. The particular flag used is the binary sequence 01111110. The use of these flags causes some processing to be completed in both the transmitter preparing data for transmission and the receiver that receives that data. In the transmitter, the data sequence that is being transmitted must be monitored for the appearance of the flag sequence. If that sequence exists in the data, an escape flag must be inserted to prevent the receiver from falsely identifying that data sequence as the flag delimiting the end of the packet. In the receiver, the incoming data must be monitored to detect start and stop flags, as well as any escape characters which must be replaced with the original data sequence in the received data stream. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Use of a framing protocol, such as HDLC, that requires monitoring of both the outgoing and incoming data adds to the computational load on the central processing unit (CPU) tasked to perform the monitoring. The computational load increases proportionally as the data rates increase. Newer wireless systems, examples of which are given above, support data rates that are higher than those supported by IS-95. The trend toward higher data rates in wireless systems is likely to continue. There is therefore a need in the art for support of IP, and its associated framing, with lower computational load requirements. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Embodiments disclosed herein address the need for supporting IP framing with lower computational load. In one aspect, IP packets are partitioned into RLP frames. Subsequently, the IP packets, partitioned into RLP frames, are transmitted on a wireless data link employing RLP. In another aspect, received RLP frames are reconstructed into IP packets. The RLP framing is used to supply frame boundaries for the reconstructed IP packets. These aspects have the benefit of using the underlying frame transmission and framing properties of RLP, thus minimizing computational load associated with framing, transmitting, and receiving IP packets. The techniques described herein apply equally to both access points and access terminals. Various other aspects of the invention are also presented. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The invention provides methods and system elements that implement various aspects, embodiments, and features of the invention, as described in further detail below. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The features, nature, and advantages of the present invention will become more apparent from the detailed description set forth below when taken in conjunction with the drawings in which like reference characters identify correspondingly throughout and wherein: </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a wireless communication system that supports a number of users, and which can implement various aspects of the invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a generalized block diagram of a wireless data system; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a transmitter configured in accordance with various aspects of the invention; </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> diagrams the composition of frames for IP framing over RLP; and </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a receiver configured in accordance with various aspects of the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagram of a wireless communication system <highlight><bold>100</bold></highlight> that supports a number of users, and which can implement various aspects of the invention. System <highlight><bold>100</bold></highlight> may be designed to support one or more standards and/or designs (e.g., the IS-95 standard, the cdma2000 standard, the HDR specification, the GPRS standard). For simplicity, system <highlight><bold>100</bold></highlight> is shown to include three access points <highlight><bold>104</bold></highlight> (which may also be referred to as base stations) in communication with two access terminals <highlight><bold>106</bold></highlight> (which may also be referred to as remote terminals or mobile stations). The access point and its coverage area are often collectively referred to as a &ldquo;cell&rdquo;. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> When certain CDMA systems are being implemented, each access terminal <highlight><bold>106</bold></highlight> may communicate with one (or possibly more) access points <highlight><bold>104</bold></highlight> on the forward link at any given moment, and may communicate with one or more access points on the reverse link depending on whether or not the access terminal is in soft handoff. The forward link (i.e., downlink) refers to transmission from the access point to the access terminal, and the reverse link (i.e., uplink) refers to transmission from the access terminal to the access point. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> For clarity, unless otherwise specified, the examples used in describing this invention will assume access points as the originator of signals and access terminals as receivers of those signals, i.e. the forward link. Those skilled in the art will understand that access terminals as well as access points can be equipped to transmit data as described herein and the aspects of the present invention apply in those situations as well, i.e., the reverse link. The word &ldquo;exemplary&rdquo; is used exclusively herein to mean &ldquo;serving as an example, instance, or illustration.&rdquo; Any embodiment described herein as &ldquo;exemplary&rdquo; is not necessarily to be construed as preferred or advantageous over other embodiments. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a generalized block diagram of wireless data system <highlight><bold>200</bold></highlight>. Access point, or base station, <highlight><bold>215</bold></highlight> communicates over a wireless link via antenna <highlight><bold>235</bold></highlight> with antenna <highlight><bold>240</bold></highlight> of access terminal, or mobile station, <highlight><bold>245</bold></highlight>. Base station <highlight><bold>215</bold></highlight> is connected to one or more packet data service nodes (PDSNs) <highlight><bold>210</bold></highlight>A-<highlight><bold>210</bold></highlight>N, which in turn are connected to Internet <highlight><bold>205</bold></highlight>. Data is transferred between the Internet <highlight><bold>205</bold></highlight>, PDSNs <highlight><bold>210</bold></highlight>A-<highlight><bold>210</bold></highlight>N and base station <highlight><bold>215</bold></highlight> using IP packets. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Router <highlight><bold>220</bold></highlight> provides routing services for base station <highlight><bold>215</bold></highlight>. It receives IP data from Internet <highlight><bold>205</bold></highlight> via PDSNs <highlight><bold>210</bold></highlight>A-<highlight><bold>210</bold></highlight>N, and perhaps from data sources internal to the base station, for transmission over the wireless link through transmitter <highlight><bold>225</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Transmission from base station <highlight><bold>215</bold></highlight> to mobile station <highlight><bold>245</bold></highlight> is commonly known as the forward link. Transmitter <highlight><bold>225</bold></highlight> receives the IP packets, as well as their associated frame boundaries, and prepares the data for transmission via antenna <highlight><bold>235</bold></highlight>, according to the air interface standard being utilized. The transmitted signals are received at mobile station <highlight><bold>245</bold></highlight> through antenna <highlight><bold>240</bold></highlight>, and delivered to receiver <highlight><bold>250</bold></highlight>. Receiver <highlight><bold>250</bold></highlight> performs operations necessary to convert the transmitted signals to baseband, demodulates the data, and delivers the data in IP packets, along with associated frame boundaries, to block <highlight><bold>255</bold></highlight>, data applications. Block <highlight><bold>255</bold></highlight> represents the numerous data applications that may be operating in mobile station <highlight><bold>245</bold></highlight>. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Connected to data applications block <highlight><bold>255</bold></highlight> is an optional external appliance <highlight><bold>265</bold></highlight> (there can be more than one external appliance), which may be a portable computer or other data appliance externally connected to the access terminal, or mobile station <highlight><bold>245</bold></highlight>. The link between data applications <highlight><bold>255</bold></highlight> and external appliance <highlight><bold>265</bold></highlight> may be an IP link, or it may be any other type of link (including a wireless link such as Bluetooth). Alternatively, the link to external appliance <highlight><bold>265</bold></highlight> may come directly from receiver <highlight><bold>250</bold></highlight> (not shown). </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Data transmission from mobile station <highlight><bold>245</bold></highlight> to base station <highlight><bold>215</bold></highlight> is commonly known as the reverse link. Data from external appliance <highlight><bold>265</bold></highlight> or data applications <highlight><bold>255</bold></highlight> is delivered to transmitter <highlight><bold>260</bold></highlight> via IP packets (and associated frame boundaries). Transmitter <highlight><bold>260</bold></highlight> prepares the data for transmission via antenna <highlight><bold>240</bold></highlight>, according to the air interface being utilized for the reverse link. The transmitted signals are received at base station <highlight><bold>215</bold></highlight> through antenna <highlight><bold>235</bold></highlight>, and delivered to receiver <highlight><bold>230</bold></highlight>. Receiver <highlight><bold>230</bold></highlight> performs operations necessary to convert the transmitted signals to baseband, demodulates the data, and delivers the data in IP packets, along with associated frame boundaries, to router <highlight><bold>220</bold></highlight> for delivery to its final destination via PDSNs <highlight><bold>210</bold></highlight>A-<highlight><bold>210</bold></highlight>N and Internet <highlight><bold>205</bold></highlight> (in some cases, the destination of the data may be within base station <highlight><bold>215</bold></highlight>). </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> depicts transmitter <highlight><bold>300</bold></highlight>, which is suitable for deployment in wireless data system <highlight><bold>200</bold></highlight> as either transmitter <highlight><bold>225</bold></highlight> or transmitter <highlight><bold>260</bold></highlight>, as shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. In transmitter <highlight><bold>300</bold></highlight>, IP packets are delivered to RLP processor <highlight><bold>310</bold></highlight>. The IP packets are processed into RLP frames, which are delivered to mux sublayer processor <highlight><bold>320</bold></highlight>. Mux sublayer processor <highlight><bold>320</bold></highlight> receives the RLP frames, as well as other data, and multiplexes them together and delivers them to modem <highlight><bold>330</bold></highlight>, which performs physical layer processing for transmission via antenna <highlight><bold>340</bold></highlight> (antenna <highlight><bold>340</bold></highlight> corresponds to either antenna <highlight><bold>235</bold></highlight> or <highlight><bold>240</bold></highlight> in reference to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). Modem <highlight><bold>330</bold></highlight> processes the physical layer according to the air interface being deployed. (The physical layer may differ on the forward and reverse links.) </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> In the exemplary embodiment, the cdma2000 standard is deployed, and the PPP protocol is used to transmit and receive IP packets. In this example, the IP packets delivered to RLP processor may be PPP frames. HDLC is not needed to provide framing, since the RLP framing will be utilized. This relieves the transmitter of the burden of monitoring the transmitted data for appearances of start and stop flags, and replacing them with escape sequences, as described in the background section above. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> details the frame composition for the procedures just described. IP packets (or PPP frames) are received in RLP processor <highlight><bold>310</bold></highlight>. Examples of these are IP frame n <highlight><bold>400</bold></highlight> and IP frame n&plus;1 <highlight><bold>302</bold></highlight>. Each IP frame will be encapsulated into one RLP frame, so that the RLP framing can be used throughout the radio link and no additional frame processing will be required. An RLP frame can consist of up to 4096 octets. RLP processor <highlight><bold>310</bold></highlight> increments a frame sequence and prepends a frame number to each RLP frame. Refer to the RLP standard for details on how RLP is used. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The RLP frames are delivered to mux sublayer processor <highlight><bold>320</bold></highlight>, where they are processed, along with any other data streams, into units for transmission known as multiplexed sublayer protocol data units (or mux PDUs). Sometimes an RLP frame cannot be carried across one mux PDU, and so it must be spread across multiple mux PDUs. In <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, frames <highlight><bold>404</bold></highlight> and <highlight><bold>406</bold></highlight> show two segments of RLP frame n (associated with IP frame n <highlight><bold>400</bold></highlight>), with the frame number prepended as described above. Similarly, frames <highlight><bold>408</bold></highlight> and <highlight><bold>410</bold></highlight> correspond to RLP frame n&plus;1 (associated with IP frame n&plus;1 <highlight><bold>402</bold></highlight>). Each of frames <highlight><bold>404</bold></highlight>, <highlight><bold>406</bold></highlight>, <highlight><bold>408</bold></highlight> and <highlight><bold>410</bold></highlight> make up the payload of the mux PDU, called the multiplexed sublayer service data units (or mux SDUs), and are prepended with a header to make mux PDUs <highlight><bold>412</bold></highlight>, <highlight><bold>414</bold></highlight>, <highlight><bold>416</bold></highlight>, and <highlight><bold>418</bold></highlight>, respectively. The mux PDUs are delivered to modem <highlight><bold>330</bold></highlight> for physical layer processing, and ultimately transmission via antenna <highlight><bold>340</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> depicts transmitter <highlight><bold>500</bold></highlight>, which is suitable for deployment in wireless data system <highlight><bold>200</bold></highlight> as either receiver <highlight><bold>230</bold></highlight> or receiver <highlight><bold>250</bold></highlight>, as shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. Signals incorporating data, processed as described above with respect to <cross-reference target="DRAWINGS">FIGS. 3 and 4</cross-reference>, are received via antenna <highlight><bold>510</bold></highlight> and delivered to modem <highlight><bold>520</bold></highlight>. Modem <highlight><bold>520</bold></highlight> performs any necessary downconversion and baseband processing according to the air interface being employed. Data is delivered to mux sublayer processor <highlight><bold>530</bold></highlight>, where it is demultiplexed. Data for other services is delivered to its destination (not shown), and RLP frames are delivered to RLP processor <highlight><bold>540</bold></highlight>. RLP processor <highlight><bold>540</bold></highlight> performs RLP processing, as described in the RLP standard, including reconstructing the RLP frames. The data from each RLP frame corresponds to the data for an IP packet, and hence the RLP frame boundaries also provide IP framing. RLP processor <highlight><bold>540</bold></highlight> reconstructs IP packets from RLP frames and delivers them along with the RLP frame boundaries to their destination (not shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, refer to <cross-reference target="DRAWINGS">FIG. 2</cross-reference> for examples). </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> One of the aspects of RLP is that it uses length fields to indicate packet length, so receiver <highlight><bold>500</bold></highlight> is relieved of the requirement to monitor each byte as it is received (as would be the requirement with flag-based framing such as HDLC). In the exemplary embodiment, a cdma2000 system, RLP is already being deployed between the PPP layer and the multiplexed sublayer, so the RLP processing is not additive to the overall processing burden. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> The features of the present invention are readily applicable to the exemplary cdma2000 system, but they apply with equal force to any wireless data system in which RLP or a similar protocol is deployed. For example, this procedure is compatible with GPRS under the &ldquo;native IP&rdquo; option, which runs IP directly over Radio Link Control (RLC). In this situation, the RLC framing would be used to provide IP framing. RLP can be used to support native IP mode when running data services in mixed modes like MC-MAP or HDR-GPRS. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> It should be noted that in all the embodiments described above, method steps can be interchanged without departing from the scope of the invention. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Those of skill in the art will understand that information and signals may be represented using any of a variety of different technologies and techniques. For example, data, instructions, commands, information, signals, bits, symbols, and chips that may be referenced throughout the above description may be represented by voltages, currents, electromagnetic waves, magnetic fields or particles, optical fields or particles, or any combination thereof. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Those of skill will further appreciate that the various illustrative logical blocks, modules, circuits, and algorithm steps described in connection with the embodiments disclosed herein may be implemented as electronic hardware, computer software, or combinations of both. To clearly illustrate this interchangeability of hardware and software, various illustrative components, blocks, modules, circuits, and steps have been described above generally in terms of their functionality. Whether such functionality is implemented as hardware or software depends upon the particular application and design constraints imposed on the overall system. Skilled artisans may implement the described functionality in varying ways for each particular application, but such implementation decisions should not be interpreted as causing a departure from the scope of the present invention. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The various illustrative logical blocks, modules, and circuits described in connection with the embodiments disclosed herein may be implemented or performed with a general purpose processor, a digital signal processor (DSP), an application specific integrated circuit (ASIC), a field programmable gate array (FPGA) or other programmable logic device, discrete gate or transistor logic, discrete hardware components, or any combination thereof designed to perform the functions described herein. A general purpose processor may be a microprocessor, but in the alternative, the processor may be any conventional processor, controller, microcontroller, or state machine. A processor may also be implemented as a combination of computing devices, e.g., a combination of a DSP and a microprocessor, a plurality of microprocessors, one or more microprocessors in conjunction with a DSP core, or any other such configuration. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The steps of a method or algorithm described in connection with the embodiments disclosed herein may be embodied directly in hardware, in a software module executed by a processor, or in a combination of the two. A software module may reside in RAM memory, flash memory, ROM memory, EPROM memory, EEPROM memory, registers, hard disk, a removable disk, a CD-ROM, or any other form of storage medium known in the art. An exemplary storage medium is coupled to the processor such the processor can read information from, and write information to, the storage medium. In the alternative, the storage medium may be integral to the processor. The processor and the storage medium may reside in an ASIC. The ASIC may reside in a user terminal. In the alternative, the processor and the storage medium may reside as discrete components in a user terminal. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> The previous description of the disclosed embodiments is provided to enable any person skilled in the art to make or use the present invention. Various modifications to these embodiments will be readily apparent to those skilled in the art, and the generic principles defined herein may be applied to other embodiments without departing from the spirit or scope of the invention. Thus, the present invention is not intended to be limited to the embodiments shown herein but is to be accorded the widest scope consistent with the principles and novel features disclosed herein.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for transmission of Internet Protocol (IP) packets over a wireless link employing Radio Link Protocol comprising: 
+<claim-text>framing the IP packets using RLP frame boundaries. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method for transmission of IP packets from a data source to a data sink over a wireless link employing RLP comprising: 
+<claim-text>partitioning the IP packets from the data source into RLP frames; </claim-text>
+<claim-text>transmitting the RLP frames over the wireless link using RLP; </claim-text>
+<claim-text>formatting the transmitted RLP frames into IP packets for delivery to the data sink; and </claim-text>
+<claim-text>framing the IP packets using RLP frame boundaries. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein each one of the IP packets is encapsulated in one RLP frame during the partitioning step. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein each IP packet is 4096 octets or less. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method for transmission of IP packets from a data source to a data sink over a wireless link employing RLP, using the Point to Point Protocol (PPP) comprising: 
+<claim-text>formatting the IP packets from the data source into PPP frames; </claim-text>
+<claim-text>partitioning the PPP frames into RLP frames; </claim-text>
+<claim-text>transmitting the RLP frames over the wireless link using RLP; </claim-text>
+<claim-text>formatting the transmitted RLP frames into PPP frames; </claim-text>
+<claim-text>formatting the PPP frames into IP packets for delivery to the data sink; and </claim-text>
+<claim-text>framing the IP packets using RLP frame boundaries. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein each one of the PPP packets is encapsulated in one RLP frame during the partitioning step. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method for transmission of PPP frames over a wireless link employing RLP comprising: 
+<claim-text>partitioning the PPP frames into RLP frames; </claim-text>
+<claim-text>transmitting the RLP frames over the wireless link using RLP; </claim-text>
+<claim-text>formatting the transmitted RLP frames into PPP frames; </claim-text>
+<claim-text>framing the PPP frames using RLP frame boundaries. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein each one of the PPP packets is encapsulated in one RLP frame during the partitioning step. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A communications system, comprising: 
+<claim-text>a transmitter for transmitting data using RLP, comprising: 
+<claim-text>an RLP processor for accepting IP packets and partitioning the IP packets into RLP frames; and </claim-text>
+</claim-text>
+<claim-text>a receiver for receiving data using RLP, comprising: 
+<claim-text>an RLP processor for producing IP packets and frame boundaries from received RLP frames and RLP frame boundaries. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A cdma2000 system, comprising: 
+<claim-text>a transmitter for transmitting data using RLP, comprising: 
+<claim-text>an RLP processor for accepting IP packets and partitioning the IP packets into RLP frames; and </claim-text>
+</claim-text>
+<claim-text>a receiver for receiving data using RLP, comprising: 
+<claim-text>an RLP processor for producing IP packets and frame boundaries from received RLP frames and RLP frame boundaries. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A transmitter for transmitting data using RLP, comprising an RLP processor for accepting IP packets and partitioning the IP packets into RLP frames. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The transmitter of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein each of the IP packets is partitioned into one RLP frame </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A receiver for receiving data using RLP, comprising an RLP processor for producing IP packets and frame boundaries from received RLP frames and RLP frame boundaries. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. An access point in a wireless communication system comprising an RLP processor for producing IP packets and frame boundaries from received RLP frames and RLP frame boundaries. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. An access point in a wireless communication system comprising an RLP processor for accepting IP packets and partitioning the IP packets into RLP frames. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. An access point in a wireless communication system comprising: 
+<claim-text>a transmitter for transmitting data using RLP, comprising: 
+<claim-text>an RLP processor for accepting IP packets and partitioning the IP packets into RLP frames; and </claim-text>
+</claim-text>
+<claim-text>a receiver for receiving data using RLP, comprising: 
+<claim-text>an RLP processor for producing IP packets and frame boundaries from received RLP frames and RLP frame boundaries. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. An access terminal in a wireless communication system comprising an RLP processor for producing IP packets and frame boundaries from received RLP frames and RLP frame boundaries. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. An access terminal in a wireless communication system comprising an RLP processor for accepting IP packets and partitioning the IP packets into RLP frames. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. An access terminal in a wireless communication system comprising: 
+<claim-text>a transmitter for transmitting data using RLP, comprising: 
+<claim-text>an RLP processor for accepting IP packets and partitioning the IP packets into RLP frames; and </claim-text>
+</claim-text>
+<claim-text>a receiver for receiving data using RLP, comprising: 
+<claim-text>an RLP processor for producing IP packets and frame boundaries from received RLP frames and RLP frame boundaries.</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002467A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002467A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002467A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002467A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002467A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002467A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

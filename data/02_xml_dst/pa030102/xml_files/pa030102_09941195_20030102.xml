@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004669A1-20030102-D00000.TIF SYSTEM "US20030004669A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004669A1-20030102-D00001.TIF SYSTEM "US20030004669A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004669A1-20030102-D00002.TIF SYSTEM "US20030004669A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004669A1-20030102-D00003.TIF SYSTEM "US20030004669A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004669A1-20030102-D00004.TIF SYSTEM "US20030004669A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004669A1-20030102-D00005.TIF SYSTEM "US20030004669A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004669</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09941195</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010828</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F019/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>702</class>
+<subclass>117000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for testing time-varying signals</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60300512</doc-number>
+<document-date>20010622</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Atarbes</given-name>
+<middle-name>K.</middle-name>
+<family-name>Gorman</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Sheldon R. Meyer</name-1>
+<name-2>FLIESLER DUBB MEYER &amp; LOVEJOY LLP</name-2>
+<address>
+<address-1>Four Embarcadero Center Fourth Floor</address-1>
+<city>San Francisco</city>
+<state>CA</state>
+<postalcode>94111-4156</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention includes a system and method for generating a signal particularly useful in testing JMX monitors using a generator bean, such as a signal generating Java Mbean. A user can specify equations and/or parameters in order to determine the type of signal to be generated. The generator bean is then polled at a frequency at least twice the frequency of the generated signal using a monitor MBean of the JMX monitor. A testing value is returned for each polling of the generator bean. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">CLAIM OF PRIORITY </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application claims priority to Provisional patent application Serial No. 60/300,512, filed Jun. 22, 2001, entitled SYSTEM AND METHOD FOR TESTING TIME-VARYING SIGNALS.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">COPYRIGHT NOTICE </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> A portion of the disclosure of this patent document contains material which is subject to copyright protection. The copyright owner has no objection to the facsimile reproduction by anyone of the patent document or the patent disclosure, as it appears in the Patent and Trademark Office patent file or records, but otherwise reserves all copyright rights whatsoever. </paragraph>
+</section>
+<section>
+<heading lvl="1">TECHNICAL FIELD </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The present invention relates generally to the testing and generation of signals that may vary over time. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Java Management Extensions (JMX) define a community process standard for managing resources and remotely accessible agents. JMX defines an architecture for network and/or application management in the Java programming language, as well as design patterns, services, and APIs. JMX utilizes the standard industry model Managed Beans, or MBeans, for use in Java programs and management applications. MBeans are Java objects that implement application resources. These MBeans may be managed by a JMX agent or other agent supporting the MBean concept. A set of complimentary services is typically specified, which work with these MBeans to monitor and manage Java-based applications. A monitoring Mbean, or JMX monitor, may be dynamically loaded by an application, and may send an event or notification when the component or parameter being monitored reaches a certain value or state. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> JMX monitors typically detect and monitor signals that vary over time, functioning similar to a digital sampling oscilloscope. When developing these monitors, it is desirable to be able to test not only for accuracy, but also for stress and load capabilities. Digital signal generators of the prior art are typically used in the analog realm, and lack the necessary JMS format capabilities needed to test these JMX monitors. These prior art signal generators also fail to generate unorthodox signals, such as a string of words. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> It is therefore an object of the invention to develop a method and system for testing a JMX monitor that can run for an extended duration, allowing for controllable stress and load testing. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The present invention includes a system for testing signal monitors, such as JMX monitors. The system utilizes a generator bean to generate a signal. A user may specify an equation and/or parameters to be used in generating an appropriate signal. A monitor bean is used to monitor the signal being generated. A notification is created by an MBean in response to the monitoring, such as may notify a user or application that the signal has reached a certain value, or may store the current value to a data store. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Also included in the present invention is a method for testing a JMX monitor. In the method, a signal is generated using a generator bean, such as a signal generator Java MBean. Equations and/or parameters may be specified in determining the type of signal to be generated. The generator bean is then polled at a frequency at least twice the frequency of the generated signal using a monitor MBean of the JMX monitor. A testing value is then returned for each polling of the generator bean.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE FIGURES </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an illustration of an agent architecture in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is an example sequence diagram for a test in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a diagram of a testing process in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart showing the testing steps of one embodiment of the present invention. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a diagram of a testing system in accordance with one embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A signal generator in accordance with the present invention comprises an MBean, hereinafter referred to as a SignalGeneratorMBean. A SignalGeneratorMBean is an interface that conforms to the static MBean design patterns. This embodiment includes classes derived from an application, such as SignalGenerator, which generates the desired signal(s). Equations can be used by the SignalGeneratorMBean to precisely define the desired testing signals to be used. Users can specify or set values and select the appropriate equation(s) for each testing situation. The equations can be entered by the user, stored in a library or file, hard coded into the application, or accessed by any other appropriate means. Users may select or set values by such means as direct entry, selection, or from a file or library containing predetermined values. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In one approach for JMX monitoring tests in accordance with the present invention, the sequence of events may be enforced by a class, such as for example MonitorMBeanTestDriver. Steps of such a sequence are shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. In this embodiment <highlight><bold>400</bold></highlight>, the class includes four parameters: (1) SignalGeneratorMBean for generating the signal, (2) MonitorMBean for monitoring the generated signal, (3) NotificationListener to listen to MonitorMBean and generate a notification upon certain conditions, and (4) StopTime to designate the duration of the test. These parameters, as well as others, can be specified for each test. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Initially, SignalGeneratorMBean is registered with the system and setup for testing <highlight><bold>402</bold></highlight>. MonitorMbean is also registered and setup appropriately <highlight><bold>404</bold></highlight>. MonitorMBean is attached to SignalGeneratorMBean <highlight><bold>406</bold></highlight> such that MonitorMBean can monitor the generated signal. NotificationListener is attached to MonitorMBean <highlight><bold>408</bold></highlight> so a notification can be generated for appropriate circumstances, such as MonitorMBean detecting a signal surpassing a threshold value. Once the system is setup, MonitorMBean can be started <highlight><bold>410</bold></highlight>. SignalGeneratorMBean is also started <highlight><bold>412</bold></highlight>. SignalGeneratorMBean is allowed to run for a set time, herein referred to as StopTime <highlight><bold>414</bold></highlight>. After the set time has passed, SignalGeneratorMBean and MonitorMBean are stopped <highlight><bold>416</bold></highlight>. All events are checked to see if they correctly fired to the client <highlight><bold>418</bold></highlight>. If so, MonitorMBean is deregistered <highlight><bold>420</bold></highlight>. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> One view of a system <highlight><bold>500</bold></highlight> in accordance with the present invention is shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. In this embodiment, a set of equations <highlight><bold>502</bold></highlight> is used to input a desired signal form to the signal generator <highlight><bold>504</bold></highlight>. The signal generator <highlight><bold>504</bold></highlight> generates a signal according to the input equation, which is received by a monitor <highlight><bold>506</bold></highlight>. The monitor <highlight><bold>506</bold></highlight> is in communication with a notifier <highlight><bold>508</bold></highlight>. The monitor can send a signal to the notifier in one embodiment, while the notifier can poll the monitor in another embodiment. When the monitor sends a response or signal to the notifier regarding measurement of the signal, the notifier can send a notification to a listener <highlight><bold>510</bold></highlight>, which is adapted to receive the notification and act accordingly, such as by sending a message to a user or recording a data point. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Some tests may be time sensitive. In one embodiment, the failure to meet a timepoint for a particular test, such as may be due to network latency or logic server errors, can cause the test to abort. Other embodiments may utilize an error handling routine, throw an exception, or utilize any other appropriate error handling approach. Any errors can also be logged, such that the resultant logs can later, or concurrently, be analyzed. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The functional blocks for the embodiment <highlight><bold>100</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> may be mapped to a server, such as a logic server (&ldquo;LS&rdquo;). The MBean server <highlight><bold>106</bold></highlight> on the agent side <highlight><bold>102</bold></highlight> of the figure corresponds to an LS. The JMX managed resource <highlight><bold>108</bold></highlight> on the left is an MBean that corresponds to a service component, such as an Enterprise Java Bean or Java Messaging Service. The MBeanServer <highlight><bold>106</bold></highlight> can be accessed by any appropriate method known in the art, such as by performing a JNDI (Java name directory interface) lookup. The MBeans, including the Monitor MBean <highlight><bold>122</bold></highlight> and Query MBean <highlight><bold>124</bold></highlight>, can be retrieved with an exact lookup or with a query, such as may be based upon an MBean ObjectName. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The tests described in this embodiment correspond to a JMX-enabled management application <highlight><bold>110</bold></highlight>, as may be contained in a Java virtual machine <highlight><bold>112</bold></highlight>. The JMX-enabled management application <highlight><bold>110</bold></highlight> is shown on the manager side <highlight><bold>104</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. Communication between the manager-side Java virtual machine <highlight><bold>112</bold></highlight> and the agent side <highlight><bold>102</bold></highlight> can be accomplished through, for example, a connector client <highlight><bold>114</bold></highlight> and connector server <highlight><bold>116</bold></highlight>. The agent side can also utilize a protocol adapter <highlight><bold>118</bold></highlight> to communicate with an application supporting JMX agents <highlight><bold>120</bold></highlight>. These tests can communicate directly with the MBean server <highlight><bold>106</bold></highlight> to access runtime MBeans. Runtime MBeans represent the runtime configuration and metrics of a domain as it is running. Runtime MBeans in this embodiment are not modifiable, but may be modified in other embodiments. In order to accurately capture values, a RuntimeMBean can be sampled at a frequency at least twice that of the signal being measured. Each test can then specify the desired testing frequency. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> These tests can independently assess measurements made by the RuntimeMBean, in order to determine a pass/fail result. In a first technique, a carefully controlled test/server interaction can be used, such that the expected return value can be known beforehand. In a second technique a feature outside of the LS, such as the system time, can be used to measure a feature of the LS independent of its own internal mechanisms. This second technique is not exact, and therefore may include a margin of error. It will be evident to those skilled in the art that other similar or appropriate techniques may be used that are within the spirit and scope of the invention. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> A class such as SignalGenerator may implement the SignalGeneratorMBean interface for all but one method, such as for example SignalGenerator::calculateValue(time: long). Subclasses of SignalGenerator, such as may implement the method CalculateValue, can create a time-varying signal that starts at time 0, when a method SignalGenerator::start is called. As an example, a sinusoidal signal may be implemented as sin(wt) where t is the time and w is the angular velocity. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> A sequence diagram is shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> for one such test <highlight><bold>200</bold></highlight> of the present invention. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows the dynamic runtime behavior of a class such as SquareWave <highlight><bold>202</bold></highlight>, StringGenerator <highlight><bold>204</bold></highlight>, or Ramp <highlight><bold>206</bold></highlight>. These classes may be subclasses that are derived from SignalGenerator <highlight><bold>208</bold></highlight>. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> also shows a structural placement of the class SquareWave <highlight><bold>202</bold></highlight> within the test <highlight><bold>200</bold></highlight>. CounterMonitor <highlight><bold>212</bold></highlight> is a class that is responsible for polling the signal under observation. CounterMonitor <highlight><bold>212</bold></highlight> may, for instance, call a getCurrentObject or similar method of the SignalGenerator <highlight><bold>208</bold></highlight> class in order to get the current time. SignalGenerator <highlight><bold>208</bold></highlight> may then implement SignalGeneratorMBean <highlight><bold>210</bold></highlight>. A granularity period exists between successive polling of SquareWave <highlight><bold>202</bold></highlight> by CounterMonitor <highlight><bold>212</bold></highlight>. If one of the pollings exceeds a certain threshold value, CounterMonitor <highlight><bold>212</bold></highlight> may notify a notification listener. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> GenericNotificationListener is one such test class that may be called by CounterMonitor when a signal being polled meets predefined conditions, such as the afore-mentioned threshold value, with the conditions being defined by CounterMonitor. GenericNotificationListener can also be responsible for storing values deemed important by CounterMonitor. TestCounterMonitor is an example of a class that can be called by an end user or another object or application in order to execute the test. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Another view of a testing process of the present invention is shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. In this test <highlight><bold>300</bold></highlight>, a tester <highlight><bold>302</bold></highlight> or end-user runs TestCounterMonitor <highlight><bold>304</bold></highlight>. During the setup portion <highlight><bold>312</bold></highlight>, TestCounterMonitor <highlight><bold>304</bold></highlight> initiates CounterMonitor <highlight><bold>306</bold></highlight>, which in turn polls SquareWave <highlight><bold>310</bold></highlight> and initiates GenericNotificationListener <highlight><bold>308</bold></highlight>. Once the setup portion <highlight><bold>312</bold></highlight> is complete, the testing is started <highlight><bold>314</bold></highlight>,as CounterMonitor <highlight><bold>306</bold></highlight> polls SquareWave <highlight><bold>310</bold></highlight>, and continues polling <highlight><bold>316</bold></highlight> according to the granularity setting. In the event that a threshold or value is reached or exceeded, CounterMonitor <highlight><bold>306</bold></highlight> can notify <highlight><bold>318</bold></highlight> GeneritcNotificationListener <highlight><bold>308</bold></highlight> and can continue polling SquareWave <highlight><bold>310</bold></highlight>. After the polling process is complete, the process is stopped <highlight><bold>320</bold></highlight>. SquareWave <highlight><bold>310</bold></highlight> can then store the testing values, and TestCounterMonitor <highlight><bold>304</bold></highlight> can compare the results. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Table 1 shows some of the symbols that may be used in the signal equations, a description of each symbol, a preferred range of values for each symbol, and example values. Some of the signal equations using these symbols are shown in Table 2, as well as the subclasses that implement those signals. For example, if a signal is to be generated that increases monotonically over time, the Ramp signal equation can be used, which is equivalent to the basic equation for a line (y&equals;m*x&plus;b). In Ramp, m is the slope or rate of increase of the linear signal over time, while b is the y-intercept, or the initial value of the signal at time zero. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> These equations may form a library of possible signals that can be generated, providing a significant level of flexibility to the system. A developer can produce new signals simply by selecting the proper equation and setting proper values for each variable in the selected equation. It may also be possible, if the library of equations is not sufficient, for the developer to enter a new equation into the library in order to generate a new signal type.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 1</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Preferred equation symbols</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="49PT" align="left"/>
+<colspec colname="3" colwidth="56PT" align="left"/>
+<colspec colname="4" colwidth="84PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>Symbol</entry>
+<entry>Description</entry>
+<entry>Type</entry>
+<entry>Example</entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>m</entry>
+<entry>Multiplier,</entry>
+<entry>scalar number,</entry>
+<entry>4.87, 2, &minus;78.9, 0.0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>slope or</entry>
+<entry>&minus;&infin; &lt; m &lt; &infin;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>amplitude</entry>
+</row>
+<row>
+<entry>b</entry>
+<entry>offset,</entry>
+<entry>scalar number,</entry>
+<entry>4.87, 2, &minus;78.9, 0.0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>y-intercept</entry>
+<entry>&minus;&infin; &lt; b &lt; &infin;</entry>
+</row>
+<row>
+<entry>t</entry>
+<entry>Time</entry>
+<entry>scalar integer,</entry>
+<entry>0, 14, 60</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>0 &lt; t &lt; &infin;</entry>
+</row>
+<row>
+<entry>T</entry>
+<entry>Period</entry>
+<entry>scalar integer,</entry>
+<entry>0, 14, 60</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>0 &lt; T &lt; &infin;</entry>
+</row>
+<row>
+<entry>n</entry>
+<entry>Iterations</entry>
+<entry>scalar integer,</entry>
+<entry>0, 1, 2, 3</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>0 &lt; n &lt; &infin;</entry>
+</row>
+<row>
+<entry>f(t)</entry>
+<entry>Function</entry>
+<entry>Function of time</entry>
+<entry>f(0) &equals; 3, f(1) &equals; 6, f(2) &equals; 9</entry>
+</row>
+<row>
+<entry>d(t)</entry>
+<entry>unit impulse f&prime;n</entry>
+<entry>Function,</entry>
+<entry>f(&minus;1) &equals; 0, f(0) &cong; &infin;, f(1) &equals; 0</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry><highlight><subscript>&minus;&infin;</subscript></highlight>&int;<highlight><superscript>&infin;</superscript></highlight> &dgr;(t) &equals; 1</entry>
+</row>
+<row>
+<entry>&Sgr;</entry>
+<entry>Summation</entry>
+<entry>Function</entry>
+<entry><highlight><subscript>n&equals;0</subscript></highlight><highlight><superscript>3</superscript></highlight>&Sgr;n &equals; 6</entry>
+</row>
+<row>
+<entry>u(t)</entry>
+<entry>unit step</entry>
+<entry>Function</entry>
+<entry>u(&minus;1) &equals; 0, u(0) &equals; 1,</entry>
+</row>
+<row>
+<entry></entry>
+<entry>function</entry>
+<entry></entry>
+<entry>u(1) &equals; 1</entry>
+</row>
+<row>
+<entry>s(t)</entry>
+<entry>String array</entry>
+<entry>Array</entry>
+<entry>s(3) &equals;  StringArray&lsqb;3&rsqb; &equals;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>&prime;hello&prime;</entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number>  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 2</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>example signals</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="left"/>
+<colspec colname="3" colwidth="91PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>Signal</entry>
+<entry>Parameters</entry>
+<entry>Equation</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Ramp</entry>
+<entry>b, m</entry>
+<entry>f(t) &equals; b &plus; m * t</entry>
+</row>
+<row>
+<entry>PeriodicRamp</entry>
+<entry>b, m, T</entry>
+<entry>f(t) &equals;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>&Sgr;(b &plus; m * (t &minus; nT)) u(t &minus; nT)</entry>
+</row>
+<row>
+<entry>AlternatingRamp</entry>
+<entry>b, m, T</entry>
+<entry>f(t) &equals; (b &plus; m * t) * (&minus;1)<highlight><superscript>(2T&plus;t)/T</superscript></highlight></entry>
+</row>
+<row>
+<entry>SquareWave</entry>
+<entry>b, m, T</entry>
+<entry>f(t) &equals; b &plus; m&lsqb;S(u(t &minus; nT) &minus;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>2u(t &minus; (n &plus; 1/2)T) &plus; u(t &minus;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>(n &plus; 1)T)&rsqb;</entry>
+</row>
+<row>
+<entry>CarrierSquareWave</entry>
+<entry>b, m, T, T&prime; &equals; 1/10 T</entry>
+<entry>f(t) &equals; b &plus; m&lsqb;&Sgr;(u(t &minus; nT) &minus;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>2u(t &minus; (n &plus; 1/2) T) &plus; u(t &minus;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>(n &plus; 1)T) &plus; &Sgr;(1/10(u(t &minus;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>nT&prime;) &minus; 2u(t &minus; (n &plus; 1/2)T&prime;) &plus;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>u(t &minus; (n &plus; 1)T&prime;)&rsqb;</entry>
+</row>
+<row>
+<entry>StringGenerator</entry>
+<entry>T, StringArray</entry>
+<entry>f(t) &equals; &int;&dgr;(t &minus; nT)</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>s(t) &equals; StringArray&lsqb;f(t)&rsqb;</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> A signal generator of the present invention may also include a generic user interface, or GUI. This can provide for an easy reconfiguration of the signals, as described above, by allowing a user or developer to simply select or enter an appropriate signal equation and variable values. There may be no need for the values used in the wave equations to be hard coded or stored in a source file, although at least some of the commonly used signals may be stored as such. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Another embodiment of the invention utilizes the signal generator as a string generator. This can be useful in applications where the accurate generation of a data stream, such as a stream of words, may be necessary for testing. In an example of a system in accordance with the present invention, a system may generate two strings, such as may represent &ldquo;pass&rdquo; and &ldquo;fail.&rdquo; The application could determine the test signal that would be produced when transmitting that string of text, and the string generator could generate the appropriate signal. The monitor or notification listener could then store the signal as received, which could then be compared against the test signal to quickly determine the accuracy of the monitor. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Other features, aspects and objects of the invention can be obtained from a review of the figures and the claims. It is to be understood that other embodiments of the invention can be developed and fall within the spirit and scope of the invention and claims. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The foregoing description of preferred embodiments of the present invention has been provided for the purposes of illustration and description. It is not intended to be exhaustive or to limit the invention to the precise forms disclosed. Obviously, many modifications and variations will be apparent to the practitioner skilled in the art. The embodiments were chosen and described in order to best explain the principles of the invention and its practical application, thereby enabling others skilled in the art to understand the invention for various embodiments and with various modifications that are suited to the particular use contemplated. It is intended that the scope of the invention be defined by the following claims and their equivalence. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for testing JMX monitors, the system comprising: 
+<claim-text>(a) a generator adapted to generate a signal; </claim-text>
+<claim-text>(b) a monitor adapted to monitor the signal; and </claim-text>
+<claim-text>(c) a notifier adapted to generate a notification in response to the monitoring of the signal by the monitor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising a listener for receiving the notification. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising an interface adapted to allow entry of at least one parameter to be used in generating the signal. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising a source of at least one equation to be used in generating the signal. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said source is selected from the group consisting of data libraries, data files, application code, or user entry. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising a timer, adapted to control the time for testing. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the monitor monitors the signal at a frequency at least twice the frequency of the signal. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising a processor adapted to execute the generation of the signal. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A signal generator comprising: 
+<claim-text>(a) a generator MBean adapted to generate a signal; and </claim-text>
+<claim-text>(b) a library of equations for use in the generator MBean, each equation representing a signal capable of being generated by the generator MBean. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A signal generator according to <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising an interface adapted to allow selection of an equation from the library to be used in generating the signal. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A signal generator according to <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the interface is further adapted to allow entry of at least one parameter to be used in the equation. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising a timer java bean, adapted to control the time for generation of the signal. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method for generating a signal, the method comprising the steps of: 
+<claim-text>(a) selecting an equation from a library, the equation corresponding to the signal to be generated; </claim-text>
+<claim-text>(b) specifying the appropriate parameters for the equation; and </claim-text>
+<claim-text>(c) generating a signal corresponding to the equation with the parameters using a generator MBean. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further comprising the step of specifying the length of time for generation of the signal. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method for testing a JMX monitor, the method comprising the steps of: 
+<claim-text>(a) generating a signal using a generator MBean; </claim-text>
+<claim-text>(b) polling the generator bean at a frequency at least twice the frequency of the generated signal using a monitor MBean of the JMX monitor; and </claim-text>
+<claim-text>(c) returning a testing value for each polling of the generator MBean. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising the step of generating a notification when a threshold value of the testing signal is detected by the monitor. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising the step of storing the testing values to a data store. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising the step of comparing each testing value to the corresponding value of the signal from the generator MBean. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising the step of specifying an equation to be used in generating the signal. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising the step of specifying at least one parameter to be used in generating the signal. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising the step of specifying the frequency of polling. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A computer-readable medium, comprising: 
+<claim-text>(a) means for selecting an equation from a library, the equation corresponding to a signal to be generated; </claim-text>
+<claim-text>(b) means for specifying parameters for the equation; and </claim-text>
+<claim-text>(c) means for generating a signal corresponding to the equation, with the parameters, using a generator MBean. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A computer program product for execution by a server computer for testing a JMX monitor, comprising: 
+<claim-text>(a) computer code for selecting an equation from a library, the equation corresponding to a signal to be generated; </claim-text>
+<claim-text>(b) computer code for specifying parameters for the equation; and </claim-text>
+<claim-text>(c) computer code for generating a signal corresponding to the equation, with the parameters, using a generator MBean. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A system for testing a JMX monitor, comprising: 
+<claim-text>(a) means for selecting an equation from a library, the equation corresponding to a signal to be generated; </claim-text>
+<claim-text>(b) means for specifying parameters for the equation; and </claim-text>
+<claim-text>(c) means for generating a signal corresponding to the equation, with the parameters, using a generator MBean. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A computer system comprising: 
+<claim-text>a processor; </claim-text>
+<claim-text>object code executed by said processor, said object code configured to: 
+<claim-text>(a) select an equation from a library, the equation corresponding to a signal to be generated; </claim-text>
+<claim-text>(b) specify parameters for the equation; and </claim-text>
+<claim-text>(c) generate a signal corresponding to the equation, with the parameters, using a generator MBean.</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004669A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004669A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004669A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004669A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004669A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004669A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

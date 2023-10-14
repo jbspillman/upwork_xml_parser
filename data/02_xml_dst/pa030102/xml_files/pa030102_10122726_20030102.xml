@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002748A1-20030102-D00000.TIF SYSTEM "US20030002748A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00001.TIF SYSTEM "US20030002748A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00002.TIF SYSTEM "US20030002748A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00003.TIF SYSTEM "US20030002748A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00004.TIF SYSTEM "US20030002748A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00005.TIF SYSTEM "US20030002748A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00006.TIF SYSTEM "US20030002748A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00007.TIF SYSTEM "US20030002748A1-20030102-D00007.TIF" NDATA TIF>
+<!ENTITY US20030002748A1-20030102-D00008.TIF SYSTEM "US20030002748A1-20030102-D00008.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002748</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10122726</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020416</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>2001-116477</doc-number>
+</priority-application-number>
+<filing-date>20010416</filing-date>
+<country-code>JP</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06K009/40</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>382</class>
+<subclass>274000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Image management system, image management method and image display device</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Takeshi</given-name>
+<family-name>Funahashi</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Kanagawa</city>
+<country-code>JP</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>FUJI PHOTO FILM CO., LTD.</organization-name>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>SUGHRUE, MION, ZINN, MACPEAK &amp; SEAS, PLLC</name-1>
+<name-2></name-2>
+<address>
+<address-1>2100 Pennsylvania Avenue, N.W.</address-1>
+<city>Washington</city>
+<state>DC</state>
+<postalcode>20037-3213</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">An image management system is proposed that can display the same image in the same appearance on each image display device connected to a network independent of individual hardware characteristics. When an image file server that manages diagnostic images transfers the diagnostic image to an image display device connected to the network, it transfers a gradation table describing a gradation correction curve corresponding to the type of display of the image display device to be a destination as well. On the side of the image display device, the diagnostic image will be displayed in the same appearance independent of local characteristics such as hardware or the like by performing luminance correction on the diagnostic image referring to the received gradation table. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to an image management system, image management method and image display device for managing image data via a network. In particular to an image management system, image management method and image display device for managing diagnostic image data via a network, which is output by various kinds of medical diagnostic image taking apparatuses such as a CT (Computed Tomography) apparatus, MR (Magnetic Resonance) apparatus, CR (Computed Radiography) apparatus, etc. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> More particularly, the present invention relates to an image management system, image management method and image display for retaining and managing diagnostic image data that is transferred via a network, and in particular to an image management system, image management method and image display device capable of viewing the diagnostic images retained and managed on the network on any image display devices connected to the network. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Along with the recent progress of information technologies, general purpose computer systems with advanced and powerful computing capabilities have been widely used in the offices of various research organizations and companies as well as in common families. The applicable fields of computers have also extended, wherein not only computer data but also a variety of media data such as images (including both static and moving images) and audio have been treated on computers as digitized files. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> For example, in the fields of medical and diagnostic technologies, patients are diagnosed their symptoms based on fluoroscopic images or cross-sectional images of their bodies, which are taken by various modality apparatuses such as a CT (Computed Tomography) apparatus, MR (Magnetic Resonance) apparatus, and CR (Computed Radiography) apparatus. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Conventionally, diagnostic images of patient bodies taken by these kinds of modality apparatuses have only been directly printed out to sensitive films by an image output apparatus that is installed near the modality apparatus. Accordingly, managing the diagnostic images afterward is performed by manually sorting and arranging the films as physical media, thus it requires a significant man power to move, distribute and share the diagnostic images, thereby leading to inefficient works. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> On the contrary, recently diagnostic images taken by modality apparatuses are digitized by a reader and managed by a computer as image files. Furthermore, by interconnecting modality apparatuses in a hospital and computers used by doctors and nurses via a network laid in the hospital, medial and diagnostic information such as diagnostic images and medical charts can be treated transparently in the network space. Namely, it becomes possible to transfer the diagnostic images to a remote terminal or to share the medical and diagnostic information among each of the terminals or to perform cooperative diagnoses on the network. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> For example, diagnostic image files taken by a radiographer using a modality apparatus and verified afterward are once stored in an image storage server on a network. In this case, a doctor who needs a diagnostic image, can access the image storage server from a terminal on his desk (or in a consultation room), retrieve the diagnostic image, and further transfer the diagnostic image along with the diagnostic results to the image storage server, whereby the diagnostic data of a number of patients can be managed in a lump in the hospital. Moreover, a doctor can retrieve later the diagnostic image from the image storage server and determine a healing condition in time series by comparing it with the latest one. Medical records such as diagnostic images and diagnostic results are obliged or recommended to be saved at medical institutions for a given period of time. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In addition, providing a print server on the network allows sharing of an expensive printer for film printing among multiple modality apparatuses. Namely, technicians and doctors can transfer the image files taken by the modality apparatuses or image files stored on the image storage server to the remote print server to print them out on the films. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Furthermore, it is also possible to install on the network the workstations (WS) for viewing images, that is, image viewers, in addition to the modality apparatuses. Doctors can interpret and diagnose the diagnostic images taken by the modality apparatuses on the image viewer. For interpretation, the image processing conditions applied to the diagnostic images may be changed or corrected by the doctor. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> By the way, in a hospital (in particular a large-scaled general hospital), a number of modality apparatuses are installed as sources of diagnostic images. Wherein on each of the modality apparatus, technicians who operates the apparatuses (e.g., radiographers) may take photographs of affected parts or entire bodies of patients or investigate the taken images and then send image data to the image storage server one after another. Doctors retrieve diagnostic image data from the image storage server via the network for interpretation and diagnosis, thereafter they store it in the image storage server as image files with diagnostic results appended. In other words, the image storage server stores a large number of image files to which plural file operators (e.g., doctors or radiographers) perform various operations of their own accord. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The image storage server generally comprises a huge hard disk drive, which temporarily stores vast amounts of image files sent from modality apparatuses or computers used by doctors. However, as a result of endless medical practices, the total capacity of the image files to be retained as medical records may exceed the storage capacity of the hard disk drive at a relatively early stage. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In view of this, the image files temporarily stored on the hard disk drive are moved to removable media such as a DVD (Digital Versatile Disc) or MO (Magnetic-Optical disc), in order to permanently retain the medical records. Though one removable medium naturally has its limit of storage capacity, a nearly inexhaustible amount of image files can be permanently stored by exchanging a medium loaded in the media drive. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> By the way, a doctor can perform interpretation and diagnosis by outputting diagnostic images taken by the modality apparatus on a high-resolution CRT display connected to the image viewer. For interpretation, the conditions for image reading or for image processing that are applied to the diagnostic images on the image viewer may be changed. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> When displaying such diagnostic images, it is desirable to reproduce the diagnostic image within a range of luminance which human beings are interested in, in order to perform a correct interpretation. However, depending on the difference of characteristics of luminance logarithmic values of the image display devices, even the images with the same dark and light values may appear differently on the respective image display devices. Suppose, for example, that after a radiographer performs quality assurance (QA) for diagnostic images on some display after taking some radiographs, a doctor interprets the diagnostic images on another display. In this case, the doctor may see the images that appear differently from those at the time of quality assurance. In this case, the quality assurance by the radiographer has little meaning and the doctor can not perform a correct interpretation, which may lead to misdiagnosis such as an oversight of the affected areas. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In general, it is preferable that the luminance logarithmic values change uniformly according to the dark and light values so that the appearance in the eyes of observers, that is, the spectral luminous efficacy is constant in any luminance area. On this account, the gradation table, which is the correction curve to give linearity to the luminance logarithmic values, is provided for the image display devices in order to display images with correcting the image values using the gradation table. For a CRT display, for example, since the spectral luminous efficacy decreases at the dark areas, the gradation table has a gradation correction curve to maintain linearity in such luminance areas. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> However, this gradation correction curve has a strong dependence on hardware so that it differs depending on the types of display devices. Furthermore, even the same type of displays have unique properties. Also, even the same display device has a correction curve that changes with time. For example, the maximum luminance of CRT (Cathode Ray Tube) display decreases with aged deterioration. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> It is an object of the present invention to provide an excellent image management system, image management method and image display device for managing diagnostic image data via a network. The image data is taken by various kinds of medical diagnostic image capturing apparatuses, such as a CT (Computed Tomography) apparatus, MR (Magnetic Resonance) apparatus, CR (Computed Radiography) apparatus, etc. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> It is another object of the invention to provide an excellent image management system, image management method and image display device for displaying diagnostic images in good conditions that are retained and managed on a network on any image display devices connected to the network. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> It is a further object of the invention to provide an excellent image management system, image management method and image display device for displaying the same images in the same appearance on each of image display devices connected to a network independent of individual hardware characteristics. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> It is a further object of the invention to provide an excellent image management system, image management method and image display device for enabling interpretation of radiographs with the same characteristics at all times by compensating the change of gradation characteristics due to the aged deterioration of hardware. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In view of the above problems, in a first aspect of the present invention, there is provided an image management system or method for managing image files displayed on an image display device connected to a network, comprising: </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> a recorder or recording step of recording image files; </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> a storage or storing step of storing a plurality of gradation tables specifying gradation characteristics of each type of display output of the image display device; and </paragraph>
+<paragraph id="P-0024" lvl="2"><number>&lsqb;0024&rsqb;</number> a transmitter or transmitting step of transmitting the image file along with the gradation table that corresponds to the type of the display output of the image display device to be a destination. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> With the image management system or method according to the first aspect of the invention, when transferring a diagnostic image to the image display device connected to the network, the gradation table is transferred together which describes a gradation correction curve corresponding to the type of display of the image display device to be a destination. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Accordingly, on the side of the image display device, the diagnostic image is displayed with luminance being corrected with reference to the received gradation table so that a good image with the same appearance will be displayed independent of the local characteristics such as the hardware. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> It is noted that the above transmitting means or step may transmit the gradation table as separate data from the image file. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Alternatively, the transmitting means or step may transmit the image file to the image display device after reflecting the gradation characteristics defined by the gradation table on the image. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> In a second aspect of the invention, there is provided an image display device for displaying images, comprising: </paragraph>
+<paragraph id="P-0030" lvl="2"><number>&lsqb;0030&rsqb;</number> a display unit for displaying the images; </paragraph>
+<paragraph id="P-0031" lvl="2"><number>&lsqb;0031&rsqb;</number> a storage for storing gradation tables that specify gradation characteristics corresponding to multiple maximum luminance; </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> a detector for measuring the maximum luminance that is output by the display unit; and </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> a processor for performing gradation correction processing specified by the gradation table on the image displayed on the display section by retrieving from the gradation table storing means the gradation table corresponding to the maximum luminance measured by the luminance measuring means. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The image display device may comprise, for example, a CRT (Cathode Ray Tube) display as a display output section. For this type of display, the maximum luminance may decrease due to the aging, wherein the image can not be displayed upon interpretation in accordance with the expected gradation curve. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The image display device according to the second aspect of the invention provides gradation tables beforehand. The gradation table specifies gradation correction curves corresponding to multiple maximum luminance and automatically selects a most appropriate one depending on the aged deterioration of the maximum luminance in order to display images using the almost ideal gradation correction curve. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Namely, interpretation can be always performed with the same characteristics by compensating the change of gradation characteristics due to the aged deterioration of the hardware. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Other additional objectives, features and advantages of the present invention will be appreciated with reference to the following detailed explanation about embodiments described in conjunction with the accompanying drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts a schematic diagram of a network system where medical diagnostic image files are shared among multiple terminals. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a functional block diagram for managing computerized diagnostic images in a network system for medical images. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> depicts a flow of diagnostic image files dealt with on a network system for medical images according to a flow of medical and diagnostic operations. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> depicts a structure of a diagnostic image file. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> depicts a hardware configuration of a computer system <highlight><bold>10</bold></highlight> capable of operating as image file server <highlight><bold>10</bold></highlight>C and image viewer <highlight><bold>10</bold></highlight>A. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a diagram illustrating a transfer function of image information performed between image file server <highlight><bold>1</bold></highlight>C and external devices such as modality apparatuses <highlight><bold>50</bold></highlight> and image viewer <highlight><bold>10</bold></highlight>A. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a diagram illustrating another transfer function of image information performed between image file server <highlight><bold>10</bold></highlight>C and external devices such as modality apparatuses <highlight><bold>50</bold></highlight> and image viewer <highlight><bold>10</bold></highlight>A. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> depicts an example of configuration of an image display device according to the embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Now embodiments of the present invention will be described with reference to the drawings. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a schematic diagram of a network system where medical diagnostic image files are shared among multiple terminals. On the network system, medical diagnostic images taken by multiple modality apparatuses <highlight><bold>50</bold></highlight>A, <highlight><bold>50</bold></highlight>B, etc., are dealt with by multiple workstations <highlight><bold>10</bold></highlight>A, <highlight><bold>10</bold></highlight>B, etc. Each of the modality apparatuses and each of the workstations that deal with the diagnostic images are generally connected to the network using the network interface card (NIC) (not shown). </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the network may be a LAN (Local Area Network) laid in a single hospital, for example. The LAN may be configured by a single LAN segment <highlight><bold>20</bold></highlight> or by multiple LAN segments that are interconnected via routers (or gateways) <highlight><bold>30</bold></highlight>. Alternatively, the network may be a WAN (wide Area Network) that is configured by connecting LANs each other located at remote hospitals via a dedicated line or may be a WAN like the Internet or an intranet. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Connected to the network are multiple modality apparatuses serving as supply sources of medical images, including a MR (Magnetic Resonance) apparatus <highlight><bold>50</bold></highlight>A, RI apparatus <highlight><bold>50</bold></highlight>B, US apparatus <highlight><bold>50</bold></highlight>C, DSA (Digital Subtraction Angiography) apparatus <highlight><bold>50</bold></highlight>D, CT (Computed Tomography) apparatus <highlight><bold>50</bold></highlight>E, CR (Computed Radiography) apparatus <highlight><bold>50</bold></highlight>F, etc., and workstations <highlight><bold>10</bold></highlight>A, <highlight><bold>10</bold></highlight>B, etc. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> Generally, each of the modality apparatuses <highlight><bold>50</bold></highlight> is located in a dedicated diagnostic room (not shown) in a hospital. Furthermore, specialized technicians such as radiographers are deployed to each of the modality apparatuses. They take photographs of affected parts or entire bodies of patients or inspect the taken images or may possibly photograph again upon request. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> A computer system shown by a reference number <highlight><bold>10</bold></highlight>B operates as a print server. Connected to print server <highlight><bold>10</bold></highlight>B are, for example, two printers locally via adapter cards (not shown). Print server <highlight><bold>10</bold></highlight>B performs to the image data sent from each of the modality apparatuses <highlight><bold>50</bold></highlight> on the network the format operation (such as a layout operation on a film with a predetermined size), enlargement or reduction operation of images, and gradation conversion suitable for interpretation and diagnosis before printout. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> A printer for medical diagnostic images is typically a type of that which forms an image on a sensitive film rather than plain paper. The reason for using a film rather than plain paper as an output medium is due to the high resolution of the film compared with plain paper (particularly a dynamic range is wide), which allows correct observation, that is, interpretation of the affected parts based on the output images. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> A workstation (WS) shown by a reference number <highlight><bold>10</bold></highlight>C operates as a file server, which comprises a mass storage device for storing a huge amount of diagnostic image files. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> A further workstation (WS) shown by a reference number <highlight><bold>10</bold></highlight>A operates as an image viewer. A doctor manipulates the image viewer <highlight><bold>10</bold></highlight>A to retrieve a plurality of past diagnostic images from file server <highlight><bold>10</bold></highlight>B and check the process of recovery or the evolution of the disease on the display screen, and which typically comprises a high-resolution CRT (Cathode Ray Tube) display with a large screen. The description about interpretation, that is, diagnostic results by a doctor is saved in the image file server <highlight><bold>10</bold></highlight>C along with the diagnostic image files. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Each of the workstations <highlight><bold>10</bold></highlight> and modality apparatuses <highlight><bold>50</bold></highlight> on the network is connected transparently according to a predetermined communication protocol. For example, for an OSI (Open Systems Interconnection) reference standard model, a physical layer and data link layer of the network are configured by the Ethernet, while a transport layer and network layer are configured by the TCP/IP (Transmission Control Protocol/Internet Protocol). Upper layers higher than a session layer inclusive are provided as specialized protocols given by each of the manufacturers of medical products. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> One of the representative upper layers of the medical industry is DICOM (Digital Imaging and Communication for Machine). DICOM is the industrial standard specifying the transfer of images and other medical information between computers, which allows the digital communication between a diagnostic apparatus and a therapeutic apparatus produced by different manufacturers. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Using the network system for medical images as shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, every medical image data acquired in a hospital is computerized and thereafter moved, transferred, distributed or shared among multiple terminals on the network. Namely, diagnostic data obtained in a diagnostic room can be viewed in another diagnostic room (or a diagnostic room in a remote hospital). It is also possible to check the process of recovery or the evolution of the disease by retrieving the past diagnostic images from the file server <highlight><bold>10</bold></highlight>C as needed. Furthermore, computer resources, such as an expensive film printer for outputting images taken by the modality apparatuses <highlight><bold>50</bold></highlight> or images retrieved from file server <highlight><bold>10</bold></highlight>C, are shared among multiple modality apparatuses and workstations. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> Using the network structure shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, diagnostic images are digitized, that is, computerized and managed and shared in the network for the purpose of diagnostic operations. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a functional block diagram for managing computerized diagnostic images in a network system for medical images. The system shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> comprises a RIS (Radiology Information System), a CR system related management information management layer, and a CR system. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> The radiology information system totally manages the diagnostic images and other information dealt with by the department of radiology in a hospital. Generally, the department of radiology has one or more modality apparatus such a CR, wherein each of the modality apparatuses is located in a dedicated photographic room (not shown). </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> The CR system related information management layer constructs a database composed of RIS information and CR system information. This layer manages a series of processing ranging from generation of diagnostic images at the CR system to diagnosis of them using this database as well as notifies the status of the examination progress to the upper radiology information system. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> The CR system that exchanges data with the CR system related information management layer comprises a modality apparatus, an image display subsystem, an image storage subsystem, and a hard copy subsystem. The image display subsystem is embodied by an image viewer <highlight><bold>10</bold></highlight>A, the image storage subsystem is embodied by an image file server <highlight><bold>10</bold></highlight>C, and the hard copy subsystem is embodied by a print server <highlight><bold>10</bold></highlight>B and film printer. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> The modality apparatus comprises an examination registration section, an image generation section, and an image check and delivery section, those of which perform registration of taken images in response to an examination request, image generation, image check and delivery, and notification of the end of the examination. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The radiology information system has an interface with a hospital information system (HIS) that totally manages medical information, and receives examination requests at the department of radiology or feeds back the examination results. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The CR system related information management layer acquires an examination work list from the radiology information system and registers the examination information with the modality apparatus. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The modality apparatus is used by a radiographer to generate diagnostic images of patients according to the examination information registered as well as notifies the CR system related information management layer of the end of the examination. The diagnostic images checked at the modality apparatus may be transferred to the image display subsystem or hard copy subsystem via the network. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> In response to the notification of the end of the examination from the modality apparatus, the CR system related information management layer notifies the radiology information system of the status of the examination progress. Furthermore, receiving from the radiology information system a list of images for which the examination has ended, the CR system related information management layer creates a list of images that can be diagnosed and sends this list to the image display subsystem. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Based on the list of images that can be diagnosed, the image display subsystem is used by a doctor to diagnose the diagnostic images. Then the image display subsystem returns notification of the end of the interpretation to the CR system related information management layer, and in turn the latter returns notification of the end of the interpretation to the radiology information system. The diagnostic images interpreted may be transferred to the image storage subsystem or hard copy subsystem via the network. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> By using the image display subsystem, a doctor creates and stores reports concerning the diagnostic results. The image display subsystem further refers to the diagnostic results of the image display subsystem and the diagnostic images saved in the image storage subsystem, and then integrates those kinds of information into a care card sent from the medical information system. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> depicts a flow of diagnostic image files dealt with on a network system for medical images according to a flow of medical and diagnostic operations. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> A technician using a modality apparatus takes photographs of affected parts or entire bodies of patients and then reads the taken images using a reader to obtain &ldquo;generated images&rdquo; in a digital format. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> Next, the technician determines on an image check apparatus whether the generated images are in sufficient quality for a doctor to diagnose. One of the image-check operations is called QA (Quality Assurance). A set of a radiation source, radiogram reader and image checker constitutes a modality apparatus. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> In the process of QA, a radiographer may adjust image processing parameters such as the one for dark and light adjustment of the taken image, nevertheless, if the image of sufficient quality for a doctor to diagnosis can not be obtained, the diagnostic image may be photographed again upon request. It is noted that the diagnostic image that has passed the QA process is also called a &ldquo;checked diagnostic image&rdquo;. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> The image processing parameters that can be set at a user level, such as a radiographer or a doctor, are roughly classified into GP (gradation processing) parameters, RP (frequency processing) parameter, DRC (dynamic range compressed processing) parameters, and TAS (linear tomographic fault shade removal processing) parameters. Each of the image processing parameters are detailed below.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 1</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>GP (Gradation Processing) Parameters</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="35PT" align="left"/>
+<colspec colname="2" colwidth="140PT" align="left"/>
+<colspec colname="3" colwidth="42PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry></entry>
+<entry>Input</entry>
+</row>
+<row>
+<entry>Parameter</entry>
+<entry>Properties</entry>
+<entry>Range</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>GA</entry>
+<entry>The tendency of the gradation curve.</entry>
+<entry>&minus;4.0&tilde;&minus;0.1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It adjusts the contrast of the image.</entry>
+<entry>0.1&tilde;4.0</entry>
+</row>
+<row>
+<entry>GT</entry>
+<entry>Figure of the gradation curve.</entry>
+<entry>A&tilde;Z</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It has the same effect as the changing of the &ggr;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>curve of several kind of X ray film.</entry>
+</row>
+<row>
+<entry>GC</entry>
+<entry>A central density of the tendency of the</entry>
+<entry>0.30&tilde;2.64</entry>
+</row>
+<row>
+<entry></entry>
+<entry>gradation curve.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It changes GA centering around GC.</entry>
+</row>
+<row>
+<entry>GS</entry>
+<entry>A parallel movement of gradation curve.</entry>
+<entry>&minus;1.44&tilde;1.44</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It can adjust the display density of the entire</entry>
+</row>
+<row>
+<entry></entry>
+<entry>image.</entry>
+</row>
+<row>
+<entry>S-Shift</entry>
+<entry>A coefficient relating to the original sensitivity.</entry>
+<entry>/(&divide;)2.0&tilde;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It can adjust the display density of the entire</entry>
+<entry>(x)2.0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>image.</entry>
+</row>
+<row>
+<entry>C-Shift</entry>
+<entry>A coefficient relating to GA.</entry>
+<entry>(x)0.5&tilde;2.0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It can adjust the contrast of the entire image.</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number>  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 2</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>RP (Frequency Processing) Parameters</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="49PT" align="left"/>
+<colspec colname="2" colwidth="126PT" align="left"/>
+<colspec colname="3" colwidth="42PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>Parameter</entry>
+<entry>Properties</entry>
+<entry>Input Range</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>RN</entry>
+<entry>Emphasized frequency range in frequency</entry>
+<entry>0&tilde;9</entry>
+</row>
+<row>
+<entry></entry>
+<entry>processing.</entry>
+<entry>(10 types)</entry>
+</row>
+<row>
+<entry>RT</entry>
+<entry>Figure of the curve in accordance with</entry>
+<entry>A&tilde;Z</entry>
+</row>
+<row>
+<entry></entry>
+<entry>the density of image.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It adjusts the level of emphasis within a</entry>
+</row>
+<row>
+<entry></entry>
+<entry>predetermined density range.</entry>
+</row>
+<row>
+<entry>RE</entry>
+<entry>Emphasizing density of frequency</entry>
+<entry>0.0&tilde;9.9</entry>
+</row>
+<row>
+<entry></entry>
+<entry>processing. The Intensity of the process</entry>
+<entry>10&tilde;16</entry>
+</row>
+<row>
+<entry></entry>
+<entry>changes in accordance with RE value.</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number>  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 3</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>RP (dynamic range compressed processing) Parameters</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="133PT" align="left"/>
+<colspec colname="3" colwidth="42PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>Parameter</entry>
+<entry>Properties</entry>
+<entry>Input Range</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>DRN</entry>
+<entry>The mask size of DR compressing.</entry>
+<entry>0&tilde;9</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It sets the processing range along with DRT.</entry>
+<entry>(10 types)</entry>
+</row>
+<row>
+<entry>DRT</entry>
+<entry>Type of DR compressing filter.</entry>
+<entry>A&tilde;T</entry>
+</row>
+<row>
+<entry></entry>
+<entry>It sets the range to be processed.</entry>
+<entry>(20 types)</entry>
+</row>
+<row>
+<entry>DRE</entry>
+<entry>The level of DR compress filtering process.</entry>
+<entry>0.0&tilde;9.9</entry>
+</row>
+<row>
+<entry></entry>
+<entry>The intensity of the process changes in</entry>
+<entry>10&tilde;16</entry>
+</row>
+<row>
+<entry></entry>
+<entry>accordance with DRE value.</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number>  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 4</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>TAS (linear tomographic fault shade removal processing) Parameters</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="133PT" align="left"/>
+<colspec colname="3" colwidth="42PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>Parameter</entry>
+<entry>Properties</entry>
+<entry>Input Type</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>ORN</entry>
+<entry>The mask size of one-dimensional BOKE</entry>
+<entry>0&tilde;9</entry>
+</row>
+<row>
+<entry></entry>
+<entry>mask processing.</entry>
+<entry>(10 types)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Set the most effective size in accordance</entry>
+</row>
+<row>
+<entry></entry>
+<entry>with the dislocation angle.</entry>
+</row>
+<row>
+<entry>ORE</entry>
+<entry>The level of emphasis of one-dimensional</entry>
+<entry>10&tilde;16</entry>
+</row>
+<row>
+<entry></entry>
+<entry>BOKE mask processing.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>The intensity of the process changes in</entry>
+</row>
+<row>
+<entry></entry>
+<entry>accordance with ORE value.</entry>
+</row>
+<row>
+<entry>ORD</entry>
+<entry>The direction of one-dimensional BOKE</entry>
+<entry>0:orthogonal</entry>
+</row>
+<row>
+<entry></entry>
+<entry>mask processing.</entry>
+<entry>1:parallel</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Set the direction in accordance with the</entry>
+</row>
+<row>
+<entry></entry>
+<entry>scanning direction and the track direction</entry>
+</row>
+<row>
+<entry></entry>
+<entry>of the dislocation.</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> The &ldquo;generated diagnostic images&rdquo; and &ldquo;checked diagnostic images&rdquo; operated by the radiographer may be saved on a local disk in the modality apparatus or may be transferred to the image file server <highlight><bold>10</bold></highlight>C and saved therein. The checked diagnostic images are once stored on the image file server <highlight><bold>10</bold></highlight>C. In other words, the checked diagnostic images are what is subject to diagnosis, wherein an access right to them is granted to doctors and nurses who prepare for those diagnostic images for doctors. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> A doctor retrieves diagnostic images of a predetermined patient on a workstation serving as a diagnostic image viewer <highlight><bold>10</bold></highlight>A in order to make an interpretation, that is, to make a diagnosis. Upon interpretation, the doctor may change the image processing parameters (e.g., for dark and light adjustment) of the diagnostic images. The diagnostic image that has been interpreted by the doctor is also called an &ldquo;interpreted diagnostic image&rdquo; herein. The image processing parameters applied to the diagnostic contents and images by a doctor are important medical records, which are saved in the image file server <highlight><bold>10</bold></highlight>C along with the interpreted diagnostic images. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> In each of the processes of generation, check and interpretation of diagnostic images shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, various kinds of collateral information is appended to the diagnostic image, including information of a corresponding patient, an examination date, and examination contents. These kinds of collateral information are important as a medical record along with the diagnostic images. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> In the embodiment of the present invention, the diagnostic image file is described with being structured as shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, thus the collateral information can be dealt with concurrently with the diagnostic image. As shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the diagnostic image file comprises a patient field, an examination field, a series field, and an image field. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> In the patient field, there is written personal information for identifying a patient corresponding to the diagnostic images or specifying a class, such as a name of patient, an identification number, sex, a birth date, etc. </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> In the examination field, there are written an examination date when photographs are taken, time, an imaging method (e.g., simple imaging of inner chest), etc. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> In the series field, there are written a series of dates and time when the affected parts, such as the front side and lateral side of the chest, have been photographed in sequence. </paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number> One image file can contain one or more frames of image data. The image processing parameters applied to each image data (e.g., direction of image) may be saved in conjunction with the image data. In addition, tag information showing that interpretation has been done may be appended to the image data that has already been interpreted by a doctor. </paragraph>
+<paragraph id="P-0085" lvl="0"><number>&lsqb;0085&rsqb;</number> In a network system according to the embodiment of the invention, the image file server <highlight><bold>10</bold></highlight>C may retain diagnostic images on hard disks in response to requests from clients or may automatically archive the diagnostic images on a removable medium, thereby averting the risk of involuntarily deleting important diagnostic images as well as saving the operators the trouble of storage operations. It is noted that a client refers to herein a modality apparatus that generates diagnostic images or a radiographer serving as its operator, or an image viewer or a doctor who interprets the diagnostic images on the image viewer with applying the image processing parameters to the images. </paragraph>
+<paragraph id="P-0086" lvl="0"><number>&lsqb;0086&rsqb;</number> The diagnostic images that are temporarily stored or permanently archived in image file server <highlight><bold>10</bold></highlight>C are read by image viewer <highlight><bold>10</bold></highlight>A operated by a doctor for the purpose of interpretation, that is, diagnosis. In the process of interpretation, the conditions for image reading or image processing applied to the diagnostic images may be changed. </paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number> The conditions for image processing may include reversible ones such as modification of dark and light values. An original image can be reproduced from the resulting image after the image processing has been performed by storing the image processing parameters, and irreversible ones such as normalization processing, wherein an original image cannot be reproduced because pixel values themselves are changed. </paragraph>
+<paragraph id="P-0088" lvl="0"><number>&lsqb;0088&rsqb;</number> Radiographers and doctors may retrieve diagnostic images stored in image file server <highlight><bold>10</bold></highlight>C to display them on the display of image viewer <highlight><bold>10</bold></highlight>B and then perform quality assurance (QA) of generated images, interpretation of checked images, or reinterpretation of diagnosed images. </paragraph>
+<paragraph id="P-0089" lvl="0"><number>&lsqb;0089&rsqb;</number> For correct interpretation, it is preferable to reproduce the diagnostic images within a range of luminance which human beings are interested in. However, in accordance with the difference of characteristics of luminance logarithmic values of the respective image display, even the images with the same dark and light values may appear differently on the respective image display devices. Suppose, for example, that after a radiographer performs quality assurance (QA) for diagnostic images on some display after taking some radiographs, a doctor interprets the diagnostic images on another display. In this case, the doctor may see the images that appear differently from those at the time of quality assurance. In this case, the quality assurance by the radiographer has little meaning and the doctor can not perform a correct interpretation, which may lead to misdiagnosis such as an oversight of the affected areas. </paragraph>
+<paragraph id="P-0090" lvl="0"><number>&lsqb;0090&rsqb;</number> In general, it is preferable that the luminance logarithmic values change uniformly according to the dark and light values so that the appearance in the eyes of observers, that is, the spectral luminous efficacy is constant in any luminance area. On this account, the gradation table, which is the correction curve to give linearity to the luminance logarithmic values, is provided for the image display devices in order to display images with correcting the image values using the gradation table. </paragraph>
+<paragraph id="P-0091" lvl="0"><number>&lsqb;0091&rsqb;</number> According to the embodiment of the invention, image file server <highlight><bold>10</bold></highlight>C manages diagnostic images (or any other device that can manage diagnostic images in a centralized manner on the network), and transfers the diagnostic image to image viewer <highlight><bold>10</bold></highlight>C (or an image display device connected to the network). It also transfers a gradation table describing a gradation correction curve corresponding to the type of display (or hardware characteristics or individual differences) of the display device to be a destination as well. </paragraph>
+<paragraph id="P-0092" lvl="0"><number>&lsqb;0092&rsqb;</number> In this case, on the side of the image display device, the diagnostic image will be displayed in the same appearance independent of local characteristics such as hardware or the like even if the diagnostic image is displayed as it is. Therefore, a doctor can perform a correct interpretation. </paragraph>
+<paragraph id="P-0093" lvl="0"><number>&lsqb;0093&rsqb;</number> According to another embodiment of the invention, the image file server <highlight><bold>10</bold></highlight>C manages diagnostic images (or any other device that can manage diagnostic images in a centralized manner on the network), and transfers the diagnostic image to image viewer <highlight><bold>10</bold></highlight>A (or an image display device connected to the network). It also performs luminance correction using a gradation table describing a gradation correction curve corresponding to the type of display (or hardware characteristics or individual differences) of the display device to be a destination before transferring that diagnostic image. </paragraph>
+<paragraph id="P-0094" lvl="0"><number>&lsqb;0094&rsqb;</number> In this case, on the side of the image display device, the diagnostic image will be displayed in the same appearance independent of local characteristics such as hardware or the like even if the diagnostic image is displayed as it is. Therefore, a doctor can perform a correct interpretation. </paragraph>
+<paragraph id="P-0095" lvl="0"><number>&lsqb;0095&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> depicts a hardware configuration of a computer system <highlight><bold>10</bold></highlight> capable of operating as image file server <highlight><bold>10</bold></highlight>C and image viewer <highlight><bold>10</bold></highlight>A. An example of computer system <highlight><bold>10</bold></highlight> may be a workstation (WS) or personal computer (PC) that consists of an IBM PC/AT (Personal Computer/Advanced Technology) compatible machine or its successor machine. Hereinafter, each part of computer system <highlight><bold>10</bold></highlight> will be described. </paragraph>
+<paragraph id="P-0096" lvl="0"><number>&lsqb;0096&rsqb;</number> A CPU (Central Processing Unit) <highlight><bold>11</bold></highlight> serving as a main controller of the system <highlight><bold>10</bold></highlight>C performs various kinds of applications under the control of the operating system (OS). CPU<highlight><bold>11</bold></highlight> can execute, for example, file server applications that perform management of diagnostic image files or applications for displaying and interpreting the diagnostic images on the display. </paragraph>
+<paragraph id="P-0097" lvl="0"><number>&lsqb;0097&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, CPU <highlight><bold>11</bold></highlight> is interconnected to other devices (described below) via a bus <highlight><bold>18</bold></highlight>. Each of the devices on bus <highlight><bold>18</bold></highlight> is granted a unique memory address or I/O address, thus CPU <highlight><bold>11</bold></highlight> can access each of the devices connected to bus <highlight><bold>18</bold></highlight> by addressing. Bus <highlight><bold>18</bold></highlight> is a common signal transmission path including an address bus, data bus and control bus, an example of which is PCI (Peripheral Component Interconnection) bus. </paragraph>
+<paragraph id="P-0098" lvl="0"><number>&lsqb;0098&rsqb;</number> RAM (Random Access Memory) <highlight><bold>12</bold></highlight> is a volatile storage device used to store program codes executed in CPU <highlight><bold>11</bold></highlight> or temporarily store work data under execution. ROM (Read Only Memory) <highlight><bold>13</bold></highlight> is a nonvolatile storage device for permanently storing program codes or data, in which BIOS (Basic Input/Output System) or POST (Power-On Self Test Program) are stored, for example. </paragraph>
+<paragraph id="P-0099" lvl="0"><number>&lsqb;0099&rsqb;</number> Display interface <highlight><bold>14</bold></highlight> is a peripheral device for actually processing draw instructions issued by CPU <highlight><bold>11</bold></highlight>. Drawing data processed in display interface <highlight><bold>14</bold></highlight> may be once written to a frame buffer (not shown) before being output to display <highlight><bold>21</bold></highlight>. Display <highlight><bold>21</bold></highlight> may be a CRT (cathode ray tube) display, for example. </paragraph>
+<paragraph id="P-0100" lvl="0"><number>&lsqb;0100&rsqb;</number> Input device interface <highlight><bold>15</bold></highlight> connects user input devices, such as a keyboard <highlight><bold>22</bold></highlight> and mouse <highlight><bold>23</bold></highlight>, to system <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0101" lvl="0"><number>&lsqb;0101&rsqb;</number> Network interface <highlight><bold>17</bold></highlight> connects system <highlight><bold>10</bold></highlight> to a network (not shown) such as a LAN (Local Area Network) according to a predetermined communication protocol such as Ethernet. Network interface <highlight><bold>17</bold></highlight> is typically provided in the form of LAN adapter card, which is installed into a PCI bus slot on the mother board (not shown). </paragraph>
+<paragraph id="P-0102" lvl="0"><number>&lsqb;0102&rsqb;</number> Multiple host computers are connected transparently on the LAN to construct a distributed computing environment. Furthermore, some of the host computers operate as a router to interconnect to other LANs or external networks such as the Internet. For example, the diagnostic images generated by the modality apparatus are transferred or delivered via the network. </paragraph>
+<paragraph id="P-0103" lvl="0"><number>&lsqb;0103&rsqb;</number> External device interface <highlight><bold>16</bold></highlight> is a device for connecting external devices such as hard disk drive (HDD) <highlight><bold>24</bold></highlight> and media drive <highlight><bold>25</bold></highlight> to system <highlight><bold>10</bold></highlight>C. External device interface <highlight><bold>16</bold></highlight> complies with an interface standard such as IDE (Integrated Drive Electronics) and SCSI (Small Computer System Interface). </paragraph>
+<paragraph id="P-0104" lvl="0"><number>&lsqb;0104&rsqb;</number> HDD <highlight><bold>24</bold></highlight> is an external storage device loading a magnetic disk fixedly as a storage medium and is superior to other external storage devices in terms of storage capacity and data transfer rate. It is noted that placing a software program on HDD <highlight><bold>24</bold></highlight> in an executable condition is called &ldquo;installing&rdquo; a program in a system. Typically, on HDD <highlight><bold>24</bold></highlight> are stored a program code of the operating system executed by CPU <highlight><bold>11</bold></highlight>, application programs, and device drivers in a nonvolatile condition. For example, server applications involved in the present invention or applications for displaying and interpreting diagnostic images are installed on HDD <highlight><bold>24</bold></highlight>. For image file server <highlight><bold>10</bold></highlight>C, HDD <highlight><bold>24</bold></highlight> is used to temporarily store the diagnostic image files sent from external devices such as modality apparatuses and image viewers. HDD <highlight><bold>24</bold></highlight> is also utilized to store gradation tables corresponding to multiple maximum luminance. </paragraph>
+<paragraph id="P-0105" lvl="0"><number>&lsqb;0105&rsqb;</number> Media drive <highlight><bold>25</bold></highlight> is a device for loading removable media such as a CD (Compact Disk), MO (Magneto-Optical disk) and DVD (Digital Versatile Disk) and accessing their recording surface. The removable media is mainly used to back up software programs and data files in a computer-readable format or to move (including sales, logistics, distribution) them among multiple systems. </paragraph>
+<paragraph id="P-0106" lvl="0"><number>&lsqb;0106&rsqb;</number> In the image file server <highlight><bold>10</bold></highlight>C, the removable media are used as a permanent storage for diagnostic image files. Though the storage capacity of one piece of removable medium is finite, replacing the medium on the media drive <highlight><bold>25</bold></highlight> provides nearly inexhaustible storage capacity. </paragraph>
+<paragraph id="P-0107" lvl="0"><number>&lsqb;0107&rsqb;</number> Next, with reference to <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, it will be described about a transfer function of image information performed between the image file server <highlight><bold>10</bold></highlight>C and external devices such as modality apparatuses <highlight><bold>50</bold></highlight> and image viewer <highlight><bold>10</bold></highlight>A. </paragraph>
+<paragraph id="P-0108" lvl="0"><number>&lsqb;0108&rsqb;</number> Image file server <highlight><bold>10</bold></highlight>C, which serves as an image storage device for storing diagnostic image files, is interconnected via the network with each of the modality apparatuses <highlight><bold>50</bold></highlight> serving as image generation devices and multiple image display devices A, B and C (image viewers). </paragraph>
+<paragraph id="P-0109" lvl="0"><number>&lsqb;0109&rsqb;</number> Each of modality apparatuses <highlight><bold>50</bold></highlight> is comprised of a reader for capturing diagnostic images using radiation and an image check and delivery apparatus for checking and transmitting the diagnostic images via a network. Modality apparatuses <highlight><bold>50</bold></highlight> are operated by specialized technicians (e.g., radiographer) to photograph (or photograph again upon request) the diagnostic images or to perform check operations. The checked diagnostic images may be transferred to image file server <highlight><bold>10</bold></highlight>C serving as an image delivery apparatus, where they are temporarily stored on the hard disk or permanently archived on the removable disk. Alternatively, the checked diagnostic images may be directly transferred to respective image display devices A, B and C with passing image file server <highlight><bold>10</bold></highlight>C. </paragraph>
+<paragraph id="P-0110" lvl="0"><number>&lsqb;0110&rsqb;</number> Image display devices A, B and C are operated by a doctor who performs interpretation, that is, diagnosis of diagnostic images, then the diagnostic contents and results are written to the diagnostic image file. The diagnostic images displayed on the image display devices A, B and C may be transferred directly from modality devices <highlight><bold>50</bold></highlight> or may be transferred after temporarily stored in image file server <highlight><bold>10</bold></highlight>C. </paragraph>
+<paragraph id="P-0111" lvl="0"><number>&lsqb;0111&rsqb;</number> Assuming that the appearance is different from each other depending on the difference of characteristics of luminance logarithmic values for each of the image display devices A, B and C. It is preferable that the luminance logarithmic values change uniformly according to the dark and light values so that the appearance in the eyes of observers, that is, the spectral luminous efficacy is constant in any luminance area. As shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, each of the image display devices A, B and C can provide the linearity to the luminance logarithmic values by referring to the gradation correction curve specified in the respective gradation tables. Therefore the image display devices A, B and C can display the image in the same appearance as other display devices. </paragraph>
+<paragraph id="P-0112" lvl="0"><number>&lsqb;0112&rsqb;</number> Image file server <highlight><bold>10</bold></highlight>C manages the diagnostic images generated by modality apparatuses <highlight><bold>50</bold></highlight> as well as provides multiple gradation tables describing gradation correction curves corresponding to each type of display (or hardware characteristics or individual differences). When transferring the diagnostic images to the image display devices A, B and C, image file server <highlight><bold>10</bold></highlight>C transfers the gradation table together that corresponds to the type of display of the image display device to be a destination. </paragraph>
+<paragraph id="P-0113" lvl="0"><number>&lsqb;0113&rsqb;</number> Accordingly, on the side of the image display devices A, B and C, the diagnostic image is displayed with luminance being corrected with reference to the received gradation table so that a good image with the same appearance will be displayed independent of the local characteristics such as the hardware. </paragraph>
+<paragraph id="P-0114" lvl="0"><number>&lsqb;0114&rsqb;</number> Now with reference to <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, it will be described about another transfer function of image information performed between the image file server <highlight><bold>10</bold></highlight>C and external devices such as modality apparatuses <highlight><bold>50</bold></highlight> and image viewer <highlight><bold>10</bold></highlight>A. </paragraph>
+<paragraph id="P-0115" lvl="0"><number>&lsqb;0115&rsqb;</number> Image file server <highlight><bold>10</bold></highlight>C, which serves as an image storage device for storing diagnostic image files, is interconnected via the network with each of the modality apparatuses <highlight><bold>50</bold></highlight> serving as image generation devices and multiple image display devices A, B and C (image viewers). </paragraph>
+<paragraph id="P-0116" lvl="0"><number>&lsqb;0116&rsqb;</number> Each of modality apparatuses <highlight><bold>50</bold></highlight> is comprised of a reader for capturing diagnostic images using radiation and an image check and delivery apparatus for checking and transmitting the diagnostic images via a network. Modality apparatuses <highlight><bold>50</bold></highlight> are operated by specialized technicians (e.g., radiographer) to photograph (or photograph again upon request) the diagnostic images or to perform check operations. The checked diagnostic images may be transferred to image file server <highlight><bold>10</bold></highlight>C serving as an image delivery apparatus, where they are temporarily stored on the hard disk or permanently archived on the removable disk. </paragraph>
+<paragraph id="P-0117" lvl="0"><number>&lsqb;0117&rsqb;</number> Alternatively, the checked diagnostic images may be directly transferred to respective image display devices A, B and C with passing image file server <highlight><bold>10</bold></highlight>C. </paragraph>
+<paragraph id="P-0118" lvl="0"><number>&lsqb;0118&rsqb;</number> Image display devices A, B and C are operated by a doctor who performs interpretation, that is, diagnosis of diagnostic images, then the diagnostic contents and results are written to the diagnostic image file. The diagnostic images displayed on the image display devices A, B and C may be transferred directly from modality devices <highlight><bold>50</bold></highlight> or may be transferred after temporarily stored in image file server <highlight><bold>10</bold></highlight>C. </paragraph>
+<paragraph id="P-0119" lvl="0"><number>&lsqb;0119&rsqb;</number> Assuming that the appearance be different from each other depending on the difference of characteristics of luminance logarithmic values for each of the image display devices A, B and C. As shown in <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, each of the image display devices A, B and C can provide linearity to the luminance logarithmic values devices by referring to the gradation correction curve specified by the respective gradation tables, so that they can display outputs in the same appearance as other display. </paragraph>
+<paragraph id="P-0120" lvl="0"><number>&lsqb;0120&rsqb;</number> Image file server <highlight><bold>10</bold></highlight>C manages the diagnostic images generated by modality apparatuses <highlight><bold>50</bold></highlight> as well as provides multiple gradation tables describing gradation correction curves corresponding to each type of display (or hardware characteristics or individual differences). The image file server <highlight><bold>10</bold></highlight>C transfers the diagnostic images whose luminance has been corrected using respective gradation tables A, B and C that describe respective gradation correction curves corresponding to the respective kinds of displays of the image display devices to be a destination. </paragraph>
+<paragraph id="P-0121" lvl="0"><number>&lsqb;0121&rsqb;</number> Accordingly, on the side of the image display devices A, B and C, the diagnostic image is displayed in the same appearance independent of local characteristics such as hardware or the like even when displaying the diagnostic image as it is. Therefore, a doctor can perform a correct interpretation. </paragraph>
+<paragraph id="P-0122" lvl="0"><number>&lsqb;0122&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> depicts an example of configuration of an image display device according to the embodiment of the present invention. </paragraph>
+<paragraph id="P-0123" lvl="0"><number>&lsqb;0123&rsqb;</number> The image display device comprises a CRT (Cathode Ray Tube) display as a display output section. For this type of display, the maximum luminance may decrease due to the aging, wherein the image can not be displayed upon interpretation in accordance with the expected gradation curve. </paragraph>
+<paragraph id="P-0124" lvl="0"><number>&lsqb;0124&rsqb;</number> In view of this, the image display device <highlight><bold>10</bold></highlight> shown provides gradation tables beforehand that specify gradation correction curves corresponding to multiple maximum luminance and automatically selects a most appropriate one depending on the aged deterioration of the maximum luminance in order to display images using the almost ideal gradation correction curve. </paragraph>
+<paragraph id="P-0125" lvl="0"><number>&lsqb;0125&rsqb;</number> The image display device <highlight><bold>10</bold></highlight> comprises a luminance measuring section <highlight><bold>19</bold></highlight> for measuring the maximum luminance on the display screen. It selects the most appropriate gradation table corresponding the aged deterioration of the display among the multiple ones prepared beforehand depending on the measured maximum luminance and uses this table to display images. In the example shown in <cross-reference target="DRAWINGS">FIG. 8</cross-reference>, depending on the maximum luminance measured at luminance measuring section <highlight><bold>19</bold></highlight>, it is seen that the gradation table for the maximum luminance X is selected and display processing is performed according to that gradation correction curve. </paragraph>
+<paragraph id="P-0126" lvl="0"><number>&lsqb;0126&rsqb;</number> Accordingly, with the display device according to the embodiment, interpretation can be performed with the same characteristics at all times by compensating the change of gradation characteristics due to the aged deterioration of hardware. </paragraph>
+<paragraph id="P-0127" lvl="0"><number>&lsqb;0127&rsqb;</number> As mentioned above, according to the present invention, there is provided an excellent image management system, image management method and image display device for managing diagnostic image data via a network. The image management system according to the present invention can handle various kinds of medical diagnostic image taken by apparatuses, such as a CT (Computed Tomography) apparatus, MR (Magnetic Resonance) apparatus and CR (Computed Radiography) apparatus. </paragraph>
+<paragraph id="P-0128" lvl="0"><number>&lsqb;0128&rsqb;</number> Furthermore, there is provided an excellent image management system, image management method and image display device for displaying diagnostic images in good conditions that are retained and managed on a network on any image display devices connected to the network. </paragraph>
+<paragraph id="P-0129" lvl="0"><number>&lsqb;0129&rsqb;</number> In addition, there is provided an excellent image management system, image management method and image display device for displaying the same images in the same appearance on each of image display devices connected to a network independent of individual hardware characteristics. </paragraph>
+<paragraph id="P-0130" lvl="0"><number>&lsqb;0130&rsqb;</number> Still further, there is provided an excellent image management system, image management method and image display device for enabling interpretation of radiographs with the same characteristics at all times by compensating the change of gradation characteristics due to the aged deterioration of hardware. </paragraph>
+<paragraph id="P-0131" lvl="0"><number>&lsqb;0131&rsqb;</number> The present invention has been described with reference to the specific embodiments. However, in view of this disclosure, it will be apparent to those skilled in the art that numerous changes and modifications can be made without departing from the scope and spirit of the invention. Namely, the disclosed invention is to be considered merely as illustrative.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-0001a">
+<claim-text><highlight><bold>1</bold></highlight>a. An image management system for managing image files displayed on an image display device connected to a network, comprising: 
+<claim-text>a recorder for recording the image files; </claim-text>
+<claim-text>a storage for storing a plurality of gradation tables specifying gradation characteristics of each type of display output of the image display device; and </claim-text>
+<claim-text>a transmitter for transmitting the image file along with the gradation table that corresponds to the type of the display output of the image display device to be a destination. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system according to claim <highlight><bold>1</bold></highlight>, wherein the transmitter transmits the gradation table as separate data from the image file. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system according to claim <highlight><bold>1</bold></highlight>, wherein the transmitter transmits the image file to the image display device after reflecting the gradation characteristics defined by the gradation table on the image. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. An image management method for managing image files displayed on an image display device connected to a network, comprising the steps of: 
+<claim-text>recording the image files; </claim-text>
+<claim-text>storing a plurality of gradation tables specifying gradation characteristics of each type of display output of the image display device; and </claim-text>
+<claim-text>transmitting the image file along with the gradation table that corresponds to the type of the display output of the image display device to be a destination. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the transmitting step transmits the gradation table as separate data from the image file. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the transmitting step transmits the image file to the image display device after reflecting the gradation characteristics defined by the gradation table on the image. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. An image display device for displaying images, comprising: 
+<claim-text>a display for displaying the images; </claim-text>
+<claim-text>a storage for storing gradation tables that specify gradation characteristics corresponding to multiple maximum luminance; </claim-text>
+<claim-text>a sensor for measuring the maximum luminance that is output by the display section; and </claim-text>
+<claim-text>a processor for performing gradation correction processing specified by the gradation table on the image displayed on the display section by retrieving from the gradation table storing means the gradation table corresponding to the maximum luminance measured by the luminance measuring means.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>5</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002748A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002748A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002748A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002748A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002748A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002748A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030002748A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030002748A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00008">
+<image id="EMI-D00008" file="US20030002748A1-20030102-D00008.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

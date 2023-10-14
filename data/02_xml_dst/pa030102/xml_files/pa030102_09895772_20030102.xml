@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005020A1-20030102-D00000.TIF SYSTEM "US20030005020A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005020A1-20030102-D00001.TIF SYSTEM "US20030005020A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005020A1-20030102-D00002.TIF SYSTEM "US20030005020A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005020A1-20030102-D00003.TIF SYSTEM "US20030005020A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005020A1-20030102-D00004.TIF SYSTEM "US20030005020A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005020</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895772</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F017/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>001000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Initialization of Java classes in Java virtual machine environments</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>David</given-name>
+<family-name>Wallman</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sunnyvale</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Stepan</given-name>
+<family-name>Sokolov</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Fremont</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Sun Microsystems, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>BEYER WEAVER &amp; THOMAS LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 778</address-1>
+<city>BERKELEY</city>
+<state>CA</state>
+<postalcode>94704-0778</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Techniques for initialization of Java classes are disclosed. As such, the techniques can be implemented in a Java virtual machine to initialize Java classes represented in Java class files. A Java class loader suitable for loading class files into the Java virtual machine is disclosed. As will be appreciated, the Java class loader facilitates loading and execution of the Java initialization methods that need to be executed in order to initialize Java classes. Moreover, the Java class loader operates to remove the Java initialization methods after they have been executed and no longer serve a useful purpose. This means that the virtual machine can utilize its memory space more efficiently. As a result, the performance of virtual machines, especially those operating with limited resources is improved. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to object-based high level programming environments, and more particularly, to techniques suitable for initialization of Java classes in Java computing environments. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> One of the goals of high level languages is to provide a portable programming environment such that the computer programs may easily be ported to another computer platform. High level languages such as &ldquo;C&rdquo; provide a level of abstraction from the underlying computer architecture and their success is well evidenced from the fact that most computer applications are now written in a high level language. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Portability has been taken to new heights with the advent of the World Wide Web (&ldquo;the Web&rdquo;) which is an interface protocol for the Internet which allows communication between diverse computer platforms through a graphical interface. Computers communicating over the Web are able to download and execute small applications called applets. Given that applets may be executed on a diverse assortment of computer platforms, the applets are typically executed by a Java&trade; virtual machine. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Recently, the Java programming environment has become quite popular. The Java programming language is a language that is designed to be portable enough to be executed on a wide range of computers ranging from small devices (e.g., pagers, cell phones and smart cards) up to supercomputers. Computer programs written in the Java programming language (and other languages) may be compiled into Java Bytecode instructions that are suitable for execution by a Java virtual machine implementation. The Java virtual machine is commonly implemented in software by means of an interpreter for the Java virtual machine instruction set but, in general, may be software, hardware, or both. A particular Java virtual machine implementation and corresponding support libraries together constitute a Java runtime environment. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Computer programs in the Java programming language are arranged in one or more classes or interfaces (referred to herein jointly as classes or class files). Such programs are generally platform, i.e., hardware and operating system, independent. As such, these computer programs may be executed without modification on any computer that is able to run an implementation of the Java runtime environment. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Object-oriented classes written in the Java programming language are compiled to a particular binary format called the &ldquo;class file format.&rdquo; The class file includes various components associated with a single class. These components can be, for example, methods and/or interfaces associated with the class. In addition, the class file format can include a significant amount of ancillary information that is associated with the class. The class file format (as well as the general operation of the Java virtual machine) is described in some detail in <highlight><italic>The Java Virtual Machine Specification, Second Edition</italic></highlight>, by Tim Lindholm and Frank Yellin, which is hereby incorporated herein by reference. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> shows a progression of a simple piece of a Java source code <highlight><bold>101</bold></highlight> through execution by an interpreter, the Java virtual machine. The Java source code <highlight><bold>101</bold></highlight> includes the classic Hello World program written in Java. The source code is then input into a Bytecode compiler <highlight><bold>103</bold></highlight> that compiles the source code into Bytecodes. The Bytecodes are virtual machine instructions as they will be executed by a software emulated computer. Typically, virtual machine instructions are generic (i.e., not designed for any specific microprocessor or computer architecture) but this is not required. The Bytecode compiler outputs a Java class file <highlight><bold>105</bold></highlight> that includes the Bytecodes for the Java program. The Java class file is input into a Java virtual machine <highlight><bold>107</bold></highlight>. The Java virtual machine is an interpreter that decodes and executes the Bytecodes in the Java class file. The Java virtual machine is an interpreter, but is commonly referred to as a virtual machine as it emulates a microprocessor or computer architecture in software (e.g., the microprocessor or computer architecture may not exist in hardware). </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> illustrates a simplified class file <highlight><bold>100</bold></highlight>. As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>B, the class file <highlight><bold>100</bold></highlight> includes a constant pool <highlight><bold>102</bold></highlight> portion, interfaces portion <highlight><bold>104</bold></highlight>, fields portion <highlight><bold>106</bold></highlight>, methods portion <highlight><bold>108</bold></highlight>, and attributes portion <highlight><bold>110</bold></highlight>. The methods portion <highlight><bold>108</bold></highlight> can include or have references to several Java methods associated with the Java class which is represented in the class file <highlight><bold>100</bold></highlight>. One of these methods is an initialization method used to initialize the Java class after the class file has been loaded by the virtual machine but before other methods can be invoked. In other words, various initialization methods are used to initialize various Java classes before these classes can be used. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> One problem with the conventional approaches for initializing Java classes is that the initialization methods remain loaded in the virtual memory even after they have been executed. In other words, although the initialization method is executed only once, conventional virtual machines continue to store them in their memory. As will be appreciated, numerous Java classes may be loaded into a virtual machine. In some cases, the initialization method can be a complex process which takes up a significant portion of the memory. This, of course, can result in a grossly inefficient use of system resources. In some circumstances, particularly in systems with limited computing power and/or memory, this inefficient use of resources is a serious disadvantage. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In view of the foregoing, improved techniques for initialization of Java classes are needed. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Broadly speaking, the invention relates to techniques for initialization of Java classes. As such, the invention can be implemented in a Java virtual machine to initialize Java classes represented in Java class files. A Java class loader suitable for loading class files into the Java virtual machine is disclosed. As will be appreciated, the Java class loader facilitates loading and execution of the Java initialization methods that need to be executed in order to initialize Java classes. Moreover, the Java class loader operates to remove the Java initialization methods after they have been executed and no longer serve a useful purpose. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The invention can be implemented in numerous ways, including as a method, an apparatus, a computer readable medium, and a database system. Several embodiments of the invention are discussed below. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> As a method for initializing Java classes in a Java class file suitable for loading by a Java virtual machine operating in a Java computing environment, one embodiment of the invention includes that acts of: loading a first initialization method associated with a first Java class into a memory portion of the virtual machine; executing the first initialization method after the initialization method has been loaded into the memory portion of the virtual machine; and deleting the first initialization method from the memory portion after the execution of the first initialization method has been completed. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> As a Java virtual machine suitable for loading and execution of Java class files, another embodiment of the invention includes a Java class loader operating to load a first initialization method associated with a first Java class into a memory portion of the virtual machine. The first initialization method is capable of initializing the first Java class when executed. The virtual machine operates to execute the first initialization method after the initialization method has been loaded into the memory portion of the virtual machine, thereby initializing the first Java class. The virtual machine then deletes the first initialization method from the memory portion after the execution of the first initialization method has been completed. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> As a computer readable medium including computer program code for initializing Java classes suitable for loading by a Java virtual machine operating in a Java computing environment, one embodiment of the invention includes: computer readable code for loading a first initialization method associated with a first Java class into a memory portion of the virtual machine, computer readable code for executing the first initialization method after the initialization method has been loaded into the memory portion of the virtual machine, and computer readable code for deleting the first initialization method from the memory portion after the execution of the first initialization method has been completed. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> These and other aspects and advantages of the present invention will become more apparent when the detailed description below is read in conjunction with the accompanying drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The present invention will be readily understood by the following detailed description in conjunction with the accompanying drawings, wherein like reference numerals designate like structural elements, and in which: </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> shows a progression of a simple piece of a Java source code through execution by an interpreter, the Java virtual machine. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> illustrates a simplified class file. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> FIGS. <highlight><bold>2</bold></highlight>A-C illustrate a Java computing environment in accordance with one embodiment of the invention. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a method for initializing Java classes in accordance with one embodiment of the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The present invention pertains to improved techniques for initialization of Java classes. As such, the techniques can be implemented in a Java virtual machine to initialize Java classes represented in Java class files. A Java class loader suitable for loading class files into the Java virtual machine is disclosed. As will be appreciated, the Java class loader facilitates loading and execution of the Java initialization methods that need to be executed in order to initialize Java classes. Moreover, the Java class loader operates to remove the Java initialization methods after they have been executed and no longer serve a useful purpose. This means that the virtual machine can utilize its memory space more efficiently. As a result, the performance of virtual machines, especially those operating with limited resources is improved. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Embodiments of the invention are discussed below with reference to FIGS. <highlight><bold>2</bold></highlight>A-<highlight><bold>3</bold></highlight>. However, those skilled in the art will readily appreciate that the detailed description given herein with respect to these figures is for explanatory purposes only as the invention extends beyond these limited embodiments. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> FIGS. <highlight><bold>2</bold></highlight>A-C illustrate a Java computing environment <highlight><bold>200</bold></highlight> in accordance with one embodiment of the invention. The Java computing environment <highlight><bold>200</bold></highlight> includes a Java class loader <highlight><bold>202</bold></highlight> suitable for loading Java classes represented in a Java class file. As is known to those skilled in the art, conventional Java class loaders function to load Java class files into the virtual machine. The Java class loader <highlight><bold>202</bold></highlight> can perform this and other operations conventionally performed. However, as will be appreciated, unlike conventional Java class loaders, the Java class loader <highlight><bold>202</bold></highlight> operates to remove initialization methods from the memory of the virtual machine when they are no longer needed. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>A, an initialization method A is stored in a memory portion <highlight><bold>204</bold></highlight>. In the described embodiment, the memory portion <highlight><bold>204</bold></highlight> is a buffer allocated in the local memory of the Java class loader <highlight><bold>202</bold></highlight>. It should be noted that in conventional virtual machines the initialization methods are typically stored in a portion of memory where all methods may be stored. Thus, an initialization method of a Java class can be in the same portion of memory as other methods associated with the Java class. Moreover, the initialization methods are not conventionally removed from the memory even after they are used and no longer serve a useful purpose. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> After the Java class loader <highlight><bold>202</bold></highlight> has loaded the initialization method A into memory portion <highlight><bold>204</bold></highlight>, the Java class loader <highlight><bold>202</bold></highlight> operates to set a monitor <highlight><bold>206</bold></highlight> to a first state, namely, state 1. As is known to those skilled in the art, the monitor (or log) <highlight><bold>206</bold></highlight> can be used as a synchronization mechanism which allows the virtual machine to know when the initialization method has been loaded and is ready for execution. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B, monitor <highlight><bold>206</bold></highlight> is set to a second state (state 2) when the initialization method A has been executed. In <cross-reference target="DRAWINGS">FIG. 2</cross-reference>C, after the monitor <highlight><bold>206</bold></highlight> is set to state 2, the Java class loader <highlight><bold>202</bold></highlight> operates to load another initialization method, namely, initialization method B, into the memory portion <highlight><bold>206</bold></highlight>. In other words, the Java class loader <highlight><bold>202</bold></highlight> operates to remove the initialization method A from the virtual machine by overwriting the load initialization method B in the memory portion <highlight><bold>206</bold></highlight>. In this way, various initialization methods can be loaded, executed, and then removed from the virtual machine. This means that the virtual machine can utilize its memory space more efficiently. As a result, the performance of virtual machines, especially those operating with limited resources, is improved. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a method <highlight><bold>300</bold></highlight> for initializing Java classes in accordance with one embodiment of the invention. The Java classes are represented in Java class files that are loaded by the virtual machine. The method <highlight><bold>300</bold></highlight> can, for example, be used by the Java class loader <highlight><bold>202</bold></highlight> of FIGS. <highlight><bold>2</bold></highlight>A-C. Initially, at operation <highlight><bold>302</bold></highlight>, a first initialization method associated with a first Java class is loaded into a memory portion of the virtual machine. As noted above, the memory portion can be a buffer allocated in the local memory of the Java class loader. When executed, the first initialization method is capable of initializing the first Java class. Next, at operation <highlight><bold>304</bold></highlight>, a monitor (or log) is set to a first state. Thereafter, at operation <highlight><bold>306</bold></highlight>, the first initialization method is executed. After the execution of the first initialization method, the method <highlight><bold>300</bold></highlight> proceeds to operation <highlight><bold>308</bold></highlight> where a determination is made as to whether there are more initialization methods to execute. If it is determined at operation <highlight><bold>308</bold></highlight> that there is not at least one more initialization method to execute, the method <highlight><bold>300</bold></highlight> ends. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> On the other hand, if it is determined at operation <highlight><bold>308</bold></highlight> that there is at least one initialization method to execute, the method <highlight><bold>300</bold></highlight> proceeds to operation <highlight><bold>310</bold></highlight> where the monitor is set to a second state. Next, at operation <highlight><bold>312</bold></highlight>, the next initialization method is loaded into the memory portion of the virtual machine. It should be noted that by loading the next initialization method, the previous (e.g., the first initialization method) is deleted from the virtual machine. Thereafter, at operation <highlight><bold>314</bold></highlight>, the monitor is set back to the first state. This means that the second initialization method can be executed. Accordingly, at operation <highlight><bold>316</bold></highlight>, the next initialization method is executed. The method <highlight><bold>300</bold></highlight> then proceeds to operation <highlight><bold>308</bold></highlight> where a determination is made as to whether there are more initialization methods to execute. If it is determined at operation <highlight><bold>308</bold></highlight> that there is at least one more initialization method to execute, the method <highlight><bold>300</bold></highlight> proceeds to operations <highlight><bold>310</bold></highlight>-<highlight><bold>316</bold></highlight> in a similar manner as discussed above. When it is determined at operation <highlight><bold>308</bold></highlight> that there is not at least one more initialization method to execute, the method <highlight><bold>300</bold></highlight> ends. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The many features and advantages of the present invention are apparent from the written description, and thus, it is intended by the appended claims to cover all such features and advantages of the invention. Further, since numerous modifications and changes will readily occur to those skilled in the art, it is not desired to limit the invention to the exact construction and operation as illustrated and described. Hence, all suitable modifications and equivalents may be resorted to as falling within the scope of the invention.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. In a Java computing environment, a method of initializing Java classes in a Java class file suitable for loading by a Java virtual machine operating in a Java computing environment, said method comprising: 
+<claim-text>loading a first initialization method associated with a first Java class into a memory portion of said virtual machine, said first initialization method capable of initializing said first Java class when executed; </claim-text>
+<claim-text>executing said first initialization method after said initialization method has been loaded into said memory portion of said virtual machine, thereby initializing said first Java class; and </claim-text>
+<claim-text>deleting said first initialization method from said memory portion after said execution of said first initialization method has been completed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said deleting of said first initialization method is performed while at least one other method associated with said Java class is loaded by said virtual machine. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said deleting of said first initialization method from said memory portion operates to overwrite said memory portion with a second initialization method associated with a second Java class. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said method further comprises: 
+<claim-text>setting a monitor suitable for synchronization to a first state when said first initialization method has been loaded; and </claim-text>
+<claim-text>setting said monitor to a second state when said first initialization method has been executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, 
+<claim-text>wherein said first initialization method is executed only when said monitor is in said first state; and </claim-text>
+<claim-text>wherein said deleting of said first initialization method from said memory portion operates to overwrite said memory portion with a second initialization method associated with a second Java class when said monitor is in said second state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said loading of said first initialization method into said memory portion is performed by a Java class loader. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, 
+<claim-text>wherein said loading of said first initialization method into said memory portion is performed by a Java class loader; </claim-text>
+<claim-text>wherein said memory portion is a buffer of a predetermined size; and </claim-text>
+<claim-text>wherein said buffer is allocated in a local memory portion of said class loader. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A Java computing environment comprising: 
+<claim-text>a Java virtual machine suitable for loading and execution of Java class files; </claim-text>
+<claim-text>a Java class loader operating to: 
+<claim-text>load a first initialization method associated with a first Java class into a memory portion of said virtual machine, said first initialization method capable of initializing said first Java class when executed; </claim-text>
+<claim-text>execute said first initialization method after said initialization method has been loaded into said memory portion of said virtual machine, thereby initializing said first Java class; and </claim-text>
+<claim-text>delete said first initialization method from said memory portion after said execution of said first initialization method has been completed. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A Java computing environment as recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said deleting of said first initialization method is performed while at least one other method associated with said Java class is loaded by said virtual machine. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A Java computing environment as recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said deleting of said first initialization method from said memory portion operates to overwrite said memory portion with a second initialization method associated with a second Java class. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A Java computing environment as recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said Java class loader further operates to: 
+<claim-text>set a monitor suitable for synchronization to a first state when said first initialization method has been loaded; and </claim-text>
+<claim-text>set said monitor to a second state when said first initialization method has been executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A Java computing environment as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, 
+<claim-text>wherein said first initialization method is executed only when said monitor is in said first state; and </claim-text>
+<claim-text>wherein said deleting of said first initialization method from said memory portion operates to overwrite said memory portion with a second initialization method associated with a second Java class when said monitor is in said second state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A Java computing environment as recited in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said memory portion is a buffer of a predetermined size. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A Java computing environment as recited in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, 
+<claim-text>wherein said memory portion is a buffer of a predetermined size; and </claim-text>
+<claim-text>wherein said buffer is allocated in a local memory portion of said class loader. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A computer readable medium including computer program code for initializing Java classes suitable for loading by a Java virtual machine operating in a Java computing environment; said computer readable medium comprising: 
+<claim-text>computer readable code for loading a first initialization method associated with a first Java class into a memory portion of said virtual machine, said first initialization method capable of initializing said first Java class when executed; </claim-text>
+<claim-text>computer readable code for executing said first initialization method after said initialization method has been loaded into said memory portion of said virtual machine; thereby initializing said first Java class; and </claim-text>
+<claim-text>computer readable code for deleting said first initialization method from said memory portion after said execution of said first initialization method has been completed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A computer readable medium as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said deleting of said first initialization method is performed while at least one other method associated with said Java class is loaded by said virtual machine. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A computer readable medium as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said deleting of said first initialization method from said memory portion operates to overwrite said memory portion with a second initialization method associated with a second Java class. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A computer readable medium as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said computer readable media further comprises: 
+<claim-text>computer program code for setting a monitor suitable for synchronization to a first state when said first initialization method has been loaded; and </claim-text>
+<claim-text>computer program code for setting said monitor to a second state when said first initialization method has been executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A computer readable medium as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said loading of said first initialization method into said memory portion is performed by a Java class loader; </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A computer readable medium as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, 
+<claim-text>wherein said loading of said first initialization method into said memory portion is performed by a Java class loader; </claim-text>
+<claim-text>wherein said memory portion is a buffer of a predetermined size; and </claim-text>
+<claim-text>wherein said buffer is allocated in a local memory portion of said class loader.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005020A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005020A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005020A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005020A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005020A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

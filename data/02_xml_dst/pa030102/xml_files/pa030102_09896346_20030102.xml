@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005262A1-20030102-D00000.TIF SYSTEM "US20030005262A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005262A1-20030102-D00001.TIF SYSTEM "US20030005262A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005262A1-20030102-D00002.TIF SYSTEM "US20030005262A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005262A1-20030102-D00003.TIF SYSTEM "US20030005262A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005262A1-20030102-D00004.TIF SYSTEM "US20030005262A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005262</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896346</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/30</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>712</class>
+<subclass>207000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>712</class>
+<subclass>235000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Mechanism for providing high instruction fetch bandwidth in a multi-threaded processor</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Sailesh</given-name>
+<family-name>Kottapalli</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Milpitas</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>James</given-name>
+<middle-name>S.</middle-name>
+<family-name>Burns</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Cupertino</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Kenneth</given-name>
+<middle-name>D.</middle-name>
+<family-name>Shoemaker</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Los Altos Hills</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Leo V. Novakoski</name-1>
+<name-2>BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP</name-2>
+<address>
+<address-1>12400 Wilshire Boulevard, Seventh Floor</address-1>
+<city>Los Angeles</city>
+<state>CA</state>
+<postalcode>90025-1026</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention provides a mechanism for supporting high bandwidth instruction fetching in a multi-threaded processor. A multi-threaded processor includes an instruction cache (I-cache) and a temporary instruction cache (TIC). In response to an instruction pointer (IP) of a first thread hitting in the I-cache, a first block of instructions for the thread is provided to an instruction buffer and a second block of instructions for the thread are provided to the TIC. On a subsequent clock interval, the second block of instructions is provided to the instruction buffer, and first and second blocks of instructions from a second thread are loaded into a second instruction buffer and the TIC, respectively. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Technical Field </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to computer systems and, in particular to mechanisms for fetching instructions for execution by a processor in a computer system. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Background Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Modem high-performance processors are designed to execute multiple instructions on each clock cycle. To this end, they typically include extensive execution resources to facilitate parallel processing of the instructions. The efficient use of these resources may be limited by the availability of instructions that can be executed in parallel. This availability is referred to as instruction level parallelism (ILP). Dependencies between instructions in a thread of instructions can limit ILP. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> One strategy for increasing ILP is to allow a processor to execute instructions from multiple instruction threads simultaneously. By definition, instructions from different threads are independent, which allows instructions from different threads to execute in parallel, increasing ILP. A processor that supports concurrent execution of instructions from two or more instruction threads is referred to as a multi-threaded (MT) processor. An MT processor includes resources, such as data, state and control registers, to track the architectural states associated with the different instruction threads as they execute concurrently. In addition, operations such as instruction fetches and state updates, are modified to accommodate concurrent handling of multiple instruction threads. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The fetch engine of a processor is responsible for providing instructions to the execution resources of a processor. The instruction fetch engine and execution resources are components of the front end and back end, respectively, of the processor&apos;s execution pipeline. The front and back ends often communicate through an instruction buffer or queue, which decouples their operations. For example, if the back end of the pipeline stalls, the front end may continue fetching instructions into the instruction queue. If the front end of the pipeline stalls, the backend of the pipeline may continue executing instructions accumulated in the instruction queue. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a conventional instruction fetch engine for a uni-threaded processor. For the disclosed fetch engine, a multiplexer (MUX) <highlight><bold>110</bold></highlight> selects an instruction pointer (IP) from one of several inputs <highlight><bold>140</bold></highlight>(<highlight><bold>1</bold></highlight>)-<highlight><bold>140</bold></highlight>(<highlight><italic>m</italic></highlight>) and provides it to an instruction cache <highlight><bold>120</bold></highlight>. If the IP hits in I-cache <highlight><bold>120</bold></highlight>, it provides instructions from the associated entry to an instruction queue <highlight><bold>130</bold></highlight>. The number of instructions provided on each clock interval depends on the particular processor used. For example, VLIW processors may provide blocks of two or more instructions from their I-caches during each clock interval. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of a conventional instruction fetch engine <highlight><bold>200</bold></highlight> that has been modified for a multi-threaded processor. Fetch engine <highlight><bold>200</bold></highlight> includes IP MUXs <highlight><bold>210</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>210</bold></highlight>(<highlight><italic>b</italic></highlight>), which provide IPs for their respective threads to an arbiter <highlight><bold>250</bold></highlight>. Arbiter <highlight><bold>250</bold></highlight> forwards an IP to an I-cache <highlight><bold>220</bold></highlight>, which provides a corresponding block of instructions to one of instruction queues <highlight><bold>230</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>230</bold></highlight>(<highlight><italic>b</italic></highlight>). For example, arbiter <highlight><bold>250</bold></highlight> may provide IPs from the different threads on alternating clock intervals. One problem with fetch engine <highlight><bold>200</bold></highlight> is that the bandwidth to instruction queues <highlight><bold>230</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>230</bold></highlight>(<highlight><italic>b</italic></highlight>) is, on average, half of the bandwidth to instruction queue <highlight><bold>130</bold></highlight> of uni-threaded processor <highlight><bold>100</bold></highlight>. When queues <highlight><bold>230</bold></highlight>(<highlight><italic>a</italic></highlight>) or <highlight><bold>230</bold></highlight>(<highlight><italic>b</italic></highlight>) are empty, this reduction in bandwidth translates directly into a lower instruction throughput for the processor. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> An alternative to fetch engine <highlight><bold>200</bold></highlight> that has a smaller impact on the instruction fetch bandwidth provides multiple ports on, for example, I-cache <highlight><bold>220</bold></highlight> and its various components (tag array, translation look-aside buffers). Multi-ported structures are considerably larger than single ported structures, so the bandwidth gain may significantly increase the die area of a processor. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The present invention address these and other issues associated with instruction fetching in multi-threaded processors.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The present invention may be understood with reference to the following drawings, in which like elements are indicated by like numbers. These drawings are provided to illustrate selected embodiments of the present invention and are not intended to limit the scope of the invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a conventional instruction fetch engine for uni-threaded processor. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of a conventional instruction fetch engine for a multi-threaded processor. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of one embodiment of a processor that includes an instruction fetch engine in accordance with the present invention. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram of another embodiment of a processor that includes an instruction fetch engine in accordance with the present invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart representing one embodiment of a method for fetching instructions in accordance with the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The following discussion sets forth numerous specific details to provide a thorough understanding of the invention. However, those of ordinary skill in the art, having the benefit of this disclosure, will appreciate that the invention may be practiced without these specific details. In addition, various well-known methods, procedures, components, and circuits have not been described in detail in order to focus attention on the features of the present invention. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The present invention supports high bandwidth instruction fetching without significantly increasing the die area necessary for the instruction fetch engine. A processor in accordance with the present invention includes a temporary instruction cache that operates in conjunction with an instruction cache. The instruction cache provides a block of instructions in response to an instruction pointer (IP) from an instruction thread. On one clock interval, a first portion of the instruction block is provided to an instruction buffer or queue, and a second portion of the instruction block is provided to the temporary instruction cache. On a subsequent clock interval, the second portion of instruction block is provided to the instruction queue. An instruction block for a different instruction thread may be provided from the instruction cache to a corresponding instruction queue on the subsequent clock interval. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> For one embodiment of the invention, a dual threaded processor includes an instruction cache that handles instructions in blocks that are twice as large as the processing width of the processor. Here, processing width refers to the maximum number of instructions that the processor is capable of executing per clock interval. On one clock interval, half of the instruction block is provided to the instruction queue and the other half of the instruction block is provided to the temporary instruction cache. On a subsequent clock interval, the half of the instruction block stored in the temporary instruction cache is provided to the instruction queue. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Other embodiments of the invention may support additional threads by scaling the size of the instruction block provided by the I-cache during a fetch operation and the size of the portions into which the block of instructions is divided. Generally, for a processor having a processor width, W<highlight><subscript>P</subscript></highlight>, and capable of concurrently executing m-threads, the instruction cache provides m*W<highlight><subscript>P </subscript></highlight>instructions for a thread when the IP it provides hits in the instruction cache. W<highlight><subscript>P </subscript></highlight>instructions are provided to an instruction queue allocated to the thread and (m-<highlight><bold>1</bold></highlight>)&middot;W<highlight><subscript>P </subscript></highlight>instructions are provided to the temporary instruction cache. For a processor that implements a round-robin thread-selection algorithm, the latter instructions are transferred from the temporary instruction cache to the allocated instruction queue in blocks of W<highlight><subscript>P </subscript></highlight>instructions, on the next (m-<highlight><bold>1</bold></highlight>) clock cycles, as instructions from the remaining (m-<highlight><bold>1</bold></highlight>) threads are provided from the instruction cache to corresponding instruction queues and the temporary instruction cache. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block level diagram of one embodiment of a processor <highlight><bold>300</bold></highlight> that includes an instruction fetch engine (&ldquo;IFE&rdquo;) <highlight><bold>304</bold></highlight> in accordance with the present invention. IFE <highlight><bold>304</bold></highlight> includes first and second IP sources <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>310</bold></highlight>(<highlight><italic>b</italic></highlight>), respectively, a thread-arbiter <highlight><bold>340</bold></highlight>, an I-cache <highlight><bold>320</bold></highlight>, and a temporary instruction cache (&ldquo;TIB&rdquo;) <highlight><bold>350</bold></highlight>. IFE <highlight><bold>304</bold></highlight> provides instructions to first and second instruction buffers <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>), respectively, for execution by back-end resources <highlight><bold>360</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> For one embodiment of processor <highlight><bold>300</bold></highlight>, IP source <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>) and instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) are allocated to a first instruction thread (&ldquo;thread-A&rdquo;), and IP source <highlight><bold>310</bold></highlight>(<highlight><italic>b</italic></highlight>) and instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>) are allocated to a second instruction thread (&ldquo;thread-B&rdquo;). Thread-arbiter <highlight><bold>340</bold></highlight>, I-cache <highlight><bold>320</bold></highlight>, and TIC <highlight><bold>350</bold></highlight> are shared by threads A and B. Instructions from one or both threads are issued to back-end resources <highlight><bold>360</bold></highlight> for execution and retirement. On a context switch, state data for, e.g., thread-A is saved to memory, and the resources relinquished by thread-A, such as IP source <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>), instruction buffer <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>), data and control registers (not shown), are allocated to a new thread. In the following discussion, indices are dropped from thread-specific resources, like IP source <highlight><bold>310</bold></highlight> and instruction buffer <highlight><bold>330</bold></highlight>, except as needed to avoid ambiguity. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Thread-arbiter <highlight><bold>340</bold></highlight> selects an IP from source <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>) or <highlight><bold>310</bold></highlight>(<highlight><italic>b</italic></highlight>) according to a thread selection algorithm implemented by processor <highlight><bold>300</bold></highlight>, and forwards the selected IP to I-cache <highlight><bold>320</bold></highlight>. Assuming the forwarded IP hits in I-cache <highlight><bold>320</bold></highlight>, a block of thread instructions indicated by the IP is provided to the instruction buffer <highlight><bold>330</bold></highlight> corresponding to the source <highlight><bold>310</bold></highlight> of the IP. For example, if arbiter <highlight><bold>340</bold></highlight> selects the IP from source <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>) and the selected IP hits in I-cache <highlight><bold>320</bold></highlight>, I-cache <highlight><bold>320</bold></highlight> outputs a portion of the thread-A instructions indicated by the IP to instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>). If arbiter <highlight><bold>340</bold></highlight> implements a round robin thread selection algorithm, an IP from source <highlight><bold>310</bold></highlight>(<highlight><italic>b</italic></highlight>) is forwarded to I-cache <highlight><bold>320</bold></highlight> on the next clock interval. Assuming the IP hits, I-cache <highlight><bold>320</bold></highlight> outputs a portion of the thread-B instructions indicated by the IP to instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>). </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Regardless of the thread selection algorithm applied by arbiter <highlight><bold>340</bold></highlight>, the multi-threaded nature of processor <highlight><bold>300</bold></highlight> ensures that instruction buffers <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>) do not receive instruction blocks from I-cache <highlight><bold>320</bold></highlight> for their respective threads on every clock interval. In the example described above, instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) does not receive thread-A instructions from I-cache <highlight><bold>320</bold></highlight> on those clock intervals for which I-cache <highlight><bold>320</bold></highlight> outputs thread-B instructions. To compensate for this, I-cache <highlight><bold>320</bold></highlight> outputs a number of instructions that exceeds the processing width of processor <highlight><bold>300</bold></highlight>, and temporary instruction cache (TIC) <highlight><bold>350</bold></highlight> stores a portion of the output thread instructions for delivery when I-cache <highlight><bold>320</bold></highlight> services the other thread. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> For one embodiment of the invention, dual-threaded processor <highlight><bold>300</bold></highlight> has a processing width of N-instructions, and instruction buffer <highlight><bold>330</bold></highlight> is designed to receive N instructions per clock interval. For this embodiment, I-cache <highlight><bold>320</bold></highlight> outputs <highlight><bold>2</bold></highlight>N instructions per clock interval using, for example, a cache line size sufficient to accommodate <highlight><bold>2</bold></highlight>N instructions. During a first clock interval, a first block of N thread-A instructions is provided to instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) and a second block of N thread-A instructions is provided to TIC <highlight><bold>350</bold></highlight>. During a second clock interval, first and second blocks of N thread-B instructions are transferred to instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>) and TIC <highlight><bold>350</bold></highlight>, respectively. During a third clock interval, instruction cache <highlight><bold>320</bold></highlight> provides new first and second blocks of N thread-A instructions to instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) and TIC <highlight><bold>350</bold></highlight>, respectively. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The instruction blocks in TIC <highlight><bold>350</bold></highlight> are transferred to instruction buffers <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>) on those clock intervals for which I-cache <highlight><bold>320</bold></highlight> outputs blocks of instructions for thread-B and thread-A, respectively. In the above example, the second block of N thread-A instructions is transferred from TIC <highlight><bold>350</bold></highlight> to instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) on the second clock interval, and the second block of N thread-B instructions is transferred from TIC <highlight><bold>350</bold></highlight> to instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>) on the third clock interval. Proceeding in this manner and ignoring branches for the moment, instruction buffers <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) and <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>) each receive blocks of N instructions per clock interval without the use of multiple ports on I-cache <highlight><bold>320</bold></highlight>. For example, instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>a</italic></highlight>) receives blocks of N thread-A instructions from I-cache <highlight><bold>320</bold></highlight> and TIC <highlight><bold>350</bold></highlight> on the first and second clock intervals, respectively, while instruction buffer <highlight><bold>330</bold></highlight>(<highlight><italic>b</italic></highlight>) receives blocks of N thread-B instructions from TIC <highlight><bold>350</bold></highlight> and I cache <highlight><bold>320</bold></highlight> on these same clock intervals. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> For one embodiment of processor <highlight><bold>300</bold></highlight>, TIC <highlight><bold>350</bold></highlight> is implemented as a cache shared by thread-A and thread-B. For different embodiments of TIC <highlight><bold>350</bold></highlight>, entries may be allocated to threads as needed, they may include one or more bits to identify a thread to which the associated instructions belong, or they may be partitioned into separate thread-A and thread-B banks. In general, an entry of TIC <highlight><bold>350</bold></highlight> stores a block of N-instructions, one or more associated address tags, and any ancillary information that may be used by instruction buffers <highlight><bold>330</bold></highlight> or back-end resources <highlight><bold>360</bold></highlight>. For example, a cache line may have associated memory-type or attribute information used to process its component instructions properly. This information may be temporarily stored in TIC <highlight><bold>350</bold></highlight>, along with the address tag(s) and N-instruction block. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Accesses to TIC <highlight><bold>350</bold></highlight> may be handled like those to I-cache <highlight><bold>320</bold></highlight>. For one embodiment of processor <highlight><bold>300</bold></highlight>, IP source <highlight><bold>310</bold></highlight> generates an IP or address tag on each clock interval, and arbiter <highlight><bold>340</bold></highlight> forwards the generated IPs to I-cache <highlight><bold>320</bold></highlight> and to TIC <highlight><bold>350</bold></highlight> on alternating clock intervals. When an IP hits in I-cache <highlight><bold>320</bold></highlight> on a first clock cycle, the IP sent to TIC <highlight><bold>350</bold></highlight> on the second clock cycle will hit, provided no resteering events intervene. Resteering events include, for example, branches in the first block of N-instructions that are predicted taken, interrupts and the like. For the system described above, arbiter <highlight><bold>340</bold></highlight> may forward the IPs generated for thread-A on first and second clock intervals to I-cache <highlight><bold>320</bold></highlight> and to TIC <highlight><bold>350</bold></highlight>, respectively. The IPs generated for thread-B may be forwarded to TIC <highlight><bold>350</bold></highlight> and I-cache <highlight><bold>320</bold></highlight> on the first and second clock intervals, respectively. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> TIC <highlight><bold>350</bold></highlight> may be embodied in a number of different ways. For example, it may by implemented as a virtually addressed cache, a physically addressed cache, a FIFO or some other comparable storage structure. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> As long as instructions execute sequentially, TIC <highlight><bold>350</bold></highlight> allows IFE <highlight><bold>304</bold></highlight> to provide a steady stream of instructions for multiple instruction threads. For example, if a first instruction block of a cache line is executed, it is likely that the second instruction block will also be executed. Outputting the first and second instruction blocks on the same cache access and temporarily storing the second instruction block to provide to an instruction queue on a later clock interval works well as long as the instructions continue to execute in sequence. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Branches and interrupts can disrupt the sequential execution of instructions by transferring control to a non-sequential target instruction. For example, a cache line to which an IP from, e.g., IP source <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>) points may include a branch that is predicted &ldquo;taken&rdquo; (TK). For one embodiment of processor <highlight><bold>300</bold></highlight>, if a branch that is predicted TK is detected, the next IP provided by IP source <highlight><bold>310</bold></highlight>(<highlight><italic>a</italic></highlight>) points to the predicted target address of the branch. If the branch falls within the first N-instructions of the cache line, TIC <highlight><bold>350</bold></highlight> will hold the next N-instructions in sequence by the time the next IP from thread-A is processed. Since the next IP points to non-sequential block of instructions, this IP will miss in TIC <highlight><bold>350</bold></highlight>. If the branch instruction falls within the last N-instructions of the cache line, the next IP will be applied to I-cache <highlight><bold>320</bold></highlight>, which may or may not contain the branch target instruction(s). </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Processors in accordance with the present invention may handle such non-sequential instruction flows in a number of different ways. For example, if the first instruction block includes a branch that is predicted taken, the next IP (pointing to the branch target address) may be preserved until arbiter <highlight><bold>340</bold></highlight> again selects a thread-A IP for coupling to I-cache <highlight><bold>320</bold></highlight>. For the round-robin algorithm discussed above, this happens two clock intervals after the thread-A IP that points to the branch-containing cache line is provided to I-cache <highlight><bold>320</bold></highlight>. Assuming a cache line that includes the branch target instruction is available in I-cache <highlight><bold>320</bold></highlight>, the next IP will hit in I-cache <highlight><bold>320</bold></highlight> and instruction fetching can continue down the new branch leg. This and other mechanisms for handling non-sequential instruction flows are discussed below in greater detail. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram representing an embodiment of a processor <highlight><bold>400</bold></highlight> that includes an instruction fetch engine (IFE) <highlight><bold>404</bold></highlight> suitable for supporting p-threads concurrently (thread-l to thread-p). IFE <highlight><bold>404</bold></highlight> includes IP MUXes <highlight><bold>410</bold></highlight>(<highlight><bold>1</bold></highlight>)-<highlight><bold>410</bold></highlight>(<highlight><italic>p</italic></highlight>), which provide IPs for up to p-threads. Arbiter <highlight><bold>440</bold></highlight> selects an IP for one of the p-threads and forwards it to I-cache <highlight><bold>420</bold></highlight>, instruction streaming buffer (ISB) <highlight><bold>460</bold></highlight>, and branch predictor <highlight><bold>480</bold></highlight>. ISB <highlight><bold>460</bold></highlight> temporarily stores instructions that are returned (streamed) from memory. A source select MUX <highlight><bold>470</bold></highlight> provides an instruction block to one of instruction buffers <highlight><bold>430</bold></highlight>(<highlight><bold>1</bold></highlight>)-<highlight><bold>430</bold></highlight>(<highlight><italic>p</italic></highlight>), responsive to an IP from one of corresponding IP MUXs <highlight><bold>410</bold></highlight>(<highlight><bold>1</bold></highlight>)-<highlight><bold>410</bold></highlight>(<highlight><italic>p</italic></highlight>), respectively, hitting in I-cache <highlight><bold>420</bold></highlight> or ISB <highlight><bold>460</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> For the disclosed embodiment of IFE <highlight><bold>404</bold></highlight>, I-cache <highlight><bold>420</bold></highlight> is a four way set-associative cache that includes a data array <highlight><bold>420</bold></highlight>, a tag array <highlight><bold>424</bold></highlight>, a translation look-aside buffer (TLB) <highlight><bold>428</bold></highlight> and a way selector <highlight><bold>426</bold></highlight>. Various portions of the IP are applied to data array <highlight><bold>422</bold></highlight>, tag array <highlight><bold>424</bold></highlight> and TLB <highlight><bold>428</bold></highlight> to determine whether a cache line pointed to by the IP is present in cache <highlight><bold>420</bold></highlight>. Data array <highlight><bold>424</bold></highlight> stores instructions in cache lines, each of which includes p-blocks of instructions. MUX <highlight><bold>470</bold></highlight> selects the cache line from an appropriate one of the ways, when an IP hits in I-cache <highlight><bold>420</bold></highlight>. This particular cache configuration is one of many that may be implemented with the present invention and is provided for illustration only. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Branch predictor <highlight><bold>480</bold></highlight> performs a look-up in response to an IP, to determine whether the IP points to a cache entry that contains a branch instruction. If an IP hits in branch predictor <highlight><bold>480</bold></highlight>, it indicates whether the branch is predicted taken (TK) or not taken (NT). If a branch is predicted TK, branch predictor <highlight><bold>480</bold></highlight> provides a target IP corresponding to a memory address that includes the instruction to which the branch is predicted to jump. The target IP is routed to the IP MUX that provided the IP that hit in branch predictor <highlight><bold>480</bold></highlight>. For example, if thread_<highlight><bold>1</bold></highlight> provides an IP that hits in branch predictor <highlight><bold>480</bold></highlight> on a first clock interval, branch predictor <highlight><bold>480</bold></highlight> provides a target IP for the branch to an input of IP MUX <highlight><bold>410</bold></highlight>(<highlight><bold>1</bold></highlight>). Typically, branch predictor <highlight><bold>480</bold></highlight> also signals IP MUX <highlight><bold>410</bold></highlight>(<highlight><bold>1</bold></highlight>) to select the input that corresponds to the branch target IP on the next clock interval. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> As noted above, if a branch instruction that is predicted taken occurs in a portion of the cache line other than the last portion, the benefit of storing the next sequence of instructions in TIC <highlight><bold>450</bold></highlight> is lost. For example, where p&equals;2, and a branch in the first instruction block of a thread-<highlight><bold>1</bold></highlight> cache line is predicted taken, the second instruction block of the cache line is not on the predicted instruction path. For one embodiment of processor <highlight><bold>400</bold></highlight>, branch predictor <highlight><bold>480</bold></highlight> provides to MUX <highlight><bold>410</bold></highlight>(<highlight><bold>1</bold></highlight>) an IP that points to the address of the non-sequential instruction (branch target address). </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> For the round-robin algorithm discussed above, the next IP is the branch target IP, which is normally sent to TIC <highlight><bold>450</bold></highlight>. For one embodiment of IFE <highlight><bold>404</bold></highlight>, arbiter <highlight><bold>440</bold></highlight> may skip this step and couple the branch target IP to I-cache <highlight><bold>420</bold></highlight> the next time thread-<highlight><bold>1</bold></highlight> is given access to I-cache <highlight><bold>420</bold></highlight>. Alternatively, it may couple the branch target IP to TIC <highlight><bold>450</bold></highlight> on the next clock cycle and recirculate it to I-cache <highlight><bold>420</bold></highlight> on the following cycle. If the branch target IP is sent to TIC <highlight><bold>450</bold></highlight>, it will likely miss unless there is only a &ldquo;short&rdquo; distance between the sequential address and the branch target address. Here, &ldquo;short means that the branch target falls within the next portion of the cache line, e.g. the portion that is stored in TIC <highlight><bold>450</bold></highlight>. For embodiments of processor <highlight><bold>400</bold></highlight> that support prefetching, non-sequential IPs have a relatively high probability of hitting in I-cache <highlight><bold>420</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Other embodiments of IFE <highlight><bold>404</bold></highlight> may handle branches in different ways. For example, the transfer of instruction blocks of a cache line to TIC <highlight><bold>450</bold></highlight> may be canceled if a predicted TK branch is detected in an earlier instruction block and the next IP may default to I-cache <highlight><bold>320</bold></highlight>. For example, in a dual-threaded processor, transfer of the second instruction block may be canceled if a predicted TK branch is detected in the first instruction block. Persons skilled in the art of processor design and having the benefit of this disclosure will recognize other alternatives for handling non-sequential operations. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart representing one embodiment of a method <highlight><bold>500</bold></highlight> for fetching instructions in a processor that handles two threads concurrently using a round robin thread selecting algorithm. A thread is designated as primary (1&deg;) or secondary (2&deg;) according to whether its IP is sent to the I-cache or temporary I-cache (TIC), respectively. For this embodiment, a cache line for a given thread includes a first block of instructions and a second block of instructions, and instructions in the first block are executed ahead of instructions in the second block. Thread operations that occur in parallel are indicated by the adjacent paths (designated 1&deg; thread and 2&deg; thread) in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Initially, IPs for the threads currently designated as primary and secondary are forwarded <highlight><bold>510</bold></highlight> to the I-cache and to the temporary I-cache, respectively. A cache line of the primary thread (&ldquo;primary cache line&rdquo;) is retrieved <highlight><bold>520</bold></highlight> from the I-cache, responsive to the primary IP, and a second instruction block of the secondary thread is retrieved from the TIC <highlight><bold>530</bold></highlight> responsive to the secondary IP. The first block of the primary cache line is provided <highlight><bold>540</bold></highlight>(<highlight><italic>a</italic></highlight>) to the instruction buffer or queue for the primary thread (1&deg; IB), and the second block of the primary cache line is provided <highlight><bold>540</bold></highlight>(<highlight><italic>b</italic></highlight>) to the TIC. Concurrently, the second block of a cache line from the secondary thread is provided <highlight><bold>550</bold></highlight> to the instruction buffer for the secondary thread (2&deg; IB). This block will have been loaded into the TIC on a previous clock interval. The primary and secondary designations for the threads are switched <highlight><bold>560</bold></highlight> and method <highlight><bold>500</bold></highlight> is repeated. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> There has thus been disclosed a mechanism for supporting high bandwidth instruction fetching in a processor. An instruction fetch engine includes an instruction cache and a temporary instruction cache. The cache lines of the instruction cache are sized to accommodate two or more blocks of instructions, while those of the temporary cache are sized to accommodate one or more blocks of instructions. An arbiter selects one of the threads as the primary thread and forwards an IP for the primary thread to the I-cache. Responsive to an I-cache hit by the primary IP, the I-cache provides a first block of the cache line hit by the primary IP to a first instruction buffer and the second block to the temporary instruction cache. On a subsequent clock interval, the I-cache provides first and second blocks of a cache line hit by an IP from another thread to a second instruction buffer and the temporary instruction cache, respectively, and the temporary instruction cache provides the second block of the primary thread to the first instruction buffer. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The disclosed embodiments have been provided to illustrate various features of the present invention. Persons skilled in the art of processor design, having the benefit of this disclosure, will recognize variations and modifications of the disclosed embodiments, which none the less fall within the spirit and scope of the appended claims.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A processor comprising: 
+<claim-text>first and second instruction pointer (IP) sources to provide IPs for first and second instruction threads, respectively; </claim-text>
+<claim-text>an instruction cache to provide a cache line responsive to an IP; </claim-text>
+<claim-text>a source arbiter to provide an IP from the first or second IP source to the instruction cache; </claim-text>
+<claim-text>an instruction buffer (IB) to receive a first block of the cache line; and </claim-text>
+<claim-text>a temporary instruction cache (TIC) to receive a second block of the cache line. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The processor of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the IB and the TIC receive the first and second blocks of the cache line on a first clock interval. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the second block of the cache line is transferred to the IB on a subsequent clock interval. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the source arbiter provides IPs from the first and second sources on alternate clock intervals. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the IB includes first and second IBs to store instructions from the first and second threads, respectively. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the first IB receives an instruction block from the TIC and the second IB receives an instruction block from the cache on a second clock interval. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The processor of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the IB receives first and second instruction blocks from the instruction cache and the TIB, respectively, on adjacent clock intervals. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The processor of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the IB comprises first and second IBs and the instruction cache provides instruction blocks to the first and second IBs on adjacent clock cycles. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The processor of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the TIC provides instruction blocks to the first and second IBs on adjacent clock cycles. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. An instruction fetch engine comprising: 
+<claim-text>an instruction cache to provide a line of instructions in response to an instruction pointer; </claim-text>
+<claim-text>an instruction queue to receive a first block of the instruction line during a first clock interval; and </claim-text>
+<claim-text>a temporary instruction cache to receive a second block of the instruction line during the first clock interval. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The instruction fetch engine of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the temporary instruction cache provides the second block of the instruction line to the instruction queue during a subsequent clock interval. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The instruction fetch engine of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the instruction cache stores lines of instructions for first and second instruction threads and the instruction queue includes first and second instruction queues to store blocks of instructions for the first and second instruction threads, respectively. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The instruction fetch engine of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the instruction cache provides first and second blocks of a line of instructions for the first instruction thread to the first instruction queue and the temporary instruction cache, respectively, during the first clock interval. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The instruction fetch engine of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the instruction cache provides first and second blocks of a line of instructions for the second instruction thread to the second instruction queue and the temporary instruction cache, respectively, during a second clock interval. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The instruction fetch engine of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the instruction queue includes first and second instruction queues and the instruction cache provides first blocks of instruction lines for the first and second instruction threads to the first and second instruction queues on alternate clock intervals. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The instruction fetch engine of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the instruction queue provides second blocks of the instruction lines for the first and second instruction threads to the temporary instruction cache on alternate clock intervals. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The instruction fetch engine of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the temporary instruction cache provides the second blocks of the instruction lines for the first and second instruction threads to the first and second instruction queues, respectively, on alternate clock intervals. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A method comprising: 
+<claim-text>selecting first and second cache lines for first and second instruction threads; </claim-text>
+<claim-text>providing first and second instruction blocks of the first cache line to a first instruction queue and a temporary instruction cache, respectively, during a first clock interval; and </claim-text>
+<claim-text>providing first and second instruction blocks of the second cache line to a second instruction queue and the temporary instruction cache, respectively, during a second clock interval. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, further comprising providing the second block of the first cache line to the first instruction queue during the second clock interval. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein selecting first and second cache lines comprises: 
+<claim-text>receiving instruction pointers for the first and second threads; and </claim-text>
+<claim-text>providing first and second cache lines responsive to receipt of the instruction pointers for the first and second threads, respectively. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein receiving instruction pointers for the first and second threads comprises receiving instruction pointers for the first and second threads during adjacent clock intervals. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein providing the first and second instruction blocks comprises providing the first and second instruction blocks during adjacent clock intervals. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A system comprising: 
+<claim-text>1<highlight><superscript>st </superscript></highlight>through n<highlight><superscript>th </superscript></highlight>instruction pointer (IP) sources; </claim-text>
+<claim-text>1<highlight><superscript>st </superscript></highlight>through n<highlight><superscript>th </superscript></highlight>instruction queues associated with the 1<highlight><superscript>st </superscript></highlight>through n<highlight><superscript>th </superscript></highlight>IP sources, respectively; </claim-text>
+<claim-text>a cache to provide a first portion of an instruction block to one of the 1<highlight><superscript>st </superscript></highlight>through 4<highlight><superscript>th </superscript></highlight>instruction queues, responsive to an IP from the associated IP source; and </claim-text>
+<claim-text>a temporary storage to receive a second portion of the instruction block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the block of instructions is a cache line that comprises n portions of instructions. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, further comprising an arbiter to select an IP from one of the 1<highlight><superscript>st </superscript></highlight>through 4<highlight><superscript>th </superscript></highlight>IP sources to send to the cache. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the cache provides the first portion of the instruction block to the one of the 1<highlight><superscript>st </superscript></highlight>through 4<highlight><superscript>th </superscript></highlight>instruction queues on a first clock interval and the temporary storage structure provides a second portion of the instruction block to the one of the 1<highlight><superscript>st </superscript></highlight>through 4<highlight><superscript>th </superscript></highlight>instruction queues on a second clock interval.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>5</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005262A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005262A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005262A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005262A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005262A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005164A1-20030102-D00000.TIF SYSTEM "US20030005164A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005164A1-20030102-D00001.TIF SYSTEM "US20030005164A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005164A1-20030102-D00002.TIF SYSTEM "US20030005164A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005164A1-20030102-D00003.TIF SYSTEM "US20030005164A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005164A1-20030102-D00004.TIF SYSTEM "US20030005164A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005164A1-20030102-D00005.TIF SYSTEM "US20030005164A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005164A1-20030102-D00006.TIF SYSTEM "US20030005164A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005164</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09893947</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F015/16</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>250000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>230000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Dynamic network interface</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Solomon</given-name>
+<family-name>Trainin</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Haifa</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Edwin H. Taylor</name-1>
+<name-2>Blakely, Sokoloff, Taylor &amp; Zafman LLP</name-2>
+<address>
+<address-1>Seventh Floor</address-1>
+<address-2>12400 Wilshire Boulevard</address-2>
+<city>Los Angeles</city>
+<state>CA</state>
+<postalcode>90025-1030</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A dynamic network interface is described, intended to enable the efficient processing of received data within a computer network by a target computer system by reducing excessive copying of the received data prior to being accessed by a network software application. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention described herein relates to the field of computer networks. More particularly, the invention relates to a network interface protocol. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> High-speed computer network topologies, such as Local Area Networks (LAN) and Wide Area Network (WAN), demand increasing bandwidth and data throughput. Consequently, data traveling across high-speed computer networks may &ldquo;bottleneck&rdquo; once the data is received by a Network Interface Card (NIC) within a target computer system. In order to accommodate continued increases in LAN/WAN network bandwidth, bottlenecks within the network must be prevented. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> One reason data may bottleneck in a NIC is because the network interfaces used in current NICs may be inefficient in the way in which they handle incoming data. For example, a prior art network interface handles incoming data by relying on a NIC software driver to retrieve data from a temporary receiving buffer and store the data into a protocol memory before storing the data to application memory. Network software applications may then access the data from the application memory. Such a network interface involves numerous intermediate copying operations that take time and may cause network throughput to bottleneck. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The features and advantages will become apparent from the following detailed description in which: </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a computer network according to one embodiment. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a Network Interface Card (NIC) according to one embodiment. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an RBD queue according to one embodiment. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates the contents of an incoming frame of data. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates fields that may be stored within a Receiving Frame Descriptor (RFD) corresponding to a received frame of data. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flow diagram illustrating the operation of a dynamic network interface according to one embodiment. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> A dynamic network interface is described, intended to enable the efficient processing of received data within a computer network by a target computer system by reducing excessive copying of the received data prior to being accessed by a network software application. </paragraph>
+</section>
+<section>
+<heading lvl="1">A Computer Network </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a computer network according to one embodiment. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Computer systems may communicate over a network <highlight><bold>105</bold></highlight>, such as a Local Area Network (LAN) or Wide Area Network (WAN), depending on the relative location and requirements of the computer systems within a network. Accordingly, data may be transmitted across a network via a wired connection, such as T1 or twisted pair, or by wireless means, such as a Radio Frequency (RF) signal. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A target system <highlight><bold>115</bold></highlight> is any computer system that is the destination of data transmitted across a network. A source computer system <highlight><bold>110</bold></highlight> may transmit data to the target computer system either after the data has been requested by the target computer system, or the source computer system may transmit data unsolicited by the target computer system. In either case, data sent to a target computer system by a source computer system is stored within the target computer system, at least temporarily, in order to allow software programs, such as a network software application, to access the data. </paragraph>
+</section>
+<section>
+<heading lvl="1">A Network Interface Sub-System </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Data received by a target computer system may be copied from the target computer system to other locations within the receiving host computer system or other computer system in order to make the received data accessible to data processing software or hardware, such as a network software application. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Data sent to a target computer system may be received by a network interface sub-system where it may be copied from a temporary storage device, such as buffer memory, to Application Memory (AM) in order to allow a network software application to access the data. AM is a location of memory that has been dedicated, either permanently or temporarily, to a network software application. Data stored within AM may then be accessed by a network software application running on the host computer system. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In one embodiment, the network interface sub-system is a Network Interface Card (NIC). <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an NIC according to one embodiment. In one embodiment, a NIC <highlight><bold>205</bold></highlight> consists of an embedded processor <highlight><bold>225</bold></highlight>, embedded memory <highlight><bold>230</bold></highlight> and a receiving buffer <highlight><bold>210</bold></highlight>. A receiving buffer may be used to temporarily store received data until the data can be copied or transferred to another location within the NIC or host computer system. Received data may then be copied to driver memory <highlight><bold>220</bold></highlight> where it may be accessed by software programs, such as a software driver, that control the NIC and subsequently copied to application memory <highlight><bold>215</bold></highlight>. Application memory may be used to store the received data in order to allow a network software application to access it. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Device memory and application memory may exist within the same physical memory device or in separate memory devices. In one embodiment, application memory and device memory are allocated within system memory of the host target computer system, whereas the temporary receiving buffers are located in the NIC. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Once data is received by a NIC, an embedded processor may process the received data in order for a software application to access the data. For example, received data temporarily stored in a receiving buffer may be copied to device memory by a software driver running on the host system. The software driver may then copy the data to an application memory space where it may be accessed by a software application running on the host computer system. </paragraph>
+</section>
+<section>
+<heading lvl="1">A Dynamic Network Interface </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A dynamic network interface is described herein, in which application software may access data received by a target computer system without waiting for the data to be copied by a software driver or other program to intermediate memory locations, such as device memory, before being stored to application memory. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In one embodiment, frames of data within a messaging flow, such as a Transmission Control Protocol (TCP) flow, are temporarily stored within a receiving buffer and then stored into buffers within application memory (AM) buffers that have been allocated by one or more network software applications. A messaging flow refers to one or more frames of data that are intended to be received by a particular computer system for use by a software application running on the receiving computer system. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> A network software application may access received data frames stored in the AM buffers without having to wait for the data to be copied to an intermediate memory location and subsequently stored into application memory. Frames of data that are stored to application memory in such a manner are referred to as &ldquo;Zero Copy&rdquo; (ZC) frames, as the frames require no intermediate copying or transferring prior to being stored within application memory. Accordingly, a portion of a messaging flow to which a ZC frame belongs is referred to as a ZC flow, while an AM buffer in which ZC frames are stored are referred to as a ZC AM buffer. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In one embodiment, frames received by the target computer system may be determined to be ZC frames by a device driver running on the host computer that controls the NIC hardware. Once the device driver has determined that the received frame may be processed as a ZC frame, embedded software running on the NIC may configure the frame as a ZC frame and copy the data from the receiving buffer to a ZC AM buffer or buffers. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> After it is determined that a frame of data may be &ldquo;zero copied&rdquo; to application memory, one or more circular Receiving Buffer Descriptor (RBD) queues may be created and a predetermined number of RBD&apos;s allocated within. Each RBD entry may contain at least a value corresponding to a start address and a value indicating the size of a ZC AM buffer to which an RBD corresponds. In one embodiment, the value corresponding to a start address is the start address of the corresponding ZC AM buffer within application memory. In other embodiments, the value may be an offset, sequence number, or other value from which the address of a ZC AM buffer may be derived. Furthermore, when a new ZC AM buffer is allocated within application memory, a new RBD entry may be stored within an available RBD queue entry or one that later becomes available. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an RBD queue according to one embodiment. A next available RBD queue entry may be indicated by a Head Pointer <highlight><bold>305</bold></highlight>, whereas an oldest incomplete RBD queue entry may be indicated by a Tail Pointer <highlight><bold>310</bold></highlight>. Once a ZC AM buffer has been filled, an RBD corresponding to the filled ZC AM buffer may be indicated by a Last Completed RBD Number (LCRN) pointer <highlight><bold>315</bold></highlight>. The LCRN pointer may be communicated to a NIC device driver in order to inform the device driver that the ZC AM buffer is full and will be de-allocated. The device driver may use this information to keep track of available AM buffers in order to process non-ZC frames. The RBD corresponding to the filled ZC AM buffer may then be de-allocated, allowing other pending or future RBD&apos;s to be stored within the queue. In one embodiment, a fulfilled RBD is de-allocated by invalidating the RBD through incrementing of the Tail Pointer. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Upon receiving a frame of data into the receiving buffers of a receiving host computer system&apos;s NIC, it may be determined whether the data is intended for the receiving host computer. In one embodiment, a network software application running on the target host computer system determines whether a received frame is intended for the target host computer and whether it is intended to be processed by the network software application. This information may be obtained by interpreting header information associated with the received frame. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Received frames may arrive in various network protocols, including TCP. In general, a flow of TCP frames may be identified by using various header parameters associated with the protocol. For example, in one embodiment, Internet Protocol (IP) Source Address, IP Destination Number, Destination Port Number, and Source Port number may be used to identify TCP frames of a particular flow as being intended for the receiving computer system. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> When a new frame of data is received and the receiving host computer system determines that the frame is intended for the receiving host computer system, it is then determined whether the frame may be treated as a ZC frame and therefore copied directly from receiving buffers within the receiving host computer NIC to application memory without intermediate copying steps. In one embodiment, a received frame of data within a TCP flow is &ldquo;zero copied&rdquo; to application memory if there is enough space for the frame within any of a group of allocated ZC AM buffers, and if not, new ZC AM buffers may be allocated. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> If it is determined that the received frame may be &ldquo;zero copied&rdquo; to an existing ZC AM buffer within application memory then the data is copied directly into the available ZC AM buffer(s). If all allocated ZC AM buffers are unable store the received frame and available space within the RBD queue exists, a new ZC AM buffer may be allocated and the corresponding RBD placed in the RBD queue, thereby enabling a new ZC flow of ZC frames. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> In one embodiment, a flow descriptor is created that corresponds to a newly enabled ZC flow. A flow descriptor may contain flow control fields and RBD array status information pertaining to a ZC flow, which may be used by embedded software or other software/hardware within the target computer system to retrieve status information pertaining to the ZC flow or to identify the ZC flow. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Various fields may be stored within the flow descriptor using various bit lengths to represent each field. In one embodiment, the flow descriptor contains a 4-bit Flow Identification Number, a 1-bit Internet Protocol (IP) type, a 32 or 128-bit IP Source Address, a 32 or 128-bit IP Destination Address, a 16-bit Destination Port Number, a 16-bit Source Port Number, a 32-bit Start Sequence Number, a 1-bit TCP/UDP number, and an RBD Array Pointer. Any one or combination of these fields may be used to identify and recognize a particular flow. In addition, the flow descriptor may contain an RBD Array indicating the number of RBD&apos;s within an RBD queue, and the number RBD&apos;s associated with frames within a ZC flow. Other fields may also be stored within the flow descriptor in other embodiments. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Once a ZC flow descriptor is created and at least one ZC AM buffer is allocated within application memory, ZC frames that were temporarily stored in receiving buffers may be stored in the allocated ZC AM buffers corresponding to a particular ZC flow. Once an ZC AM buffer is allocated, values corresponding to the buffer&apos;s start address and size are then stored within an available RBD, which is indicated by a Head Pointer within the RBD queue. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates the contents of an incoming frame of data. Each received frame in a flow may contain a header <highlight><bold>405</bold></highlight> and a payload <highlight><bold>410</bold></highlight>. The payload is the actual data that will be used by application software, whereas the header contains information relating to the particular received frame of data and the flow to which it belongs. After allocating an ZC AM buffer and storing the buffer&apos;s start address and size into an RBD, the payload of a received ZC frame is stored within the allocated ZC AM buffer. A header associated with the ZC frame is stored within a Receiving Frame Descriptor (RFD), which is stored in an RFD pool with other RFD&apos;s corresponding to other received frames. An RFD may be used to identify a particular frame. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates fields that may be stored within an RFD corresponding to a received frame of data. Each newly received frame of data&mdash;ZC frame or otherwise&mdash;may store its header information in an RFD. In one embodiment, an RFD contains a 6-bit Last Complete RBD Number (LCRN) <highlight><bold>505</bold></highlight>, a 4-bit Flow Identification Number <highlight><bold>510</bold></highlight>, a 32-bit Sequence Number <highlight><bold>530</bold></highlight>, a 1-bit flag to indicate that a flow has started <highlight><bold>515</bold></highlight>, a 1-bit flag to indicate that a flow has terminated <highlight><bold>520</bold></highlight>, and a 2-bit number to indicate the reason for termination <highlight><bold>525</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The 32-bit sequence number may indicate a start sequence number, if the start bit is set, and an end sequence number, if the terminated bit is set. Furthermore, sequence numbers may identify relative position of a byte or group of bytes within a received frame of data in a particular flow. Accordingly, RFD structures may be used by a device driver controlling the NIC hardware to determine whether a frame of data has been configured as a ZC frame. A device driver may then determine whether the frame data should be ignored (if it is a ZC frame) or whether to retrieve the frame data (if the data is a non-ZC frame) and store it into device memory or some other memory from which it may be copied into application memory. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> If a ZC bit <highlight><bold>540</bold></highlight> is set within an RFD, the device driver, in one embodiment, may also use the RFD to 1) check the flow corresponding to the flow ID within the RFD, 2) Release the RBD referenced by the LCRN pointer, 3) calculate the number of remaining valid RBD&apos;s in the RBD queue, and 4) determine whether new RBD content should be supplied to embedded software running on the NIC by determining whether the number of valid RBD&apos;s in the queue is less than some predetermined number. </paragraph>
+</section>
+<section>
+<heading lvl="1">One Embodiment of a Dynamic Network Interface </heading>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flow diagram illustrating the operation of a dynamic network interface according to one embodiment. After the host computer determines that the received data frame is intended for an application software program running on the host computer <highlight><bold>605</bold></highlight>, the header information associated with the received frame of data is stored within an RFD <highlight><bold>610</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> A determination may then be made as to whether the received frame may be &ldquo;zero copied&rdquo; directly to application memory from a receiving buffer. A received buffer may be &ldquo;zero-copied&rdquo; to application memory if available ZC AM buffer space exists <highlight><bold>615</bold></highlight>. If not, <highlight><bold>620</bold></highlight> the received frame may be &ldquo;zero-copied&rdquo; to application memory if there is enough room in the RBD queue for a new ZC AM buffer to be allocated in application memory. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> If the received frame cannot be stored into an existing ZC AM buffer and there is no space within the RBD queue for a new zero-copy AM buffer to be allocated within application memory, a prior art method <highlight><bold>625</bold></highlight> of handling the received frame is invoked. A prior art method may involve methods that do not support storing the received frame directly to application memory after it is received in a receiving buffer, but instead may invoke other intermediate copying operations. If there is enough space in an existing ZC AM buffer or buffers, the received frame data is stored in the available ZC AM buffer or buffers and the corresponding RFD zero-copy bit is set to indicate that the frame is a zero-copy frame <highlight><bold>630</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> In order to find an available ZC AM buffer to store the received data, a search is conducted among a pre-determined number RBD&apos;s, each corresponding to a particular ZC AM buffer. In one embodiment, the search is based on a sequence number and size of the received frame data stored within each RBD. The sequence number is used to calculate an AM buffer&apos;s offset address and the data size is used to determine whether there is enough space in the ZC AM buffer for received data. A successful search identifies an ZC AM buffer address derived from the frame sequence number that is able to contain the received frame data. A search fails and is aborted if no such ZC AM buffer can be identified. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> In one embodiment, the search may be aborted if the number of searched ZC AM buffers exceeds the predefined number, thus aborting the ZC flow itself. If the ZC flow is aborted, this may be reflected within the RFD associated with the received frame by setting a termination bit and an appropriate termination reason field. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> If it is determined that there is no space for the received frame data in existing zero-copy ZC AM buffers, a new ZC AM buffer may be allocated to store the received frame data as a zero-copy frame. In one embodiment, a new ZC AM buffer is allocated if there is an available RBD queue entry in which to store an RBD associated with the newly allocated ZC AM buffer. If the RBD queue is full, prior art methods are used to copy the received data to application memory that may involve intermediate copying steps. If there is available space within the RBD queue, a new zero-copy AM buffer is allocated <highlight><bold>635</bold></highlight> and a corresponding RBD is placed within the RBD queue. The data may be stored within the newly-allocated ZC AM buffer and the RFD updated to reflect that the received frame is a ZC frame <highlight><bold>640</bold></highlight>. A ZC flow descriptor may also be created to indicate that a new ZC flow has begun <highlight><bold>645</bold></highlight>. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> When a ZC AM buffer is fulfilled <highlight><bold>650</bold></highlight>, a corresponding LCRN pointer within the RBD queue may be used to inform a software program, such as a NIC device driver, that the corresponding RBD queue entry is available to receive a new RBD. Accordingly, this information may be communicated to software controlling the zero-copy operation, such as embedded software running on the NIC, to invalidate the RBD corresponding to the fulfilled AM buffer so that the RBD queue entry may be used to hold future or pending RBD&apos;s <highlight><bold>655</bold></highlight>. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> While this invention has been described with reference to illustrative embodiments, this description is not intended to be construed in a limiting sense. Various modifications of the illustrative embodiments, as well as other embodiments, which are apparent to persons skilled in the art to which the invention pertains are deemed to lie within the spirit and scope of the invention. </paragraph>
+</section>
+<section>
+<heading lvl="1">Appendix </heading>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> William E. Alford, Reg. No. 37,764; Farzad E. Amini, Reg. No. 42,261; William Thomas Babbitt, Reg. No. 39,591; Carol F. Barry, Reg. No. 41,600; Jordan Michael Becker, Reg. No. 39,602; Lisa N. Benado, Peg. No. 39,995; Bradley J. Bereznak, Reg. No. 33,474; Michael A. Bemadicou, Reg. No. 35,934; Roger W. Blakely, Jr., Reg. No. 25,831; R. Alan Burnett, Reg. No 46,149; Gregory D. Caldwell, Reg. No. 39,926; Thomas M. Coester, Reg. No. 39,637; Donna Jo Coningsby, Reg. No. 41,684; Florin Corie, Reg. No. 46,244; Mimi Diemmy Dao, Reg. No. 45,628; Dennis M. deGuzman, Reg. No. 41,702; Stephen M. De Klerk, Reg. No. 46,503; Michael Anthony DeSanctis, Reg. No. 39,957; Daniel M. De Vos, Reg. No. 37,813; Justin M. Dillon, Reg. No. 42,486; Sanjeet Dutta, Reg. No. 46,145; Matthew C. Fagan, Reg. No. 37,542; Tarek N. Fahmi, Reg. No. 41,402; Thomas S. Ferrill, Reg. No. 42,532; George Fountain, Reg. No. 37,374; James Y. Go, Reg. No. 40,621; James A. Henry, Reg. No. 41,064; Libby N. Ho, Reg. No. 46,774; Wilimore F. Holbrow III, Reg. No. 41,845; Sheryl Sue Holloway, Reg. No. 37,850; George W Hoover II, Reg. No. 32,992; Eric S. Hyman, Reg. No. 30,139; William W. Kidd, Reg. No. 31,772; Sang Hui Kim, Reg. No. 40,450; Walter T. Kim, Reg. No. 42,731; Eric T. King, Reg. No. 44,188; George Brian Leavell, Reg. No. 45,436; Kurt P. Leyendecker, Reg. No. 42,799; Gordon R. Lindeen III, Reg No. 33,192; Jan Carol Little, Reg. No. 41,181; Robert G. Litts, Reg. No. 46,876; Julio Loza, Reg. No. P47,758; Joseph Lutz, Reg. No. 43,765; Michael J. Mallie, Reg. No. 36,591; Andre L. Marais, Reg. No. P048,095; Paul A. Mendonsa, Reg. No. 42,879; Clive D. Menezes, Reg. No. 45,493; Chun M. Ng, Reg. No. 36,878; Thien T. Nguyen, Reg. No. 43,835; Thinh V. Nguyen, Reg. No. 42,034; Robert B. O&apos;Rourke, Reg. No. 46,972; Daniel E. Ovanezian, Reg. No. 41,236; Kenneth B. Paley, Reg. No. 38,989; Gregg A. Peacock, Reg. No. 45,001; Marina Portnova, Reg. No. 45,750; William F. Ryann, Reg. 44,313; James H. Salter, Reg. No. 35,668; William W. Schaal, Reg. No. 39,018; James C. Scheller, Reg. No. 31,195; Jeffrey S. Schubert, Reg. No. 43,096; George Simion, Reg. No. P47,089; Maria McCormack Sobrino, Reg. No. 31,639; Stanley W. Sokoloff, Reg. No. 25,128; Judith A. Szepesi, Reg. No. 39,393; Edwin H. Taylor, Reg. No. 25,129; John F. Travis, Reg. No. 43,203; Joseph A. Twarowski, Reg. No. 42,191; Mark C. Van Ness, Reg. No. 39,865; Tom Van Zandt, Reg. No. 48,219; Brent E. Vecchia, Reg. No. P48,011; Lester J. Vincent, Reg. No. 31,460; Archana B. Vittal, Reg. No. 45,182; Glenn E. Von Tersch, Reg. No. 41,364; John Patrick Ward, Reg. No. 40,216; Mark L. Watson, Reg. No. 46,322; Thomas C. Webster, Reg. No. 46,164; and Norman Zafman, Reg. No. 26,250; my patent attorneys, and Firasat Ali, Reg. No. 45,715; and Raul Martinez, Reg. No. 46,904, my patent agents, of BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP, with offices located at 12400 Wilshire Boulevard, 7th Floor, Los Angeles, Calif. 90025, telephone (310) 207-3800, and Alan K. Aldous, Reg. No. 31,905; Ben Burge, Reg. No. 42,372; Richard C. Calderwood, Reg. No. 35,468; Paul W. Churillar Reg. No. P47,495; Jeffrey S. Draeger, Reg. No. 41,000; Cynthia Thomas Faatz. Reg No. 39,973; John N. Greaves, Reg. No. 40,362; Seth Z. Kalson, Reg. No. 40,670; David J. Kaplan, Reg. No. 41,105; John Kacvinsky, Reg. No. 40,040; Peter Lam, Reg. No. 44,855; Charles A. Mirho, Reg. No. 41,199; Paul Nagy, Reg. No. 37,896; Leo V. Novakoski, Reg. No. 37,198; Thomas C. Reynolds, Reg. No. 32,488; Kenneth M. Seddon, Reg. No. 43,105; Mark Seeley, Reg. No. <highlight><bold>32</bold></highlight>,<highlight><bold>299</bold></highlight>; Steven P. Skabrat, Reg. No. 36,279; Howard A. Skaist, Reg. No. 36,008; Steven C. Stewart, Reg. No. 33,555; Gene I. Su, Reg. No. 45,140; Calvin E. Wells, Reg. No. P43,256, Raymond J. Wemer, Reg. No. 34,752; Robert G. Winkle, Reg. No. 37,474; Sharon Wong, Reg. No. 37,760; Steven D. Yates, Reg. No. 42,242; and Chades K. Young, fleg. No. 39,435; my patent attorneys, and Michael J. Nesheiwat, Reg. No. P47,819, my patent agent of INTEL CORPORATION; and James R. Thein, Reg. No. 31,710, my patent attomey with full power of substitution and revocation, to prosecute this application and to transact all business in the Patent and Trademark Office connected herewith. </paragraph>
+</section>
+<section>
+<heading lvl="1">Appendix A </heading>
+</section>
+<section>
+<heading lvl="1">Title 37, Code of Federal Regulations, Section 1,56 </heading>
+</section>
+<section>
+<heading lvl="1">Duty to Disclose Information Material to Patentability </heading>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> (a) A patent by its very nature is affected with a public interest. The public interest is best served, and the most effective patent examination occurs when, at the time an application is being examined, the Office is aware of and evaluates the teachings of all information material to patentability. Each individual associated with the filing and prosecution of a patent application has a duty of candor and good faith in dealing with the Office, which includes a duty to disclose to the Office all information known to that individual to be material to patentability as defined in this section. The duty to disclose information exists with respect to each pending claim until the claim is cancelled or withdrawn from consideration, or the application becomes abandoned. Information material to the patentability of a claim that is cancelled or withdrawn from consideration need not be submitted if the information is not material to the patentability of any claim remaining under consideration in the application. There is no duty to submit information which is not material to the patentability of any existing claim. The duty to disclose all information known to be material to patentability is deemed to be satisfied if all information known to be material to patentability of any claim issued in a patent was cited by the Office or submitted to the Office in the manner prescribed by &sect;&sect;1.97(b)-(d) and 1.98. However, no patent will be granted on an application in connection with which fraud on the Office was practiced or attempted or the duty of disclosure was violated through bad faith or intentional misconduct. The Office encourages applicants to carefully examine: </paragraph>
+<paragraph id="P-0047" lvl="2"><number>&lsqb;0047&rsqb;</number> (1) Prior art cited in search reports of a foreign patent office in a counterpart application, and </paragraph>
+<paragraph id="P-0048" lvl="2"><number>&lsqb;0048&rsqb;</number> (2) The closest information over which individuals associated with the filing or prosecution of a patent application believe any pending claim patentably defines, to make sure that any material information contained therein is disclosed to the Office. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> (b) Under this section, information is material to patentability when it is not cumulative to information already of record or being made of record in the application, and </paragraph>
+<paragraph id="P-0050" lvl="2"><number>&lsqb;0050&rsqb;</number> (1) It establishes, by itself or in combination with other information, a prima facie case of unpatentability of a claim; or </paragraph>
+<paragraph id="P-0051" lvl="2"><number>&lsqb;0051&rsqb;</number> (2) It refutes, or is inconsistent with, a position the applicant takes in: </paragraph>
+<paragraph id="P-0052" lvl="3"><number>&lsqb;0052&rsqb;</number> (i) Opposing an argument of unpatentability relied on by the Office, or </paragraph>
+<paragraph id="P-0053" lvl="3"><number>&lsqb;0053&rsqb;</number> (ii) Asserting an argument of patentability. </paragraph>
+<paragraph id="P-0054" lvl="3"><number>&lsqb;0054&rsqb;</number> &emsp;A prima facie case of unpatentability is established when the information compels a conclusion that a claim is unpatentable under the preponderance of evidence, burden-of-proof standard, giving each term in the claim its broadest reasonable construction consistent with the specification, and before any consideration is given to evidence which may be submitted in an attempt to establish a contrary conclusion of patentability. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> (c) Individuals associated with the filing or prosecution of a patent application within the meaning of this section are: </paragraph>
+<paragraph id="P-0056" lvl="2"><number>&lsqb;0056&rsqb;</number> (1) Each inventor named in the application; </paragraph>
+<paragraph id="P-0057" lvl="2"><number>&lsqb;0057&rsqb;</number> (2) Each attorney or agent who prepares or prosecutes the application; and </paragraph>
+<paragraph id="P-0058" lvl="2"><number>&lsqb;0058&rsqb;</number> (3) Every other person who is substantively involved in the preparation or prosecution of the application and who is associated with the inventor, with the assignee or with anyone to whom there is an obligation to assign the application. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> (d) Individuals other than the attorney, agent or inventor may comply with this section by disclosing information to the attorney, agent, or inventor. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> (e) In any continuation-in-part application, the duty under this section includes the duty to disclose to the Office all information known to the person to be material to patentability, as defined in paragraph (b) of this section, which became available between the filing date of the prior application and the national or PCT international filing date of the continuation-in-part application. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>receiving a frame of data transmitted across a network into a receiving buffer of a target computer system; </claim-text>
+<claim-text>recognizing and initiating a copy of said frame of data, said initiating comprising identifying at least one available Application Memory (AM) buffer in which to store a payload of said frame of data; </claim-text>
+<claim-text>storing a header of said frame of data to a Receiving Frame Descriptor (RFD), said header comprising at least one sequence number; zero-copying said payload of said received frame of data to said at least one AM buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising allocating a new AM buffer if at least one available AM buffer is not identified, said allocating comprising creating a Receiving Buffer Descriptor (RBD) within an available RBD queue entry, said RBD comprising a value corresponding to a start address and a value corresponding to a size of said new AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein said zero-copying is aborted if said at least available RBD queue entry is not identified. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further comprising creating a flow descriptor if said new AM buffer is allocated, said flow descriptor identifying a zero-copy flow. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein said identifying comprises searching a pre-defined number of RBD&apos;s within said RBD queue for an RBD corresponding to said at least one available AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein said search is based on a difference between a an AM buffer size and a size of said payload of said frame of data. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein said search is aborted if said search is unsuccessful after searching said predefined number of RBD&apos;s within said RBD queue. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein said RBD queue is indexed by a head pointer, a tail pointer and a Last Completed RBD Number (LCRN) pointer, said head pointer comprising a value corresponding to an address of a next available RBD entry within said RBD queue and said tail pointer comprising a value corresponding to an address of an oldest incomplete RBD within said RBD queue and said LCRN pointer comprising a value corresponding to a full AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein an RBD entry within said RBD queue corresponding to a full AM buffer is invalidated. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein said invalidated RBD entry is used to store future or pending RBD&apos;s. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A machine-readable medium having stored thereon a set of instructions, said set of instructions, when executed by a processor, cause said processor to perform a method comprising: 
+<claim-text>allocating at least one Application Memory (AM) buffer in which to store a payload of at least one frame of data; </claim-text>
+<claim-text>storing a payload of said at least one frame of data into said at least one AM buffer; </claim-text>
+<claim-text>storing a header associated with said at least one frame of data into at least one Receiving Frame Descriptor (RFD); </claim-text>
+<claim-text>dynamically allocating or de-allocating within a queue of Receiving Buffer Descriptors (RBD&apos;s) at least one RBD corresponding to said at least one allocated AM buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein said dynamically de-allocating said RBD comprises invalidating said at least one RBD within said queue after said at least one AM buffer is full. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein said dynamically allocating said RBD comprises storing said at least one RBD to said queue after allocating said at least one AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein said at least one RBD comprises a start address of a payload of said at least one frame of data stored within said at least one AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein said RBD queue comprises at least one RBD corresponding to at least one AM buffer, said at least one AM buffer comprising at least one data frame payload. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> further comprising notifying a device driver after said at least one AM buffer is full. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein a Last Completed RBD Number (LCRN) is stored within said RFD after said at least one AM buffer is full. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> wherein said notifying further comprises updating an LCRN pointer to point to an RBD within said RBD queue corresponding to said full at least one AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein said queue is indexed by a plurality of pointers, said pointers comprising a head, tail, and LCRN pointer. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein said head pointer comprises a value corresponding to an address of a next available RBD entry within said queue and said tail pointer comprises a value corresponding to an address of an oldest incomplete RBD within said queue and said LCRN pointer comprises a value corresponding to an address of a last completed RBD within said queue. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A system comprising: 
+<claim-text>at least one CPU; </claim-text>
+<claim-text>at least one buffer unit, said at least one buffer unit being coupled to said at least one CPU; </claim-text>
+<claim-text>at least one memory unit to store at least one Application Memory (AM) buffer, said at least one memory unit being coupled to said at least one CPU, said at least one AM buffer being associated with at least one entry within a Receiving Buffer Descriptor (RBD) queue, said RBD queue wherein at least one RBD is enabled to be dynamically allocated or de-allocated. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein said at least one RBD is enabled to be dynamically de-allocated by invalidating said at least one RBD within said RBD queue after said at least one AM buffer is full, said at least one RBD being enabled to be dynamically allocated by adding said at least one RBD to said queue after said at least one AM buffer is allocated. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein said at least one RBD comprises a value corresponding to a start address and a value corresponding to a size of said at least one AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein an indication is made to a software driver after said at least one AM buffer is full. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> wherein a Last Completed RBD Number (LCRN) is stored within a Receiving Frame Descriptor (RFD) after said at least one AM buffer is full, said RFD being associated with said at least one frame of data. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> wherein said indicating comprises updating an LCRN pointer to point to an RBD within said RBD queue corresponding to said full at least one AM buffer. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein said queue is indexed by a plurality of pointers, said pointers comprising a head, tail, and LCRN pointer. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The system medium of <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference> wherein said head pointer comprises a value corresponding to an address of a next available RBD entry within said queue and said tail pointer comprises a value corresponding to an address of an oldest incomplete RBD within said queue and said LCRN pointer comprises a value corresponding to an address of a last completed RBD within said queue. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein said RFD comprises a Zero Copy (ZC) bit and a flow identification (ID), said ZC bit being enable to indicate whether said at least one frame of data is associated with a ZC flow, said ZC flow being identified by said flow ID. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference> wherein, if said ZC bit is set, said device driver de-allocates from said RBD queue an RBD referenced by said LCRN pointer, calculates a remaining number of valid RBD&apos;s within said RBD queue, and allocates a new RBD&apos;s to replace said de-allocated RBD.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>6</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005164A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005164A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005164A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005164A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005164A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005164A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005164A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

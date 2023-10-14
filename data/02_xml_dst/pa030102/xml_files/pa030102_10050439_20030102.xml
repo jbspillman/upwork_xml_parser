@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002534A1-20030102-M00001.NB SYSTEM "US20030002534A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030002534A1-20030102-M00001.TIF SYSTEM "US20030002534A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030002534A1-20030102-D00000.TIF SYSTEM "US20030002534A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002534A1-20030102-D00001.TIF SYSTEM "US20030002534A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002534A1-20030102-D00002.TIF SYSTEM "US20030002534A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002534A1-20030102-D00003.TIF SYSTEM "US20030002534A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002534A1-20030102-D00004.TIF SYSTEM "US20030002534A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002534A1-20030102-D00005.TIF SYSTEM "US20030002534A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002534</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10050439</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020116</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04J003/24</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>370</class>
+<subclass>474000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>476000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>392000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>400000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Random early discard for cell-switched data switch</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60299961</doc-number>
+<document-date>20010621</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Werner</given-name>
+<middle-name>van</middle-name>
+<family-name>Hoof</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Kanata</city>
+<country-code>CA</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>CHRISTIE, PARKER &amp; HALE, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>350 WEST COLORADO BOULEVARD</address-1>
+<address-2>SUITE 500</address-2>
+<city>PASADENA</city>
+<state>CA</state>
+<postalcode>91105</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A congestion control method and apparatus in a cell-switched data switch. The switch attaches a tag with a discard processing indicator, such as a particular random number, to all cells belonging to a same packet. In determining which cells to drop when running a congestion control algorithm such as RED, the switch compares the discard processing indicator of the cells with a discard criterion and only drops cells that conform with the discard criterion. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">CROSS-REFERENCE TO RELATED APPLICATION(S) </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application claims the benefit of U.S. Provisional Application No. 60/299,961, filed Jun. 21, 2001 (attorney docket 41207/JEC/X2), the content of which is incorporated herein by reference.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates generally to congestion avoidance mechanisms, and more particularly, to a congestion avoidance mechanism in a cell-switched data switch. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Data switch architectures include packet-switched and cell-switched varieties. Packet-switched data switches switch variable-length packets as a whole from ingress ports to egress ports. Cell-switched data switches segment packets into fixed-length units called cells, and separately switch the units from ingress ports to egress ports. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> One feature becoming more prevalent in data switches is a congestion avoidance mechanism referred to as random early discard (RED), described in further detail in S. Floyd et. al, &ldquo;Random Early Detection Gateways for Congestion Avoidance,&rdquo; <highlight><italic>IEE/ACM Transactions on Networking</italic></highlight>, Vol. 1, No. 4, 397-413 (Aug. 1993), the content of which is incorporated herein by reference. While RED and other similar congestion avoidance mechanisms are relatively easy to implement in packet-switched data switches, it is more difficult in cell-switched data switches. Due to the segmentation of a packet into multiple cells upon ingress in a cell-switched data switch, it is difficult to ensure proper retention/discard processing of the packet. Particularly, if a different retention/discard decision is made for different cells of the packet, fewer than all cells of the packet will generally be retained, a condition generally known as partial packet discard (PPD), and the packet will generally not be successfully reassembled. This non-uniform retention/discard processing may arise from, for instance, making the retention/discard decision for the different constituent cells of a packet at different places within a distributed switching architecture, or at different times. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Accordingly, there is a need for efficient RED for a cell-switched data switch, and more generally, a need to avoid PPD in a cell-switched data switch by ensuring uniform retention/discard processing of the constituent cells of a packet. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The present invention is directed to a congestion control method and apparatus for a cell-switched data switch that provides a uniform discard and retention decision for cells belonging to a same data packet. In one embodiment, the present invention comprises a data switch including an input port, an output port and a memory coupled therebetween. The data switch generates a discard processing indicator for a packet received on the input port, segments said packet into ones of units, and appends the discard processing indicator to the ones of units. The data switch compares the discard processing indicator appended to the ones of units with a discard criterion to determine whether to discard the ones of units. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In another embodiment, the present invention comprises a data switch including an input port, an output port, and a switch fabric operative between the input port and the output port. The input port generates a tag including a discard processing indicator for appending to ones of input units segmented from an input data packet. The output port includes one or more output queues where each output queue stores an output unit. The switch fabric includes a congestion controller that retrieves a level of utilization of an output queue to which a particular unit is destined and selects the input unit for discard or not based on the discard processing indicator in the tag appended to the input unit. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In a further embodiment, the present invention is directed to a method for congestion control in a data switch including an input port, an output port, and a memory coupled therebetween. The method includes generating a number for a packet received on the input port, segmenting the packet into ones of units, appending the number to the ones of units, and individually comparing the number appended to the ones of units with a discard criterion for determining whether to discard the packet. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In another embodiment, the method for congestion control includes generating a tag including a discard processing indicator, appending the tag with the discard processing indicator to each unit segmented from an input data packet, determining a level of utilization of an output queue to which a particular unit of the input data packet is destined, determining a discard criterion in accordance with the determined level of utilization, and discarding the particular unit based on a conformance of the discard processing indicator in the tag appended to the particular unit with the discard criterion. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In a further embodiment, the invention is directed to a data switch comprising an input port, an output port and a memory coupled therebetween where the data switch generates a uniform discard processing indicator for a packet received on the input port, segments the packet into ones of units, and appends the uniform discard processing indicator to the ones of units. The data switch compares for each of the ones of the units the uniform discard processing indicator appended thereto with a uniform discard criterion for ensuring that the ones of units receive a uniform discard decision. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> It should be appreciated, therefore, that the present invention provides a method and apparatus which helps avoid PPD in a cell-switched data switch. The comparing of a discard processing indicator attached to each cell to a discard criterion helps ensure that if a unit belonging to a particular packet is identified to be dropped, all other units belonging to the packet are also dropped.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> These and other features, aspects and advantages of the present invention will be more fully understood when considered with respect to the following detailed description, appended claims, and accompanying drawings where: </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic block diagram of a cell-switched data switch according to one embodiment of the invention; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is more detailed block diagram of the cell-switched data switch of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> according to one embodiment of the invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a diagram of a format of an exemplary data unit after processing by an ingress I/O control according to one embodiment of the invention; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a more detailed block diagram of a congestion controller according to one embodiment of the invention; and </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow diagram illustrating a processing of an inbound data packet according to one embodiment of the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic block diagram of a cell-switched data switch <highlight><bold>10</bold></highlight> according to one embodiment of the invention. The cell-switched data switch <highlight><bold>10</bold></highlight> may also be referred to as simply a switch, a data communication node, or a data communication switch. The data switch <highlight><bold>10</bold></highlight> includes switching interfaces <highlight><bold>14</bold></highlight>, <highlight><bold>16</bold></highlight> and <highlight><bold>18</bold></highlight> interconnected to respective groups of local area networks (LANs) <highlight><bold>30</bold></highlight>, <highlight><bold>32</bold></highlight>, <highlight><bold>34</bold></highlight>, and interconnected to one another over data paths <highlight><bold>20</bold></highlight>, <highlight><bold>22</bold></highlight>, <highlight><bold>24</bold></highlight> via a switching backplane <highlight><bold>12</bold></highlight>. The switching backplane <highlight><bold>12</bold></highlight> preferably includes a switching fabric connecting the switching interfaces to one another in a manner that is conventional in the art. The switching interfaces may also be coupled to one another over control paths <highlight><bold>26</bold></highlight> and <highlight><bold>28</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The switching interfaces <highlight><bold>14</bold></highlight>, <highlight><bold>16</bold></highlight>, <highlight><bold>18</bold></highlight> are preferably ingress/egress ports receiving/transmitting packets from/to the LANs over cable media <highlight><bold>36</bold></highlight>, <highlight><bold>38</bold></highlight>, <highlight><bold>40</bold></highlight>, such as, for example, optical fiber. The switching interfaces preferably forward packets to and from their respective groups of LANs <highlight><bold>30</bold></highlight>, <highlight><bold>32</bold></highlight>, <highlight><bold>34</bold></highlight> in accordance with one or more operative communication protocols, such as, for example, an Internet Protocol (IP). The switching node <highlight><bold>10</bold></highlight> is shown for illustrative purposes only. In practice, packet switching nodes may include more or less than three switching interfaces. The switching interfaces may also forward packets to and from other switching nodes. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is more detailed block diagram of a cell-switched data switch according to one embodiment of the invention. The cell-switched data switch preferably includes one or more ingress input/output (I/O) controls <highlight><bold>100</bold></highlight> and one or more egress I/O controls <highlight><bold>102</bold></highlight> connected by a switch fabric <highlight><bold>104</bold></highlight>. The ingress and egress I/O controls <highlight><bold>100</bold></highlight>, <highlight><bold>102</bold></highlight> are each respectively coupled to a plurality of ingress and egress ports <highlight><bold>106</bold></highlight>, <highlight><bold>108</bold></highlight>, which may be similar to the switching interfaces <highlight><bold>14</bold></highlight>, <highlight><bold>16</bold></highlight>, <highlight><bold>18</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Each ingress I/O control <highlight><bold>100</bold></highlight> preferably includes an ingress memory <highlight><bold>110</bold></highlight>, I/O ports <highlight><bold>114</bold></highlight>, and a switch route tag (SRT) generator <highlight><bold>112</bold></highlight>. According to one embodiment of the invention, the ingress memory <highlight><bold>110</bold></highlight> is a unitary buffer that stores data packets in a single queue. According to another embodiment of the invention, the ingress memory includes a separate queue for each input port which stores a data packet in the queue associated with the receiving input port. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The data packets in the ingress memory <highlight><bold>110</bold></highlight> are segmented into fixed length data units, also referred to as cells. Each cell is transmitted to the switch fabric <highlight><bold>104</bold></highlight> via the I/O ports <highlight><bold>114</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The SRT generator <highlight><bold>112</bold></highlight> preferably includes logic and/or circuitry for generating a tag that is appended to each cell as header information. The SRT generator <highlight><bold>112</bold></highlight> may be implemented in software, hardware, and/or firmware (e.g. an application specific integrated circuit (ASIC)). The tag generated by the SRT generator may include a random number, a time stamp, and/or any other information used for determining whether the data unit is to be dropped or forwarded to the egress ports. Preferably, the same tag is applied to each data unit that belongs to the same packet. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The switch fabric <highlight><bold>104</bold></highlight> may reside in a switching backplane similar to the switching backplane <highlight><bold>12</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The switch fabric preferably includes multiple switching elements <highlight><bold>104</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><italic>c </italic></highlight>for switching the cells to their destination output ports <highlight><bold>108</bold></highlight>. Each switching element preferably includes a fabric memory <highlight><bold>116</bold></highlight> for storing the cells to be switched to the egress ports <highlight><bold>108</bold></highlight>. Each switching element further includes a congestion controller <highlight><bold>118</bold></highlight> running a congestion control algorithm, such as, for example, a random early discard (RED) algorithm, for determining if a cell is to be forwarded to the egress I/O control <highlight><bold>102</bold></highlight> or discarded, based on current cell traffic information. A person skilled in the art should recognize, however, that other derivatives of the RED algorithm may be employed as the congestion avoidance mechanism, such as, for example, a weighted RED (WRED) mechanism. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The congestion controller <highlight><bold>118</bold></highlight> preferably includes a queue utilization table <highlight><bold>122</bold></highlight> containing information on levels of utilization of preferably all the output queues associated with the output ports <highlight><bold>108</bold></highlight> monitored by the congestion controller <highlight><bold>118</bold></highlight>. The queue utilization table preferably contains multiple entries for a particular output queue depicting a filling level of the output queue at different points in time. The entries of the queue utilization table <highlight><bold>122</bold></highlight> are preferably updated based on congestion updates received from the one or more egress I/O controls <highlight><bold>102</bold></highlight> over a communication bus <highlight><bold>120</bold></highlight> preferably shared by the one or more egress I/O controls. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Each egress I/O control <highlight><bold>102</bold></highlight> preferably includes an egress rate controller <highlight><bold>123</bold></highlight>, reassembly queues <highlight><bold>125</bold></highlight>, and an egress memory <highlight><bold>124</bold></highlight>. Each reassembly queue <highlight><bold>125</bold></highlight> stores the cells to be reassembled into data packets and to be transmitted via a particular output port <highlight><bold>108</bold></highlight>. The reassembled data packets are preferably stored in the egress memory <highlight><bold>124</bold></highlight> until their scheduled transmission time. Preferably, the egress memory <highlight><bold>124</bold></highlight> is a buffer including a separate output queue for each of the separate output ports <highlight><bold>108</bold></highlight>, each output queue storing retained data packets destined for its output port. In another embodiment of the invention, the egress memory <highlight><bold>124</bold></highlight> includes a unitary buffer storing all the retained data packets in a single queue. In a further embodiment of the invention, the egress memory <highlight><bold>124</bold></highlight> may be a buffer including various priority output queues for each of the separate output ports <highlight><bold>108</bold></highlight>, where a data packet destined for a particular output port is stored in a particular output queue associated with the output port based on its priority. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The egress rate controller <highlight><bold>123</bold></highlight> is preferably a scheduler for dequeuing data packets from the output queues in the egress memory <highlight><bold>124</bold></highlight>. The scheduler preferably dequeues the data packets according to a particular dequeuing algorithm such as, for example, a weighted round robin algorithm, class based dequeuing, or the like. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> In general terms, the ingress I/O control <highlight><bold>100</bold></highlight> preferably receives from the input ports <highlight><bold>106</bold></highlight> various inbound data packets. The data packets are segmented by the ingress I/O control <highlight><bold>100</bold></highlight> into discrete units, such as fixed-size cells, in a manner well known to those skilled in the art. The segmented units are transmitted via the I/O ports <highlight><bold>114</bold></highlight> to one of the switching elements <highlight><bold>104</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>104</bold></highlight><highlight><italic>c </italic></highlight>in the switching fabric <highlight><bold>104</bold></highlight>. Upon arrival in the switch fabric, the data units are stored in the corresponding switching element and/or discarded based upon a match with a discard criterion associated with a destination output queue. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Each output queue in the egress memory <highlight><bold>124</bold></highlight> preferably periodically broadcasts to all the switching elements in the switch fabric a congestion status, also referred to as a filling level or utilization level of the output queue. The information is used to update entries in the queue utilization table <highlight><bold>122</bold></highlight> of the switching element. The information in the queue utilization table is then used by the congestion controller <highlight><bold>118</bold></highlight> for determining if the units are to be discarded or retained. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> If the units are to be discarded, the congestion controller <highlight><bold>118</bold></highlight> preferably ensures that the units that are discarded belong to the same packet. In this regard, the congestion controller examines the tags generated and appended by the SRT generator <highlight><bold>112</bold></highlight> to the units, and selects those units whose tags or portions thereof conform to a pre-determined discard criterion. The pre-determined discard criterion may be, for instance, a subset of random numbers, a numerical threshold, an ingress queue address, QOS information, and/or the like. A person skilled in the art should appreciate, therefore, that this allows for uniform discard and retention decisions for cells belonging to the same data packet for eliminating PPD conditions. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> A data unit that is retained is stored in the fabric memory <highlight><bold>116</bold></highlight> for transmitting to the I/O egress control <highlight><bold>102</bold></highlight> of a destination output port. In an alternative embodiment, a data unit is first stored in the fabric memory and then discarded based on congestion control information. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Once received by the I/O egress control <highlight><bold>102</bold></highlight>, the data units are stored in the reassembly queues <highlight><bold>125</bold></highlight> for reassembly into data packets. The reassembled data packets are stored in an appropriate output queue of the egress memory <highlight><bold>124</bold></highlight> and forwarded via a destination output port <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a diagram of a format of an exemplary data unit <highlight><bold>200</bold></highlight> after processing by the ingress I/O control <highlight><bold>100</bold></highlight> according to one embodiment of the invention. The data unit <highlight><bold>200</bold></highlight> preferably includes an SRT <highlight><bold>202</bold></highlight> header, other header data <highlight><bold>204</bold></highlight>, and a payload <highlight><bold>206</bold></highlight>. The SRT <highlight><bold>202</bold></highlight> preferably includes an egress port address <highlight><bold>202</bold></highlight><highlight><italic>a</italic></highlight>, local output queue number <highlight><bold>202</bold></highlight><highlight><italic>b </italic></highlight>and a time stamp <highlight><bold>202</bold></highlight><highlight><italic>c</italic></highlight>. The egress port address <highlight><bold>202</bold></highlight><highlight><italic>a </italic></highlight>along with the local output queue number <highlight><bold>202</bold></highlight><highlight><italic>b </italic></highlight>identifies a particular output queue in the system for which a queue utilization level is to be examined. The timestamp <highlight><bold>202</bold></highlight><highlight><italic>c </italic></highlight>preferably identifies a time or global clock count in which a data packet was received by the ingress I/O control <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The queue utilization table <highlight><bold>120</bold></highlight> preferably maintains for the identified output queue, multiple queue utilization levels for different time periods. The time stamp <highlight><bold>202</bold></highlight><highlight><italic>c </italic></highlight>information in the SRT <highlight><bold>202</bold></highlight> is preferably used to identify a queue utilization level at the time period indicated by the time stamp. This preferably allows cells transmitted by the ingress I/O control <highlight><bold>100</bold></highlight> at different times, but belonging to one and the same packet, to retrieve the same utilization level information. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The SRT <highlight><bold>202</bold></highlight> further includes one or more fields containing one or more discard processing indicators used by the congestion controller <highlight><bold>118</bold></highlight> to compare against a discard criterion in determining whether to drop or retain a cell in the switch fabric <highlight><bold>104</bold></highlight> if the queue utilization level indicates a possibility of a congestion. Discard processing indicators may include, for instance, a random number <highlight><bold>202</bold></highlight><highlight><italic>d</italic></highlight>, an ingress port address, a priority number, and/or any other information tested for conformance with the discard criterion. Preferably, the same discard processing indicator is appended to all data units belonging to the same data packet. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Other header data <highlight><bold>204</bold></highlight> of the data unit may include, but is not limited to generic flow control data, payload type, priority information, and header error check information. The payload <highlight><bold>204</bold></highlight> is preferably of a fixed size, and contains data to be forwarded via an output port. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a more detailed block diagram of the congestion controller <highlight><bold>118</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> according to one embodiment of the invention. The congestion controller <highlight><bold>118</bold></highlight> preferably includes a demultiplexer function <highlight><bold>300</bold></highlight> used to select an appropriate egress queue level entry in a queue utilization table <highlight><bold>122</bold></highlight> for a particular output port based on a data unit&apos;s timestamp <highlight><bold>302</bold></highlight> and output queue number <highlight><bold>304</bold></highlight>. The timestamp <highlight><bold>302</bold></highlight> and output queue number <highlight><bold>304</bold></highlight> are obtained from the timestamp <highlight><bold>202</bold></highlight><highlight><italic>b </italic></highlight>and output queue number <highlight><bold>202</bold></highlight><highlight><italic>a </italic></highlight>fields of the data unit&apos;s SRT. After an appropriate address to the queue utilization table <highlight><bold>122</bold></highlight> is obtained using the timestamp <highlight><bold>302</bold></highlight> and output queue number <highlight><bold>304</bold></highlight>, the queue level information stored in the address is retrieved for forwarding to a drop profile module <highlight><bold>310</bold></highlight>. A multiplexer function <highlight><bold>308</bold></highlight> coupled to a drop profile module <highlight><bold>310</bold></highlight> receives the identified queue level information from the queue utilization table <highlight><bold>122</bold></highlight> and forwards the information to the drop profile module <highlight><bold>310</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The drop profile module <highlight><bold>310</bold></highlight> preferably invokes a congestion control algorithm such as, for example, RED, to determine a percentage of data units destined for the identified output queue that are to be dropped. The dropping percentage is preferably calculated based on the queue level information, and other header data and payload information, such as, for example, QoS level, DSCP colors, and the like. For example, if the filling level of an egress queue associated with a particular cell is seventy-five percent, and the congestion controller <highlight><bold>118</bold></highlight> indicates that at this filling level, fifty percent of the incoming cells destined for the egress queue are to be dropped, the dropping percentage for the queue is set to fifty percent. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> The dropping percentage is transmitted to a drop selector module <highlight><bold>314</bold></highlight> which selects as many data units destined for the output queue to be discarded as indicated by the dropping percentage. Preferably, the drop selector module <highlight><bold>314</bold></highlight> selects a discard criterion <highlight><bold>316</bold></highlight> used for determining the data units that are to be dropped. Preferably, the discard criterion <highlight><bold>316</bold></highlight> is a subset of random numbers aimed to fulfill the dropping percentage. A person skilled in the art should recognize, however, that other criteria based on SRT information may also be used instead of the random numbers. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> According to one embodiment of the invention, the discard criterion is regulated dynamically in accordance with the dropping percentage. For example, if fifty percent of incoming data units are to be dropped, the discard criterion may be dynamically selected to be even numbers for discarding cells with only even numbers in the random number field <highlight><bold>202</bold></highlight><highlight><italic>c </italic></highlight>of the SRT <highlight><bold>202</bold></highlight>. Because any two data cells that belong to the same packet should have the same random number assigned, all cells of a data packet are dropped if their assigned random number is an even number. Dropping data units based on the discard processing indicia contained in a data unit&apos;s SRT allows the uniform discard processing of cells that belong to the same packet to help avoid PPD scenarios. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The queue utilization table <highlight><bold>122</bold></highlight> is periodically updated with congestion status updates <highlight><bold>320</bold></highlight> received from the egress I/O control. According to one embodiment of the invention, a time multiplexed driven method is utilized for transmitting the congestion updates. Preferably, the queue utilization tables <highlight><bold>122</bold></highlight> and the output ports <highlight><bold>108</bold></highlight> are synchronized on a global clock, and each output queue associated with an output port is assigned a timeslot to broadcast its filling level. Broadcasts may be done using a register chain or using a tri-state scheme in a manner that is conventional in the art. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow diagram illustrating a processing of an inbound data packet according to one embodiment of the invention. The process starts, and in step <highlight><bold>400</bold></highlight>, the ingress I/O control <highlight><bold>100</bold></highlight> at an input port receives the inbound data packet. In step <highlight><bold>402</bold></highlight>, the ingress I/O control <highlight><bold>100</bold></highlight> segments the data packet into discrete units. In step <highlight><bold>404</bold></highlight>, the SRT generator generates an SRT for each of the units, and attaches the SRT to each unit. Preferably, the same discard processing indicator, timestamp, egress port, and queue information is included in the SRTs for units that belong to the same packet. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> In step <highlight><bold>406</bold></highlight>, the ingress I/O control <highlight><bold>100</bold></highlight> transmits each unit with the appended SRT to the switch fabric <highlight><bold>104</bold></highlight>. In step <highlight><bold>408</bold></highlight>, the congestion controller <highlight><bold>118</bold></highlight> determines the congestion level of the output queue to which a particular unit is destined by retrieving and examining the queue&apos;s utilization level. The address into the queue utilization level table for a data unit destined for ouput queue Qo with a timestamp T1 is calculated according to the following algorithm:  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mrow>
+  <mrow>
+    <mi>Address_Data</mi>
+    <mo>&it;</mo>
+    <mi>_Unit</mi>
+    <mo>&it;</mo>
+    <mrow>
+      <mo>(</mo>
+      <mrow>
+        <mi>Qo</mi>
+        <mo>,</mo>
+        <mi>T1</mi>
+      </mrow>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+  <mo>=</mo>
+  <mrow>
+    <mrow>
+      <mi>Address_write</mi>
+      <mo>&it;</mo>
+      <mi>_in</mi>
+      <mo>&it;</mo>
+      <mrow>
+        <mo>(</mo>
+        <mi>T1</mi>
+        <mo>)</mo>
+      </mrow>
+    </mrow>
+    <mo>-</mo>
+    <mrow>
+      <mo>(</mo>
+      <mrow>
+        <mrow>
+          <mi>QueueNumber_write</mi>
+          <mo>&it;</mo>
+          <mi>_in</mi>
+          <mo>&it;</mo>
+          <mrow>
+            <mo>(</mo>
+            <mi>T1</mi>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+        <mo>-</mo>
+        <mi>Qo</mi>
+      </mrow>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030002534A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="21.12075" file="US20030002534A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0044" lvl="7"><number>&lsqb;0044&rsqb;</number> where: </paragraph>
+<paragraph id="P-0045" lvl="2"><number>&lsqb;0045&rsqb;</number> Address_Data_Unit(Qo, T1) &equals;The address into the queue utilization level table for a data unit destined for output queue Qo with a timestamp T1. </paragraph>
+<paragraph id="P-0046" lvl="2"><number>&lsqb;0046&rsqb;</number> Address_write_in(T1) &equals;Filling level write-in Address in Queue Utilization Table at T1&equals;(T1) modulus (Queue Utilization Table Address Depth). </paragraph>
+<paragraph id="P-0047" lvl="2"><number>&lsqb;0047&rsqb;</number> QueueNumber_write_in(T1)&equals;Queue Number for which the Filling Level is updated at T1&equals;(T1) modulus (Total Number of Queues). </paragraph>
+<paragraph id="P-0048" lvl="2"><number>&lsqb;0048&rsqb;</number> The timestamp T1 is the Global Clock Count at packet reception. The timestamp is added to each data unit belonging to the packet. </paragraph>
+<paragraph id="P-0049" lvl="7"><number>&lsqb;0049&rsqb;</number> The Queue Utilization Table Address Depth is preferably at least Total number of Queues&plus;N*Total Number of Queues where N is such that N*Tfilling&gt;Tpacket&plus;Tjitter. Furthermore, Tfilling is the time to fill one full queue utilization status section, Tpacket is the time to send all the data units for a maximum length packet, and Tjitter is the maximum send and receive jitter in the system. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> In step <highlight><bold>410</bold></highlight>, the congestion controller <highlight><bold>118</bold></highlight> determines a drop percentage for the output queue based on any of the well-known congestion control algorithms. The drop percentage may be calculated, for instance, based on one or more discard thresholds set for the queue. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> In step <highlight><bold>412</bold></highlight>, the congestion controller <highlight><bold>118</bold></highlight> determines whether the drop percentage is greater than zero. If the answer is YES, the congestion controller, in step <highlight><bold>414</bold></highlight>, dynamically selects a discard criterion as a function of the drop percentage. In step <highlight><bold>416</bold></highlight>, the congestion controller compares the discard processing indicator in the SRT of units destined for the same output queue, with the discard criterion. If a match is found, as determined in step <highlight><bold>418</bold></highlight>, the identified units are dropped in step <highlight><bold>420</bold></highlight>. The comparing of SRT information to the discard criterion helps ensure that if a unit belonging to a particular packet is identified to be dropped, all units belonging to the packet are also dropped. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> If a match is not found between the discard criterion and the SRT information of a cell being compared, the cell is not dropped but enqueued in the switch fabric memory <highlight><bold>116</bold></highlight> in step <highlight><bold>422</bold></highlight>. In step <highlight><bold>424</bold></highlight>, the retained cells are reassembled into packets for forwarding by the egress rate controller in step <highlight><bold>426</bold></highlight> via an output port. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> Similarly, referring again to step <highlight><bold>412</bold></highlight>, if the drop percentage is not greater than zero, the cell being examined is enqueued in the switch fabric memory <highlight><bold>116</bold></highlight> in step <highlight><bold>422</bold></highlight> for later reassembling and forwarding in steps <highlight><bold>424</bold></highlight> and <highlight><bold>426</bold></highlight>. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Although this invention has been described in certain specific embodiments, those skilled in the art will have no difficulty devising variations which in no way depart from the scope and spirit of the present invention. It is therefore to be understood that this invention may be practiced otherwise than is specifically described. Thus, the present embodiments of the invention should be considered in all respects as illustrative and not restrictive, the scope of the invention to be indicated by the appended claims and their equivalents rather than the foregoing description. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A data switch comprising an input port, an output port and a memory coupled therebetween, characterized in that the data switch generates a discard processing indicator for a packet received on the input port, segments the packet into ones of units, and appends the discard processing indicator to the ones of units, further characterized in that the data switch compares the discard processing indicator appended to the ones of units with a discard criterion to determine whether to discard the ones of units. </claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the discard processing indicator is a random number. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further characterized in that the data switch stores the ones of units in the memory if the units are determined not to be discarded. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further characterized in that the discard criterion is dynamically selected in accordance with a utilization level of an output queue to which the ones of units are destined. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> further characterized in that the data switch appends a timestamp to the ones of units for determining a utilization level of the output queue at a time indicated by the timestamp. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the ones of units are units of a fixed length. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A data switch comprising: 
+<claim-text>an input port generating a tag including a discard processing indicator for appending to ones of input units segmented from an input data packet; </claim-text>
+<claim-text>an output port including one or more output queues, each output queue storing an output unit; </claim-text>
+<claim-text>a switch fabric operative between the input port and the output port, the switch fabric including a congestion controller retrieving a level of utilization of an output queue to which a particular input unit is destined and selecting the input unit for discard or not based on the discard processing indicator in the tag appended to the input unit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein the switch fabric includes a memory storing non-discarded units for forwarding to the output port. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the congestion controller compares the discard processing indicator with a discard criterion selected in accordance with the utilization level of the output queue. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the utilization level of the output queue is selected based on a timestamp included in the tag. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the discard processing indicator is a random number. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The data switch of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the output port transmits to the switch fabric congestion status updates including queue utilization levels for the one or more output queues. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method for congestion control in a data switch including an input port, an output port, and a memory coupled therebetween, the method comprising: 
+<claim-text>generating a number for a packet received on the input port; </claim-text>
+<claim-text>segmenting the packet into ones of units; </claim-text>
+<claim-text>appending the number to the ones of units; and </claim-text>
+<claim-text>individually comparing the number appended to the ones of units with a discard criterion for determining whether to discard the packet. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the number is a random number. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> further comprising storing the ones of units in the memory if the units are determined not to be discarded. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, further comprising selecting a discard criterion in accordance with a utilization level of an output queue to which the ones of units are destined. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> further comprising the step of appending a timestamp to the ones of units for determining a utilization level of the output queue at a time indicated by the timestamp. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A method for congestion control in a data switch, the method comprising: 
+<claim-text>generating a tag including a discard processing indicator; </claim-text>
+<claim-text>appending the tag with the discard processing indicator to each unit segmented from an input data packet; </claim-text>
+<claim-text>determining a level of utilization of an output queue to which a particular unit of the input data packet is destined; </claim-text>
+<claim-text>determining a discard criterion in accordance with the determined level of utilization; and </claim-text>
+<claim-text>discarding the particular unit based on a conformance of the discard processing indicator in the tag appended to the particular unit with the discard criterion. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the determining of the level of utilization of the output queue comprises selecting a level of utilization for the output queue based on a timestamp included in the tag appended to the particular unit. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the discard processing indicator is a random number. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> further comprising transmitting to the switch fabric congestion status updates including a queue utilization level of the output queue. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A data switch comprising an input port, an output port and a memory coupled therebetween, characterized in that the data switch generates a uniform discard processing indicator for a packet received on the input port, segments the packet into ones of units, and appends the uniform discard processing indicator to the ones of units, further characterized in that the data switch compares for each of the ones of the units the uniform discard processing indicator appended thereto with a uniform discard criterion for ensuring that the ones of units receive a uniform discard decision.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002534A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002534A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002534A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002534A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002534A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002534A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

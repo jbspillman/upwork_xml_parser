@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004709A1-20030102-D00000.TIF SYSTEM "US20030004709A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004709A1-20030102-D00001.TIF SYSTEM "US20030004709A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004709A1-20030102-D00002.TIF SYSTEM "US20030004709A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004709A1-20030102-D00003.TIF SYSTEM "US20030004709A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004709A1-20030102-D00004.TIF SYSTEM "US20030004709A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004709A1-20030102-D00005.TIF SYSTEM "US20030004709A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004709A1-20030102-D00006.TIF SYSTEM "US20030004709A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030004709A1-20030102-D00007.TIF SYSTEM "US20030004709A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004709</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09878762</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010611</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G10L011/04</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>704</class>
+<subclass>207000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and apparatus for coding successive pitch periods in speech signal</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Ari</given-name>
+<family-name>Heikkinen</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Tampere</city>
+<country-code>FI</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Vesa</given-name>
+<middle-name>T.</middle-name>
+<family-name>Ruoppila</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Tampere</city>
+<country-code>FI</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Samuli</given-name>
+<family-name>Pietila</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Tampere</city>
+<country-code>FI</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Nokia Corporation</organization-name>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>WARE FRESSOLA VAN DER SLUYS &amp;</name-1>
+<name-2>ADOLPHSON, LLP</name-2>
+<address>
+<address-1>BRADFORD GREEN BUILDING 5</address-1>
+<address-2>755 MAIN STREET, P O BOX 224</address-2>
+<city>MONROE</city>
+<state>CT</state>
+<postalcode>06468</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and apparatus for coding successive pitch periods of a speech signal. Based on a priori knowledge of statistical properties of successive speech periods, a shaped lattice structure is designed to cover the most probable points in the pitch space. The codebook index search starts with finding an open-loop estimate in the pitch space considering all dimensions and refining the open-loop estimate in a closed-loop search separately in each dimension based on the shaped lattice structure. The closed-loop search for the first subframe is for obtaining an absolute pitch period or a delta pitch while the closed-loop search for each of the other subframes is for obtaining a delta pitch for the respective subframe. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to the field of speech coding and, in particular, to the quantization of successive pitch periods. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Based on the human speech processing mechanism, the pitch period contour of voiced speech evolves slowly in time. This phenomenon is exploited in many current speech coders by coding the difference between successive pitch periods thereby increasing the coding efficiency. In a typical coder operating on a subframe basis, such as the code excited linear predictive (CELP) coder, the absolute pitch period is sent a least once per frame. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The difference between successive pitch periods is generally referred to as a delta period. In prior art, the delta periods may attain uniformly distributed values from a limited range facilitating their coding. This can be interpreted as a multi-dimensional rectangular lattice populated uniformly by points that define the delta periods over the frame. Accordingly, coding of the delta periods is carried out by using a uniform quantizer. That is, similar quantizers are used to code independently several successive delta periods. An encoder that uses such an approach is also known as a multi-dimensional rectangular lattice quantizer. In a multi-dimensional lattice quantizer, each dimension represents a pitch period in a corresponding subframe. Usually, the first dimension of a lattice is indicative of the absolute pitch period in the first subframe, while each of the remaining dimensions represents the difference between the pitch periods of the current and the preceding subframe. Thus, in a speech coding scheme where a speech frame is divided into four subframes for speech processing, the encoder for use in the quantization of successive pitch periods is referred to as a four-dimensional lattice quantizer, and the absolute pitch period in the first dimension and the delta periods in the remaining three dimensions are represented by a point (p, d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3</subscript></highlight>) in a four-dimensional pitch space. In the present invention, special attention is paid to a lattice structure containing the dimensions only for the delta periods (d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3</subscript></highlight>, . . . , d<highlight><subscript>n</subscript></highlight>). </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In most prior art speech coders utilizing differential coding, the lattice structure for n delta periods is described as a set of points with a regular arrangement in an n-dimensional pitch space such that the points are uniformly spaced throughout the pitch space. In addition to the uniform spacing of the points in the pitch space, the key feature of the prior art speech coders is the rectangular shape of the projection of the lattice points onto a two-dimensional plane. The structure of the lattice is usually constant regardless of the pitch period in the previous segment. An example of a typical two-dimensional lattice for delta periods is presented in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, where the lattice L is defined by </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>L</italic></highlight>&equals;(&lcub;(<highlight><italic>d</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>, d</italic></highlight><highlight><subscript>2</subscript></highlight>)&verbar;<highlight><italic>d</italic></highlight><highlight><subscript>1min</subscript></highlight><highlight><italic>&lE;d</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>&lE;d</italic></highlight><highlight><subscript>1max</subscript></highlight><highlight><italic>&circ; d</italic></highlight><highlight><subscript>2min</subscript></highlight><highlight><italic>&lE;d</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><italic>&lE;d</italic></highlight><highlight><subscript>2max</subscript></highlight>&rcub;&emsp;&emsp;(1) </in-line-formula></paragraph>
+<paragraph id="P-0005" lvl="7"><number>&lsqb;0005&rsqb;</number> The lattice covers all possible combination of d<highlight><subscript>1 </subscript></highlight>and d<highlight><subscript>2 </subscript></highlight>between their respective minimum and maximum values. While the lattice, as shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, is two-dimensional, higher dimensional lattices can be easily derived from the two-dimensional case. In general, the minimum and maximum possible delta periods for the jth dimension are denoted by d<highlight><subscript>jmin </subscript></highlight>and d<highlight><subscript>jmax</subscript></highlight>, respectively. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Once the shape and the region of the lattice quantizer are defined, an important parameter is the density of the lattice, for the density determines the bit rate of the coder. The bit rate is a monotonically increasing function of the density. Thus, the density of the lattice quantizer reflects the accuracy used for pitch period information. Normally, fractional values are used instead of integers to improve the quality of the synthesized speech. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In a typical lattice quantizer for delta periods, attention is usually paid to the boundary values (d<highlight><subscript>jmin</subscript></highlight>, d<highlight><subscript>jmax</subscript></highlight>) of the lattice while the rectangular shape of the lattice is kept constant. Attention is not paid, however, to the selection of a suitable set of lattice points to cover the regions of pitch space containing most of the source probability. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It is known that in a speech signal where pitch is a meaningful parameter, the evolution of pitch is smooth due to the characteristics of human speech processing mechanism. In general, the pitch period contour of voiced speech evolves slowly in time, and abrupt changes in the contour are very unlikely to happen. It has been found that a rectangular lattice structure is far from being optimal regarding the selection of lattice points to cover the regions of pitch space. Furthermore, in prior art, the search for differential pitch values is performed independently in each dimension. The use of rectangular lattices and the search method have not been optimized to reflect the known behavior of human speech. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> It is advantageous and desirable to provide an improved method and system for the quantization of successive pitch periods in speech coders, taking advantage of the source probability in the pitch space to improve the quality of synthesized speech. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> It is a primary object of the present invention to increase the efficiency of coding successive pitch periods thereby improving the quality of synthesized speeches in a speech coder utilizing differential coding to code the difference between successive pitch periods. This object can be achieved by defining an optimized, or more efficient, lattice structure which is shaped to cover the region of pitch space where the most probable points are located, based on a priori knowledge of the behavior of successive delta periods in voiced speech. Furthermore, regions with different point density representing different time resolution for pitch periods can be defined within the optimized lattice structure. With such an optimized lattice structure, a new method for assigning an index to a point in the optimized lattice structure and the search of the index in a codebook can be provided. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Thus, according to the first aspect of the present invention, a method of coding a sound signal in a plurality of signal frames each having a pitch period indicative of the sound signal in the respective signal frame, wherein each signal frame comprises a plurality of signal segments each representing a dimension in a pitch space, and the sound signal in each of the signal segments is characterized by a pitch value, and wherein the pitch values are representable by a point distribution pattern characteristic of the sound signal in a lattice structure for defining codebook indices in the pitch space, said method comprising the steps of: </paragraph>
+<paragraph id="P-0012" lvl="2"><number>&lsqb;0012&rsqb;</number> shaping the lattice structure based on the point distribution pattern; and </paragraph>
+<paragraph id="P-0013" lvl="2"><number>&lsqb;0013&rsqb;</number> providing a codebook index representing the pitch value in each dimension of the pitch space according to the shaped lattice structure for facilitating coding of the sound signal. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> According the first aspect of the present invention, the method further comprises the steps of: </paragraph>
+<paragraph id="P-0015" lvl="2"><number>&lsqb;0015&rsqb;</number> obtaining an open-loop estimate of the pitch period by an open-loop search from the shaped lattice structure considering all of the dimensions of the pitch space; and </paragraph>
+<paragraph id="P-0016" lvl="2"><number>&lsqb;0016&rsqb;</number> refining the open-loop estimate in each of the dimensions in the pitch space separately by a closed-loop search from the shaped lattice structure for obtaining a closed-loop search value indicative of the pitch value in the respective signal segment. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> According to the present invention, the pitch value is indicative of a differential pitch period or an absolute pitch period. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> According to the present invention, the pitch value in at least one of the signal segments is indicative of an absolute pitch period and the pitch value in each of the remaining signal segments is indicative of a differential pitch period. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Accordingly, when the signal segments comprise sequentially a first signal segment and three second signal segments, the pitch value in the first signal segment is indicative of an absolute pitch period and the pitch value in each of the second signal segments is indicative of a differential pitch period. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Alternatively, each of the signal frames comprises four signal segments, and the pitch value in each of the four signal segments is indicative of a differential pitch period. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> According to the present invention, the signal segments can be arranged in successive subframes. Thus, the pitch value in the first subframe can be an absolute pitch period or a differential pitch period, and the pitch value in each of the remaining subframes is a differential pitch period. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Preferably, each point in the lattice structure represents a distance from a reference point of the pitch space and the lattice structure is shaped to eliminate points that exceed a predetermined distance. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In particular, the shaped lattice structure of the present invention is composed of a union of non-overlapping hypercubes, which are defined by the delta period range and the time resolution in each dimension of the pitch space, and wherein each hypercube is representable by a plurality of edges comprising a number of lattice points. The index of the optimized lattice, according to the present invention, is indicative of the number of lattice points on the edges of the hypercubes. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> It should be noted that a codebook index is provided and conveyed by an encoding means to a decoding means having information indicative of the shaped lattice, and wherein the decoding means synthesizes speech signal from the codebook index based on the shaped lattice. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> According to the second aspect of the present invention, an apparatus for encoding a sound signal in a plurality of signal frames each having a pitch period indicative of the sound signal in the respective signal frame, wherein each signal frame comprises a plurality of signal segments each representing a dimension in a pitch space, and the sound signal in each of the signal segments is characterized by a pitch value, and wherein the pitch values are representable by a point distribution pattern characteristic of the sound signal in a lattice structure for defining codebook indices in the pitch space, and the lattice structure is shaped based on the point distribution pattern for defining a shaped lattice structure, said apparatus comprising: </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> means, responsive to the sound signal, for obtaining an open-loop estimate of the pitch period by an open-loop search from the shaped lattice structure considering all of the dimensions of the pitch space for providing an open-loop search value indicative of the open-loop estimate; and </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> means, responsive to the open-loop search value, for refining the open-loop estimate in each of the dimensions in the pitch space separately by a closed-loop search from the shaped lattice structure for obtaining a closed-loop search value indicative of the pitch value in the respective signal segment. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> According to the third aspect of the present invention, a system for coding a sound signal in a plurality of signal frames each having a pitch period indicative of the sound signal in the respective signal frame, wherein each signal frame comprises a plurality of signal segments each representing a dimension in a pitch space, and the sound signal in each of the signal segments is characterized by a pitch value, and wherein the pitch values are representable by a point distribution pattern characteristic of the sound signal in a lattice structure for defining codebook indices in the pitch space, and the lattice structure is shaped based on the point distribution pattern for defining a shaped lattice structure, said system comprising: </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> an encoder having: </paragraph>
+<paragraph id="P-0030" lvl="3"><number>&lsqb;0030&rsqb;</number> means, responsive to the sound signal, for obtaining an open-loop estimate of the pitch period by an open-loop search from the shaped lattice considering all of the dimensions of the pitch space for providing an open-loop search value indicative of the open-loop estimate; and </paragraph>
+<paragraph id="P-0031" lvl="3"><number>&lsqb;0031&rsqb;</number> means, responsive to the open-loop search value, for refining the open-loop estimate in each of the dimensions in the pitch space separately by a closed-loop search from the shaped lattice structure for obtaining a closed-loop search value indicative of the pitch value in the respective signal segment for providing information indicative of the shaped lattice structure and the codebook indices; and </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> a decoder having means, responsive to the information, for synthesizing a further sound signal from the codebook indices based on the shaped lattice structure. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> The present invention will become apparent upon reading the description taken in conjunction with FIGS. <highlight><bold>2</bold></highlight> to <highlight><bold>6</bold></highlight>.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagrammatic representation illustrating a rectangular lattice. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a diagrammatic representation illustrating a shaped lattice structure. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a </italic></highlight>is a diagrammatic representation illustrating the projection of a hypercube in a two-dimensional plane. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>b </italic></highlight>is a diagrammatic representation illustrating the projection of the hypercube in another two-dimensional plane. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference><highlight><italic>a </italic></highlight>is a histogram illustrating a point density distribution in a two-dimensional plane. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference><highlight><italic>b </italic></highlight>is a histogram illustrating a point density distribution in another two-dimensional plane. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a diagrammatic representation illustrating an encoder, according to the present invention. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flowchart illustrating the method of coding a speech signal, according to the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The principle of establishing a shaped lattice structure, according to the present invention, is shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. In general, the lattice points in a pitch space are not evenly distributed. Rather, the distribution is defined by a plurality of regions with different point densities representing different time resolutions for pitch periods. As shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, two sublattices with different point densities, denoted by S<highlight><subscript>1 </subscript></highlight>and S<highlight><subscript>2</subscript></highlight>, exist in the pitch space. The union of these two sublattices, or S<highlight><subscript>1</subscript></highlight>&cup;S<highlight><subscript>2</subscript></highlight>, represents an optimized lattice structure, S, defining the shaped lattice structure. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> As mentioned earlier, it is known that the pitch period contour of voiced speech evolves slowly in time, and abrupt changes in the contour are very unlikely to happen. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Thus, within a same speech frame, it is very unlikely to have two large delta periods. For example, the corner points (d<highlight><subscript>1min</subscript></highlight>, d<highlight><subscript>2min</subscript></highlight>), (d<highlight><subscript>1max</subscript></highlight>, d<highlight><subscript>2min</subscript></highlight>), (d<highlight><subscript>1min</subscript></highlight>, d<highlight><subscript>2max</subscript></highlight>) and (d<highlight><subscript>1max</subscript></highlight>, d<highlight><subscript>2max</subscript></highlight>) and the adjacent points thereof in the lattice L, as shown in <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference>, represent situation where both the delta period in d<highlight><subscript>1 </subscript></highlight>and the delta period in d<highlight><subscript>2 </subscript></highlight>are large. Since this situation is not likely to occur in voiced speech, these points are very unlikely to be used in a codebook index search. Accordingly, these points can be excluded from the shaped lattice S, as shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, without producing noticeable effects on the resulting speech quality. As shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, higher point density in the sublattice S<highlight><subscript>1 </subscript></highlight>allows the use of a finer pitch resolution when pitch period evolves smoothly without significantly increasing the bit rate. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Because of the closed-loop structure of most existing coders utilizing differential coding of the pitch period, the index search in a lattice is carried out in a subframe basis. Thus, the search proceeds sequentially along one coordinate axis of the lattice in time. Generally, this is done by first determining a single open-loop pitch period estimate for the subframes containing the absolute pitch period and the following delta periods. Typically, integer values are used in open-loop search to reduce complexity. Thereafter, the index search is done in a closed-loop fashion sequentially for each dimension. For the first subframe, this is done in the neighborhood of the selected open-loop pitch period. For the other subframes, the search area consists of the neighborhood of the previously selected pitch period. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> With the optimized lattice, according to the present invention, this approach is not practical because the possible set of lattice points in each dimension usually depends substantially on the selected point in the previous dimension. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> According to the preferred method of the present invention, an estimated open-loop point in the shaped lattice is determined in the multi-dimensional space. The optimal index in each dimension, including the first dimension, is determined thereafter in a closed-loop fashion in the neighborhood of the estimated open-loop point, one dimension at a time. The dot p, as shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, represents the estimated open-loop point and the optimal index is searched from the shaded region C. The closed-loop search examines the points that belong to the intersection of the shaped lattice S and the search region C centered to the open-loop pitch estimate, p. The index determined by the closed-loop search defines uniquely the pitch period over the subframes covered by the lattice. In <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the shaped lattice S is a subset of the lattice L. In general, this is not necessarily the case. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> For illustration purposes, the shaped lattice structure is shaped as a union of non-overlapping hypercubes D<highlight><subscript>i</subscript></highlight>, each of which is defined by the delta period range and the time resolution used in a corresponding dimension. Each of the hypercubes D<highlight><subscript>i </subscript></highlight>is a row of a hypercube matrix D. If a speech frame is divided into four subframes and each of the subframes is represented by a dimension in a four-dimensional pitch space, then the ith row of the matrix D defines a unique four-dimensional hypercube as follows: </paragraph>
+<paragraph lvl="0"><in-line-formula>D(i,:)&equals;&lsqb;p<highlight><subscript>i min</subscript></highlight>p<highlight><subscript>imax</subscript></highlight>r<highlight><subscript>i0</subscript></highlight>d<highlight><subscript>i1 min</subscript></highlight>d<highlight><subscript>i1 max</subscript></highlight>r<highlight><subscript>i1</subscript></highlight>d<highlight><subscript>di2 min</subscript></highlight>d<highlight><subscript>i2 max</subscript></highlight>r<highlight><subscript>i2</subscript></highlight>d<highlight><subscript>i3 min</subscript></highlight>d<highlight><subscript>i3 max</subscript></highlight>r<highlight><subscript>i3</subscript></highlight>&rsqb;&emsp;&emsp;(2) </in-line-formula></paragraph>
+<paragraph id="P-0049" lvl="7"><number>&lsqb;0049&rsqb;</number> where p<highlight><subscript>i min</subscript></highlight>, p<highlight><subscript>i max </subscript></highlight>and r<highlight><subscript>i0 </subscript></highlight>define the pitch period range and the resolution for the first subframe. The ranges of delta periods in the last three subframes are defined by d<highlight><subscript>ijmin </subscript></highlight>and d<highlight><subscript>ijmax</subscript></highlight>, where j is the subframe index. The corresponding resolution in each subframe is denoted by r<highlight><subscript>ij</subscript></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> With the lattice structure described above, the encoding process is quite straightforward. For encoding the index of a certain point in the shaped lattice, a starting index and the number of points in each unique edge of every hypercube are obtained. The encoding process starts by finding the index of the hypercube to which the found pitch period combination (p, d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3</subscript></highlight>) belongs. The hypercube D<highlight><subscript>i </subscript></highlight>containing the point (p, d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3</subscript></highlight>) is defined as </paragraph>
+<paragraph lvl="0"><in-line-formula>D<highlight><subscript>i</subscript></highlight>&equals;&lcub;, d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3</subscript></highlight>)&verbar;p<highlight><subscript>i min</subscript></highlight>&lE;p&lE;p<highlight><subscript>i max</subscript></highlight>&circ; d<highlight><subscript>ji min</subscript></highlight>&lE;d<highlight><subscript>j</subscript></highlight>&lE;d<highlight><subscript>ij max</subscript></highlight>), j&equals;1, 2, 3&rcub;&emsp;&emsp;(3) </in-line-formula></paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a </italic></highlight>illustrates four hypercubes D<highlight><subscript>0</subscript></highlight>, D<highlight><subscript>1</subscript></highlight>, D<highlight><subscript>2</subscript></highlight>, D<highlight><subscript>3 </subscript></highlight>as projected onto the two-dimensional plane of d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2</subscript></highlight>. <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>b </italic></highlight>illustrates the same hypercubes as projected onto the two-dimensional plane of d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3</subscript></highlight>. It should be noted that, in general, the point density of one hypercube may be different from the point density of another. For simplicity, the circles, as shown in <cross-reference target="DRAWINGS">FIGS. 3</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>3</bold></highlight><highlight><italic>b</italic></highlight>, are evenly distributed. In <cross-reference target="DRAWINGS">FIGS. 3</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>3</bold></highlight><highlight><italic>b</italic></highlight>, different hypercubes are shown as enclosed rectangles, each of which can be defined by its unique edges. For example, the hypercube D<highlight><subscript>2 </subscript></highlight>is defined by the edges a<highlight><subscript>2</subscript></highlight>, b<highlight><subscript>2 </subscript></highlight>and c<highlight><subscript>2</subscript></highlight>. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The optimized or shaped lattice, according to the present invention, has been described in conjunction with FIGS. <highlight><bold>2</bold></highlight> to <highlight><bold>3</bold></highlight><highlight><italic>b</italic></highlight>. With the optimized lattice structure, according to the present invention, it is possible to define a set of indices to be transmitted to a decoder for speech synthesis as described below. The index of a point in the hypercube can be assigned by first defining the coordinates of each dimension inside the hypercube D<highlight><subscript>i</subscript></highlight>. The coordinate p<highlight><subscript>j </subscript></highlight>for the (j&plus;1)th subframe is given by </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>p</italic></highlight><highlight><subscript>0</subscript></highlight>&equals;(<highlight><italic>p&minus;p</italic></highlight><highlight><subscript>i min</subscript></highlight>)<highlight><italic>r</italic></highlight><highlight><subscript>i0</subscript></highlight>&emsp;&emsp;(4) </in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>p</italic></highlight><highlight><subscript>j</subscript></highlight>&equals;(<highlight><italic>d</italic></highlight><highlight><subscript>j</subscript></highlight><highlight><italic>&minus;d</italic></highlight><highlight><subscript>ji min</subscript></highlight>)<highlight><italic>r</italic></highlight><highlight><subscript>ij</subscript></highlight>, for <highlight><italic>j&equals;</italic></highlight>1, 2, 3&emsp;&emsp;(5) </in-line-formula></paragraph>
+<paragraph id="P-0053" lvl="7"><number>&lsqb;0053&rsqb;</number> Thus, the index s of the point (p, d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3</subscript></highlight>) in the shaped lattice can be assigned according to </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>s&equals;s</italic></highlight><highlight><subscript>Di</subscript></highlight><highlight><italic>&plus;p</italic></highlight><highlight><subscript>0</subscript></highlight><highlight><italic>&plus;p</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>i0</subscript></highlight><highlight><italic>&plus;p</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>i1</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>i0</subscript></highlight><highlight><italic>&plus;p</italic></highlight><highlight><subscript>3</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>i2</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>i1</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>i0 (</subscript></highlight>6) </in-line-formula></paragraph>
+<paragraph id="P-0054" lvl="7"><number>&lsqb;0054&rsqb;</number> where s<highlight><subscript>Di </subscript></highlight>is the offset of the hypercube D<highlight><subscript>i</subscript></highlight>. The number of points in each edge of D<highlight><subscript>i </subscript></highlight>in the </paragraph>
+<paragraph id="P-0055" lvl="7"><number>&lsqb;0055&rsqb;</number> (j&plus;1)th dimension is denoted by n<highlight><subscript>ij</subscript></highlight>. After describing the lattice in a suitable way, the next issue is to find the appropriate boundary values for it. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> It should be understood that, the shaped lattice structure, as described above, is for illustration purposes only. The shaped lattice structure is not restricted to those composed of hypercubes. In general, the lattice structure is shaped by choosing the sublattices representing the point distribution pattern characteristic of the speech signal in the speech frame and subframes in a multidimensional pitch space. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> The coding method, according to the present invention, has been implemented in a modified IS-641 speech coder. In the modified IS-641 coder, the first dimension is coded in a usual way such that an absolute pitch period is sent in the first subframe. However, the shaped lattice structure including four hypercubes is used for coding the remaining three dimensions. It should be noted that, in a regular IS-641 coder, only two delta periods are sent for subframes 2 and 4. In the modified IS-641 coder, three delta periods are sent instead. Based on an experiment using 39434 frames of American-English speech spoken by a number of talkers, the distribution of delta periods derived from speech segments using the modified IS-641 speech coder is shown in <cross-reference target="DRAWINGS">FIGS. 4</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>4</bold></highlight><highlight><italic>b</italic></highlight>. For simplicity, the delta period range is limited to &plusmn;6 samples. The difference between the pitch periods of the (i&plus;1)th subframe and the ith subframe is denoted by d<highlight><subscript>i</subscript></highlight>. The delta periods are rounded to integer values in the <cross-reference target="DRAWINGS">FIGS. 4</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>4</bold></highlight><highlight><italic>b </italic></highlight>although &frac13; resolution is used in the simulation. The point-density distribution in the d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2 </subscript></highlight>plane and that in the d<highlight><subscript>2</subscript></highlight>, d<highlight><subscript>3 </subscript></highlight>plane are shown in <cross-reference target="DRAWINGS">FIGS. 4</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>4</bold></highlight><highlight><italic>b</italic></highlight>, respectively. As shown in <cross-reference target="DRAWINGS">FIGS. 4</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>4</bold></highlight><highlight><italic>b</italic></highlight>, the combinations of two large delta values are rare. That is, when d<highlight><subscript>1 </subscript></highlight>is large, d<highlight><subscript>2 </subscript></highlight>and d<highlight><subscript>3 </subscript></highlight>are small. But when d<highlight><subscript>2 </subscript></highlight>or d<highlight><subscript>3 </subscript></highlight>is large, d<highlight><subscript>1 </subscript></highlight>is small. Thus, there is an interdependency among the delta periods in the subframes. In the prior art coder, each dimension is treated independently of each other, disregarding the interdependency among the delta periods in the subframes. In the modified IS-641, according to the present invention, the open-loop pitch value is the average pitch for the frame. The open-loop pitch value is estimated jointly in each dimension using integer resolution. This open-loop estimate is refined using closed-loop search sequentially in each dimension. For example, the closed loop-value for the first subframe is search around the estimated open-loop pitch value. The closed-loop value for the second subframe is selected around the rounded, optimal closed-loop pitch of the first subframe and so on. The possible integer value for the first subframe ranges from 20-147. As shown in <cross-reference target="DRAWINGS">FIGS. 4</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>4</bold></highlight><highlight><italic>b</italic></highlight>, the lattice structure used is symmetric with respect to axes d<highlight><subscript>1</subscript></highlight>, d<highlight><subscript>2 </subscript></highlight>and d<highlight><subscript>3</subscript></highlight>. Thus, the three dimensional lattice regarding the delta periods can be unambiguously defined by one corner point of the projection of D<highlight><subscript>0 </subscript></highlight>to axes d<highlight><subscript>1 </subscript></highlight>and d<highlight><subscript>2</subscript></highlight>. In the experiment, three different optimized lattices (Shaped Lattice S<highlight><subscript>A</subscript></highlight>, Shaped Lattice S<highlight><subscript>B </subscript></highlight>and Shape Lattice S<highlight><subscript>C</subscript></highlight>) are implemented with corner points of (2&frac23;, 1&frac23;), (2&frac23;, &frac23;) and (1&frac23;, &frac23;), respectively, being used as the offset S<highlight><subscript>Di</subscript></highlight>. As a reference, two cubic quantizers (Lattice L<highlight><subscript>1</subscript></highlight>, Lattice L<highlight><subscript>2</subscript></highlight>) with maximum delta periods of 2&frac23; and 1&frac23; are used. These ranges are selected based on the distributions presented in periods are sent for subframes <highlight><bold>2</bold></highlight> and <highlight><bold>4</bold></highlight>. In the modified IS-641 coder, three delta periods expressed as segmental signal-to-noise ratios (SegSNR) between the voiced sections of the input speech and synthesized speech, together with the number of bits needed for the coding of the delta periods in each frame. A segment length of 64 samples is used and silent segments are discarded in the SegSNR computation. The speech sample used in all simulations consist of four sentences spoken by two male and two female talkers in clean conditions. The total length of sample is 782 frames. As it can be seen from Table I, the coding efficiency of successive pitch periods can be increased by using the optimized lattice structure, according to the present invention.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0" pgwide="1">
+<tgroup align="left" colsep="0" rowsep="0" cols="6">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="center"/>
+<colspec colname="2" colwidth="35PT" align="center"/>
+<colspec colname="3" colwidth="56PT" align="center"/>
+<colspec colname="4" colwidth="56PT" align="center"/>
+<colspec colname="5" colwidth="56PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="5" align="center">TABLE I</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="5" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Lattice L<highlight><subscript>1</subscript></highlight></entry>
+<entry>Lattice L<highlight><subscript>2</subscript></highlight></entry>
+<entry>Shaped Lattice S<highlight><subscript>A</subscript></highlight></entry>
+<entry>Shaped Lattice S<highlight><subscript>B</subscript></highlight></entry>
+<entry>Shaped Lattice S<highlight><subscript>c</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="6">
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="35PT" align="char" char="."/>
+<colspec colname="3" colwidth="35PT" align="char" char="."/>
+<colspec colname="4" colwidth="56PT" align="char" char="."/>
+<colspec colname="5" colwidth="56PT" align="char" char="."/>
+<colspec colname="6" colwidth="56PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>SegSNR/dB</entry>
+<entry>8.24</entry>
+<entry>8.09</entry>
+<entry>8.28</entry>
+<entry>8.11</entry>
+<entry>8.05</entry>
+</row>
+<row>
+<entry>No. of bits</entry>
+<entry>12.26</entry>
+<entry>10.38</entry>
+<entry>11.78</entry>
+<entry>10.00</entry>
+<entry>9.17</entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> The speech encoder <highlight><bold>1</bold></highlight>, according to the present invention, is shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. It is based on the coding technique known as Analysis-by-Synthesis (AbS), employing linear predictive coding (LPC) technique. Typically, a cascade of time variant pitch predictor and LPC filter is used. As shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, an LPC analysis with <highlight><bold>10</bold></highlight> is used to determine the coefficients <highlight><bold>102</bold></highlight> of the LPC filter based on the input speech signal. Usually, the speech signal is high-pass filtered in a pre-processing step. The pre-processed speech signal is then windowed, and autocorrelations of the windowed speech are computed. The LPC filter coefficients <highlight><bold>102</bold></highlight> are determined, for example, using the Levinson-Durbin algorithm. In most coders, the coefficients are not determined in every subframe. In such cases, the coefficients can be interpolated for the intermediate subframes. The pre-processing step and the LPC analysis step are known in the art. The input speech is further filtered with an inverse filter A(q,s) <highlight><bold>12</bold></highlight> to produce a residual signal <highlight><bold>104</bold></highlight>. The residual signal <highlight><bold>104</bold></highlight> is sometimes referred to as the ideal excitation. From the shaped lattice, which is determined from a priori knowledge on the distribution of successive pitch values, an open-loop search unit <highlight><bold>14</bold></highlight> is used to determine an open-loop points of (2&frac23;, 1&frac23;), (2&frac23;, &frac23;) and (1&frac23;, &frac23;), respectively, being used as the offset s<highlight><subscript>Di</subscript></highlight>. As a the same as the number of subframes, with elements corresponding to lag estimates for the individual subframes. It is also possible to search for the estimate vector <highlight><bold>106</bold></highlight> using the speech signal instead of the LPC residual signal <highlight><bold>104</bold></highlight>. As all the subframes constitute the dimensions of the multi-dimensional pitch space, the search for the estimate vector <highlight><bold>106</bold></highlight> takes into account all these dimensions. The open-loop estimate <highlight><bold>106</bold></highlight>, provides an open-loop lag value for each dimension in the pitch space. A search-area defining unit <highlight><bold>16</bold></highlight> is used to define the closed-loop search area <highlight><bold>108</bold></highlight> for the closed-loop lag vector in each dimension of the pitch space, based on the shaped lattice. For example, the unit <highlight><bold>16</bold></highlight> examines the points that belong to the intersection of the shaped lattice S and the search region C centered to the open-loop pitch estimate p, as shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. From the input speech signal, a target signal <highlight><bold>110</bold></highlight> for the closed-loop lag search is computed in a computing unit <highlight><bold>18</bold></highlight> by subtracting the zero input response of the LPC filter <highlight><bold>10</bold></highlight> from the input speech signal, taking into account the effect of the initial states of the LPC filter <highlight><bold>10</bold></highlight>. A closed-loop search unit <highlight><bold>20</bold></highlight> is used to refine the open-loop estimate <highlight><bold>106</bold></highlight>, one dimension at a time, based on the corresponding open-loop lag value using the lattice points in the shaped lattice in that dimension for obtaining the codebook index. The codebook index is contained in the signal <highlight><bold>112</bold></highlight>. In particular, the closed-loop search unit <highlight><bold>20</bold></highlight> searches for the closed-loop lag and gain by minimizing the sum-squared error between the target signal <highlight><bold>110</bold></highlight> for the closed-loop lag search and the synthesized speech signal represented by the LPC coefficients <highlight><bold>102</bold></highlight> and the LPC excitation signal. The closed-loop lag in each subframe is searched around the corresponding open-loop lag value in the defined search area <highlight><bold>108</bold></highlight>. For lag values less than the subframe length, LTP (Long Term Predictor) memory has to be extended. This can be done by using the residual signal <highlight><bold>104</bold></highlight>, or by copying old LTP excitation. The extension of LTP memory is known in the art. The target signal <highlight><bold>114</bold></highlight> for the excitation search is computed in an innovation codebook search unit <highlight><bold>22</bold></highlight> by subtracting the contribution <highlight><bold>110</bold></highlight> of the LTP filter from the target signal <highlight><bold>112</bold></highlight> of the closed loop lag search. The excitation signal and its gains, as collectively denoted by reference numeral <highlight><bold>116</bold></highlight>, are searched in a computation unit <highlight><bold>24</bold></highlight> by minimizing the sum-squared error between the target signal <highlight><bold>114</bold></highlight> for the excitation search and the synthesized speech signal represented by the LPC coefficients <highlight><bold>102</bold></highlight> and the excitation signal. Usually, some heuristic rules are employed to avoid an exhaustive search of all possible excitation signal candidates. Finally, the filter states in the encoder <highlight><bold>1</bold></highlight> are updated in an updating <highlight><bold>26</bold></highlight> unit to keep them consistent with the filter states in the decoder. The codebook search unit <highlight><bold>22</bold></highlight>, the computation unit <highlight><bold>24</bold></highlight> and the updating unit <highlight><bold>26</bold></highlight> are known in the art. The encoder <highlight><bold>1</bold></highlight>, as described above, is applicable to a typical AbS or CELP coder such as IS-<highlight><bold>641</bold></highlight>. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> It should be noted that, as the decoder receives the speech parameters from the encoder, the LTP excitation signal is determined by the received index and gain based on the same shaped lattice known to the decoder. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flowchart illustrating the method of encoding a speech signal, according to the present invention. As shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, as the encoder receives a speech signal at step <highlight><bold>210</bold></highlight>, the speech signal is processed in speech frames and subframes, as known in prior art. At step <highlight><bold>220</bold></highlight>, an open-loop search is carried out considering all the dimensions in the pitch space for obtaining an open-loop estimate of the pitch period in a speech frame. At step <highlight><bold>230</bold></highlight>, a closed-loop search is carried out for each dimension separately to refine the open-loop estimate for obtaining a pitch value. Based on the pitch value obtained from the closed-loop search for each dimension, a codebook index is obtained at step <highlight><bold>240</bold></highlight>. The closed-loop search for each dimension continues until the codebook indices for all subframes in a speech frame are obtained, as indicated by step <highlight><bold>250</bold></highlight>. It should be noted that the pitch value in the first dimension of the pitch space (the first subframe for each speech frame) can be indicative of the absolute pitch period or a different pitch period (delta pitch). However, the pitch value for each of the remaining dimensions is indicative of the different pitch period in the respective subframe. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> It should be understood that the present invention has been described in conjunction with the coding of a speech signal. However, the present invention is also applicable to non-speech signals, such as music. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> Furthermore, while it is preferable to divide a speech frame into a plurality of subframes and search for a closed-loop pitch value in each subframe, it is possible to search for a closed-loop pitch value for a different segment of the speech frame. In general, it is possible to send different parameters a number of times per speech frame to the decoder. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> Thus, although the invention has been described with respect to a preferred embodiment thereof, it will be understood by those skilled in the art that the foregoing and various other changes, omissions and deviations in the form and detail thereof may be made without departing from the spirit and scope of this invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of coding a sound signal in a plurality of signal frames each having a pitch period indicative of the sound signal in the respective signal frame, wherein each signal frame comprises a plurality of signal segments each representing a dimension in a pitch space, and the sound signal in each of the signal segments is characterized by a pitch value, and wherein the pitch values are representable by a point distribution pattern characteristic of the sound signal in a lattice structure for defining codebook indices in the pitch space, said method comprising the steps of: 
+<claim-text>shaping the lattice structure based on the point distribution pattern; and </claim-text>
+<claim-text>providing a codebook index representing the pitch value in each dimension of the pitch space according to the shaped lattice structure for facilitating coding of the sound signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising the steps of: 
+<claim-text>obtaining an open-loop estimate of the pitch period by an open-loop search from the shaped lattice structure considering all of the dimensions of the pitch space; and </claim-text>
+<claim-text>refining the open-loop estimate in each of the dimensions in the pitch space separately by a closed-loop search from the shaped lattice structure for obtaining a closed-loop search value indicative of the pitch value in the respective signal segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the pitch value is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the pitch value in at least one of the signal segments is indicative of an absolute pitch period and the pitch value in each of the remaining signal segments is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the successive signal segments sequentially comprise a first signal segment and three second signal segments, and wherein the pitch value in the first signal segment is indicative of an absolute pitch period and the pitch value in each of the second signal segments is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the signal segments are arranged in subframes. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein each of the signal frames comprises four subframes, and wherein the pitch value in each of the four subframes is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the subframes include sequentially a first subframe and three second subframes and where the pitch value in the first subframe is an absolute pitch period, and the pitch value in each of the second subframes is a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the point density pattern is comprised of a plurality of regions in the shaped lattice structure and each of the regions is representable of a hypercube each having a plurality of edges comprising one or more lattice points of the shaped lattice structure, and wherein the codebook index is indicative of the number of lattice points on the edges of the hypercubes. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the codebook index is provided by an encoding means to a decoding means having information indicative of the shaped lattice structure for allowing the decoding means to synthesize a speech signal from the codebook index based on the shaped lattice structure. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the sound signal comprises a speech signal. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. An apparatus for encoding a sound signal in a plurality of signal frames each having a pitch period indicative of the sound signal in the respective signal frame, wherein each signal frame comprises a plurality of signal segments each representing a dimension in a pitch space, and the sound signal in each of the signal segments is characterized by a pitch value, and wherein the pitch values are representable by a point distribution pattern characteristic of the sound signal in a lattice structure for defining codebook indices in the pitch space, and the lattice structure is shaped based on the point distribution pattern for defining a shaped lattice structure, said apparatus comprising: 
+<claim-text>means, responsive to the sound signal, for obtaining an open-loop estimate of the pitch period by an open-loop search from the shaped lattice structure considering all of the dimensions of the pitch space for providing an open-loop search value indicative of the open-loop estimate; and </claim-text>
+<claim-text>means, responsive to the open-loop search value, for refining the open-loop estimate in each of the dimensions in the pitch space separately by a closed-loop search from the shaped lattice structure for obtaining a closed-loop search value indicative of the pitch value in the respective signal segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the pitch value is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the pitch value in at least one of the signal segments is indicative of an absolute pitch period and the pitch value in each of the remaining signal segments is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the signal segments are arranged in successive subframes. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the successive subframes sequentially comprise a first subframe and three second subframes, and wherein the pitch value in the first subframe is indicative of an absolute pitch period and the pitch value in each of the second subframes is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein each of the signal frames comprises four subframes, and wherein the pitch value in each of the four subframes is indicative of a differential pitch period. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the point density pattern is comprised of a plurality of regions in the shaped lattice structure and each of the regions is representable of a hypercube each having a plurality of edges comprising one or more lattice points of the shaped lattice structure, and wherein the codebook index is indicative of the number of lattice points on the edges of the hypercubes. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A system for coding a sound signal in a plurality of signal frames each having a pitch period indicative of the sound signal in the respective signal frame, wherein each signal frame comprises a plurality of signal segments each representing a dimension in a pitch space, and the sound signal in each of the signal segments is characterized by a pitch value, and wherein the pitch values are representable by a point distribution pattern characteristic of the sound signal in a lattice structure for defining codebook indices in the pitch space, and the lattice structure is shaped based on the point distribution pattemfor defining a shaped lattice structure, said system comprising: 
+<claim-text>an encoder having: </claim-text>
+<claim-text>means, responsive to the sound signal, for obtaining an open-loop estimate of the pitch period by an open-loop search from the shaped lattice structure considering all of the dimensions of the pitch space for providing an open-loop search value indicative of the open-loop estimate; and </claim-text>
+<claim-text>means, responsive to the open-loop search value, for refining the open-loop estimate in each of the dimensions in the pitch space separately by a closed-loop search from the shaped lattice structure for obtaining a closed-loop search value indicative of the pitch value in the respective signal segment for providing information indicative of the shaped lattice structure and the codebook indices; and </claim-text>
+<claim-text>a decoder having means, responsive to the information, for synthesizing a further sound signal from the codebook indices based on the shaped lattice structure.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>5</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004709A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004709A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004709A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004709A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004709A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004709A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004709A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030004709A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005016A1-20030102-D00000.TIF SYSTEM "US20030005016A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005016A1-20030102-D00001.TIF SYSTEM "US20030005016A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005016A1-20030102-D00002.TIF SYSTEM "US20030005016A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005016A1-20030102-D00003.TIF SYSTEM "US20030005016A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005016A1-20030102-D00004.TIF SYSTEM "US20030005016A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005016A1-20030102-D00005.TIF SYSTEM "US20030005016A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005016</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10217740</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020812</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/52</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>708</class>
+<subclass>628000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Double precision floating point multiplier having a 32-bit booth-encoded array multiplier</title-of-invention>
+</technical-information>
+<continuity-data>
+<division-of>
+<parent-child>
+<child>
+<document-id>
+<doc-number>10217740</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20020812</document-date>
+</document-id>
+</child>
+<parent>
+<document-id>
+<doc-number>09396236</doc-number>
+<document-date>19990915</document-date>
+<country-code>US</country-code>
+</document-id>
+</parent>
+<parent-status>GRANTED</parent-status>
+<parent-patent>
+<document-id>
+<doc-number>6446104</doc-number>
+<country-code>US</country-code>
+</document-id>
+</parent-patent>
+</parent-child>
+</division-of>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Tzungren</given-name>
+<middle-name>Allan</middle-name>
+<family-name>Tzeng</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Choon</given-name>
+<middle-name>Ping</middle-name>
+<family-name>Chng</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sunnyvale</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Sun Microsystems, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>GUNNISON MCKAY &amp; HODGSON, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>1900 GARDEN ROAD</address-1>
+<address-2>SUITE 220</address-2>
+<city>MONTEREY</city>
+<state>CA</state>
+<postalcode>93940</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A double-precision multiplier for use in the floating point pipeline of a processor has an array multiplier and a carry-save partial-product accumulator. Double precision multiplication is accomplished by generating a plurality of partial products and summing these in the carry-save partial-product accumulator. The partial-product accumulator has a carry-save adder, a sum register, a carry-out counter and an extender. The carry-out counter receives a carry outputs of the carry-save adder and array multiplier, and the extender is coupled to extend the sum register dependent upon the contents of the carry-out counter. The extension occurs during addition of the most significant partial product to the sum of less significant partial products. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates to the field of multiplier hardware for digital computer systems. In particular it relates to multipliers that use multiple passes of single precision hardware to perform double precision multiplication. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Array multipliers, such as Wallace-tree multipliers with and without Booth recoding, require a gate count that grows proportionally to the square of the number of bits of each operand. Hence a 53-bit multiplier requires close to three times the area as does a 32-bit multiplier array. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The number of logic levels in the worst-case data path through a 53-bit multiplier array is greater than the number of logic levels in the worst-case data path of a 32-bit multiplier array. This means that, all other factors being equal, a 53-bit multiplier is slower than a 32-bit multiplier array. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Most modern processors have 32-bit integer multiply instructions. Several common specifications for computer floating point operations, including the IEEE 754 and Digital VAX specifications, require a 24-bit (including one hidden bit) mantissa for single precision floating point, and a 53-bit mantissa for double precision floating point. These machines therefore need to be able to quickly multiply pairs of 32 bit operands, pairs of 24-bit operands, and pairs of 53-bit operands in performing their integer and floating point arithmetic. These machines also must be able to quickly add 32-bit integer operands, as well as 53 bit and 24 bit denormalized mantissas. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> It is known that a 32-bit hardware multiplier can be used to perform a 53-bit unsigned multiply by performing a sequence of four multiply operations, each generating a partial product, and summing the partial products. A way that this may be done is as follows:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="126PT" align="left"/>
+<colspec colname="2" colwidth="91PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>&lsqb;Bits 52 . . . 32 &equals; A&rsqb; &lsqb;Bits 31 . . . 0 &equals; B&rsqb;</entry>
+<entry>Break down the multiplicand</entry>
+</row>
+<row>
+<entry>&lsqb;Bits 52 . . . 32 &equals; C&rsqb; &lsqb;Bits 31 . . . 0 &equals; D&rsqb;</entry>
+<entry>Break down the multiplier</entry>
+</row>
+<row>
+<entry>T1 &equals; B * D</entry>
+<entry>Compute partial products</entry>
+</row>
+<row>
+<entry>T2 &equals; D * A * 2**32</entry>
+<entry>and perform shift</entry>
+</row>
+<row>
+<entry>T3 &equals; C * B * 2**32</entry>
+</row>
+<row>
+<entry>T4 &equals; A * C * 2**64</entry>
+</row>
+<row>
+<entry>T6 &equals; T1 &plus; T2 &plus; T3</entry>
+</row>
+<row>
+<entry>T5 &equals; T6 &plus; T4</entry>
+<entry>Sum the partial products,</entry>
+</row>
+<row>
+<entry></entry>
+<entry>extending T1, T2, T3, and</entry>
+</row>
+<row>
+<entry></entry>
+<entry>T4 as required.</entry>
+</row>
+<row>
+<entry>Product &equals; top 53 bits (T5)</entry>
+<entry>Drop the least significant bits.</entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0006" lvl="7"><number>&lsqb;0006&rsqb;</number> T5 is nominally 106 bits wide. When performing a floating point operation, it is necessary that the product bits be aligned into the correct bit positions for the mantissa of the floating point result. If T1, T2, T3, and T4 are summed in an adder, a left shift of 12 bit positions of T4 relative to T2 and T3 is required for proper alignment. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Some computer programs require more single-precision floating point and integer multiply operations than double-precision floating point operations. Machines running these programs can provide fast single precision and integer multiply operations with slower but adequate double precision multiply using a sequence of four multiply operations in each double-precision floating-point multiply instruction. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The Booth recoding algorithm is commonly used in large multiplier arrays to hold down the number of partial products that must be added during a multiply. While a classic thirty two bit Wallace-tree binary array multiplier generates and adds thirty two partial products, an array multiplier using two-bit Booth recoding need generate and adds only half as many partial products, although the logic required for generating each partial product is somewhat more complex. Reducing the number of partial products not only can reduce the number of gates in the array, but produces a faster multiplier by reducing the number of gate delays in the worst-case critical path through the array. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In the basic binary two-bit Booth algorithm, a pair of bits of the multiplier are considered for each partial product. If those bits are zero, the partial product is zero. If those bits are one, the partial product is the multiplicand. If those bits are two, the partial product is a single-bit-shifted (multiplied by two) multiplicand. If those bits are three, the partial product is minus the multiplicand, with one added in the next partial product&mdash;giving a net partial product term of four times the multiplicand minus the multiplicand equaling three times the multiplicand. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> A common version of the Booth multiply is the modified booth recoding multiply. In this version, the multiplier is recoded from a binary number, where each digit is a 1 or a 0, to a number having fewer digits each in the range &lcub;&minus;2, &minus;1, 0, &plus;1, &plus;2&rcub;. Each bit pair &lcub;B<highlight><subscript>n&plus;1</subscript></highlight>,B<highlight><subscript>n</subscript></highlight>&rcub; of the multiplier is transformed by a three-input digit-encoder circuit that considers bit &lcub;B<highlight><subscript>n&minus;1</subscript></highlight>&rcub; of next lower significance to the bit pair being encoded according to the formula:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="35PT" align="left"/>
+<colspec colname="1" colwidth="119PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&plus;2 if (B<highlight><subscript>n&minus;1 </subscript></highlight>&amp; B<highlight><subscript>n </subscript></highlight>&amp; &tilde;B<highlight><subscript>n&plus;1</subscript></highlight>)</entry>
+<entry>110</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&plus;1 if ((B<highlight><subscript>n&minus;1 </subscript></highlight>xor B<highlight><subscript>n</subscript></highlight>) &amp; &tilde;B<highlight><subscript>n&plus;1</subscript></highlight>)</entry>
+<entry>010&verbar;100</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;1 if ((B<highlight><subscript>n&minus;1 </subscript></highlight>xor B<highlight><subscript>n</subscript></highlight>) &amp; B<highlight><subscript>n&plus;1</subscript></highlight></entry>
+<entry>101&verbar;011</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;2 if (&tilde;B<highlight><subscript>n&minus;1 </subscript></highlight>&amp; &tilde;B<highlight><subscript>n </subscript></highlight>&amp; B<highlight><subscript>n&plus;1</subscript></highlight>)</entry>
+<entry>001</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0 otherwise</entry>
+<entry>000&verbar;111</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0011" lvl="7"><number>&lsqb;0011&rsqb;</number> The partial products of the multiplier (booth_digit*multiplicand) are generated by taking a zero, a left shift of the multiplicand (&plus;2), the multiplicand (&plus;1), the negation of the multiplicand (&minus;1) or the negation of a left shift of the multiplicand (&minus;2). One such partial product is generated for each bit pair of the multiplier, these partial products are shifted appropriately and summed to generate the product. For modern array multipliers, the product is generated by an array of carry-save adders of structure similar to a Wallace tree. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In the Booth recoding circuit described above, a term Bn&minus;1 is used. In all bit-pairs except the least significant bit pair, this bit is the most significant multiplier bit of the bit pair of less significance than the bit pair being encoded. In the least significant bit pair, this bit is normally a zero. In multipliers that perform a multiply of high precision from a sequence of lower-precision multiplies, it is known that this bit may be used as a carry input to the higher digits of the multiply. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> A multiplier has been constructed that performs a high precision multiply by performing a sequence of four lower-precision multiplies, each of the four generating a partial product, and summing the partial products. This multiplier breaks down the a multiply into a sequence of four multiply operations.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="126PT" align="left"/>
+<colspec colname="2" colwidth="91PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>&lsqb;Bits 52 . . . 32 &equals; A&rsqb; &lsqb;Bits 31 . . . 0 &equals; B&rsqb;</entry>
+<entry>Break down the multiplicand</entry>
+</row>
+<row>
+<entry>&lsqb;Bits 52 . . . 32 &equals; C&rsqb; &lsqb;Bits 31 . . . 0 &equals; D&rsqb;</entry>
+<entry>Break down the multiplier</entry>
+</row>
+<row>
+<entry>P1 &equals; (B * D) right shifted by 64 bits</entry>
+<entry>Compute partial products</entry>
+</row>
+<row>
+<entry>P2 &equals; (D * A) right shifted by 32 bits</entry>
+<entry>and perform shift</entry>
+</row>
+<row>
+<entry>P3 &equals; (C * B) right shifted by 32 bits</entry>
+</row>
+<row>
+<entry>P4 &equals; (A left shifted by 6 bits) *</entry>
+</row>
+<row>
+<entry>(C left shifted by 6 bits)</entry>
+</row>
+<row>
+<entry>Product &equals; (P1 &plus; P2 &plus; P3 &plus; P4)</entry>
+<entry>Sum the partial products.</entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0014" lvl="7"><number>&lsqb;0014&rsqb;</number> The multiplier performs three initial cycles to compute the partial products P1, P2, and P3. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The left-shift-by-12 bit positions required in the example to align the resulting 53 bits of product is accomplished by the left shift of each of the A and C operands 6 bit positions, this places the significant bits of P4 at the appropriate inputs of the adder used to sum the partial products. The top 22 bits of partial sums P3, P2, and the effect of P1, are positioned in the 22 least significant bits of the adder by shift operations. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The multiplier used for all four cycles of the multiply is Booth encoded. Each two-bit booth recoder cell requires three inputs, (Bn&plus;1, Bn, Bn&minus;1), so that an add of three times the multiplicand can be represented as a subtract of one times the multiplicand with an add of four times the multiplicand. It may therefore be necessary to force an extra addition when the multiplier is split into fields as in this design. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> To get the correct result using the booth encoded multiplier, two techniques have been used. In the first technique the booth recoding cell that receives the raw multiplier bits <highlight><bold>32</bold></highlight> and <highlight><bold>33</bold></highlight> during computation of P4 must also receive multiplier bit <highlight><bold>31</bold></highlight>. This is the same booth recoding cell that receives multiplier bits <highlight><bold>6</bold></highlight> and <highlight><bold>7</bold></highlight> as &lcub;B<highlight><subscript>n</subscript></highlight>, B<highlight><subscript>n&plus;1</subscript></highlight>&rcub; during computation of the partial product P4. A multiplexor has been found necessary such that the Bn&minus;1 input of this recoding cell may either be bit <highlight><bold>5</bold></highlight> of the multiplier or bit <highlight><bold>31</bold></highlight> of the multiplier; in this way the correct result is attained. Bit <highlight><bold>31</bold></highlight> of the multiplier may be obtained for this multiplexor directly from the multiplier register or by latching bit <highlight><bold>31</bold></highlight> during the preceding, P3, cycle. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In an alternative technique, an effectively 34-bit booth encoder is used during computation of P1, P2, and P3, having its two most significant input bits (B<highlight><subscript>n&plus;1 </subscript></highlight>and B<highlight><subscript>n</subscript></highlight>) driven to zero. The B<highlight><subscript>n&minus;1 </subscript></highlight>bit of the top encoder cell is the most significant bit (Bit <highlight><bold>31</bold></highlight>) of the operand. The multiplier array has a partial stage corresponding to this top encoder cell, wherein any necessary correction term is generated and added. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> It has also been found that each of the partial products P2, and P3 may be zero extended as they are summed. P1, however, must be conditionally extended with 0&apos;s if there is an explicit carry out of the multiplier array, and extended with 1&apos;s if there is no carry out. Then, prior to adding P4, the sum of P1, P2, and P3 is extended with one of four possible constants depending on the number of explicit carry out signals generated by the multiplier during computation of P1 and the summing adder during computation of P2 and P3. These constants are 03FDH, 03FEH, 03FFH, and 0000H, where 0FFDH is used if no explicit carry out signals occurred and 0000H is used if three carry out signals occurred.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a generalized computer system; </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2 a</cross-reference> block diagram of the processor of the generalized computer system; </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> an illustration of the bit fields of a floating point number as often used in typical computer systems; </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4 a</cross-reference> block diagram of a floating point multiplier portion of a floating point pipeline, showing the configuration of the array multiplier, as may be used in the computer system; </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5 a</cross-reference> block diagram of the array multiplier of the floating point multiplier; </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6 a</cross-reference> block diagram of the array multiplier of an alternative embodiment of the floating point multiplier, where a register preserves multiplier bit <highlight><bold>31</bold></highlight> from the third until the fourth cycle of the multiply; </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7 a</cross-reference> diagram of the shifter and partial product accumulator of a second alternative embodiment of the double-precision multiplier; </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8 a</cross-reference> block diagram of the array multiplier of a third alternative embodiment of the floating point multiplier, wherein the least significant 32-bit bit field of the multiplier is zero extended to 34 bits prior to Booth recoding; and </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 9, a</cross-reference> block diagram of the array multiplier, partial product accumulator, and multiplier partial operand multiplexor of an implementation of the third alternative embodiment wherein the adder of the partial product accumulator is laid-out together with the adders of the multiplier array.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Many computer systems used today, such as those portrayed in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, have a processing element <highlight><bold>100</bold></highlight>. One or more additional processing elements <highlight><bold>101</bold></highlight> may also be present, as is supported by symmetric multiprocessing operating systems including Solaris, Linux, and Windows NT. Each processing element usually has a processor <highlight><bold>102</bold></highlight>, a Cache memory <highlight><bold>103</bold></highlight>, and a memory manager <highlight><bold>104</bold></highlight> that determines which memory addresses are cacheable and translates memory addresses from a virtual address space to a physical address space. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Each processing element communicates over one or more data busses <highlight><bold>105</bold></highlight> to a main memory <highlight><bold>106</bold></highlight>, which may include additional memory management functions, and, usually through a bus bridge <highlight><bold>107</bold></highlight> and an additional bus <highlight><bold>108</bold></highlight>, to I/O devices <highlight><bold>109</bold></highlight>, including disk memory devices <highlight><bold>110</bold></highlight>. There are many ways of implementing such computer systems, for example some of the I/O functions <highlight><bold>109</bold></highlight>, including the Disk Memory <highlight><bold>110</bold></highlight>, may communicate directly with the main memory. Further, the Main Memory <highlight><bold>106</bold></highlight> block may also contain one or more additional levels of cache memory. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In the processor <highlight><bold>102</bold></highlight> of each processing element, there is usually a unit for fetching instructions and tracking instruction addresses <highlight><bold>200</bold></highlight>, an instruction decoder and dispatcher <highlight><bold>201</bold></highlight>, and a data fetch and store unit <highlight><bold>202</bold></highlight> that initiates and controls data transfers between a multiport register file <highlight><bold>203</bold></highlight> and the various memory and I/O devices of the system, including the cache memory <highlight><bold>103</bold></highlight>, main memory <highlight><bold>106</bold></highlight>, disk memory <highlight><bold>110</bold></highlight> and I/O devices <highlight><bold>109</bold></highlight>. There are also generally an floating point execution pipeline <highlight><bold>204</bold></highlight> and an integer execution pipeline <highlight><bold>205</bold></highlight> that receive data from the multiport register file <highlight><bold>203</bold></highlight>, operate upon it, and write results back to the multiport register file <highlight><bold>203</bold></highlight>. The floating point execution pipeline <highlight><bold>204</bold></highlight> and integer execution pipeline <highlight><bold>205</bold></highlight> may alternatively be combined into one unit; use of a 32 bit by 32 bit multiplier array is particularly desirable in processors having these units merged. Further, even if the floating point execution pipeline <highlight><bold>204</bold></highlight> and the integer execution pipeline <highlight><bold>205</bold></highlight> are not fully merged it is advantageous for these units to share a single multiplier array of 34&times;32 or 32&times;32 size because of the high silicon cost of large multiplier arrays. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Floating point numbers, as shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, are generally comprised of three separate fields. A sign bit <highlight><bold>300</bold></highlight> represents whether the number is positive or negative. The magnitude of the floating point number is that of the mantissa field value <highlight><bold>301</bold></highlight> multiplied by a base value raised to the power indicated by an exponent field <highlight><bold>302</bold></highlight>. The base value is fixed for each floating point format, two being a common base value. The IEEE 754 specification provides detailed descriptions of a single precision floating point format, where all three of the sign, exponent, and mantissa fields fit in a 32-bit word and having but 24 bits (including one hidden bit) allocated to the mantissa, and a double precision floating point format where all three fields fit in a 64-bit word and having 52 bits allocated to the mantissa. One extra, or hidden, mantissa bit is available because of the way in which normalization is performed, so the mantissa is effectively a 53 bit number. The mantissa portion of the number is always positive, negative numbers are represented through the sign bit; hence the product of a pair of mantissas is always positive. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> The bits of the operand are numbered for purposes of this discussion such that bit <highlight><bold>0</bold></highlight> is the least significant bit of the mantissa. For a single precision operand, bit <highlight><bold>31</bold></highlight> is the sign bit, and bit <highlight><bold>23</bold></highlight> the most significant bit of the mantissa. Similarly, for double precision operands, bit <highlight><bold>63</bold></highlight> is the sign bit, the hidden bit is the most significant bit of the mantissa, and bit <highlight><bold>51</bold></highlight> the second most significant bit of the mantissa with bit <highlight><bold>0</bold></highlight> the least significant bit of mantissa. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates the functions performed by a floating point pipeline embodying the present invention during execution of a floating point multiply. Hardware used for addition, subtraction, and division is not shown. Pipeline latches and bypass logic, as are often included in floating point pipelines, are also not shown. In performing a multiplication operation, the multiplicand is split into an exponent fields and a mantissa fields by an exponent/mantissa splitter <highlight><bold>400</bold></highlight>. Similarly, the multiplier is also broken down into exponent and mantissa fields by a second exponent/mantissa splitter <highlight><bold>401</bold></highlight>. The exponents are then summed in the exponent adder <highlight><bold>402</bold></highlight> to produce an initial product exponent. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> During single-precision multiply operations, the mantissa of the multiplicand is passed in its entirety through a partial-operand multiplexor <highlight><bold>405</bold></highlight> into a mantissa multiplier array <highlight><bold>406</bold></highlight>. Simultaneously, the mantissa of the multiplier is passed in its entirety through a second partial-operand multiplexor <highlight><bold>407</bold></highlight> into the mantissa multiplier array <highlight><bold>406</bold></highlight>. A mantissa product in carry-save form from the mantissa multiplier array <highlight><bold>406</bold></highlight> through a shifter into a partial product accumulator <highlight><bold>408</bold></highlight> where the carry is propagated. The mantissa multiplier array <highlight><bold>406</bold></highlight> is a 32 by 32 multiplier array, and is capable of directly multiplying the 24 bit mantissas. The mantissa product and the initial exponent product are passed to a normalizer and exception generator <highlight><bold>409</bold></highlight> that recombines the mantissa product and exponent product fields into a product that meets the specifications for the floating point format in use, and generates error interrupts when the product can not be represented in the floating point format in use. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> During double-precision multiply operations, the exponent and mantissa are separated, and exponents added, in a manner similar to that of the single-precision multiply operation. The mantissa multiplier array <highlight><bold>406</bold></highlight> is a 32 by 32 multiplier array, incapable of directly multiplying the 53 bit mantissas of the preferred, IEEE 754, double precision floating point format. A sequence of four multiply operations, each generating a partial product, is therefore performed, while summing the partial products. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In a first cycle, the low 32 bits of the multiplier are selected by the multiplier partial-operand multiplexor <highlight><bold>407</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight>. Simultaneously, the low 32 bits of the multiplicand are selected by the multiplicand partial-operand multiplexor <highlight><bold>405</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight>. The partial product from the array <highlight><bold>406</bold></highlight> is shifted into the low 64 effective bit positions of the effective 106 bit product and latched into the partial product accumulator <highlight><bold>408</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In a second cycle, the high 21 bits of the 53-bit multiplier are selected by the multiplier partial-operand multiplexor <highlight><bold>407</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight>. Simultaneously, the low 32 bits of the multiplicand are selected by the multiplicand partial-operand multiplexor <highlight><bold>405</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight>. The partial product from the array <highlight><bold>406</bold></highlight> is added to the partial product produced from the first cycle, as shifted and extended into the appropriate bit positions of the product, and latched into the partial product accumulator <highlight><bold>408</bold></highlight>. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In a third cycle, the low 32 bits of the 53-bit multiplier are selected by the multiplier partial-operand multiplexor <highlight><bold>407</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight>. Simultaneously, the high 21 bits of the multiplicand are selected by the multiplicand partial-operand multiplexor <highlight><bold>405</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight>. The partial product from the array <highlight><bold>406</bold></highlight> is shifted into the appropriate bit positions of the effective 106 bit product, added to the partial product produced from the second cycle, and latched into the partial product accumulator <highlight><bold>408</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> In a fourth cycle, the high 21 bits of the 53-bit multiplier are selected by the multiplier partial-operand multiplexor <highlight><bold>407</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight> left shifted six places. Simultaneously, the high 21 bits of the multiplicand are selected by the multiplicand partial-operand multiplexor <highlight><bold>405</bold></highlight> and presented to the multiplier array <highlight><bold>406</bold></highlight> left shifted six places. The partial product from the array <highlight><bold>406</bold></highlight> is produced in the appropriate bit positions of the effective 106 bit product, added to the partial product produced from the third cycle, presented to the normalizer and exception generator <highlight><bold>409</bold></highlight>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The multiplier array <highlight><bold>406</bold></highlight> of the preferred and an alternative embodiment is shown in more detail in <cross-reference target="DRAWINGS">FIGS. 5 and 6</cross-reference>. In both embodiments, a 32-bit multiplicand <highlight><bold>501</bold></highlight> and <highlight><bold>601</bold></highlight> is presented to an array of Booth-type partial product generators <highlight><bold>502</bold></highlight> and <highlight><bold>602</bold></highlight>. A 32-bit multiplier <highlight><bold>503</bold></highlight> and <highlight><bold>603</bold></highlight> is broken into a 26-bit upper field and a 6-bit lower field, the 26-bit upper field is presented as the upper 26-bits of a 32-bit booth encoder <highlight><bold>504</bold></highlight> and <highlight><bold>604</bold></highlight>. The booth encoder <highlight><bold>504</bold></highlight> and <highlight><bold>604</bold></highlight> feeds the multiplier input of the Booth-type partial product generators <highlight><bold>502</bold></highlight> and <highlight><bold>602</bold></highlight>, with the partial products summed in a carry-save adder array <highlight><bold>505</bold></highlight> and <highlight><bold>605</bold></highlight> to form a 64-bit product term <highlight><bold>506</bold></highlight> and <highlight><bold>606</bold></highlight>. The product term <highlight><bold>506</bold></highlight> and <highlight><bold>606</bold></highlight> is a mantissa product for single-precision multiply operations, and a partial product for double-precision multiply operations. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> In the first embodiment, the 6-bit lower field of the multiplier input <highlight><bold>503</bold></highlight> is fed to a multiplexor <highlight><bold>510</bold></highlight>. Multiplexor <highlight><bold>510</bold></highlight> may be implemented as part of the partial operand multiplexor. The second data input of multiplexor <highlight><bold>510</bold></highlight> is a 6-bit string formed by concatenating bit <highlight><bold>31</bold></highlight> of the multiplier exponent/mantissa splitter <highlight><bold>401</bold></highlight> and five bits of zero, and the control input of the multiplexor <highlight><bold>510</bold></highlight> is taken from sequential logic (not shown) that controls the operation of the multiplier. The control input is true only during the fourth cycle of the multiply operation. Multiplexor <highlight><bold>510</bold></highlight>, which provides a fill for the low six bits when the partial operand multiplexor provides the 21 most significant bits of the multiplier in left-shifted-by-six-positions form, may be formed as part of the partial operand multiplexor. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> In the first alternative embodiment, the 6-bit lower field of the multiplier input <highlight><bold>603</bold></highlight> is fed to a multiplexor <highlight><bold>610</bold></highlight>. The other data input of multiplexor <highlight><bold>610</bold></highlight> is a 6-bit string formed by concatenating the output of a D-flop <highlight><bold>611</bold></highlight> and five bits of zero, with the control input of the multiplexor <highlight><bold>510</bold></highlight> is taken from sequential logic (not shown) that controls the operation of the multiplier. The control input is true only during the fourth cycle of the multiply operation. The input of the D-flop is bit <highlight><bold>31</bold></highlight> of the 32-bit multiplier input <highlight><bold>603</bold></highlight>, the bits being numbered 31 for most significant and 0 for least significant. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> The shifter and partial product accumulator <highlight><bold>408</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4</cross-reference>) for a second alternative embodiment is portrayed in <cross-reference target="DRAWINGS">FIG. 7</cross-reference>. In this embodiment, the four partial products are added in carry-save format. In the first cycle, the 64-bit array multiplier output <highlight><bold>701</bold></highlight> is passed into Carry-Save adder <highlight><bold>702</bold></highlight>, then latched in the low 64 bits, bits <highlight><bold>63</bold></highlight> through <highlight><bold>0</bold></highlight>, of the carry save register <highlight><bold>703</bold></highlight> as the cycle completes. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> During the first cycle, any explicit carry out from the carry-save Wallace-tree adders of the array multiplier <highlight><bold>406</bold></highlight> is latched as a count of one into a two-bit carry-out counter <highlight><bold>710</bold></highlight>, without a carry-out the carry-out counter <highlight><bold>710</bold></highlight> is set to zero. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Since the second partial product is the product of a 21 bit by a 32 bit number, only the low 53 bits of the array multiplier output have significance in the second cycle. These bits of the second partial product are passed to bits the Carry Save adder <highlight><bold>702</bold></highlight> for addition. Simultaneously, the first partial product from the carry-save register <highlight><bold>703</bold></highlight> is conditionally extended with the complement of any explicit carry out of the adder array and right-shifted by <highlight><bold>32</bold></highlight> bit positions in the Right Shifter-Mux <highlight><bold>704</bold></highlight>, the discarded bits being processed as required for correct rounding, the retained bits being fed back to the carry-save adder <highlight><bold>702</bold></highlight> for adding to the second partial product. The result of the addition is latched in the carry save register <highlight><bold>703</bold></highlight> as the second cycle of the multiply operation completes. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> During the second cycle, any explicit carry out from bit <highlight><bold>52</bold></highlight> of the carry-save adders of the carry-save adder <highlight><bold>702</bold></highlight> increments carry-out counter <highlight><bold>710</bold></highlight>. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The third partial product is also the product of a 21 bit by a 32 bit number, only the low 52 bits of the array multiplier output have significance in the third cycle. These bits of the third partial product are positioned by the bit positioner <highlight><bold>704</bold></highlight> for addition to the carry-save register <highlight><bold>703</bold></highlight>, as fed back unchanged through the Right Shifter-Mux <highlight><bold>705</bold></highlight>. The result of the addition is latched in the carry save register <highlight><bold>703</bold></highlight> as the third cycle of the double precision multiply operation completes. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> During the third cycle, any explicit carry out from bit <highlight><bold>52</bold></highlight> of the carry-save adders of the carry-save adder <highlight><bold>702</bold></highlight> increments carry-out counter <highlight><bold>710</bold></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The fourth partial product is the product of a 21 bit by a 21 bit number, these numbers are adjusted as described above such that the 42 significant bits of the partial product are in bit positions <highlight><bold>53</bold></highlight> through <highlight><bold>12</bold></highlight> of the 64-bit array-multiplier output <highlight><bold>701</bold></highlight> in carry-save format. Alignment in these positions is advantageous in minimizing the rounding, normalizing, and exception handling logic. In the fourth cycle of the multiply operation, these 42 bits of the array multiplier output <highlight><bold>701</bold></highlight> are added to bits <highlight><bold>52</bold></highlight> through <highlight><bold>0</bold></highlight> of carry-save register <highlight><bold>703</bold></highlight>, as extended in the extender <highlight><bold>705</bold></highlight>. In extending the carry-save register in the fourth cycle, bits <highlight><bold>63</bold></highlight> through <highlight><bold>53</bold></highlight> are extended to a value determined by the carry-out counter <highlight><bold>710</bold></highlight>. If the counter contains zero, bits <highlight><bold>63</bold></highlight> through <highlight><bold>53</bold></highlight> are driven to the binary value 11 1111 1101 (minus three). If the counter contains one, bits <highlight><bold>63</bold></highlight> through <highlight><bold>53</bold></highlight> are driven by the extender <highlight><bold>705</bold></highlight> to the binary value 11 1111 1110 (minus two). If the counter contains two, bits <highlight><bold>63</bold></highlight> through <highlight><bold>53</bold></highlight> are driven to the binary value 11 1111 1111 (minus one). If the counter contains three, bits <highlight><bold>63</bold></highlight> through <highlight><bold>53</bold></highlight> are driven to the binary value 00 0000 0000 (zero). The result of the addition is latched in the carry save register <highlight><bold>703</bold></highlight> as the fourth cycle of the double precision multiply operation completes. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> In the fifth cycle of the double precision multiply operation, the carry save register <highlight><bold>703</bold></highlight> contents is passed through a carry propagating circuit <highlight><bold>706</bold></highlight> to produce an un-normalized mantissa product <highlight><bold>707</bold></highlight>. This is then fed to the normalizer and exception generator. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> In a third alternative embodiment of the invention, as shown in <cross-reference target="DRAWINGS">FIG. 8, a</cross-reference> 34 bit array multiplier booth encoder is used in place of the 32 bit multiplier encoder heretofore described. The multiplier array <highlight><bold>406</bold></highlight> of this embodiment is shown in more detail in <cross-reference target="DRAWINGS">FIG. 8</cross-reference>. In this embodiment, a 32-bit multiplicand <highlight><bold>801</bold></highlight> is presented to an array of Booth-type partial product generators <highlight><bold>802</bold></highlight>. The multiplicand partial operand multiplexor <highlight><bold>405</bold></highlight> zero fills the six least significant bits when it selects as a partial operand the high twenty-one bits of the multiplicand left shifted by six bit positions. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> A 32-bit multiplier <highlight><bold>803</bold></highlight> is zero extended to 34 bits, then broken into a 28-bit upper field and a 6-bit lower field, the 28-bit upper field is presented as the upper 28-bits of a 34-bit booth encoder <highlight><bold>804</bold></highlight>. Booth encoder <highlight><bold>804</bold></highlight> feeds the multiplier input of the Booth-type partial product generators <highlight><bold>802</bold></highlight>, with the partial products summed in a carry-save adder array <highlight><bold>805</bold></highlight> to form a 64-bit product term <highlight><bold>806</bold></highlight>. The product term <highlight><bold>806</bold></highlight> is a mantissa product for single-precision multiply operations, and a partial product for double-precision multiply operations. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> In this embodiment, the 6-bit lower field of the multiplier input <highlight><bold>803</bold></highlight> is fed to a multiplexor <highlight><bold>810</bold></highlight>. The second data input of multiplexor <highlight><bold>810</bold></highlight> is six bits of zero, and the control input of the multiplexor <highlight><bold>810</bold></highlight> is taken from a state machine (not shown) that controls operation of the multiplier. The control input selects the zero field only during the fourth cycle of the multiply operation. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> In this embodiment, all of the partial products must be positive numbers, hence it is not necessary to multiplex bit <highlight><bold>31</bold></highlight> from the prior cycle to bit <highlight><bold>6</bold></highlight> of the booth encoder. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> The third alternative embodiment of <cross-reference target="DRAWINGS">FIG. 8</cross-reference> may be implemented with the partial-product accumulator carry-save adder laid out with the carry-save adder array of the multiplier array, as illustrated in <cross-reference target="DRAWINGS">FIG. 9</cross-reference>. In this implementation, the 53-bit multiplier input <highlight><bold>900</bold></highlight> is selected by partial operand multiplexor <highlight><bold>901</bold></highlight> into a low 32-bit, a high 21-bit, or a high-21-bit-left-shifted-by-six-positions partial operand. When the partial operand multiplexor <highlight><bold>901</bold></highlight> selects the high-21-bit-left-shifted-by-six-positions partial operand, the low six bit positions are zero filled by a low bit multiplexor <highlight><bold>902</bold></highlight>, that may be formed as part of the partial operand multiplexor <highlight><bold>901</bold></highlight>. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Similarly, 53-bit multiplicand input <highlight><bold>903</bold></highlight> is selected by partial operand multiplexor <highlight><bold>904</bold></highlight> into a low 32-bit, a high 21-bit, or a high-21-bit-left-shifted-by-six-positions partial operand. When the partial operand multiplexor <highlight><bold>904</bold></highlight> selects the high-21-bit-left-shifted-by-six-positions partial operand, the low six bit positions are zero filled. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> The partial operand from the multiplier partial operand multiplexor and low bit multiplexor <highlight><bold>901</bold></highlight> and <highlight><bold>902</bold></highlight> is zero-extended to 34 bits and Booth recoded by a 34-bit Booth encoder <highlight><bold>906</bold></highlight>. A booth-recoded multiplier from booth encoder <highlight><bold>906</bold></highlight> controls a set of array multiplier partial product generators <highlight><bold>907</bold></highlight> that are part of an array multiplier and operate upon an output of the multiplicand partial operand multiplexor <highlight><bold>904</bold></highlight>. The array multiplier partial products from the partial product generators <highlight><bold>907</bold></highlight> are summed in a carry-save adder array <highlight><bold>908</bold></highlight> that also forms part of the array multiplier, and added to any earlier partial product in a partial product accumulator register <highlight><bold>909</bold></highlight> as extended by extender <highlight><bold>911</bold></highlight> by a carry-save adder <highlight><bold>910</bold></highlight> that is laid out as an extension of the multiplier carry-save adder array <highlight><bold>908</bold></highlight>. A sum from carry-save adder <highlight><bold>910</bold></highlight> is shifted in shifter <highlight><bold>912</bold></highlight> and deposited in the partial product accumulator register <highlight><bold>909</bold></highlight>. Once all four partial products are accumulated in the partial product accumulator register <highlight><bold>909</bold></highlight>, the carries are propagated by carry propagator <highlight><bold>915</bold></highlight> to produce an unnormalized mantissa product <highlight><bold>916</bold></highlight>. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Each partial product from the carry-save adder array (<highlight><bold>804</bold></highlight> and <highlight><bold>908</bold></highlight>) is positive. Even if the most significant bit of a multiplier portion is one, in the embodiments of <cross-reference target="DRAWINGS">FIGS. 8 and 9</cross-reference> the final partial product from the array multiplier carry-save adder array (<highlight><bold>805</bold></highlight> and <highlight><bold>908</bold></highlight>) is positive since the multiplier is extended with zeros during Booth recoding and each multiplicand partial operand is positive. The final sum of all the partial products must also be positive. Thus, only the magnitude of the number need be represented. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Although the final result of the multiplication is positive, Booth partial product terms generated in the array multiplier can be, and often are, negative. These terms of the array multiplier must be effectively sign extended during addition. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> Partial products in carry-save form comprise a sum vector and a carry vector, the carry vector representing unpropagated carries into the corresponding bits of the sum vector. A partial product in carry save form from carry-save adder array (<highlight><bold>804</bold></highlight> and <highlight><bold>908</bold></highlight>) may have a one in the most significant sum vector bit derived from carry-save addition of the negative Booth partial product terms generated in the array multiplier. This may occur in an implicit carry-out situation, with a one in the corresponding carry vector bit or data in lower bits that will emerge as a carry into the most significant bit if carry were propagated. In this case, a carry will occur from the most significant bit during carry propagation. If this carry-save form number is extended with more significant bits, those bits must have ones in either their sum or carry vectors so that carry propagation will flip those bits to the correct twos complement sign for a positive partial product of zero. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> In the embodiments of <cross-reference target="DRAWINGS">FIGS. 7, 8</cross-reference>, and <highlight><bold>9</bold></highlight>, the partial product from carry-save adder array (<highlight><bold>805</bold></highlight> and <highlight><bold>908</bold></highlight>) is in sum and carry vector form, hence the carry-out may be explicit or implicit. Explicit carry-out is detected as the carry-out from the most significant bit in the carry-save adder (<highlight><bold>702</bold></highlight> and <highlight><bold>912</bold></highlight>) or from the array multiplier carry-save adders. Implicit carry-out is inherent in the carry and sum terms, the carry-out does not emerge until carry is propagated. In these embodiments, carry is propagated in the carry propagator (<highlight><bold>706</bold></highlight> and <highlight><bold>915</bold></highlight>) after all partial products are summed in the carry-save register (<highlight><bold>703</bold></highlight> and <highlight><bold>909</bold></highlight>). Explicit carry-out&apos;s may be dropped, however implicit carry-out&apos;s are hidden in both the carry and sum terms of the product and require sign extension for correct result. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> These embodiments use conditional extension to effectively propagate carry from the lower order partial products into the significant bits of the higher order product. Since three carry-out&apos;s are expected (implicit or explicit, one and only one per partial product), the last recycled product term is conditionally extended depending upon the number of explicit carry-out&apos;s already present. Knowing that the total number of carry-out&apos;s expected is three, the number of implicit carry-out is equal to the total number minus the number of explicit carry-out&apos;s. Hence the conditional extension of the sum in carry-save form of the first three partial products during addition to the fourth partial product, the extension being based upon explicit carry-outs, is: </paragraph>
+<paragraph id="P-0064" lvl="2"><number>&lsqb;0064&rsqb;</number> if zero explicit carry outs 1111 1111 01 (minus three) </paragraph>
+<paragraph id="P-0065" lvl="2"><number>&lsqb;0065&rsqb;</number> if one explicit carry out 1111 1111 10 (minus two) </paragraph>
+<paragraph id="P-0066" lvl="2"><number>&lsqb;0066&rsqb;</number> if two explicit carry outs 1111 1111 11 (minus one) </paragraph>
+<paragraph id="P-0067" lvl="2"><number>&lsqb;0067&rsqb;</number> if three explicit carry outs 0000 0000 00. (zero) </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> It is these explicit carry outs that may occur during computation and summing of the first three partial products in carry-save form that are counted by carry-out counter (<highlight><bold>710</bold></highlight> and <highlight><bold>920</bold></highlight>). This carry-out count is used by the. extender (<highlight><bold>705</bold></highlight> and <highlight><bold>911</bold></highlight>) to conditionally extend the sum of these first three partial products when that sum is right-shifted by shifter (<highlight><bold>704</bold></highlight> and <highlight><bold>910</bold></highlight>) and added to the fourth partial product. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> The invention has been shown with reference to a particular preferred embodiment. It will be understood by those skilled in the art that various changes in form and details may be made without departing from the spirit and scope of the invention. For example, the division of the multiplier and multiplicand into partial operands may occur at different bit boundaries than the bit <highlight><bold>32</bold></highlight>-<highlight><bold>31</bold></highlight> boundary of the embodiments illustrated herein. If the bit boundaries are altered, it may be that the twos complement minus three, minus two, minus one, and zero values injected onto the most significant bits of the extender (<highlight><bold>705</bold></highlight> and <highlight><bold>911</bold></highlight>) output during the fourth partial product addition will comprise a different number of bits than the twelve bits illustrated herein. The order of the carry-save register, shifter, and extender in the partial product accumulator may be shuffled without preventing function. The double-precision multiplier may have additional states not herein discussed. Further, it is possible that the multiport register file may be divided into separate register arrays for the integer and for the floating point pipelines, or that the first three partial products be generated in a different sequence than that illustrated herein. It is understood that the invention is defined by the scope of the following claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. An array multiplier having inputs A, B, S, and C, and output O; 
+<claim-text>where B is a multiplicand; </claim-text>
+<claim-text>where input A is a bit vector &lcub;A<highlight><subscript>n </subscript></highlight>. . . A<highlight><subscript>m&plus;1</subscript></highlight>, A<highlight><subscript>m</subscript></highlight>, A<highlight><subscript>m&minus;1 </subscript></highlight>. . . A<highlight><subscript>0</subscript></highlight>&rcub;; </claim-text>
+<claim-text>the multiplier comprising: 
+<claim-text>a plurality of booth encoder circuits each receiving a pair of bits of vector A and a third input, and generating a booth encoded value, one of said plurality of booth encoder circuits having inputs A<highlight><subscript>m </subscript></highlight>and A<highlight><subscript>m&plus;1</subscript></highlight>, the booth encoder circuits generating a booth encoded value; </claim-text>
+<claim-text>a multiplexor having an output bit V<highlight><subscript>m</subscript></highlight>, control input S, and inputs C and bit Am of vector A coupled such that V<highlight><subscript>m</subscript></highlight>&equals;S &amp; C&verbar;&excl;S &amp; A<highlight><subscript>m</subscript></highlight>, wherein V<highlight><subscript>m </subscript></highlight>is coupled as the third input of the booth encoder having inputs A<highlight><subscript>m </subscript></highlight>and A<highlight><subscript>m&plus;1 </subscript></highlight>and another of the plurality of booth encoder circuits receives the A<highlight><subscript>m&plus;2 </subscript></highlight>and A<highlight><subscript>m&plus;3 </subscript></highlight>pair of bits of vector A and third input A<highlight><subscript>m&plus;1</subscript></highlight>; </claim-text>
+<claim-text>a plurality of partial product generators wherein the booth encoded value and input B are used to generate a plurality of partial products; </claim-text>
+<claim-text>and an adder tree wherein output O is computed by summing the partial products. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The array multiplier of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the multiplexor input bit V<highlight><subscript>m&minus;1 </subscript></highlight>is bit A<highlight><subscript>5</subscript></highlight>. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A double-precision multiplier comprising: 
+<claim-text>an array multiplier; and </claim-text>
+<claim-text>a carry-save partial-product accumulator coupled to receive an output of the array multiplier; </claim-text>
+<claim-text>wherein the carry-save partial-product accumulator further comprises a carry-save adder, a sum register, a carry-out counter and an extender, the carry-save adder being coupled to receive the output of the array multiplier and an output of the extender, the sum register being coupled to receive an output of the carry-save adder, the extender being coupled to receive an output of the sum register and an output of the carry-out counter, and the carry-out counter being coupled to receive a carry output of the carry-save adder and a carry output of the array multiplier. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The double-precision multiplier of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the array multiplier is of the booth-recoded type. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The double-precision multiplier of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the double-precision multiplier is contained within a floating point pipeline of a processor, and where the array multiplier is a shared resource also used by an integer pipeline of the processor. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The double-precision multiplier of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the array multiplier successively generates at least a first partial product, a second partial product, a third partial product, and a fourth partial product; the partial products being accumulated in the carry-save partial-product accumulator; wherein there exists a state in which the extender drives a plurality of bits of the output of the extender to a value selected according to the output of the carry-out counter from the group consisting of minus three, minus two, minus one, and zero. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The double-precision multiplier of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the array multiplier further comprises a plurality of array multiplier partial product generators and a carry-save adder tree; and wherein the carry-save adder of the partial product accumulator is constructed in combination with the carry-save adder tree of the array multiplier. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The double-precision multiplier of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the state in which the extender drives a plurality of bits of the output of the extender to a value selected according to the output of the carry-out counter is a state after generation of the first, the second, and the third partial products. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A processor for a computer system, the processor comprising a multiport register file, integer pipeline and a floating point pipeline, wherein the integer pipeline and floating point pipeline share an array multiplier, wherein the floating point pipeline further comprises a double-precision multiply unit comprising: 
+<claim-text>a carry-save partial-product accumulator coupled to receive an output of the array multiplier; </claim-text>
+<claim-text>wherein the carry-save partial-product accumulator further comprises a carry-save adder, a sum register, a carry-out counter and an extender, the carry-save adder being coupled to receive the output of the array multiplier and an output of the extender, the sum register being coupled to receive an output of the carry-save adder, the extender being coupled to receive an output of the sum register and an output of the carry-out counter, and the carry-out counter being coupled to receive a carry output of the carry-save adder and a carry output of the array multiplier.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>5</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005016A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005016A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005016A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005016A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005016A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005016A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

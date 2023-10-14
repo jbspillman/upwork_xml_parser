@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030001633A1-20030102-D00000.TIF SYSTEM "US20030001633A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030001633A1-20030102-D00001.TIF SYSTEM "US20030001633A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030001633A1-20030102-D00002.TIF SYSTEM "US20030001633A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030001633A1-20030102-D00003.TIF SYSTEM "US20030001633A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030001633A1-20030102-D00004.TIF SYSTEM "US20030001633A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030001633</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10142854</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020509</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>0111300.0</doc-number>
+</priority-application-number>
+<filing-date>20010509</filing-date>
+<country-code>GB</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H03L007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>327</class>
+<subclass>141000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Master slave frame lock method</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Paul</given-name>
+<family-name>Gresham</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Arnprior</city>
+<country-code>CA</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>Mitel Knowledge Corporation</organization-name>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Frank Chau</name-1>
+<name-2>F. CHAU &amp; ASSOCIATES, LLP</name-2>
+<address>
+<address-1>Suite 501</address-1>
+<address-2>1900 Hempstead Turnpike</address-2>
+<city>East Meadow</city>
+<state>NY</state>
+<postalcode>11554</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention relates to a system for synchronising slave and master timing, comprising a phase adjust circuit for receiving and delaying an arbitrary clock signal by an adjustable amount and outputting a delayed clock signal related to the slave timing, and a master phase detector and lock circuit for comparing relative phases of the master and slave timing and in response generating and applying delay adjust signals to the phase adjust circuit at a dynamically adjusted rate which is related to the relative phase in order to synchronise the slave and master timing and is thereafter reduced to a minimum rate required to maintain synchronisation of the slave and master timing. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates in general to network systems and more specifically to a method and apparatus for synchronizing a slave network to a master network via a communication link there between. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> It is known in the art for slave network nodes to perform direct clock and framing extraction on the input data stream from the master network re-create the corresponding clocking and frame reference signals on the slave network. One problem with this technique is that the clocking signals derived at the slave network tend to be subjected to jitter, as a result of having been extracted directly from the data stream, and therefore subject to the noise characteristics of the transmission line joining the master to the slave. This technique also requires that the exact framing of the master be present in some form in the data stream, usually as a start-of-frame character or signal. Also, the data stream from the master to the slave must be continuous. If there is an interruption in the data stream, the clocking and framing of the slave system is usually quite radically affected. Some systems incorporate loss-of-signal detectors and circuitry for maintaining the slave clocks approximately constant in the event of data interruption, until the data stream signal is re-established. Overall, this technique is not well suited to applications with stringent requirements on accuracy of the derived slave clock. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Phase locked loops (PLL) are well-known systems by which clocking and phasing are generated on the slave node using voltage-controlled oscillators. The initial framing of the slave is arbitrary. However, the slave node framing phase information is compared to the relative frame phasing received from the master node via the data link. An error-offset signal is calculated using the phase information from the master and the slave. The offset signal feeds back into the voltage controlled oscillator of the slave node clock generation circuits, to adjust the slave clock frequency until the master and the slave are in the desired relative phase. This frequency until the master and the slave are in the desired relative phase. This technique provides a very smooth operating slave end node that is quite resilient to transient noise characteristics on the data link. Brief interruptions in the signal are tolerated, without affecting the slave clock and framing. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The problem with prior art phase lock loops is that the circuit design is generally more complicated than direct-clock-extraction circuits. Phase lock loop circuits generally incorporate well known devices such as voltage controlled oscillators, phase comparators, etc. which cannot be easily integrated into digital CMOS ASICs. On the other hand, PLL circuits that are designed for integration into ASICs have fixed operational characteristics that are not desirable. For example, the frequency and/or phase tracking response is generally fixed. Some PLL circuits have dual or even multiple algorithms, (i.e. one for tracking the master phase and initially establishing the slave phase lock, and a different algorithm for keeping the slave circuit locked.) These circuits are usually employed because the criteria required to track the master phase and establish the slave phase under all possible conditions tend to make the slave signal unstable or jittery once the circuit is locked. Alternatively, circuits that are characterised by desirable clock quality and stability do not provide sufficient response to initially capture and lock to the master node under all conditions. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Finally, a PLL lock-holding response that provides the most desirable clock output characteristics tends to have longer time constants associated with it. Thus, for example, in the situation of a master system lock to a digital trunk (slave system), these long time constants in combination with the master tracking algorithm can cause system instability. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> According to the present invention, a master/slave synchronisation technique is set forth which does not utilise a fixed locking algorithm or multiple fixed algorithms. Instead, the synchronisation system of the present invention is characterised by a piece-wise linear exponential response that is self-adjusting to the conditions of the data link, and to the current phase lock status of the slave node. The circuit of the present invention records the rate at which a locking signal is applied to the phase adjust circuit, and then dynamically adjusts this rate until it reaches a minimum value required to maintain lock under existing conditions. By adjusting the rate to a minimum value, the jittery characteristics of the output slave clock are minimised. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The master/slave phase lock technique of the present invention can also be integrated into the same CMOS digital ASIC as other data encode/decode and clock extraction circuits, without the need for any external hardware. According to a successful prototype, a single ASIC contains bit decoding hardware, slave framing hardware, and clock extraction hardware, as well as the master/slave synchronization hardware of the present invention. This substantially reduces the cost of the synchronisation function, and the required PCB area. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The circuit of the present invention is designed to function exclusively in a digital environment, unlike traditional prior art PLL circuits. All signalling is constant with &ldquo;logic1&rdquo; and &ldquo;logic 0&rdquo; type logic levels consistent with the current digital CMOS design techniques.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DETAILED DRAWINGS </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A description of a preferred embodiment of the present invention is provided herein below with reference to the accompanying drawings in which: </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of the master/slave synchronization system in accordance with a preferred embodiment of the present invention; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 2A and 2B</cross-reference>, in combination, form a block schematic diagram of a master phase detector and lock circuit of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; and </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block schematic diagram of a frequency generator portion of a master phase detector and lock circuit of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The master/slave phase lock circuit of the present invention operates with other components described in co-pending U.K. patent application no. 0004672.2, Canadian patent application no. 2,338,320 and U.S. patent application Ser. No. 09/794,644 entitled Integrated Data Clock Extractor, the contents of which are incorporated herein by reference. The circuit of the present invention makes use of the design of the programmable delay element described therein. This circuit according to the present invention also incorporates a frequency hold over circuit as disclosed in the foregoing application. The provision of a frequency hold over circuit has two significant effects. Firstly, it provides a stable, non-transient slave frequency in the event that the data stream signal from the master is interrupted. Secondly, it reduces the rate, referred to above, at which the locking signal must be applied to the phase adjust circuit in order to hold the slave locked to the master. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> According to the present invention, a slave phase locking function is provided by applying a variable amount of delay to an arbitrary clock signal of predetermined frequency. As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the arbitrary clock signal is delayed by a programmable delay element <highlight><bold>1</bold></highlight>, as discussed in greater detail with reference to the aforementioned U.K. patent application no. 0004672.2, Canadian patent application no. 2,338,320 and U.S. patent application Ser. No. 09/794,644. The resulting delayed clock signal is used to run a slave timing generator <highlight><bold>3</bold></highlight>, slave receiver <highlight><bold>5</bold></highlight> and master phase detector and lock <highlight><bold>7</bold></highlight>. The arbitrary clock input signal can be generated using any number of well known and well understood techniques. For example, most ASIC technology libraries offer crystal oscillator or phase-lock-loop macro cells that may be used to generate the arbitrary clock signal. According to a successful prototype of the invention, an integrated crystal oscillator circuit was used. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The slave timing generator <highlight><bold>3</bold></highlight> is a circuit consisting primarily of synchronous counters, that are used to create a reference slave frame pulse signal, and a reference slave clock. Different types of frame formats may be used, and the specifications of the frame are not part of the present invention. According to the successful prototype, 125 micro second frames were divided into 256 timeslots, each timeslot being 488 nanoseconds long. The 8 bit Slave Frame Timing signal generated by slave timing generator <highlight><bold>3</bold></highlight> represents an 8 bit binary count of these timeslots, from 0 to 255, as they occur in time. For other frame types, the only requirement is that a binary count be provided from the timing circuit that is 0 at the start of the frame, and all 1&apos;s at the end of the frame. Someone skilled in the art can easily produce this type of hardware. When power is first applied, this count, and the corresponding slave frame reference, is set arbitrarily. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The receiver <highlight><bold>5</bold></highlight> receives the data stream and decodes the master timing from it. Again, numerous types of data formats are possible. In the successful prototype, this data stream was a 20.48 mega bit/second serial link, with 256 timeslots, of 10 bit data. A special 10 bit code was incorporated in this data stream to mark the frame boundaries, and the data clock was encoded into the bit stream. An array of decade and binary counters were used to produce another 8 bit signal, the Master Frame Timing, that ranges from 0 at the start of the incoming frame, to 255 at the end of the incoming frame. Again, anyone skilled in the art would be capable of producing hardware of this nature. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The programmable delay element <highlight><bold>1</bold></highlight> illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is essentially identical to that described in co-pending U.K. patent application no. 0004672.2, Canadian patent application no. 2,338,320 and U.S. patent application Ser. No. 09/794,644 entitled Integrated Data Clock Extractor. The delay element <highlight><bold>1</bold></highlight> included a 64 element delay line, cycle limit extractors, clock reverters, two clock MUXs, glitch removers, and portions of a clock phase detector that include the delay FIFO, re-synch latch and synchronous up/down counter as set forth in the above-identified co-pending application. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The delay adjust signal input of element <highlight><bold>1</bold></highlight> receives two signals, CNTU and CNTD, that feed the above-mentioned synchronous up/down counter. If CNTU is active for one clock, then the programmable delay <highlight><bold>1</bold></highlight> adds one quanta of delay to the output clock, and if CNTD is active for one clock, then the programmable delay <highlight><bold>1</bold></highlight> subtracts one quanta of delay from the output clock. A person of ordinary skill in the art, referencing the aforementioned co-pending U.K. patent application no. 0004672.2, Canadian patent application no. 2,338,320 and U.S. patent application Ser. No. 09/794,644, would be capable of producing this circuit. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The master phase detector and lock circuit <highlight><bold>7</bold></highlight> forms the core of the present invention. All of the other components mentioned above are either disclosed in the co-pending Integrated Data Clock Extractor application or form part of any well known receiver and slave timing circuits. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The master phase detector and lock circuit <highlight><bold>7</bold></highlight> compares the master timing from the input data stream with the slave timing from the slave timing generator <highlight><bold>3</bold></highlight>. The CNTU and CNTD signals are then applied to the programmable delay element <highlight><bold>1</bold></highlight> to make small incremental changes to the delay of the clock feeding the slave timing generator <highlight><bold>3</bold></highlight> and the receive circuit <highlight><bold>5</bold></highlight>, until the desired slave phase is achieved. The rate at which these two signals are applied to the programmable delay elements determines the locking characteristics of the circuit. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> A block diagram of the master phase detector and lock circuit <highlight><bold>7</bold></highlight> is provided in <cross-reference target="DRAWINGS">FIGS. 2A and 2B</cross-reference>. As shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>A, master phase detector and lock circuit <highlight><bold>7</bold></highlight> includes a combinatorial 8 bit subtractor <highlight><bold>21</bold></highlight>, a re-sync flip-flop <highlight><bold>23</bold></highlight>, a synchronous 4 bit binary UP/DWN counter <highlight><bold>25</bold></highlight>, a 4 to 12 bit binary decoder <highlight><bold>27</bold></highlight>, 12 bit synchronous sample rate counter <highlight><bold>29</bold></highlight>, another 12 bit synchronous sample period counter <highlight><bold>31</bold></highlight>, two 12 bit synchronous up and down counters with enable and clear <highlight><bold>33</bold></highlight> and <highlight><bold>35</bold></highlight>, and an U/D COUNT COMPARE <highlight><bold>37</bold></highlight>. A frequency generator and hold-over portion of the master phase detector and lock circuit <highlight><bold>7</bold></highlight> is illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B, discussed in greater detail below. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The subtractor <highlight><bold>21</bold></highlight> is an 8 bit binary subtractor of standard design which forms the heart of the master/slave phase comparator. If the slave lags the master in time, then the slave phase is greater than the master phase, and a subtraction of the two phase numbers (i.e. 8 bit slave phase minus 8 bit master phase) yields a negative 8 bit phase difference number. Consequently, the msb (most significant bit) of the phase difference is set. If the slave phase is ahead of the master phase in time, then the slave phase number is less than the Master Phase number, and a subtraction of the two phase numbers (i.e. 8 bit slave phase minus 8 bit master phase) yields a positive phase difference number. When this happens, the msb of the phase difference result is cleared. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The re-sync flip-flop <highlight><bold>23</bold></highlight> re-times the msb signal to give an unambiguous signal to the inputs of AND gates <highlight><bold>39</bold></highlight> and <highlight><bold>41</bold></highlight> that are used to create the I_CNTU and I_CNTD outputs to the programmable delay element <highlight><bold>1</bold></highlight>. As discussed further below, the I_CNTU and I_CNTD signals do not directly feed into the programmable delay element <highlight><bold>1</bold></highlight>, but rather feed into the frequency generator and hold over circuit of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B and are transmitted therefrom to the programmable delay element. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> A PHZ_ENABLE signal is generated, as discussed in greater detail below, and applied to AND gates <highlight><bold>39</bold></highlight> and <highlight><bold>41</bold></highlight> to periodically gate one of the I_CNTU or I_CNTD signals, depending on the state of the msb signal. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> If the msb signal output from re-sync flip flop <highlight><bold>23</bold></highlight> is set, indicating that the slave is lagging the master in time, then the I_CNTD signal is generated. This causes one quanta of time to be removed from the slave phase, thereby advancing the slave in time and slightly reducing the phase difference. If the msb signal output from the re-sync flip flop <highlight><bold>23</bold></highlight> is reset, indicating that the slave is leading the master in time, then the I_CNTD signal is generated. This causes one quanta of time to be added to the slave phase, thereby retreating the slave in time and slightly reducing the phase difference. At some point, when the master and the slave are almost exactly in phase, the msb signal on the output of the re-sync flip flop <highlight><bold>23</bold></highlight> begins to alternate with every application of the PHZ_ENABLE signal. This, in turn, causes the assertions of I_CNTD and I_CNTU to alternate, signifying the point in time where the master and the slave are locked in phase. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The 4 bit binary UP/DWN counter <highlight><bold>25</bold></highlight> is a common well known structure except that it is configured for a count range between 0 and 11 (inclusive), and is configured not to count less than 0 or greater than 11. This may be expressed as follows using Verilog HDL:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>always &commat;(posedge CLK) if(EN) begin</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="7PT" align="left"/>
+<colspec colname="1" colwidth="210PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>if(UP/DWN) Q &lt;&equals; (Q&lt;11) &quest; Q&plus;1 : Q);</entry>
+</row>
+<row>
+<entry></entry>
+<entry>else Q &lt;&equals; (Q&gt;0) &quest; Q&minus;1 : Q)</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>end</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The binary decoder <highlight><bold>27</bold></highlight> is also of common well known structure except that it is configured for a 4 bit binary input in the range 0 to 11 (inclusive). This may be expressed as follows using Verilog HDL:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>always &commat;(D) case(D)</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="7PT" align="left"/>
+<colspec colname="1" colwidth="210PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>4&prime;b0000: Q &lt;&equals; 12&prime;b000000000001;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b0001: Q &lt;&equals; 12&prime;b000000000010;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b0010: Q &lt;&equals; 12&prime;b000000000100;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b0011: Q &lt;&equals; 12&prime;b000000001000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b0100: Q &lt;&equals; 12&prime;b000000010000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b0101: Q &lt;&equals; 12&prime;b000000100000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b0110: Q &lt;&equals; 12&prime;b000001000000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b0111: Q &lt;&equals; 12&prime;b000010000000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b1000: Q &lt;&equals; 12&prime;b000100000000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b1001: Q &lt;&equals; 12&prime;b001000000000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b1010: Q &lt;&equals; 12&prime;b010000000000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>4&prime;b1011: Q &lt;&equals; 12&prime;b100000000000;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>default: Q &lt;&equals; 12&prime;b100000000000;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>endcase</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The 12 bit binary compare circuit <highlight><bold>43</bold></highlight> performs the following function, expressed in Verilog HDL: </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> always &commat;(A or B) Q&lt;&equals;(A&equals;&equals;B); </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>A, the 12 bit upper limit output of the binary decoder <highlight><bold>27</bold></highlight> generates values of 2<highlight><superscript>(n&plus;1)</superscript></highlight>, where n is the binary value of the 4 bit UP/DWN counter <highlight><bold>25</bold></highlight>. The 12 bit sample rate counter <highlight><bold>29</bold></highlight> counts up to the value generated by decoder <highlight><bold>27</bold></highlight>, performing one count for every clock of the slave clock. Both the sample rate and the upper limit values are compared continuously, and when they become equal the PHZ_ENABLE is activated. This signal is used to drive one of the outputs I_CNTU or I_CNTD, depending on the value of the msb signal on the output of the re-sync flip-flop <highlight><bold>23</bold></highlight>. The I_CNTU and I_CNTD signals are used to control the programmable delay element <highlight><bold>1</bold></highlight>, as shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The PHZ_ENABLE signal also clears the sample rate counter <highlight><bold>29</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> When the upper limit counter <highlight><bold>25</bold></highlight> has a binary value of zero, the PHZ_ENABLE signal is activated on every other phase of the slave clock. When the upper limit counter has a binary value of 1, the PHZ_ENABLE signal is activated every four slave clock cycles. When the upper limit counter has a binary value of 2, the PHZ_ENABLE signal is activated every eight slave clock cycles, and so on until the upper limit counter has a binary value of 11, in which case the PHZ_ENABLE signal is activated every 4096 slave clock cycles. Thus, for every count that the upper limit counter increases, the rate at which the I_CNTU and I_CNTD signals are applied to the programmable delay circuit <highlight><bold>1</bold></highlight> is halved. This gives the circuit an exponential response characteristic. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> There are two 12 bit synchronous counters, the up counter <highlight><bold>33</bold></highlight>, and the down counter <highlight><bold>35</bold></highlight>. Both of these counters count the number of times that their respective count enable signals I_CNTU and I_CNTD respectively go active within a fixed period of time. The 12 bit sample period counter <highlight><bold>31</bold></highlight> measures out this period of time to 4096 slave clock cycles. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> When the sample period counter <highlight><bold>31</bold></highlight> reaches its highest value, AND gate <highlight><bold>45</bold></highlight> generates a sample period pulse that is applied to the 4 bit synchronous UP/DWN counter <highlight><bold>25</bold></highlight>. The counter <highlight><bold>25</bold></highlight> is incremented or decremented upon receipt of each sample period pulse, depending on the additional signalling it receives from the U/D count compare block <highlight><bold>37</bold></highlight>. The sample period pulse also clears the up counter <highlight><bold>33</bold></highlight> and the down counter <highlight><bold>35</bold></highlight> for the next sample period. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The U/D count compare block <highlight><bold>37</bold></highlight> continuously examines the up counter <highlight><bold>33</bold></highlight> and the down counter <highlight><bold>35</bold></highlight> outputs, and appropriately signals the 4 bit UP/DWN counter <highlight><bold>25</bold></highlight> as to whether an increment or a decrement is required. This count, if required, occurs at the end of every sample period. The operation of the U/D count compare block <highlight><bold>37</bold></highlight> is expressed as follows: </paragraph>
+<paragraph id="P-0035" lvl="2"><number>&lsqb;0035&rsqb;</number> if((Up Count&lt;&equals;5)&verbar;&verbar;(Down Count&lt;&equals;5)) then decrement UP/DWN </paragraph>
+<paragraph id="P-0036" lvl="2"><number>&lsqb;0036&rsqb;</number> else if((Up Count&plus;Down Count)/2&gt;abs(Up Count-Down Count)&plus;5) then increment UP/DWN </paragraph>
+<paragraph id="P-0037" lvl="2"><number>&lsqb;0037&rsqb;</number> else do not change UP/DWN </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> As indicated above, the UP/DWN counter <highlight><bold>25</bold></highlight> is never decremented if its value is zero, and it is never incremented if its value is 11. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>A, the U/D count compare block <highlight><bold>37</bold></highlight> also produces a lock status signal which is fed to the frequency generator and hold-over circuit discussed in greater detail below with reference to <cross-reference target="DRAWINGS">FIG. 2B</cross-reference>. This signal is a logical 1 if the phase detector and lock circuit <highlight><bold>7</bold></highlight> is locked. This is indicated if both of the up counter <highlight><bold>33</bold></highlight> and the down counter <highlight><bold>35</bold></highlight> registers are non-zero. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> During a complete sample period, if the slave is locked to the master then both of the up counter <highlight><bold>33</bold></highlight> and the down counter <highlight><bold>35</bold></highlight> values are non-zero. If either is zero, then the slave is not locked to the master. The 4 bit synchronous upper limit counter <highlight><bold>25</bold></highlight> is signalled by the U/D count compare block <highlight><bold>37</bold></highlight> to count down by one count if either of the up counter <highlight><bold>33</bold></highlight> or the down counter <highlight><bold>35</bold></highlight> is less than or equal to five. This action doubles the rate at which the I_CNTU or I_CNTD signals are sent to the programmable delay element <highlight><bold>1</bold></highlight>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> After another sample period, the up counter <highlight><bold>33</bold></highlight> and the down counter <highlight><bold>35</bold></highlight> values are re-examined again. If either is zero, then the slave is still not locked to the master, and the 4 bit synchronous counter <highlight><bold>25</bold></highlight> is signalled to count down by one again. This continues until the 4 bit synchronous UP/DWN counter <highlight><bold>25</bold></highlight> has counted down to zero. At this point, the I_CNTU or I_CNTD signals are sent to the programmable delay element <highlight><bold>1</bold></highlight> at the maximum rate. This rate is pre-determined to be about 10 times the rate actually needed by the slave to guarantee, under worst case conditions, that the slave phase will be able to &lsquo;catch&rsquo; the master. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> When the slave &lsquo;catches&rsquo; the master, then the two 8 bit master and slave phase numbers becomes equal, and the I_CNTU and I_CNTD signals begin to alternate, as described above. This results in both the up counter <highlight><bold>33</bold></highlight> and the down counter <highlight><bold>35</bold></highlight> values being non-zero numbers at the end of the sample period. Also, if the UP/IDWN counter <highlight><bold>25</bold></highlight> value is small, and the corresponding sample rate is high, the numerical values for both the up counter and down counter will be quite high. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> If both up counter <highlight><bold>33</bold></highlight> and down counter <highlight><bold>35</bold></highlight> are greater than five, and if the numerical average of the up counter and the down counter is five or more than the absolute value of their difference, then the UP/DWN counter <highlight><bold>25</bold></highlight> is incremented by 1. Otherwise, no changes are made to the UP/DWN counter. Consequently, the value of the UP/DWN counter is adjusted so that both up counter and down counter are minimized without becoming zero. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> The reason for comparing the up counter <highlight><bold>33</bold></highlight> and down counter <highlight><bold>35</bold></highlight> against the number five (5), and for comparing the average of their numerical output against 5 more than the difference, is that it is desirable to keep both the up counter and down counter numbers as small as possible (but greater than zero). The number five (5) was chosen to achieve this requirement. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The frequency hold-over circuit is illustrated in <cross-reference target="DRAWINGS">FIG. 2B</cross-reference>. This circuit consists of a 23 bit UP/DWN pulse counter <highlight><bold>47</bold></highlight>, a 23 bit frequency sample period counter <highlight><bold>49</bold></highlight>, a 23 bit latch <highlight><bold>51</bold></highlight>, a divider circuit <highlight><bold>53</bold></highlight>, a frequency generator circuit <highlight><bold>55</bold></highlight>, and a MUX <highlight><bold>57</bold></highlight>. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> As discussed above, the I_CNTU and the I_CNTD signals are received from the phase detector and lock circuit shown in <cross-reference target="DRAWINGS">FIG. 2A</cross-reference>. These signals are OR-ed together by OR gate <highlight><bold>59</bold></highlight> and used to control the CNT Selector MUX <highlight><bold>57</bold></highlight>. The CNT selector MUX is used to select the source of the two CNTU and CNTD signals that are applied to the programmable delay circuit <highlight><bold>1</bold></highlight>, as shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. If both of I_CNTD and I_CNTU are logic 0, then the signals F_CNTD and F_CNTU are selected as the CNDU and CNTD outputs, respectively. If either of I_CNTU or I_CNTD are a logic 1, then the I_CNTU and the I_CNTD signals are selected as the CNDU and CNTD outputs, respectively. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The 23 bit counter <highlight><bold>47</bold></highlight> is used to mark a fixed time interval during which to monitor the output signals CNTU and CNTD. For each clock cycle that CNTU is active, the UP/DWN counter <highlight><bold>47</bold></highlight> counts up by 1. For each clock cycle that CNTD is active, the UP/DWN counter <highlight><bold>47</bold></highlight> counts down by 1. At the end of the time interval, the value in the UP/DWN <highlight><bold>47</bold></highlight> counter is transferred to the 23 bit latch <highlight><bold>51</bold></highlight>, and the cycle is repeated. This number is the integer difference between the number of CNTU signals and the number of CNTD signals that has occurred during the time interval. This difference is applied to the 23 bit divider circuit <highlight><bold>53</bold></highlight> as a divisor. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The 23 bit unsigned constant 0&times;7FFFFF, or all bits set, is applied as a dividend to the divider circuit <highlight><bold>53</bold></highlight>. This results in the dividend being set to the maximal count value that the interval timer can achieve. The divider circuit <highlight><bold>53</bold></highlight> uses a fairly well known technique of successive subtraction to perform long division of the divisor into the dividend. A quick summary of this technique is as follows: </paragraph>
+<paragraph id="P-0049" lvl="2"><number>&lsqb;0049&rsqb;</number> Latch dividend into register; clear quotient register. Clear the shift count register. </paragraph>
+<paragraph id="P-0050" lvl="2"><number>&lsqb;0050&rsqb;</number> If divisor is 0, then exit. </paragraph>
+<paragraph id="P-0051" lvl="2"><number>&lsqb;0051&rsqb;</number> If divisor is negative (most significant bit is set) then negate and set NEG FLAG. </paragraph>
+<paragraph id="P-0052" lvl="2"><number>&lsqb;0052&rsqb;</number> Shift divisor left until msb is set; For each shift, increment the shift count register. </paragraph>
+<paragraph id="P-0053" lvl="2"><number>&lsqb;0053&rsqb;</number> While (shift count&gt;&equals;0) if (dividend-divisor is positive) then set the quotient register bit number indicated by shift count, and set dividend to (dividend-divisor). Decrement the shift count and shift the divisor right 1 bit position. </paragraph>
+<paragraph id="P-0054" lvl="2"><number>&lsqb;0054&rsqb;</number> When the shift count becomes less than 0, then store the remaining dividend into the remainder register. The quotient register will contain the quotient. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> The divider circuit <highlight><bold>53</bold></highlight> also has a LD_EN output. The signal from this output is an output pulse gated on the state machine which implements the division operation and is used to indicate when the divider circuit has completed the division operation. As an example, the final pulse used to enable the loading of the remainder register could be used for this function. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> A person of ordinary skill in the art will understand how to construct and implement hardware for the divider circuit <highlight><bold>53</bold></highlight>. Alternatively, hardware synthesizers such as Synopsys Behavioral Compiler can be used to synthesize this type of structure. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Not withstanding the foregoing, if a logic zero is received on the lock status input of divider <highlight><bold>53</bold></highlight>, then no calculation is performed, and no changes are made to the current values of the remainder and the quotient, and no LD_EN output pulse is generated. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> The frequency generator module <highlight><bold>55</bold></highlight> takes the quotient, divisor, remainder, and the negative flag, and uses these to generate a regularly timed series of pulses, F_CNTU or F_CNTD, that are applied to the programmable delay element <highlight><bold>1</bold></highlight>, in order to provide a steady frequency component. However, if a logic zero is received on the lock status input, then no changes are made to the rate at which F_CNTU or F_CNTD are generated. Also, if a zero divisor is detected then no pulses are generated at the F_CNTU or F_CNTD outputs. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> The block diagram for the frequency generator module <highlight><bold>55</bold></highlight> is illustrated <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. The main components are the magnitude compare <highlight><bold>61</bold></highlight>, the equality compare <highlight><bold>63</bold></highlight>, the 23 bit counter <highlight><bold>65</bold></highlight>, the 23 bit accumulator <highlight><bold>67</bold></highlight>, and a 23 bit counter <highlight><bold>65</bold></highlight>. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> The counter <highlight><bold>65</bold></highlight> is a synchronous counter of well known characteristics. For every clock cycle, if the LD input is low, it performs a synchronous up count. Its output, Q, is compared continuously with the 23 bit quotient by the equality compare circuit <highlight><bold>63</bold></highlight>. When the quotient becomes equal to the output of the 23 bit counter <highlight><bold>65</bold></highlight>, a F_PLS signal is generated by the equality compare circuit, and fed back to the LD input of the 23 bit counter <highlight><bold>65</bold></highlight>. For each transition of the CLK input signal with the LD input high, the counter 65 is pre-loaded with a logic 1 if the LD0/1 input is low or with a logic 0 if the LD0/1 input is high. The operation of the 23 bit counter may be expressed as follows (Verilog HDL): </paragraph>
+<paragraph id="P-0061" lvl="2"><number>&lsqb;0061&rsqb;</number> always &commat;(posedge CLK) if(LD) Q&lt;&equals;LD0/1 &quest; 23&prime;h0:23&prime;h1; </paragraph>
+<paragraph id="P-0062" lvl="2"><number>&lsqb;0062&rsqb;</number> else Q&lt;&equals;Q&plus;1; </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The F_PLS signal is also fed into the enable input of 23 bit accumulator <highlight><bold>67</bold></highlight>, which is designed to keep a running sum of the remainder input. In other words, when the enable signal goes high, the amount of the remainder is added to the current value of the accumulator output, Q. The magnitude compare circuit <highlight><bold>61</bold></highlight> continuously monitors the output of the 23 bit accumulator, Q, and compares it to the value on the divisor input. If the output of the 23 bit accumulator <highlight><bold>67</bold></highlight> becomes greater than or equal to the value on the divisor input, then the ADJ signal is driven high. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The 23 bit accumulator <highlight><bold>67</bold></highlight> modifies its action if the its ADJ input goes high. When the ADJ input is high, then the amount of the remainder is added to the accumulator output, Q, and the amount of the divisor is subtracted from the accumulator output, Q. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The LD input to the 23 bit accumulator <highlight><bold>67</bold></highlight> is used to load the initial value of the remainder into the accumulator at the start of a frequency sample period, after the divider circuit has completed the division operation. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> The operation of the 23 bit accumulator <highlight><bold>67</bold></highlight> may be concisely described as follows (Verilog HDL):  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>always&commat;(posedge CLK)</entry>
+</row>
+<row>
+<entry>if(LD) Q &lt;&equals; REMAINDER;</entry>
+</row>
+<row>
+<entry>else begin</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="7PT" align="left"/>
+<colspec colname="1" colwidth="210PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>if(ENABLE) Q &lt;&equals; ADJ &quest; Q &plus; REMAINDER &minus; DIVISOR : Q &plus;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>REMAINDER;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>end</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Both the equality compare circuit <highlight><bold>63</bold></highlight> and the magnitude compare circuit <highlight><bold>61</bold></highlight> are not illustrated in detail because they are trivial components that are common and well known in operation, as would be understood by a person of ordinary skill in the art. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> The arrangement of the 23 bit counter <highlight><bold>65</bold></highlight> and the 23 bit accumulator <highlight><bold>67</bold></highlight> provides a pulse rate at the F_PLS signal whose period is proportional to the value of the quotient. Also, when the 23 bit accumulator provides the ADJ pulse to the 23 bit counter <highlight><bold>67</bold></highlight>, then the counter pre-loads a zero instead of a one. This results in the counter counting one more CLK pulse than during the previous period. Together, this arrangement spreads the effect of the remainder over the entire frequency sample period, and provides a more accurate distribution of F_CNTU or F_CNTD signals. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> The LD_EN signal is provided by the divider module <highlight><bold>53</bold></highlight> as shown in <cross-reference target="DRAWINGS">FIG. 2B</cross-reference>. This signal is gated with the lock status input to prevent the circuit from changing its operation if lock status is removed. The frequency generator circuit of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> does not show gating circuitry for disabling the generation of the F_PLS signal if the value of the divisor is zero. However, this is a trivial component that need not be illustrated, thereby preserving the clarity of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> The F_PLS signal is combined with the NEG input through AND gates <highlight><bold>69</bold></highlight> and <highlight><bold>71</bold></highlight> and the INVERTER <highlight><bold>73</bold></highlight> to produce the output signals F_CNTU and F_CNTD. If the F_PLS signal is pulsed, and the NEG signal is high, then the F_CNTD signal is activated. If the F_PLS signal is pulsed, and the NEG signal is low, then the F_CNTU signal is activated. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> The main functionality of the frequency generator and hold-over circuit of <cross-reference target="DRAWINGS">FIGS. 2B and 3</cross-reference> is to count the net number of CNTU or CNTD signals applied to the programmable delay circuit <highlight><bold>1</bold></highlight> over a large period of time while the phase detector and lock circuit of <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> is locked in phase, and then to calculate the steady-state rate at which these signals must be applied to the programmable delay circuit <highlight><bold>1</bold></highlight> in order to achieve the same net count. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> It can be shown that when the frequency generator and hold-over circuit applies these pulses, then the values calculated for the up count <highlight><bold>35</bold></highlight> and down count <highlight><bold>33</bold></highlight> in the phase detector and lock circuit of <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> will cease to include this component in their respective counts, and will therefore become more equal to each other. When this happens, the up down compare circuit <highlight><bold>37</bold></highlight> allows the UP/DWN counter <highlight><bold>25</bold></highlight> to count up to a higher value, thus reducing the rate at which the I_CNTU and I_CNTD signals are generated while still maintaining the lock status. This in turn leads to a less jittery output signal. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> A person understanding the present invention may conceive of alternative embodiments and applications thereof. For example, the frequency sample period generated by counter <highlight><bold>49</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B and the sample period counter <highlight><bold>31</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>A, and their respective circuits may have counter widths adjusted to vary some of the operational characteristics. The compare value of five (5), discussed above, can also be adjusted to vary the operational characteristics. Other applications of the invention include virtually any application where a slave node is connected to a master node using a communication link that contains within it, a timing reference to the master node, where: (1) the relative phase of the slave node with respect to the master node is important, (2) the signal quality of the reference clocks on the slave node is important, (3) the combined stability of the Master and slave together is important, and (4) the level of integration is important. All such changes and modifications may be made without departing from the sphere and scope of the invention as defined by the claims appended herein. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for synchronising slave and master timing, comprising: 
+<claim-text>a phase adjust circuit for receiving and delaying an arbitrary clock signal by an adjustable amount and outputting a delayed clock signal related to said slave timing; and </claim-text>
+<claim-text>a master phase detector and lock circuit for comparing relative phases of said master and slave timing and in response generating and applying delay adjust signals to said phase adjust circuit at a dynamically adjusted rate which is related to said relative phase in order to synchronise said slave and master timing and is thereafter reduced to a minimum rate required to maintain synchronisation of said slave and master timing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said master phase detector includes circuitry for generating said delay adjust signals in the form of up count signals for incrementally increasing said adjustable amount of delay in the event said slave timing leads said master timing, and down count signals for incrementally decreasing said adjustable amount of delay in the event said slave timing lags said master timing. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said master phase detector and lock circuit further includes: 
+<claim-text>an upper limit counter for generating an upper limit count value which is related to said dynamically adjusted rate at which said delay adjust signals are applied to said phase adjust circuit by an inverse piece-wise linear exponential relationship; </claim-text>
+<claim-text>an up counter for counting how many of said up count signals are generated within a predetermined sample period; </claim-text>
+<claim-text>a down counter for counting how many of said down count signals are generated within said predetermined sample period; and </claim-text>
+<claim-text>a count compare circuit for generating an up/down signal which (i) decrements said upper limit counter in the event either of said up counter or down counter has counted to no greater than a predetermined number, thereby doubling said dynamically adjusted rate at which said delay adjust signals are applied to said phase adjust circuit, and (ii) increments said upper limit counter in the event that both said up counter and down counter have counted to greater than said predetermined number and the numerical average of said up counter and down counter exceeds the absolute value of their difference by at least said predetermined number, thereby halving said dynamically adjusted rate at which said delay adjust signals are applied to said phase adjust circuit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said predetermined number is chosen to minimize said up counter and down counter to count values greater than zero. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said predetermined number is five. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system according to any of the foregoing claims, further comprising a frequency hold over circuit for calculating a steady-state rate at which said delay adjust signals are applied to said phase adjust circuit while maintaining said synchronisation of said slave and master timing and than applying said delay adjust signals to said phase adjust circuit at said steady-state rate. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method of synchronising slave and master timing, comprising: 
+<claim-text>delaying an arbitrary clock signal by an adjustable amount and outputting a delayed clock signal related to said slave timing; and </claim-text>
+<claim-text>comparing relative phases of said master and slave timing and in response generating delay adjust signals for decreasing said amount of delay in the event said slave timing lags said master timing and increasing same amount of delay in the event said slave timing leads said master timing; </claim-text>
+<claim-text>dynamically adjusting the rate at which said delay adjust signals are generated relative to said relative phases in order to synchronise said slave and master timing and thereafter reducing said rate to a value required to maintain synchronisation of said slave and master timing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein said delay adjust signals are generated in the form of up count signals for incrementally increasing said adjustable amount of delay, and down count signals for incrementally decreasing said adjustable amount of delay. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising: 
+<claim-text>generating an upper limit count value which is related to said dynamically adjusted rate at which said delay adjust signals are generated by an inverse piece-wise linear exponential relationship; </claim-text>
+<claim-text>counting the number of said up count signals generated within a predetermined sample period; </claim-text>
+<claim-text>counting the number of said down count signals generated within said predetermined sample period; and </claim-text>
+<claim-text>generating an up/down signal which (i) decrements said upper limit count value in the event either of said number of up count or down count signals is no greater than a predetermined number, thereby doubling said dynamically adjusted rate at which said delay adjust signals are generated, and (ii) increments said upper limit counter in the event that both said number of up count signals and said number of down count signals are greater than said predetermined number and the numerical average of said number of up count signals and said number of down count signals exceeds the absolute value of their difference by at least said predetermined number, thereby halving said dynamically adjusted rate at which said delay adjust signals are generated. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein said predetermined number is chosen to minimize said numbers of up count signals and down count signals to an amount which is greater than zero. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said predetermined number is five. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method according to any of <dependent-claim-reference depends_on="CLM-00007">claims 7</dependent-claim-reference> to <dependent-claim-reference depends_on="CLM-00011">11</dependent-claim-reference>, further comprising calculating a steady-state rate at which said delay adjust signals are generated while maintaining said synchronisation of said slave and master timing and then generating said delay adjust signals at said steady-state rate.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030001633A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030001633A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030001633A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030001633A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030001633A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

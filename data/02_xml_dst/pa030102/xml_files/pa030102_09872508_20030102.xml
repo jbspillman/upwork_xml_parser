@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030001840A1-20030102-D00000.TIF SYSTEM "US20030001840A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00001.TIF SYSTEM "US20030001840A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00002.TIF SYSTEM "US20030001840A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00003.TIF SYSTEM "US20030001840A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00004.TIF SYSTEM "US20030001840A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00005.TIF SYSTEM "US20030001840A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00006.TIF SYSTEM "US20030001840A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00007.TIF SYSTEM "US20030001840A1-20030102-D00007.TIF" NDATA TIF>
+<!ENTITY US20030001840A1-20030102-D00008.TIF SYSTEM "US20030001840A1-20030102-D00008.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030001840</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09872508</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010601</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06T017/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>345</class>
+<subclass>420000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and system for synchronizing updates of vertex data with a graphics processor that is fetching vertex data</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>John</given-name>
+<middle-name>Fredric</middle-name>
+<family-name>Spitzer</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Mark</given-name>
+<middle-name>J.</middle-name>
+<family-name>Kilgard</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>SAWYER LAW GROUP LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. Box 51418</address-1>
+<city>Palo Alto</city>
+<state>CA</state>
+<postalcode>94303</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and system for synchronizing updates of vertex data by a processor with a graphics accelerator module that is fetching vertex data is disclosed. The method and system comprises providing vertex array range (VAR) and writing vertex data into the VAR. The method and system includes providing a command into a command stream of the graphics accelerator module indicating that the vertex data has written into the VAR, and providing a fence condition based upon the command. A system and method in accordance with the present invention thus permits extremely high vertex processing rates via vertex arrays or vertex buffers even when the processor lacks the necessary data movement bandwidth. By passing indices in lieu of the vertex data, the processor is capable of keeping up with the rate at which a vertex engine of the graphics accelerator module can consume vertices. In operation, the processor passes vertex indices to the hardware and lets the hardware &ldquo;pull&rdquo;the actual vertex data via direct memory access (DMA). </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to computer graphics and, more particularly, to a system and method for accessing graphics vertex data. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> In graphics processing, much data is managed in order to provide a resultant image on a computer display. One form of such data includes vertex data that comprises information for displaying triangles, lines, points or any other type of portions of an image on the computer display. Prior Art Table 1 includes an example of typical vertex data.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Prior Art</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="77PT" align="left"/>
+<colspec colname="1" colwidth="140PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>position (X Y Z W)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>diffuse (R G B A)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>specular (R G B F)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>texture0 (S T R Q)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>texture1 (S T R Q)</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Together, multiple sets of such vertex data are used to represent one of the portions of the image. In order to accomplish this, each vertex, on average, requires 40 bytes of memory storage space. During conventional system operation, over 10 million vertexes are typically exchanged every second during processing. This results in a data transfer rate of 400MB/s </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> During the processing of vertex data, various components of a system come into play. Prior Art <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates an example of a system <highlight><bold>10</bold></highlight> that processes vertex data. As shown, included are a processor <highlight><bold>12</bold></highlight>, system memory <highlight><bold>14</bold></highlight>, a graphics accelerator module <highlight><bold>16</bold></highlight>, and a bus <highlight><bold>18</bold></highlight> for allowing communication among the various components. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In use, the processor <highlight><bold>12</bold></highlight> locates the vertex data in the system memory <highlight><bold>14</bold></highlight>. The vertex data is then routed to the processor <highlight><bold>12</bold></highlight>, after which the vertex data is copied for later use by the graphics accelerator module <highlight><bold>16</bold></highlight> by the module <highlight><bold>16</bold></highlight> directly accessing the system memory <highlight><bold>14</bold></highlight>. The graphics accelerator module <highlight><bold>16</bold></highlight> may perform various operations such as transform and/or lighting operations on the vertex data. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> As mentioned earlier, a typical data transfer rate of 400MB/s is required in current systems to process the vertex data. During the transfer of such data in the system <highlight><bold>10</bold></highlight> of Prior Art <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the bus <highlight><bold>18</bold></highlight> connecting the processor <highlight><bold>12</bold></highlight> and the graphics accelerator module <highlight><bold>16</bold></highlight> is required to handle an input data transfer rate of 400MB/s along with an output data transfer rate of 400 MB/s. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> As such, the foregoing bus <highlight><bold>18</bold></highlight> must accommodate a data transfer rate of 800 MB/s while handling the vertex data. Conventionally, such bus <highlight><bold>18</bold></highlight> is 64 bits wide and the processor <highlight><bold>12</bold></highlight> runs at about 100MB/S. Therefore, the bus <highlight><bold>18</bold></highlight> is often strained during use in the system <highlight><bold>10</bold></highlight> of Prior Art <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. Further, with data transfer rates constantly rising, processors will soon not be able to be used to copy vertex data. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> A conventional graphics accelerator module <highlight><bold>16</bold></highlight> has the ability to read vertex data by one of two means. The vertex data can be supplied either in-band through the command stream of the graphics accelerator module <highlight><bold>16</bold></highlight> can be configured to read vertex data supplied in-band in its command stream. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In-band vertex data may be presented in an &ldquo;immediate mode&rdquo; as illustrated below:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="77PT" align="left"/>
+<colspec colname="1" colwidth="140PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>SetDiffuseColor0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>R0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>G0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>B0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Vertex0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>X0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Y0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Z0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>SetDiffuseColor1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>R1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>G1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>B1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Vertex1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>X1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Y1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Z1</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The single indented lines (SetDiffuseColor, Vertex) represent in a preferred embodiment 32-bit command tokens. The multiple doubly indented lines (RGB, XYZ) following the command tokens in a preferred embodiment are multiple 32-bit words of data for the preceding command. The above example involves sending data for two immediate mode vertices. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The in-band vertex data may also be packed together based on an &ldquo;inline&rdquo; vertex array format. First the format for vertex data is defined by commands in the command stream. For example: </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> SetDiffuseColorArrayFormat </paragraph>
+<paragraph id="P-0013" lvl="2"><number>&lsqb;0013&rsqb;</number> expect 3 RGB floats </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> SetVertexArrayFormat </paragraph>
+<paragraph id="P-0015" lvl="2"><number>&lsqb;0015&rsqb;</number> expect 3 XYZ floats, stride is six floats </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Then vertex data can be sent more efficiently with minimal command token overhead because the format of the vertex data is pre-established by the inline format. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Then vertex data can be sent like: </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> InlineArray </paragraph>
+<paragraph id="P-0019" lvl="2"><number>&lsqb;0019&rsqb;</number> R0 </paragraph>
+<paragraph id="P-0020" lvl="2"><number>&lsqb;0020&rsqb;</number> G0 </paragraph>
+<paragraph id="P-0021" lvl="2"><number>&lsqb;0021&rsqb;</number> B0 </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> X0 </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> Y0 </paragraph>
+<paragraph id="P-0024" lvl="2"><number>&lsqb;0024&rsqb;</number> Z0 </paragraph>
+<paragraph id="P-0025" lvl="2"><number>&lsqb;0025&rsqb;</number> R1 </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> G1 </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> B1 </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> X1 </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> Y1 </paragraph>
+<paragraph id="P-0030" lvl="2"><number>&lsqb;0030&rsqb;</number> Z1 </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In this example, the extra overhead from SetDiffuseColor and Vertex command tokens is eliminated when using inline data. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> A copending application entitled, &ldquo;System, Method and Article of Manufacture for Allowing Direct Memory Access to Graphics Vertex Data While Bypassing a Processor&rdquo;, filed on Dec. 16, 1999 and assigned to the assignee of this application, a second means for reading vertex data, is disclosed. In this application, the graphics accelerator module is supplied with the vertex array offsets and strides in addition to the vertex array formats. The offsets are relative to the beginning of a pre-established region of memory shared between the graphics accelerator module and CPU. This memory is often a high-bandwidth uncached AGP (Advanced Graphics Port) memory though it may also be &ldquo;video memory&rdquo; within the graphics hardware or cached system memory. The CPU is responsible for writing vertex data into this memory region. This shared memory region is called a &ldquo;vertex array range&rdquo;. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Accordingly, rather than passing the vertex data in-band through the command stream, the command stream contains only vertex indices that indicate where the graphics accelerator module should read the corresponding vertex data for the given vertex index. The vertex array format, stride, and offset provide the information necessary to read the data for a specified vertex index out of the current vertex array range. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In this approach, the format, offset, and stride is first defined by commands in the command stream. For example: </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> SetDiffuseColorArrayFormat </paragraph>
+<paragraph id="P-0036" lvl="2"><number>&lsqb;0036&rsqb;</number> expect 3 RGB floats, stride is 6 floats </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> SetDiffuseColorArrayOffset </paragraph>
+<paragraph id="P-0038" lvl="2"><number>&lsqb;0038&rsqb;</number> 200 bytes from the shared memory region beginning </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> SetVertexArrayFormat </paragraph>
+<paragraph id="P-0040" lvl="2"><number>&lsqb;0040&rsqb;</number> expect 3 XYZ floats </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> SetVertexArrayOffset </paragraph>
+<paragraph id="P-0042" lvl="2"><number>&lsqb;0042&rsqb;</number> 212 bytes from the shared memory region beginning </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Then the vertex data is written into the vertex array range. For example:  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="63PT" align="left"/>
+<colspec colname="1" colwidth="77PT" align="left"/>
+<colspec colname="2" colwidth="77PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>200</entry>
+<entry>R0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>204</entry>
+<entry>G0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>208</entry>
+<entry>B0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>212</entry>
+<entry>X0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>216</entry>
+<entry>Y0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>220</entry>
+<entry>Z0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>224</entry>
+<entry>R1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>228</entry>
+<entry>G1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>232</entry>
+<entry>B1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>236</entry>
+<entry>X1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>240</entry>
+<entry>Y1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>244</entry>
+<entry>Z1</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> where the given vertex data components are written at the indicated byte offsets from the beginning of the vertex array range. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Once the vertex array range is set up in the manner described, the graphics accelerator module can much more efficiently generate vertices by reading the required vertex data from the vertex array range via an ArrayElement command token as necessary rather than reading all the vertex data in-band through the command stream. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> For example: </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> ArrayElement </paragraph>
+<paragraph id="P-0048" lvl="2"><number>&lsqb;0048&rsqb;</number> 0 </paragraph>
+<paragraph id="P-0049" lvl="2"><number>&lsqb;0049&rsqb;</number> 1 </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> This simple command would instruct the graphics accelerator module to read the vertices (X0, Y0, Z0, R0, G0, B0) and (X1, Y1, Z1, R1, G1, B1) from the vertex array range. Sending vertex indices in the graphic accelerator module&apos;s command stream is substantially more efficient than sending the vertex data inline for several reasons. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Firstly, three dimensional (3D) models are represented as meshes of vertices, where the triangles making up the models tend to share vertices, and therefore share the same vertex data. Consider a cube with six faces. Each square face is formed by two triangles. Each triangle has three vertices. If the cube is drawn as twelve (12) independent triangles, the vertex data must be supplied thirty-six (36) times even though a cube has only eight (8) unique vertices. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Using a vertex array range as described above, the data for the 8 unique vertices can be copied into the vertex array range once. Then the 36 vertex indices can be sent to the graphics accelerator module via its command stream. If each vertex is a 6 32-bit float and each vertex index is a 16-bit value, this is a 12-fold reduction in the data that must be written by the CPU and read by the graphic accelerator modules through the graphic accelerator module&apos;s command stream. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> The second advantage of using a vertex array range is that the graphic accelerator module can cache the reads it performs to the vertex array range so if vertex data from the vertex array range is already in the graphic accelerator module&apos;s vertex cache, the data does not have to be read again. Often vertex data is read into the cache, and subsequently, other data from the same cache line is often read for different vertices. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> The third advantage of using a vertex array range is that if a vertex is transformed, its transformed results can be cached. If the same vertex index is issued again and the vertex index&apos;s transformed results are in the post-transform vertex cache (and no subsequent transform state settings have changed), the transformed vertex can be fetched from the cache rather than re-transforming the vertex again. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> The cache in the second stated advantage is typically a memory-based cache of pre-transformed vertex data. The cache in the third stated advantage is a vertex index-based cache of post-transformed vertex data. Both caches provide substantially gains in the efficiency of vertex transformation and reduced bandwidth required for vertex data. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> If a three-dimensional (3D) application is only required to draw static objects, the vertex data for all the static objects to be rendered can be written into the vertex array range. At this point, the objects can be rendered by configuring the vertex array range offsets, strides, and formats and sending vertex indices through the graphic accelerator module&apos;s command stream. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> While some applications involve rendering static objects, games and other interactive 3D applications often render dynamic geometry such as animated characters in expansive virtual worlds. The vertex data is dynamic either because the 3D objects represented are animating in ways that require the vertex data to be updated repeatedly or the virtual world is so expansive that the entire world cannot be statically contained in the vertex array range. In these cases, the CPU is responsible for copying vertex data into the vertex array range on a continuous basis. The problem is that vertex data is not immediately read from the vertex array range when the ArrayElement command tokens are written into the graphic accelerator module&apos;s command stream. The command stream is a queue and so any previous commands must be processed before the ArrayElement command tokens are processed causing the vertex data to be read from the vertex array range and be transformed. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> In practice, there is typically a substantial delay from when vertex data is written to the vertex array range and the ArrayElement command tokens are written in the command stream to when the vertex data is read from the vertex array range. The CPU is responsible for not modifying the sections of the vertex array range corresponding to vertex indices placed in the graphic accelerator module&apos;s command stream until the graphic accelerator module is finished reading the vertex data for the indices. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> If the CPU fails to synchronize its writes to the vertex array range to sections that contain vertex data for pending vertex indices yet read, the result is non-deterministic corruption of the vertex data for the vertices being rendered. While this is not a fatal error, the result is incorrect rendering that is typically extremely corrupted and unacceptable. Correct rendering therefore requires proper synchronization between the CPU and the graphic accelerator module. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> What is desired is an efficient synchronization mechanism so that the CPU can know when it is safe to re-write sections of the vertex array range that correspond to vertex indices that have been written into the graphic accelerator module&apos;s command stream. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> The present invention addresses such a need. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> A method and system for synchronizing updates of vertex data by a processor with a graphics accelerator module that is fetching vertex data is disclosed. The method and system comprises providing vertex array range (VAR) and writing vertex data into the VAR. The method and system includes providing a command into a command stream of the graphics accelerator module indicating that the vertex data has written into the VAR, and providing a fence condition based upon the command. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> A system and method in accordance with the present invention thus permits extremely high vertex processing rates via vertex arrays or vertex buffers even when the processor lacks the necessary data movement bandwidth. In operation, the processor passes vertex indices to the hardware and lets the hardware &ldquo;pull&rdquo; the actual vertex data via direct memory access (DMA).</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating the flow of vertex data in a system of the prior art; </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram illustrating the flow of the vertex data in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is an illustration of vertex data stored in memory in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is an illustration of possible configurations in which various components of the vertex data may be stored in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates how an application program would utilize the fences in accordance with the present invention. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is an example of a driver setting a fence in accordance with the present invention. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates the driver testing of a fence in accordance with the present invention. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> illustrates the finishing fence in accordance with the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> The present invention relates generally to computer graphics and, more particularly, to a system and method for accessing graphics vertex data. The following description is presented to enable one of ordinary skill in the art to make and use the invention and is provided in the context of a patent application and its requirements. Various modifications to the preferred embodiment and the generic principles and features described herein will be readily apparent to those skilled in the art. Thus, the present invention is not intended to be limited to the embodiment shown but is to be accorded the widest scope consistent with the principles and features described herein. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows the flow of the vertex data during use of a system <highlight><bold>100</bold></highlight> in accordance with copending application entitled &ldquo;System, Method and Article of Manufacture for Allowing Direct Memory Access to Graphics Vertex Data While Bypassing a Processor,&rdquo; filed on Dec. 6, 1999, Ser. No. 09/454,518. As shown, a processor <highlight><bold>102</bold></highlight>, system memory <highlight><bold>104</bold></highlight>, and a graphics accelerator module <highlight><bold>106</bold></highlight> are interconnected via a bus <highlight><bold>108</bold></highlight>. Further, the graphics accelerator module <highlight><bold>106</bold></highlight> is equipped with graphics memory <highlight><bold>110</bold></highlight>. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> In operation, the vertex data is stored or loaded in memory. It should be noted that the memory in which the vertex data is stored may include the system memory <highlight><bold>104</bold></highlight> or the graphics memory <highlight><bold>110</bold></highlight> associated with the graphics accelerator module <highlight><bold>106</bold></highlight>. Next, an index is received by the graphics accelerator module <highlight><bold>106</bold></highlight> which is representative of a portion of the vertex data in the memory. Note data flow path for index <highlight><bold>112</bold></highlight>. From this a location is then determined in the memory in which the portion of the vertex data is stored. Such portion of the vertex data may thereafter be directly retrieved from the determined location in memory while bypassing the processor <highlight><bold>102</bold></highlight>, as shown in data flow path <highlight><bold>114</bold></highlight>. It should be noted that during such direct memory access (DMA), memory must be locked down in a manner that is well known to those of ordinary skill in the art. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, in one embodiment, the vertex data is stored in an array <highlight><bold>200</bold></highlight> including a plurality of components such as position (X Y Z W), diffuse (R G B A), specular (R G B F), texture0 (S T R Q), texture1 (S T R Q), fog (F), and/or any other components. For reasons that will soon become apparent, multiple additional components of the vertex data are provided including normal (Nx Ny Nz) and weight (W). It should be noted that the vertex data may include any type of components representative of various aspects of an image. An example of the various components of the vertex data of one embodiment of the present invention is shown in Table 2.  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="91PT" align="left"/>
+<colspec colname="2" colwidth="105PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 2</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>position (X Y Z W)</entry>
+<entry>&lsqb;stride0, offset0, format0&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>diffuse (R G B A)</entry>
+<entry>&lsqb;stride1, offset1, format1&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>specular (R G B F)</entry>
+<entry>&lsqb;stride2, offset2, format2&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>texture0 (S T R Q)</entry>
+<entry>&lsqb;stride3, offset3, format3&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>texture1 (S T R Q)</entry>
+<entry>&lsqb;stride4, offset4, format4&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>fog (F)</entry>
+<entry>&lsqb;stride5, offset5, format5&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>normal (Nx Ny Nz)</entry>
+<entry>&lsqb;stride6, offset6, format6&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>weight (W)</entry>
+<entry>&lsqb;stride7, offset7, format7&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> In use, the foregoing vertex data may be employed to display portions, or triangles, of an image. Accordingly, different portions of the vertex data represent different portions of the image. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> In order to identify a location in memory in which the vertex data is stored, a calculation is executed. Such calculation is carried out using an index <highlight><bold>201</bold></highlight> in addition to a stride value <highlight><bold>202</bold></highlight> and an offset value <highlight><bold>204</bold></highlight>. With reference to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the calculation includes multiplying the index <highlight><bold>201</bold></highlight> by a stride value <highlight><bold>202</bold></highlight> and adding an offset value <highlight><bold>204</bold></highlight> thereto in order to determine the appropriate location in memory. It should be noted that the foregoing values are stored in associated registers. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> As mentioned earlier, the vertex data includes a plurality of components. In one embodiment, each of such components has an associated stride value <highlight><bold>202</bold></highlight> and offset value <highlight><bold>204</bold></highlight> that are used in the foregoing calculation. Note Table 2. By assigning each component of the vertex data different index, stride and offset values, such components may be stored in different configurations. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows various examples of configurations in which the components of the vertex data may be organized. For example, the components of the vertex data may take on an interleaved configuration <highlight><bold>300</bold></highlight> with the components alternately situated in an array. In another example, the components of the vertex data may be independently separated in a second configuration <highlight><bold>302</bold></highlight>. Still yet, a mixture of both interleaved and separate vertex configurations may be employed simultaneously, as in third configuration <highlight><bold>304</bold></highlight>. In various other embodiments, the components may be configured in any other way that results in the data being separated. The various components of the vertex data may thus be retrieved independently from different locations in memory. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> In addition to the stride and offset values, each of the components of the vertex data may have an associated format value. See Table 2. In one embodiment, the format value of the vertex data may include a size parameter, type parameter, and/or flag parameter. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> The size parameter of the format value is indicative of a size of the corresponding component of the vertex data. 1, 2, 3, etc., are each acceptable values of the size parameter. It should be noted that a 0 value of size indicates a disabling function. Further, the type parameter of the format value represents an amount of memory required by an associated component of the vertex data. The type parameter may include values of &ldquo;byte&rdquo;, &ldquo;short&rdquo;, and &ldquo;float&rdquo; which indicate 1 byte, 2 bytes, and 4 bytes of memory, respectively. Finally, other types of flags may be employed to convey information other than the size and amount of memory represented by the components of the vertex data. </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> By way of example, in the case of the position (X Y Z W) value, if size&equals;2 and type&equals;float, it is known that only two parameters, i.e., XY, etc., each of 4 bytes (1 float) in length exist in memory. This facilitates efficient retrieval of the vertex data and further allows data compression by removing unwanted data. Unwanted data, for example, may include the W parameter of the position (X Y Z W) value during a transform and lighting operation. For the above example, it should be noted that internally appropriate defaults are supplied for unspecified elements, i.e., Z&equals;0 and W&equals;1. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> As before mentioned, the system <highlight><bold>100</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference> considerably relieves the processor bus <highlight><bold>108</bold></highlight>. The indices <highlight><bold>201</bold></highlight> typically consist of 16 bits of information and may be increased up to 32 bits or more. Further, the system <highlight><bold>100</bold></highlight> is typically required to handle approximately 10 million vertices per second, or more in future implementations. Accordingly, in the case where the vertices each consist of 16 bits, data enters the processor <highlight><bold>102</bold></highlight> via the processor bus <highlight><bold>108</bold></highlight> at 20MB/s while data exits the processor <highlight><bold>102</bold></highlight> via the processor bus <highlight><bold>108</bold></highlight> at a similar rate of 20MB/s. This results is in a total of 40MB/s of data being handled by the processor bus <highlight><bold>108</bold></highlight> which is a considerable reduction with respect to the 800MB/s required in prior art systems. Further, the processor cache is maintained by not passing large amounts of vertex data through it. </paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number> However, it has disadvantages. While some applications involve rendering static objects, games and other interactive 3D applications often render dynamic geometry such as animated characters in expansive virtual worlds. The vertex data is dynamic either because the 3D objects represented are animating in ways that require the vertex data to be updated repeatedly or the virtual world is so expansive that the entire world cannot be statically contained in the vertex array range. In these cases, the CPU is responsible for copying vertex data into the vertex array range on a continuous basis. The problem is that vertex data is not immediately read from the vertex array range when the ArrayElement command tokens are written into the graphic accelerator module&apos;s command stream. </paragraph>
+<paragraph id="P-0085" lvl="0"><number>&lsqb;0085&rsqb;</number> In practice, there is typically a substantial delay from when vertex data is written to the vertex array range and the ArrayElement command tokens are written in the command stream to when the vertex data is read from the vertex array range. The CPU is responsible for not modifying the sections of the vertex array range corresponding to vertex indices placed in the graphic accelerator module&apos;s command stream until the graphic accelerator module is finished reading the vertex data for the indices. </paragraph>
+<paragraph id="P-0086" lvl="0"><number>&lsqb;0086&rsqb;</number> If the CPU fails to synchronize its writes to the vertex array range to sections that contain vertex data for pending vertex indices yet read, the result is non-deterministic corruption of the vertex data for the vertices being rendered. While this is not a fatal error, the result is incorrect rendering that is typically extremely corrupted and unacceptable. Correct rendering therefore requires proper synchronization between the CPU and the graphic accelerator module. </paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number> Referring back to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> method and system in accordance with the present invention utilizes a &ldquo;fence&rdquo; mechanism and an accompanying driver <highlight><bold>115</bold></highlight> for synchronizing the graphics accelerator module and CPU to allow for rewriting a vertex array range of a memory. The processor <highlight><bold>102</bold></highlight> includes an application <highlight><bold>113</bold></highlight> that utilizes the fences and a driver <highlight><bold>115</bold></highlight> that generates the fences and provides for certain fence conditions. The graphics accelerator module <highlight><bold>106</bold></highlight> includes a register <highlight><bold>117</bold></highlight>, referred to herein as a last finished reference register which is utilized to indicate whether a fence has been tested or is finished. The operation of the register <highlight><bold>117</bold></highlight> will be described in detail later in this specification. </paragraph>
+<paragraph id="P-0088" lvl="0"><number>&lsqb;0088&rsqb;</number> A driver <highlight><bold>115</bold></highlight> provides commands related to a plurality of fence conditions. These fence conditions include but are not limited to: generating an unused name for a fence (g1GenFencesNV), deleting fence by name (g1DeleteFencesNV), setting a fence (g1SetFenceNV), testing the status of a fence (g1TestFenceNV), blocking until the status of a fence becomes true (g1FinishFenceNV), determining if a name is a valid fence (g1IsFenceNV), and getting the status and condition of a specified fence (g1GetFenceivNV). </paragraph>
+<paragraph id="P-0089" lvl="0"><number>&lsqb;0089&rsqb;</number> A fence has a varying Boolean &ldquo;status&rdquo; that is false if the fence&apos;s condition is still pending and true if the fence&apos;s condition has completed. In a preferred embodiment, a fence condition called &ldquo;all completed&rdquo; which is true when all preceding commands have completed and all pixel results have been written to the frame buffer is utilized to synchronize the CPU and graphics mode. As will be discussed later, other conditions could be utilized for the synchronization operation. </paragraph>
+<paragraph id="P-0090" lvl="0"><number>&lsqb;0090&rsqb;</number> An application <highlight><bold>113</bold></highlight> creates a vertex array range. In a preferred embodiment, vertex array ranges are allocated and established using an OpenGL extension called NV_vertex_array_range. The application <highlight><bold>113</bold></highlight> then repeatedly writes dynamic vertex data into the vertex array range. For example, the vertex data may be for an animating computer generated puppet. Each frame of animation has the puppet in a different pose requiring different vertex data. The application <highlight><bold>113</bold></highlight> writes the vertex data for a given frame&apos;s pose into the vertex array range. Then the vertex indices for the puppet model are written to the graphics accelerator module&apos;s command stream. </paragraph>
+<paragraph id="P-0091" lvl="0"><number>&lsqb;0091&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates how an application program <highlight><bold>113</bold></highlight> would utilize the fences in accordance with the present invention. First, it is determined whether there is a region within the vertex array range (VAR) which is available to be written to by the CPU, via step <highlight><bold>502</bold></highlight>. If there is none, then finish the oldest space in the VAR and return the memory associates with the finished fence to an unused vertex array range memory pool, via step <highlight><bold>504</bold></highlight>. Steps <highlight><bold>502</bold></highlight> and <highlight><bold>504</bold></highlight> are repeated until there is space in the VAR. When there is space available, then vertex data is written into the VAR, via step <highlight><bold>506</bold></highlight>. Thereafter, vertex ArrayElement commands are written into the command stream by the processor, via step <highlight><bold>508</bold></highlight>. Thereafter steps <highlight><bold>502</bold></highlight>-<highlight><bold>510</bold></highlight> are repeated for all remaining vertex data. Then a fence condition is provided in the command stream, via step <highlight><bold>510</bold></highlight>, and the above-identified process is repeated until the desired number of fence conditions are provided, via step <highlight><bold>512</bold></highlight>. </paragraph>
+<paragraph id="P-0092" lvl="0"><number>&lsqb;0092&rsqb;</number> One of the fence conditions is setting a fence. A fence can be set, for example, by utilizing the g<highlight><bold>1</bold></highlight>SetFenceNV command from the driver. &ldquo;Setting a fence&rdquo; is the process of inserting a synchronization command into the graphics accelerator module&apos;s command stream and setting the fence&apos;s status to false. <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is an example of a driver <highlight><bold>115</bold></highlight> setting a fence. In a preferred embodiment, an application <highlight><bold>113</bold></highlight> may set any number of fences at one time. To set a fence, first a fence name is looked up to find its associated data structure, via step <highlight><bold>601</bold></highlight>. Next, it is determined if the fence name is resolved, via step <highlight><bold>603</bold></highlight>. If the fence name is not resolved, a data structure is allocated for a particular fence name, via step <highlight><bold>602</bold></highlight>. A plurality of fence names are stored in a table within the module <highlight><bold>106</bold></highlight>. Typically, this table comprises a hash table. The data structure includes status information and a serial number. The data structure has a status which is true or false. The fence status is set to false indicating that the fence has not finished, via step <highlight><bold>604</bold></highlight>. Next, a serial number of the driver <highlight><bold>115</bold></highlight> is incremented, via step <highlight><bold>606</bold></highlight>. Thereafter, the incremented serial number of the driver <highlight><bold>115</bold></highlight> is assigned to the serial number of the data structure associated with the fence, via step <highlight><bold>608</bold></highlight>. Finally, a fence synchronization command is inserted at the end of the graphics accelerator module&apos;s command stream, via step <highlight><bold>610</bold></highlight>. If the fence name is resolved, then proceed to step <highlight><bold>606</bold></highlight> and execute steps <highlight><bold>608</bold></highlight> and <highlight><bold>610</bold></highlight>. </paragraph>
+<paragraph id="P-0093" lvl="0"><number>&lsqb;0093&rsqb;</number> Accordingly, when the pose of the next frame has different vertex data, that data is written to a different region of the vertex array range and another fence (i.e, with a different integer name) is &ldquo;set&rdquo;. This is repeated until there is no longer any memory remaining in the vertex array range that has not been written with a previous frame&apos;s vertex data. </paragraph>
+<paragraph id="P-0094" lvl="0"><number>&lsqb;0094&rsqb;</number> A fence can be tested or finished to determine whether it is appropriate to write over a particular portion of the memory. First, testing of a fence will be described. <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates the testing of a fence. Initially, the name of the fence in the data structure is looked up, via step <highlight><bold>702</bold></highlight>. Next, it is determined whether the fence serial number is less than the cached last finish reference value, via step <highlight><bold>704</bold></highlight>. If the serial number is less than the cached last finish reference value, then return the test is true, via step <highlight><bold>706</bold></highlight>. On the other hand, if it is not, then the last finish reference value register is read by the processor, via step <highlight><bold>708</bold></highlight>. The cache is then updated to reference that new last finish reference value, via step <highlight><bold>710</bold></highlight>. Next, it is determined whether the fence serial number is less than the cached last finish reference value, via step <highlight><bold>712</bold></highlight>. If the fence serial number is more than the cached last finish reference value, a false is returned, via step <highlight><bold>714</bold></highlight>. If the fence serial number is less, then a true is returned, via step <highlight><bold>706</bold></highlight>. This simply returns whether the fence has finished or not without actually waiting for the fence to finish. This is useful when an application has other useful work to do rather than simply wait for the fence to finish. </paragraph>
+<paragraph id="P-0095" lvl="0"><number>&lsqb;0095&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> illustrates the finishing fence. First, the fence is tested, via step <highlight><bold>802</bold></highlight>, and then it is determined whether the fence is finished, via step <highlight><bold>804</bold></highlight>. This process is repeated until all the fences are finished. Thereafter, the fence status is set to true. A first fence is finished by calling a command g1FinishFenceNV with the integer name for the first fence. When the g1FinishFenceNV call returns to the application <highlight><bold>113</bold></highlight>, that indicates that the memory written preceding the setting of the fence can now be reused. This process continues by finishing the various fences for each frame&apos;s vertex data for a given puppet pose. </paragraph>
+<paragraph id="P-0096" lvl="0"><number>&lsqb;0096&rsqb;</number> Typically, there are enough fences set that by the time a fence is finished, the fence has in fact already been completed. In this case, the &ldquo;finish&rdquo; returns immediately. It is only when the fence has not completed (its status is still false) that the &ldquo;finish&rdquo; operation actually waits. If used correctly, fences can be used so that the application <highlight><bold>113</bold></highlight> rarely if ever waits for a fence to finish. </paragraph>
+<paragraph id="P-0097" lvl="7"><number>&lsqb;0097&rsqb;</number> Implementing Fences </paragraph>
+<paragraph id="P-0098" lvl="0"><number>&lsqb;0098&rsqb;</number> Referring back to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, in a preferred embodiment, fences are implemented by providing a special command that can be inserted into the graphics accelerator module&apos;s <highlight><bold>106</bold></highlight> command stream referred to &ldquo;SetReference&rdquo;. There is an associated 32-bit word of data for the SetReference command. When the SetReference command is processed, the graphics accelerator module <highlight><bold>106</bold></highlight> waits until all preceding commands to the graphics accelerator module <highlight><bold>106</bold></highlight> have completed and that all pixel data has been written to the graphics memory. Then, the 32-bit value is written to a &ldquo;last finished reference&rdquo; register <highlight><bold>117</bold></highlight> that can be read by a driver <highlight><bold>115</bold></highlight>. In a preferred embodiment, the driver <highlight><bold>115</bold></highlight> is an OpenGL driver which is conventionally utilized in graphics applications. The OpenGL driver <highlight><bold>115</bold></highlight> can then determine if the last SetReference command has been processed by continuously reading the &ldquo;last finished reference&rdquo; register <highlight><bold>117</bold></highlight> until the value of the last SetReference command appears in the register <highlight><bold>117</bold></highlight>. </paragraph>
+<paragraph id="P-0099" lvl="0"><number>&lsqb;0099&rsqb;</number> The OpenGL driver maintains a 32-bit &ldquo;serial number&rdquo; that is initially zero. Each time a fence is set, the driver&apos;s <highlight><bold>115</bold></highlight> serial number is incremented and a SetReference command is inserted in the graphics accelerator module&apos;s command stream with the latest serial number. This same serial number is also saved in the fence&apos;s associated data structure. When a fence is tested or finished, the &ldquo;last finished reference&rdquo; register <highlight><bold>117</bold></highlight> is read and compared to the serial number saved in the fence&apos;s associated data structure. If the register <highlight><bold>117</bold></highlight> is relatively greater than or equal to the fence&apos;s saved serial number, the fence is finished. Note that because serial numbers are assigned monotonically increasing values and commands in the graphics accelerator module&apos;s command stream must complete in order, if the reference value is relatively greater than the fence&apos;s saved serial number, we know that the fence must have completed. </paragraph>
+<paragraph id="P-0100" lvl="0"><number>&lsqb;0100&rsqb;</number> If the register <highlight><bold>117</bold></highlight> is relatively less than the fence&apos;s saved serial number, the fence is not finished. In the case of g<highlight><bold>1</bold></highlight>TestFenceNV, the fence status is returned as false. In the case of g<highlight><bold>1</bold></highlight>Finish FenceNV, the graphics accelerator module&apos;s command stream is flushed, and the &ldquo;last finished reference&rdquo; register <highlight><bold>117</bold></highlight> is read repeatedly until the register <highlight><bold>117</bold></highlight> is relatively greater than or equal to the fence&apos;s saved serial number. </paragraph>
+<paragraph id="P-0101" lvl="0"><number>&lsqb;0101&rsqb;</number> Because register reads are very expensive operations relative to the speed of most basic CPU operations, the OpenGL driver remembers that last value read from the &ldquo;last finished reference&rdquo; register <highlight><bold>117</bold></highlight>. If a fence is tested or finished, the driver <highlight><bold>115</bold></highlight> first checks if the fence is finished based on the last read value for the &ldquo;last finished reference register&rdquo;. Otherwise, it must read the register <highlight><bold>117</bold></highlight>. </paragraph>
+<paragraph id="P-0102" lvl="0"><number>&lsqb;0102&rsqb;</number> Also, the comparison between the fence&apos;s saved serial number and the &ldquo;last finished reference&rdquo; register <highlight><bold>117</bold></highlight> must be compared in a &ldquo;relative&rdquo; manner to guard against the serial number eventually wrapping back to zero. When the graphics accelerator module processes the synchronization command, it requires the fence&apos;s condition to be met. In the case of the &ldquo;all completed&rdquo; condition, that means that all preceding commands have been completed and all pixel results have been written to the frame buffer. At this point, the fence&apos;s status becomes true. </paragraph>
+<paragraph id="P-0103" lvl="0"><number>&lsqb;0103&rsqb;</number> As is seen, a method and system in accordance with the present invention is useful for synchronizing vertex data changes. However, this fence mechanism can be utilized for synchronizing pixel data changes. Also, currently the only condition supported is &ldquo;all completed&rdquo;, but it is also possible to support other less drastic conditions such as &ldquo;vertex fetching completed&rdquo; and &ldquo;texture fetching completed These conditions might complete faster than the existing &ldquo;all completed&rdquo; condition. </paragraph>
+<paragraph id="P-0104" lvl="0"><number>&lsqb;0104&rsqb;</number> A system and method in accordance with the present invention thus permits extremely high vertex processing rates via vertex arrays or vertex buffers even when the processor lacks the necessary data movement bandwidth. By passing indices in lieu of the vertex data, the processor is capable of keeping up with the rate at which a vertex engine of the graphics accelerator module can consume vertices. In operation, the processor passes vertex indices to the hardware and lets the hardware &ldquo;pull&rdquo; the actual vertex data via direct memory access (DMA). </paragraph>
+<paragraph id="P-0105" lvl="0"><number>&lsqb;0105&rsqb;</number> Although the present invention has been described in accordance with the embodiments shown, one of ordinary skill in the art will readily recognize that there could be variations to the embodiments and those variations would be within the spirit and scope of the present invention. Accordingly, many modifications may be made by one of ordinary skill in the art without departing from the spirit and scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for synchronizing updates of vertex data by a processor with a graphics accelerator module that is fetching vertex data, comprising the steps: 
+<claim-text>(a) providing vertex array range (VAR); </claim-text>
+<claim-text>(b) writing vertex data into the VAR; </claim-text>
+<claim-text>(c) providing a command into a command stream of the graphics accelerator module indicating that the vertex data has written into the VAR, and </claim-text>
+<claim-text>(d) providing a fence condition based upon the command. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, which includes the step of: 
+<claim-text>(e) repeating steps b-d until a desired number of fences are set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the fence condition comprises any of the following: 
+<claim-text>generating an unused name for a fence; deleting a fence; setting a fence; testing the status of a fence; blocking until status of a fence becomes true; determining if a name is a valid fence, and getting the status and condition of a fence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the command comprises a set reference command. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A system for allowing direct memory access to graphics vertex data, comprising: 
+<claim-text>memory for storing vertex data; </claim-text>
+<claim-text>a graphics accelerator module for receiving an index representative of a portion of the vertex data in the memory; and </claim-text>
+<claim-text>a processor for determining a location in the memory in which the portion of the vertex data is stored, the processor including an application for utilizing at least one fence and a driver for generating at least one fence and for providing at least one fence condition. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the memory includes system memory. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The system as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the memory includes memory of the graphics accelerator module. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The system as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein a graphics accelerator module includes a register for indicating whether a fence is finished. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the fence condition comprises any of the following: 
+<claim-text>generating an unused name for a fence; deleting a fence; setting a fence; testing the status of a fence; blocking until status of a fence becomes true; determining if a name is a valid fence, and getting the status and condition of a fence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the processor provides a command into the command stream of the graphics accelerator module to implement the at least one fence. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the command comprises a SetReference command. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the at least one fence comprises a data structure, the data structure including a status portion and a serial number. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the latest data associated with the SetReference command is stored in the register. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the driver continuously reads the register to determine if the latest SetReference command has been processed.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030001840A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030001840A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030001840A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030001840A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030001840A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030001840A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030001840A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030001840A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00008">
+<image id="EMI-D00008" file="US20030001840A1-20030102-D00008.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

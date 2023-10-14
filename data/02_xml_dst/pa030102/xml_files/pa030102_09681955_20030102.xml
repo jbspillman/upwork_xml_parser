@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005363A1-20030102-D00000.TIF SYSTEM "US20030005363A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005363A1-20030102-D00001.TIF SYSTEM "US20030005363A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005363A1-20030102-D00002.TIF SYSTEM "US20030005363A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005363</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09681955</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04B001/74</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>714</class>
+<subclass>030000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Apparatus and method for hardware-assisted diagnosis of broken logic-test shift-registers</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Robert</given-name>
+<middle-name>W.</middle-name>
+<family-name>Bassett</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Essex Junction</city>
+<state>VT</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>SCULLY SCOTT MURPHY &amp; PRESSER, PC</name-1>
+<name-2></name-2>
+<address>
+<address-1>400 GARDEN CITY PLAZA</address-1>
+<city>GARDEN CITY</city>
+<state>NY</state>
+<postalcode>11530</postalcode>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention provides a systematic means of switching contiguous segments of each production-test shift-register into several diagnostic scan-configurations. If the functional scan-verification tests fail for the production-test scan-configuration, then these same verification tests can be repeated for the alternative, diagnostic scan configurations. Using the principle of superposition, the passing and failing LSSD flush/scan tests for these diagnostic configurations will allow the failing location to be localized to a single segment of the original failing shift-register. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> <highlight><bold>1</bold></highlight>. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention generally relates to testing and diagnosing semiconductor devices, and more specifically, the invention relates to the testing and diagnosing of shift registers. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Prior Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Structural testing and defect-diagnosis of semiconductor logic devices depend significantly on the minimum functionality of the underlying design-for-test structures embedded in the logical design of such devices. Scan-based methods of structural logic testing&mdash;of which Level-Sensitive Scan Design (LSSD) is but one example&mdash;configure all the state&mdash;elements (flip-flops or latches) into one or more serial shift-registers (often referred to as scan-chains or scan-strings) so that the values in these state-elements may be directly set or interrogated by operation of the shift-registers. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Conventional defect-diagnosis of failing logic tests normally proceeds on the assumption that the shift-registers have been determined to be a-priori functional (since the actual test-input stimulus being applied to the device during the failing tests cannot otherwise be assumed to be fully known). This functionality is assured by preceding the application of all such scan-based logic tests with functional-verification tests of the shift-registers. In LSSD, these are called the flush and scan tests. They verify the logical continuity of each serial-shift-register scan-path, and establish that each state-element in each shift-register can set and hold both logical-zero and logical-one values </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> When either the flush or scan tests fail, the basic design-for-test infrastructure is broken&mdash;and none of the succeeding scan-based logic tests can be applied without expectation of massive fails, since the intended test stimulus/response will be corrupted by the broken shift-register(s). Moreover, localization and detailed diagnosis of a defect in a broken shift-register can be a very difficult problem, especially as the shift-register bit-length increases. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Broken-shift-register problems are most prevalent early in a technology-life-cycle, when device-yields tend to be the lowest, and when pressure for rapid yield-learning and volume ramp-up is the highest. The conventional approach (in microprocessor design) to managing this exposure has been to implement scan-design with as many separate shift-registers (64-80 or more) as the functional input/output (I/O) architecture of the device-design allows, thus permitting each shift-register to be of the shortest possible bit-length. Since microprocessors (and other standard products) typically utilize custom, device-specific test-fixturing, this high-pin-count approach to managing the risk of broken shift-registers has been an acceptable method. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In contrast, Application-Specific Integrated Circuit (ASIC) products have a long history of utilizing standardized, reusable test-fixturing to reduce overall test/fixturing costs across a large number of lower-volume device-designs sharing the same die configuration (chip image) and/or the same module package. This approach to multiple-device-design test standardization, often referred to as reduced-pin-count testing (RPCT), requires that each device-design implement an on-product boundary-scan structure to enable full scan-testing of all device-circuitry (except the I/O circuits) through a fixed-size signal-I/O interface comprising a maximum of 64 signal-I/Os contacted by full-function tester-channels for both wafer and module device-testing. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> These 64 signal-I/Os must include all device-inputs required for test-clocking and control, as well as all scan-data-inputs and scan-data-outputs of the shift-registers. The 64-pin limit constrains most ASIC products to a practical upper-bound of approximately 24 shift-registers per device. Thus, a typical ASIC may have far-fewer, much-longer shift-registers than a microprocessor (or other standard product) of similar logical complexity. As ASICs become earlier adopters of leading-edge technology, their risk of broken-shift-register diagnostic problems is amplified by this difference in device-design style. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> An object of this invention is to improve apparatus and method for diagnosing shift registers </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Another object of the present invention is to more easily localize the position of a shift-register break. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> A further object of this invention is to provide a method and apparatus for diagnosing shift registers that logically emulates the effect of having many more, shorter shift registers, while still maintaining the reduced pin-count interface that is so important to ASIC test economics. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> These and other objectives are attained, in accordance with the present invention, by providing a systematic means of switching contiguous segments of each production-test shift-register into several diagnostic scan-configurations. If the functional scan-verification tests fail for the production-test scan-configuration, then these same verification tests can be repeated for the alternative, diagnostic scan configurations. Using the principle of superposition, the passing and failing LSSD flush/scan tests for these diagnostic configurations will allow the failing location to be localized to a single segment of the original failing shift-register. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Further benefits and advantages of the invention will become apparent from a consideration of the following detailed description, given with reference to the accompanying drawings, which specify and show preferred embodiments of the invention</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts a method, referred to as the progressive crossover method, for implementing the invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an alternate method, referred to as the segment exchange method, for practicing the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PRESENT INVENTION </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> This invention augments the base production-test scan-configuration, by pairing the original shift-register set (this implies starting with an even-number of shift-registers) and then adding scan-path crossovers between the paired shift-registers at proportional intervals along the bit-lengths of each. The procedure for adding/connecting the required crossover logic is as follows: </paragraph>
+<paragraph id="P-0018" lvl="2"><number>&lsqb;0018&rsqb;</number> 1. Pair the shift-registers, beginning with an even-number of shift-registers whose bit-lengths have been fully balanced for scan-testing efficiency. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> 2. For each pair, insert 2-to-1 multiplexers in each shift-register scan-path at approximately equidistant intervals depending on the number of shift-register segments to be created: _Two segments per shift-register&mdash;insert a single multiplexer at the 50% point of each; _Four segments per shift-register&mdash;insert three multiplexers at the 25/50/75% points of each; _Eight segments per shift-register&mdash;insert seven multiplexers at the 12.5/25/37.5/50/62.5/75/87.5% points of each; _Sixteen segments per shift-register&acirc;&egr;&rdquo; insert fifteen multiplexers at the 6/25/12.5/18.75/25/31.25/37.5/43.75/50/56.25/62.3/68.75/75/81.25/87.5/93.25% points of each. </paragraph>
+<paragraph id="P-0020" lvl="2"><number>&lsqb;0020&rsqb;</number> 3. The scan-path of the original production-test scan-configuration is connected to the zero-port of each multiplexer, and the one-port is connected to its twin connection in the paired shift-register. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Table 1 summarizes a binary decoding of two scan-mode control inputs (SM<highlight><bold>0</bold></highlight> and SM<highlight><bold>1</bold></highlight>) to enable four distinct scan-configurations&mdash;thereby permitting each shift-register to be logically subdivided into four equal-length segments by means of inserting three multiplexers in each: </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Table 1. 2-to-4 Scan-Mode Decode SM<highlight><bold>1</bold></highlight> (Scan-Mode Bit <highlight><bold>1</bold></highlight>)SM<highlight><bold>0</bold></highlight> (Scan-Mode Bit <highlight><bold>0</bold></highlight>)Decoded Scan-Function<highlight><bold>00</bold></highlight>Production-Test Mode <highlight><bold>001</bold></highlight>Diagnostic Mode <highlight><bold>110</bold></highlight>Diagnostic Mode <highlight><bold>211</bold></highlight> Diagnostic Mode <highlight><bold>3</bold></highlight> </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> More than one method of shift-register scan-reconfiguration is possible, depending on how the scan-mode bits (SM<highlight><bold>0</bold></highlight> and SM<highlight><bold>1</bold></highlight>) are used to manipulate the scan-segment control lines of the added multiplexers. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts a progressive-crossover method for a pair of shift-registers A and B, wherein all diagnostic modes map the original scan-data-input signal of a particular base-configuration shift-register to the scan-data-output signal of the corresponding paired shift-register. The shift-register configurations for the progressive-crossover method are summarized in Table 2: </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Table 2. Progressive-Crossover Shift-Register Configurations Scan-ModeShift-Register AShift-Register BProduction-Test Mode <highlight><bold>0</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>1</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>2</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>3</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight> </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the multiplexer scan-segment control lines are directly derived from the diagnostic mode decode of Table 1: </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> -Scan-Segment Control <highlight><bold>1</bold></highlight>&equals;NOT-SM<highlight><bold>1</bold></highlight> AND SM<highlight><bold>0</bold></highlight> (Diagnostic Mode <highlight><bold>1</bold></highlight>) _Scan-Segment Control <highlight><bold>2</bold></highlight>&equals;SM<highlight><bold>1</bold></highlight> AND NOT&minus;SM<highlight><bold>0</bold></highlight> (Diagnostic Mode <highlight><bold>2</bold></highlight>) _Scan-Segment Control <highlight><bold>3</bold></highlight>&equals;SM<highlight><bold>1</bold></highlight> AND SM<highlight><bold>0</bold></highlight> (Diagnostic Mode <highlight><bold>3</bold></highlight>) </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an alternative method of shift-register reconfiguration by exchanging a single scan-segment in each shift-register with its paired twin. The shift-register configurations for the segment-exchange method are summarized in Table 3: </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Table 3. Segment-Exchange Shift-Register Configurations Scan-ModeShift-Register AShift-Register BProduction-Test Mode <highlight><bold>0</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Exchange Mode <highlight><bold>1</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Exchange Mode <highlight><bold>2</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Exchange Mode <highlight><bold>3</bold></highlight>Segments: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Segments: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight> </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> In this case, the multiplexer scan-segment control lines are specified as follows: _Scan-Segment control <highlight><bold>1</bold></highlight>&equals;NOT&minus;SM<highlight><bold>1</bold></highlight> AND SM<highlight><bold>0</bold></highlight> (Diagnostic Mode <highlight><bold>1</bold></highlight>) _Scan-Segment Control <highlight><bold>2</bold></highlight>&equals;SM<highlight><bold>1</bold></highlight> XOR SM<highlight><bold>0</bold></highlight>_Scan-Segment Control <highlight><bold>3</bold></highlight>&equals;SM<highlight><bold>1</bold></highlight> </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> From an LSSD scan-test perspective, the additional scan-mode control-inputs SM<highlight><bold>0</bold></highlight>/SM<highlight><bold>1</bold></highlight> are two additional LSSD scan-gate (SG) input functions. However, if they are simply treated as such, they are constrained to be placed within the fixed 64-full-function test-pin budget previously established as important to ASIC test economics. If used in this manner, they would tend to displace two pins that would otherwise be available for an additional production-test shift-register (which is undesirable from a production-test cost-perspective). Therefore, in some situations, it may be preferred to provide a means to enable the shift-register reconfigurability without added constraints on the 64-full-function pin budget. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Fortunately, newer ASIC product families provide an alternative. These products support an additional budget of up-to-56 restricted-function test pins, also referred to as DC-test pins. Pins now assigned to the DC-test category are currently constrained to be used only for signals that require at most a single, fixed logic-value for any given logic-test mode&mdash;and/or for test signals for macro (SRAM, DRAM, PLL, etc.) testing, provided that the fixed number of logic-value transitions required for such macro tests has been determined to be a-priori-compatible with the restricted-function tester resources available for such pins. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> In light of the foregoing, with one implementation of this invention, the current definition of DC-test-pin usage can be extended to include diagnostic scan-mode pins (SM<highlight><bold>0</bold></highlight>, SM<highlight><bold>1</bold></highlight>, &acirc;&egr;&brvbar;) as defined herein, subject to the following considerations: 1. If these DC-test-input pins are shared for product-functional usage, an appropriate ASIC pin-sharing cell must be used to bound the scope of logic that cannot be tested due to the test-pin usage-constraint for the bulk of logic scan-testing. 2. These pins are to be coded as LSSD Test-inhibit (TI) inputs for the internal logic-test modes and for the added shift-register diagnostic support discussed herein. If the two preceding conditions have been satisfied, then it should be possible to relax the TI-constraint on the diagnostic scan-mode pins, converting them to SG-inputs during the external logic-test mode&mdash;for purposes of cleanup fault-mark-off of the added scan-path multiplexers&mdash;without exceeding tester restrictions for DC-test-pin transitions. (If this proves not to be the case, this last step can be eliminated at the expense of omitting explicit testing of some fault-sites associated with the added shift-register configuration logic&mdash;which by definition cannot impact device functionality). </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The procedure by which this invention is integrated into the testing and diagnostic process may be summarized as follows: </paragraph>
+<paragraph id="P-0035" lvl="2"><number>&lsqb;0035&rsqb;</number> 1. Functional verification-testing of the base production-test shift-register configuration is performed as usual, noting any fails that occur during the LSSD flush and scan tests. </paragraph>
+<paragraph id="P-0036" lvl="2"><number>&lsqb;0036&rsqb;</number> 2. If any of the flush and scan tests fail, all flush and scan tests are repeated for all defined diagnostic scan-modes, noting all passing and failing results. </paragraph>
+<paragraph id="P-0037" lvl="2"><number>&lsqb;0037&rsqb;</number> 3. If only one base production-test shift-register is failing, superposition of the passing and failing scan tests will yield an unambiguous single-scan-segment call-out. If multiple production-test shift-registers fail, but not both of any diagnostic pair&mdash;then the multiple fails are independently localizable to a single scan-segment in each case. If both shift-registers of a diagnostic pair fail the production-mode flush and scan tests, it is possible that some additional localizing information can still be deduced from the diagnostic-mode results. </paragraph>
+<paragraph id="P-0038" lvl="2"><number>&lsqb;0038&rsqb;</number> 4. Starting from this hardware-assisted localization to a failing shift-register segment, the broken shift-register diagnosis can proceed to conclusion based on binary-search fault-insertion/simulation methods in current use. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In order to fully clarify the meaning of step <highlight><bold>3</bold></highlight> above, some illustrative examples are provided: </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Table 4. Case <highlight><bold>1</bold></highlight>: Example Using the Progressive-Crossover Method (see <cross-reference target="DRAWINGS">FIG. 1</cross-reference> and Table 2) Scan-ModeShift-Register A Flush/Scan Test-ResultShift-Register B Flush/Scan Test-ResultFailing Shift-Register Segment-MapProduction Mode <highlight><bold>0</bold></highlight>FailPassM<highlight><bold>0</bold></highlight>-SRA: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>1</bold></highlight>PassFailM<highlight><bold>1</bold></highlight>-SRB: B<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>2</bold></highlight>PassFailM<highlight><bold>2</bold></highlight>-SRB: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>3</bold></highlight>FailPassM<highlight><bold>3</bold></highlight>-SRA: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight> </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> In Case <highlight><bold>1</bold></highlight>, the intersection of the failing shift-register segments for each mode clearly identifies Segment A<highlight><bold>2</bold></highlight> as the one consistent source for all observed fails. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> Table 5. Case <highlight><bold>2</bold></highlight>: Example Using the Segment-Exchange Method (see <cross-reference target="DRAWINGS">FIG. 2</cross-reference> and Table 3) Scan-ModeShift-Register A Flush/Scan Test-ResultShift-Register B Flush/Scan Test-ResultFailing Shift-Register Segment-MapProduction Mode <highlight><bold>0</bold></highlight>PassFailM<highlight><bold>0</bold></highlight>-SRB: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>1</bold></highlight> FailPassM<highlight><bold>1</bold></highlight>-SRA: A<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>2</bold></highlight>PassFailM<highlight><bold>2</bold></highlight>-SRB: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-A<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>3</bold></highlight>PassFailM<highlight><bold>3</bold></highlight>-SRB: B<highlight><bold>0</bold></highlight>-B<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight> </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> In Case <highlight><bold>2</bold></highlight>, the intersection of the failing shift-register segments for each mode clearly identifies Segment B<highlight><bold>1</bold></highlight> as the one consistent source for all observed fails. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Table 6. Case <highlight><bold>3</bold></highlight>: Example Using the Segment-Exchange Method (see <cross-reference target="DRAWINGS">FIG. 2</cross-reference> and Table 3) Scan-ModeShift-Register A Flush/Scan Test-ResultShift-Register B Flush/Scan Test-ResultPassing Shift-Register Segment-MapProduction Mode <highlight><bold>0</bold></highlight>FailFailCrossover Mode <highlight><bold>1</bold></highlight>FailPassM<highlight><bold>1</bold></highlight>-SRB: B<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-B<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>2</bold></highlight>PassFailM<highlight><bold>2</bold></highlight>-SRA: A<highlight><bold>0</bold></highlight>-A<highlight><bold>1</bold></highlight>-B<highlight><bold>2</bold></highlight>-A<highlight><bold>3</bold></highlight>Crossover Mode <highlight><bold>3</bold></highlight>FailFail </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Case <highlight><bold>3</bold></highlight> depicts an instance of both shift-registers failing in the base production-test configuration. This example illustrates how failing-segment identification is still possible in some instances. In this case, it is significant to note that shift-register B passes in mode <highlight><bold>1</bold></highlight> and shift-register A passes in mode <highlight><bold>2</bold></highlight>. Under these circumstances, it is easier to find the failing segments by noting which shift-register segments have been proven functional by virtue of passing in at least one mode: A<highlight><bold>0</bold></highlight>, A<highlight><bold>1</bold></highlight>, A<highlight><bold>3</bold></highlight>, B<highlight><bold>0</bold></highlight>, B<highlight><bold>2</bold></highlight> and B<highlight><bold>3</bold></highlight>. Thus, by process of exclusion it may be deduced that there are defects in shift-register segments B<highlight><bold>1</bold></highlight> and A<highlight><bold>2</bold></highlight>. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> As stated previously, the problem of broken-shift-register risk-management has been handled for microprocessors (and other standard products) by maximizing the number of shift-registers to minimize their length. This minimizes the number of state-elements whose value is uncertain as a consequence of the broken-shift-register scanning operations. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The apparatus and method disclosed herein bounds the uncertainty about which bit-positions in a broken-shift-register might be responsible for its faulty behavior, thus achieving the same logical localizing effect as having many more, shorter shift-registers&mdash;while simultaneously preserving the reduced-pin-count testing interface that is important to ASIC test economics (and that is incompatible with the maximum-number-of-shift-registers approach). </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The additional logic elements that may be used to implement this invention are: </paragraph>
+<paragraph id="P-0049" lvl="2"><number>&lsqb;0049&rsqb;</number> 1. Scan-path multiplexers to enable multiple shift-register scan-configurations that emulate the effect of many more, shorter shift-registers for broken-shift-register diagnostic purposes: _Emulating 2&times; the actual number of shift-registers requires one multiplexer per shift-register; _Emulating 4&times; the actual number of shift-registers requires three multiplexers per shift-register; _Emulating 8&times; the actual number of shift-registers requires seven multiplexers per shift-register; _Emulating 16&times; the actual number of shift-registers requires fifteen multiplexers per shift-register. </paragraph>
+<paragraph id="P-0050" lvl="2"><number>&lsqb;0050&rsqb;</number> 2. DC-test-pin input controls for the required diagnostic scan-modes, including functional pin-sharing logic (as appropriate), and any necessary scan-segment control-decode logic (with buffer-repowering as needed): _Two scan-modes requires one scan-mode pin; _Four scan-modes requires two scan-mode pins; _Eight scan-modes requires three scan-mode pins; _Sixteen scan-modes requires four scan-mode pins. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> The cost of implementing the 4&times; support should be negligible for almost any ASIC chip design. The 8&times;/16&times; implementations may be considered to be a reasonable diagnostic investment even for today&apos;s bigger chips, and certainly will be more attractive as chip-sizes continue to scale-up in the future. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Although the preceding description of this invention has addressed only the pairing of shift-registers as the simplest and preferred embodiment, the apparatus and method herein disclosed may also be utilized in a manner using any ordered integer grouping of shift-registers. That is, if the device design were to include 24 total shift-registers, these techniques apply not only to 12 pairs of shift-registers, but equally to 8 groups of 3, 6 groups of 4, 4 groups of 6, 3 groups of 8, or even one group of 24. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> If each shift-register grouping is ordered (either alphabetically or numerically), then the generalized modification of the progressive-crossover method as previously described is for each shift-register in the group to exchange crossover points with the next highest-order member exchanges with the lowest-order member of the group. The generalization of the segment-exchange method as previously described may be accomplished. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> While it is apparent that the invention herein disclosed is well calculated to fulfill the objects stated above, it will be appreciated that numerous modifications and embodiments may be devised by those skilled in the art, and it is intended that the appended claims cover all such modifications and embodiments as fall within the true spirit and scope of the present invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for hardware assisted diagnosis of broken logic-test shift registers, the method comprising: 
+<claim-text>providing a systematic means of switching contiguous segments of each production test shift register into several different diagnostic scan configurations. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the providing step includes the steps of: 
+<claim-text>pairing together shift registers; and </claim-text>
+<claim-text>adding scan-path crossovers between the paired shift registers at intervals along the bit length of each shift register to facilitate localizing faults in the shift registers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the adding step includes the step of separating the paired shift registers into corresponding segments. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein, in each pair of shift registers, the scan path crossovers form progressive crossover paths for mapping output signals of progressive segments of one of the pair of shift registers to the other of the pair of shift registers. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein, in each pair of shift registers, the scan path crossovers are used to exchange individual corresponding segments of the pair of shift registers. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method for diagnosing shift registers, comprising: pairing together shift registers; 
+<claim-text>adding scan-path crossovers between the paired shift registers at intervals along the bit length of each shift register; and </claim-text>
+<claim-text>for each pair of shift registers, using the scan-path crossovers to map output signals from one of the pair of shift registers to the other of the pair of shift registers to localize faults in the shift registers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the using step includes the step of mapping output signals of progressive segments of one of the pair of shift registers to the other of the pair of shift registers. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the using step includes the step of using the crossover paths to exchange individual corresponding segments of the pair of shift registers. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the adding step includes the step of using a set of multiplexers to separate each shift register into a plurality of segments, and mapping an output of one of the multiplexers to a multiplexer of a paired shift register. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. Apparatus for hardware assisted diagnosis of broken logic-test shift registers, comprising: 
+<claim-text>a system for switching contiguous segments of each production test shift register into several different diagnostic scan configurations. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said system includes: 
+<claim-text>at least one scan-path crossover between the pair of shift registers, at an interval along the bit length of each shift register, to facilitate localizing faults in the shift registers </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the scan path crossovers separate each of the shift registers into a segments. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said system further includes means for mapping output signals of progressive segments of one of the shift registers to the other of the shift registers. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said system further includes means for using the crossover paths to exchange individual corresponding segments of the shift registers. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the crossover paths include a set of multiplexers separating each of the shift registers into a plurality of segments. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein each multiplexer is connected to both of the shift registers for mapping signals from one of the shift registers to the other of the shift registers.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005363A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005363A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005363A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

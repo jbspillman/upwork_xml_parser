@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005364A1-20030102-D00000.TIF SYSTEM "US20030005364A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005364A1-20030102-D00001.TIF SYSTEM "US20030005364A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005364A1-20030102-D00002.TIF SYSTEM "US20030005364A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005364A1-20030102-D00003.TIF SYSTEM "US20030005364A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005364</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09881937</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010614</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F011/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>714</class>
+<subclass>038000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method for estimating number of internationalization faults in software code</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Dae-Suk</given-name>
+<family-name>Chung</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Gregory</given-name>
+<middle-name>P.</middle-name>
+<family-name>Davis</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Raleigh</city>
+<state>NC</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>David</given-name>
+<middle-name>B.</middle-name>
+<family-name>Kumhyr</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+</address>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Kelly K. Kordzik</name-1>
+<name-2>5400 Renaissance Tower</name-2>
+<address>
+<address-1>1201 Elm Street</address-1>
+<city>Dallas</city>
+<state>TX</state>
+<postalcode>75270</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method, computer program product and system for estimating the number of internationalization faults, e.g., errors, warnings, in a software program. The number of internationalization faults may be estimated by scanning a subset of the total lines of code in a software program. A first factor may be calculated based on a count and the number of faults identified in the lines of code scanned. A second factor may be calculated based on the number of faults remaining after subtracting the number of faults identified in error from the number of faults identified in the lines of code scanned as well as the number of faults identified in the lines of code scanned. An estimate of the number of faults in the entire software program may be calculated based on the first and second factor and the count of the total number of lines of code in the software program. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">TECHNICAL FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to the field of software program development for internationalized programs, and more particularly to a method for estimating the number of internationalization faults in an internationalized software program. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND INFORMATION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Internationalization is a process of enabling a program, e.g., Java, to run internationally. That is, an internationalized program has the flexibility to run correctly in any country. An internationalized program must be able to read, write and manipulate localized text. Furthermore, an internationalized program must conform to local customs when displaying dates and times, formatting numbers and sorting strings. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Typically, the development of an internationalized software program involves the initial steps of analyzing a problem and then designing the overall structure of the internationalized software program to solve the problem analyzed. After the general structure of the internationalized software program has been designed, it is then constructed, i.e. coded, after which it undergoes a period of testing and debugging. Finally, after the internalized program has been successfully tested, it is released for general use. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The total time spent testing and debugging an internationalized software program may vary from program to program. Unfortunately, software developers when asked to test and debug a particular internationalized software program may not be able to estimate the number of internationalization faults, e.g., errors, warnings, in the particular internationalized software program to be debugged thereby being unable to estimate the number of hours to be spent testing and debugging the internationalized software program. Furthermore, a project manager may assign multiple software developers to test and debug a particular internationalized software program. Unfortunately, the project manager may not be able to determine the exact number of software developers to be assigned since the project manager may not be able to estimate the number of internationalization faults, e.g., errors, warnings, in the particular internationalized software program to be debugged thereby being unable to estimate the number of software developers to be assigned to test and debug the particular internationalized software program. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> It would therefore be desirable to develop a method to estimate the number of internationalization faults, e.g., errors, warnings, in a particular internationalized software program. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The problems outlined above may at least in part be solved in some embodiments by calculating an estimated number of internationalization faults, e.g., errors, warnings, in the software program based on a first and a second factor as well as a count of the total number of lines of code in the software program. The estimated number of internationalization faults, e.g., errors, warnings, in the software program may be based on scanning a subset of the total number of lines of code in the software program rather than scanning the total number of lines of code in the software program. Upon scanning a subset of the total number of lines of code in the software program, a number of internationalization faults, e.g., errors, warnings, as well as a count of the number of lines of code scanned may be identified. The first factor may be calculated based on the number of internationalization faults, e.g., errors, warnings, identified in the code scanned as well as the count of the lines of code scanned. Upon identifying the internationalization faults, e.g., errors, warnings, in the lines of code scanned, a manual analysis may be performed to identify internationalization faults, e.g., errors, warnings, that should not have been identified. These incorrectly identified internationalization faults may then be subtracted from the internationalization faults, e.g., errors, warnings, identified in the code scanned. The number of internationalization faults, e.g., errors, warnings, remaining after subtracting the incorrectly identified internationalization faults from the internationalization faults identified in the code scanned along with the number of internationalization faults identified from the code scanned may be used to calculate the second factor. An estimate of the number of internationalization faults, e.g., errors, warnings, in the entire code of the software program may then be calculated based on the first and second factor as well as the count of the total number of lines of code in the software program. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In one embodiment, a method for estimating the number of internationalization faults in a software program comprises the step of scanning a subset of the total number of lines of code in a software program. A number of internationalization faults, e.g., errors, warnings, may then be identified in the lines of code scanned. A first factor may then be calculated based on a count of the lines of code scanned and the number of internationalization faults, e.g., errors, warnings, identified in the lines of code scanned. Upon scanning a subset of the total number of lines of code in the software program, an analysis may be conducted to identify internationalization faults, e.g., errors, warnings, that should not have been identified. The internationalization faults, e.g., errors, warnings, identified in error may be subtracted from the internationalization faults identified, e.g., errors, warnings, in the lines of code scanned. A second factor may then be calculated based on the number of internationalization faults, e.g., errors, warnings, remaining after subtracting the number of internationalization faults identified in error from the number of internationalization faults identified in the lines of code scanned as well as the number of internationalization faults identified in the lines of code scanned. An estimate of the number of internationalization faults, e.g., errors, warnings, in the entire software program, i.e. in all the lines of code of the software program, may then be calculated based on the first and second factor as well as the count of the total number of lines of code in the software program. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The foregoing has outlined rather broadly the features and technical advantages of the present invention in order that the detailed description of the invention that follows may be better understood. Additional features and advantages of the invention will be described hereinafter which form the subject of the claims of the invention. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A better understanding of the present invention can be obtained when the following detailed description is considered in conjunction with the following drawings, in which: </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a data processing system configured in accordance with the present invention; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flowchart of a method for estimating the number of internationalization faults in a software program; and </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a schematic representation of data structures of subdirectories. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The present invention comprises a method, computer program product and data processing system for estimating the number of internationalization faults, e.g., errors, warnings, in an internationalized software program. In one embodiment of the present invention, a method comprises the step of scanning a subset of the total number of lines of code in a software program. A number of internationalization faults, e.g., errors, warnings, may then be identified in the lines of code scanned. A first factor may then be calculated based on a count of the lines of code scanned and the number of internationalization faults, e.g., errors, warnings, identified in the lines of code scanned. Upon scanning a subset of the total number of lines of code in the software program, an analysis may be conducted to identify internationalization faults, e.g., errors, warnings, that should not have been identified. The internationalization faults, e.g., errors, warnings, identified in error may then be subtracted from the internationalization faults identified, e.g., errors, warnings, in the lines of code scanned. A second factor may then be calculated based on the number of internationalization faults, e.g., errors, warnings, remaining after subtracting the number of internationalization faults identified in error from the number of internationalization faults identified in the lines of code scanned as well as the number of internationalization faults identified in the lines of code scanned. An estimate of the number of internationalization faults, e.g., errors, warnings, in the entire software program, i.e. in all the lines of code of the software program, may then be calculated based on the first and second factor as well as the count of the total number of lines of code in the software program. </paragraph>
+<paragraph id="P-0014" lvl="7"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference>&mdash;Computer System </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates atypical hardware configuration of data processing system <highlight><bold>13</bold></highlight> which is representative of a hardware environment for practicing the present invention. Data processing system <highlight><bold>13</bold></highlight> has a central processing unit (CPU) <highlight><bold>10</bold></highlight>, such as a conventional microprocessor, coupled to various other components by system bus <highlight><bold>12</bold></highlight>. An operating system <highlight><bold>40</bold></highlight> runs on CPU <highlight><bold>10</bold></highlight> and provides control and coordinates the function of the various components of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. Application <highlight><bold>42</bold></highlight>, e.g., program for estimating the number of internationalization faults in a software program as described in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, runs in conjunction with operating system <highlight><bold>40</bold></highlight> and provides output calls to operating system <highlight><bold>40</bold></highlight> which implements the various functions to be performed by application <highlight><bold>42</bold></highlight>. Read only memory (ROM) <highlight><bold>16</bold></highlight> is coupled to system bus <highlight><bold>12</bold></highlight> and includes a basic input/output system (&ldquo;BIOS&rdquo;) that controls certain basic functions of data processing system <highlight><bold>13</bold></highlight>. Random access memory (RAM) <highlight><bold>14</bold></highlight>, I/O adapter <highlight><bold>18</bold></highlight>, and communications adapter <highlight><bold>34</bold></highlight> are also coupled to system bus <highlight><bold>12</bold></highlight>. It should be noted that software components including operating system <highlight><bold>40</bold></highlight> and application <highlight><bold>42</bold></highlight> are loaded into RAM <highlight><bold>14</bold></highlight> which is the computer system&apos;s main memory. I/O adapter <highlight><bold>18</bold></highlight> may be a small computer system interface (&ldquo;SCSI&rdquo;) adapter that communicates with disk units <highlight><bold>20</bold></highlight>, e.g., disk drive, and tape drives <highlight><bold>40</bold></highlight>. It is noted that the program for estimating the number of internationalization faults in a software program as described in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> may also reside in disk units <highlight><bold>20</bold></highlight>. Communications adapter <highlight><bold>34</bold></highlight> interconnects bus <highlight><bold>12</bold></highlight> with an outside network enabling data processing system <highlight><bold>13</bold></highlight> to communication with other such systems. Input/Output devices are also connected to system bus <highlight><bold>12</bold></highlight> via a user interface adapter <highlight><bold>22</bold></highlight> and a display adapter <highlight><bold>36</bold></highlight>. Keyboard <highlight><bold>24</bold></highlight>, trackball <highlight><bold>28</bold></highlight>, mouse <highlight><bold>26</bold></highlight> and speaker <highlight><bold>30</bold></highlight> are all interconnected to bus <highlight><bold>12</bold></highlight> through user interface adapter <highlight><bold>22</bold></highlight>. Event data may be input to data processing system <highlight><bold>13</bold></highlight> through any of these devices. A display monitor <highlight><bold>38</bold></highlight> is connected to system bus <highlight><bold>12</bold></highlight> by display adapter <highlight><bold>36</bold></highlight>. In this manner, a user is capable of inputting to system <highlight><bold>13</bold></highlight> through keyboard <highlight><bold>24</bold></highlight>, trackball <highlight><bold>28</bold></highlight> or mouse <highlight><bold>26</bold></highlight> and receiving output from system <highlight><bold>13</bold></highlight> via display <highlight><bold>38</bold></highlight> or speaker <highlight><bold>30</bold></highlight>. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Preferred implementations of the invention include implementations as a computer system programmed to execute the method or methods described herein, and as a computer program product. According to the computer system implementations, sets of instructions for executing the method or methods are resident in the random access memory <highlight><bold>14</bold></highlight> of one or more computer systems configured generally as described above. Until required by the computer system, the set of instructions may be stored as a computer program product in another computer memory, for example, in disk drive <highlight><bold>20</bold></highlight> (which may include a removable memory such as an optical disk or floppy disk for eventual use in disk drive <highlight><bold>20</bold></highlight>). Furthermore, the computer program product can also be stored at another computer and transmitted when desired to the user&apos;s work station by a network or by an external network such as the Internet. One skilled in the art would appreciate that the physical storage of the sets of instructions physically changes the medium upon which it is stored so that the medium carries computer readable information. The change may be electrical, magnetic, chemical or some other physical change. </paragraph>
+<paragraph id="P-0017" lvl="7"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference>&mdash;Method for Estimating the Number of Internationalization Faults in a Software Program </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a flowchart of one embodiment of the present invention of a method <highlight><bold>200</bold></highlight> for estimating the number of internationalization faults, e.g., errors, warnings, in an internationalized software program. As stated in the Background Information section, the total time spent testing and debugging an internationalized software program may vary from program to program. Unfortunately, software developers when asked to test and debug a particular internationalized software program may not be able to estimate the number of internationalization faults, e.g., errors, warnings, in the particular internationalized software program to be debugged thereby being unable to estimate the number of hours to be spent testing and debugging the internationalized software program. Furthermore, a project manager may assign multiple software developers to test and debug a particular internationalized software program. Unfortunately, the project manager may not be able to determine the exact number of software developers to be assigned since the project manager may not be able to estimate the number of internationalization faults, e.g., errors, warnings, in the particular internationalized software program to be debugged thereby being unable to estimate the number of software developers to be assigned to test and debug the particular internationalized software program. It would therefore be desirable to develop a method to estimate the number of internationalization faults, e.g., errors, warnings, in a particular internationalized software program. Method <highlight><bold>200</bold></highlight> is a method for estimating the number of internationalization faults, e.g., errors, warnings, in a particular internationalized software program. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In step <highlight><bold>201</bold></highlight>, a program may count the number of lines of code of a subset of source files stored in one or more subdirectories where each subdirectory corresponds to a component, i.e. element, of a software program. Source files are files that comprise software code, e.g., Java, C, that may be used to perform one or more functions. These source files may be stored in one or more subdirectories in disk unit <highlight><bold>20</bold></highlight>. Each subdirectory comprises one or more source files, i.e. software code used to perform one or more functions, associated with a particular component, e.g., method to communicate with database, graphical user interface, of a software program as illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a schematic representation of data structures <highlight><bold>301</bold></highlight>A-C of subdirectories in disk unit <highlight><bold>20</bold></highlight>. Data structure <highlight><bold>301</bold></highlight>A may comprise a plurality of fields <highlight><bold>311</bold></highlight>A-E storing source files <highlight><bold>1</bold></highlight>-<highlight><bold>5</bold></highlight>. Data structure <highlight><bold>301</bold></highlight>B may comprise a plurality of fields <highlight><bold>311</bold></highlight>F-I storing source files <highlight><bold>6</bold></highlight>-<highlight><bold>9</bold></highlight>. Data structure <highlight><bold>301</bold></highlight>C may comprise a plurality of fields <highlight><bold>311</bold></highlight>J-O storing source files <highlight><bold>10</bold></highlight>-<highlight><bold>15</bold></highlight>. As stated above, each subdirectory, e.g., data structures <highlight><bold>301</bold></highlight>A-C, may correspond to a component, e.g., method to communicate with database, graphical user interface, of a software program. It is noted that disk unit <highlight><bold>20</bold></highlight> may comprise any number of subdirectories storing any number of source files and that <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is illustrative. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As stated above, a program may count the number of lines of code in a subset of source files stored in one or more subdirectories where each subdirectory corresponds to a component, i.e. element, of a software program in step <highlight><bold>201</bold></highlight>. For example, referring to <cross-reference target="DRAWINGS">FIG. 3, a</cross-reference> program may count the number of lines of code for only two source files in each subdirectory where each subdirectory is associated with a particular component of a software program. For instance, a program may count the lines of code in source files <highlight><bold>1</bold></highlight> and <highlight><bold>2</bold></highlight> in data structure <highlight><bold>301</bold></highlight>A, source files <highlight><bold>6</bold></highlight> and <highlight><bold>7</bold></highlight> in data structure <highlight><bold>301</bold></highlight>B and source files <highlight><bold>10</bold></highlight> and <highlight><bold>11</bold></highlight> in data structure <highlight><bold>301</bold></highlight>C. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> It is noted that the program may reside in application <highlight><bold>42</bold></highlight> or disk unit <highlight><bold>20</bold></highlight>. It is further noted that step <highlight><bold>201</bold></highlight> maybe performed by a separate tool, e.g., source line counting tool, that may reside in application <highlight><bold>42</bold></highlight> or disk unit <highlight><bold>20</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In step <highlight><bold>202</bold></highlight>, the program may further scan the code counted in step <highlight><bold>201</bold></highlight> for internationalization errors and warnings. That is, the program may scan the code in a subset of source files stored in one or more subdirectories where each subdirectory corresponds to a component, i.e. element, of a software program. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Internationalization errors may include hard-coded strings which are text strings that are hard-coded in the code, i.e. the text will not vary whether the code is running on a French or English locale. A locale may represent a geographic, cultural or political region. Hence, a hard-coded string may be a text string that appears in English even when the code is running on the French locale. Various scanning programs such as the program of the present invention may simply detect as hard-coded strings all text enclosed within double quotes (&ldquo;&rdquo;) which are used as string delimiters in Java (as well as other programming languages). However, not all text enclosed within double quotes are hard-coded strings. Hence, a manual analysis may have to be performed, as in step <highlight><bold>205</bold></highlight> described below, to determine false internationalization errors. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Internationalization warnings may include possible unsafe function calls where the variables of certain functions require a particular type of variable, e.g., ASCII character. Hence, a manual analysis may have to be performed, as in step <highlight><bold>205</bold></highlight> described below, to determine whether the variable of the function is the appropriate type. For example, in the Java code below </paragraph>
+<paragraph id="P-0026" lvl="7"><number>&lsqb;0026&rsqb;</number> if (isalpha(textMsg&lsqb;0&rsqb;)) the function isalpha( ) requires a variable that is an ASCII character. A manual analysis may then have to be performed to determined whether the variable of isalpha( ) is an ASCII character or not. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In step <highlight><bold>203</bold></highlight>, the program may further identify the total number of internationalization errors and warnings in the code scanned as illustrated in Table 1 shown below. Table 1 illustrates the number of errors and warnings identified by the program for the code scanned in each component of a particular exemplary software component.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="1" colwidth="49PT" align="left"/>
+<colspec colname="2" colwidth="35PT" align="center"/>
+<colspec colname="3" colwidth="42PT" align="center"/>
+<colspec colname="4" colwidth="42PT" align="center"/>
+<colspec colname="5" colwidth="49PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Errors and</entry>
+<entry>Lines of Code</entry>
+</row>
+<row>
+<entry>Component</entry>
+<entry>Errors</entry>
+<entry>Warnings</entry>
+<entry>Warnings</entry>
+<entry>Scanned</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="1" colwidth="49PT" align="left"/>
+<colspec colname="2" colwidth="35PT" align="char" char="."/>
+<colspec colname="3" colwidth="42PT" align="char" char="."/>
+<colspec colname="4" colwidth="42PT" align="char" char="."/>
+<colspec colname="5" colwidth="49PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry>fu</entry>
+<entry>1371</entry>
+<entry>130</entry>
+<entry>1501</entry>
+<entry>12302</entry>
+</row>
+<row>
+<entry>ful</entry>
+<entry>609</entry>
+<entry>93</entry>
+<entry>702</entry>
+<entry>8462</entry>
+</row>
+<row>
+<entry>sc</entry>
+<entry>436</entry>
+<entry>38</entry>
+<entry>474</entry>
+<entry>4663</entry>
+</row>
+<row>
+<entry>mcedit</entry>
+<entry>294</entry>
+<entry>31</entry>
+<entry>325</entry>
+<entry>4924</entry>
+</row>
+<row>
+<entry>ras</entry>
+<entry>705</entry>
+<entry>63</entry>
+<entry>768</entry>
+<entry>5865</entry>
+</row>
+<row>
+<entry>jc</entry>
+<entry>1433</entry>
+<entry>138</entry>
+<entry>1571</entry>
+<entry>20279</entry>
+</row>
+<row>
+<entry>ns</entry>
+<entry>1189</entry>
+<entry>172</entry>
+<entry>1361</entry>
+<entry>17964</entry>
+</row>
+<row>
+<entry>common</entry>
+<entry>292</entry>
+<entry>44</entry>
+<entry>336</entry>
+<entry>4375</entry>
+</row>
+<row>
+<entry>fmk</entry>
+<entry>462</entry>
+<entry>116</entry>
+<entry>578</entry>
+<entry>5882</entry>
+</row>
+<row>
+<entry>pic</entry>
+<entry>429</entry>
+<entry>70</entry>
+<entry>499</entry>
+<entry>3070</entry>
+</row>
+<row>
+<entry>mcr</entry>
+<entry>2315</entry>
+<entry>261</entry>
+<entry>2576</entry>
+<entry>22946</entry>
+</row>
+<row>
+<entry>rdb</entry>
+<entry>2767</entry>
+<entry>335</entry>
+<entry>3102</entry>
+<entry>17123</entry>
+</row>
+<row>
+<entry>tc</entry>
+<entry>1732</entry>
+<entry>127</entry>
+<entry>1859</entry>
+<entry>13352</entry>
+</row>
+<row>
+<entry>we</entry>
+<entry>1004</entry>
+<entry>115</entry>
+<entry>1119</entry>
+<entry>4290</entry>
+</row>
+<row>
+<entry>uil</entry>
+<entry>5577</entry>
+<entry>182</entry>
+<entry>5759</entry>
+<entry>15960</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> As shown above, Table 1 has separate columns for the components, internalization errors identified, internalization warnings identified, the total internalization errors and warnings identified and the total number of lines of code scanned. Each row of Table 1 lists the number of internalization errors identified, the number of internalization warnings identified, the total number of internalization errors and warnings identified and the total number of lines of code scanned for each component of the software program under analysis. As stated above, the program may identify the total number of internalization errors and warnings in the code scanned in step <highlight><bold>203</bold></highlight>. Referring to Table 1, the total number of internalization errors and warnings in the code scanned in step <highlight><bold>203</bold></highlight> is 22,520 where the number of internationalization errors is 20,605 and the number of warnings is 1,915. It is noted that the program may be configured to count the number of lines of code scanned for each component as shown in Table 1. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> In step <highlight><bold>204</bold></highlight>, a factor, &agr;, may be calculated by the program. The equation for calculating the factor, &agr;, is:</paragraph>
+<paragraph lvl="0"><in-line-formula>&agr;&equals;<highlight><italic>E/LOC,</italic></highlight></in-line-formula></paragraph>
+<paragraph id="P-0030" lvl="7"><number>&lsqb;0030&rsqb;</number> where E is the total number of internalization errors and warnings identified in step <highlight><bold>203</bold></highlight>. Referring to Table 1, the total number of internalization errors and warnings (E) is equal to 22,520. LOC is the count of the total number of lines of code scanned in step <highlight><bold>201</bold></highlight>. Referring to Table 1, the count of the total number of lines of code scanned is equal to 161,457. Therefore, &agr; equals the value of 0.1395 (22,520/161,457). </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In step <highlight><bold>205</bold></highlight>, a manual analysis of the internalization errors and warnings identified in step <highlight><bold>203</bold></highlight> is performed by one or more software developers to detect false internationalization faults, e.g., errors, warnings. That is, one or more software developers may perform a manual analysis to eliminate internalization errors and warnings that should not have been identified. These internalization errors and warnings are not correct, i.e. these internalization errors and warnings are false. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In step <highlight><bold>206</bold></highlight>, the program may further determine the number of internationalization faults, e.g., errors, warnings, that remain after the manual analysis in step <highlight><bold>205</bold></highlight> by subtracting the number of false internationalization faults, e.g., errors, warnings, identified in step <highlight><bold>205</bold></highlight> from the total number of internationalization faults, e.g., errors, warnings, identified in step <highlight><bold>203</bold></highlight> as illustrated in Table 2 shown below.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="56PT" align="center"/>
+<colspec colname="3" colwidth="91PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>False Errors and</entry>
+<entry>Errors and Warnings</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Component</entry>
+<entry>Warnings</entry>
+<entry>Remaining</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="56PT" align="char" char="."/>
+<colspec colname="3" colwidth="91PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>fu</entry>
+<entry>1498</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry></entry>
+<entry>ful</entry>
+<entry>670</entry>
+<entry>32</entry>
+</row>
+<row>
+<entry></entry>
+<entry>sc</entry>
+<entry>460</entry>
+<entry>14</entry>
+</row>
+<row>
+<entry></entry>
+<entry>mcedit</entry>
+<entry>103</entry>
+<entry>222</entry>
+</row>
+<row>
+<entry></entry>
+<entry>ras</entry>
+<entry>766</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry></entry>
+<entry>jc</entry>
+<entry>1469</entry>
+<entry>102</entry>
+</row>
+<row>
+<entry></entry>
+<entry>ns</entry>
+<entry>1211</entry>
+<entry>150</entry>
+</row>
+<row>
+<entry></entry>
+<entry>common</entry>
+<entry>276</entry>
+<entry>60</entry>
+</row>
+<row>
+<entry></entry>
+<entry>fmk</entry>
+<entry>472</entry>
+<entry>106</entry>
+</row>
+<row>
+<entry></entry>
+<entry>pic</entry>
+<entry>482</entry>
+<entry>17</entry>
+</row>
+<row>
+<entry></entry>
+<entry>mcr</entry>
+<entry>2103</entry>
+<entry>473</entry>
+</row>
+<row>
+<entry></entry>
+<entry>rdb</entry>
+<entry>2649</entry>
+<entry>453</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tc</entry>
+<entry>1789</entry>
+<entry>70</entry>
+</row>
+<row>
+<entry></entry>
+<entry>wc</entry>
+<entry>1092</entry>
+<entry>27</entry>
+</row>
+<row>
+<entry></entry>
+<entry>uil</entry>
+<entry>5753</entry>
+<entry>56</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> As shown above, Table 2 has separate columns for the components, false internationalization errors and warnings and the number of internalization errors and warnings remaining. Each row of Table 2 lists the number of false internalization errors and warnings identified and the number of internalization errors and warnings remaining for each component of the software program under analysis. As stated above, the program may further determine the number of internationalization faults, e.g., errors, warnings, that remain after the manual analysis in step <highlight><bold>205</bold></highlight> by subtracting the number of false internationalization faults, e.g., errors, warnings, identified in step <highlight><bold>205</bold></highlight> from the total number of internationalization faults, e.g., errors, warnings, identified in step <highlight><bold>203</bold></highlight>. Referring to Table 2, the total number of internalization errors and warnings remaining after the manual analysis in step <highlight><bold>205</bold></highlight> equals 1,787 (22,520&minus;20,733). </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In step <highlight><bold>207</bold></highlight>, a factor, &bgr;, may be calculated by the program. The equation for calculating the factor, &bgr;, is:</paragraph>
+<paragraph lvl="0"><in-line-formula>&bgr;&equals;<highlight><italic>EWR/E,</italic></highlight></in-line-formula></paragraph>
+<paragraph id="P-0035" lvl="7"><number>&lsqb;0035&rsqb;</number> where EWR is the total number of internationalization errors and warnings remaining as identified in step <highlight><bold>206</bold></highlight>. Referring to Table 2, the total number of internationalization errors and warnings remaining (EWR) is equal to 1,787. E is the total number of internationalization errors and warnings identified in step <highlight><bold>203</bold></highlight>. Referring to Table 1, the total number of internationalization errors and warnings (E) is equal to 22,520. Therefore, &bgr; equals the value of 0.0794 (1,787/22,520). </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> In step <highlight><bold>208</bold></highlight>, the program may further count the total number of lines of code in the entire software program, i.e. the entire code in all the source files in all the subdirectories corresponding to all the components of the software program. In one embodiment, step <highlight><bold>208</bold></highlight> may be performed by a separate tool, e.g., source line counting tool, that may reside in application <highlight><bold>42</bold></highlight> or disk unit <highlight><bold>20</bold></highlight>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In step <highlight><bold>209</bold></highlight>, the program may further calculate an estimate of the number of internationalization faults, e.g., errors, warnings, in the entire code of the software program, i.e. the entire code in all the source files in all the subdirectories corresponding to all the components of the software program, based on the factor calculated in step <highlight><bold>204</bold></highlight>, the factor calculated in step <highlight><bold>207</bold></highlight> and the total number of lines of code in the entire software program, i.e. the entire code in all the source files in all the subdirectories corresponding to all the components of the software program. The equation for calculating the estimated number, Eest, of internationalization faults, e.g., errors, warnings, in the entire code of the software program is:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Eest&equals;&agr;*&bgr;*LOCtot,</italic></highlight></in-line-formula></paragraph>
+<paragraph id="P-0038" lvl="7"><number>&lsqb;0038&rsqb;</number> where &agr; is the factor calculated in step <highlight><bold>204</bold></highlight>. Referring to step <highlight><bold>204</bold></highlight>, &agr; equaled the value of 0.1395. &bgr; is the factor calculated in step <highlight><bold>207</bold></highlight>. Referring to step <highlight><bold>207</bold></highlight>, &bgr; equaled the value of 0.0794. LOCtot is the total number of lines of code in the software program counted in step <highlight><bold>208</bold></highlight>. Therefore, Eest equals the value of 0.0111*LOCtot (0.1395*0.0794*LOCtot). </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> By estimating the number of internationalization errors and warnings that need to be manually analyzed in the entire software program, the time to spend testing and debugging the software program may be estimated. Furthermore, by estimating the number of internationalization errors and warnings that need to be manually analyzed in the entire software program, the number of software developers to be assigned to test and debug the particular software program may be estimated. The greater the number of internationalization errors and warnings that need to be analyzed the greater the time that needs to be spent testing and debugging the software program as well as the greater the number of software developers that need to be assigned to test and debug the particular software program. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> For example, the following formula may be used to estimate the time a software developer may spend testing and debugging the entire software program:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Etime</italic></highlight>&equals;((<highlight><italic>Ne*Te*Fs</italic></highlight>)&plus;(<highlight><italic>Nw*Tw*Fs</italic></highlight>))/(60)</in-line-formula></paragraph>
+<paragraph id="P-0041" lvl="7"><number>&lsqb;0041&rsqb;</number> where Etime is the estimated time a software developer may spend testing and debugging the entire software program measured in hours, Ne is the estimated number of internationalization errors, e.g., hard-coded strings, in the entire code of the software program, Te is the estimated amount of times in minutes, e.g., 15 minutes, that each error requires to be manually analyzed, Nw is the estimated number of internationalization warnings, e.g., unsafe function calls, in the entire code of the software program, Tw is the estimated amount of times in minutes, e.g., 20 minutes, that each warning requires to be manually analyzed, and Fs is the skill level of the developer manually analyzing the internationalization errors and warnings. It is noted that the quantity ((Ne*Te*Fs)&plus;(Nw*Tw*Fs)) is divided by (60) in order to get the units of Etime to be in hours since there are 60 minutes in an hour. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> Ne and Nw may be derived from the total number of warnings and errors as identified by the program in the code scanned in step <highlight><bold>203</bold></highlight>. Referring to Table 1, the total number of errors in the code scanned was 20,605 and the total number of warnings in the code scanned was 1,915. Hence, the ratio of the total number of warnings to the total number of errors as identified by the program in the code scanned in step <highlight><bold>203</bold></highlight> is 0.09294 (1,195/20,605). The ratio of the total number of errors to the total number of warnings as identified by the program in the code scanned in step <highlight><bold>203</bold></highlight> is 0.90706 (20,605/1,195). The ratios may then be used to determine the estimated number of errors and warnings in the estimated number of internationalization faults, e.g., errors, warnings, in the entire code of the software program. The estimated number of warnings in the entire code of the software program (Nw) may equal the ratio of the total number of warnings to the total number of errors as identified in step <highlight><bold>203</bold></highlight> (0.09294)*Eest. The estimated number of errors in the entire code of the software program (Nw) may equal the ratio of the total number of errors to the total number of warnings as identified in step <highlight><bold>203</bold></highlight> (0.90706)*Eest. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> As stated above, Fs is the skill level of the developer manually analyzing the internationalization errors and warnings. For example, a skilled developer with experience detecting internationalization errors and warnings may have a skill level of 1. A skilled developer but with no experience detecting internationalization errors and warnings may have a skill level of 1.5. An unskilled developer with no experience detecting internationalization errors and warnings may have a skill level of 2.0. It is noted that there may be further graduations in the skill levels of the software developers and that the above is illustrative. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> It is further noted that the above formula used to estimate the time a software developer may spend testing and debugging the entire software program may be expanded by taking into consideration classifications of errors and warnings. For example, the following formula may be used to estimate the time a software developer may spend testing and debugging a entire software program with different types of errors and warnings and the difficulties in analyzing those errors and warnings:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Etime</italic></highlight>&equals;(((<highlight><italic>Ne</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>*Te</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>*Fs</italic></highlight>)&plus;(<highlight><italic>Ne</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><italic>*Te</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><italic>*Fs</italic></highlight>)&plus; . . . )&plus;((<highlight><italic>Nw</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>*Tw</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>*Fs</italic></highlight>)&plus;(<highlight><italic>Nw</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><italic>Tw</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><italic>*Fs</italic></highlight>)&plus; . . . ))/(60)</in-line-formula></paragraph>
+<paragraph id="P-0045" lvl="7"><number>&lsqb;0045&rsqb;</number> where Ne<highlight><subscript>1 </subscript></highlight>is the estimated number of a first type of error in the entire code of the software program, Te<highlight><subscript>1 </subscript></highlight>is the estimated amount of times in minutes, e.g., 15 minutes, that each error of the first type requires to be manually analyzed, Ne<highlight><subscript>2 </subscript></highlight>is the estimated number of a second type of error, in the entire code of the software program, Te<highlight><subscript>2 </subscript></highlight>is the estimated amount of times in minutes, e.g., 21 minutes, that each error of the second type requires to be manually analyzed and so forth, Nw<highlight><subscript>1 </subscript></highlight>is the estimated number of internationalization warnings of a first type in the entire code of the software program, Tw<highlight><subscript>1 </subscript></highlight>is the estimated amount of times in minutes, e.g., 16 minutes, that each warning of the first type requires to be manually analyzed, Nw<highlight><subscript>2 </subscript></highlight>is the estimated number of internationalization warnings of a second type in the entire code of the software program, Tw<highlight><subscript>2 </subscript></highlight>is the estimated amount of times in minutes, e.g., 16 minutes, that each warning of the second type requires to be manually analyzed and so forth. It is noted that the above formula may comprise any number of classifications of errors and warnings and that the above formula is illustrative. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> It is further noted that the formula used to estimate the time a software developer may spend testing and debugging the entire software program may be expanded by taking into consideration multiple software developers testing and debugging the entire software program. For example, the following formula may be used to estimate the time multiple software developer may spend testing and debugging the entire software program:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Etotal&equals;Etime</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>&plus;Etime</italic></highlight><highlight><subscript>2</subscript></highlight>&plus; . . .</in-line-formula></paragraph>
+<paragraph id="P-0047" lvl="7"><number>&lsqb;0047&rsqb;</number> where Etime<highlight><subscript>1 </subscript></highlight>is the estimated time a first software developer may spend testing and debugging a set of errors and warnings assigned to the first software developer, Etime<highlight><subscript>2 </subscript></highlight>is the estimated time a second software developer may spend testing and debugging a set of errors and warnings assigned to the second software developer and so forth. In calculating the estimated time a particular software developer may spend testing and debugging a set of errors and warnings assigned to the software developer, the formula for cacluating the estimated time may equal:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Etime</italic></highlight><highlight><subscript>1</subscript></highlight>&equals;(((<highlight><italic>Ne</italic></highlight><highlight><subscript>11</subscript></highlight><highlight><italic>*Te</italic></highlight><highlight><subscript>11</subscript></highlight><highlight><italic>*Fs</italic></highlight><highlight><subscript>1</subscript></highlight>)&plus;(<highlight><italic>Ne</italic></highlight><highlight><subscript>12</subscript></highlight><highlight><italic>*Te</italic></highlight><highlight><subscript>12</subscript></highlight><highlight><italic>*Fs</italic></highlight><highlight><subscript>1</subscript></highlight>)&plus; . . . )&plus;((<highlight><italic>Nw</italic></highlight><highlight><subscript>11</subscript></highlight><highlight><italic>*Tw</italic></highlight><highlight><subscript>11</subscript></highlight><highlight><italic>*Fs</italic></highlight>1)&plus;(<highlight><italic>Nw</italic></highlight><highlight><subscript>12</subscript></highlight><highlight><italic>* Tw</italic></highlight><highlight><subscript>12</subscript></highlight><highlight><italic>*Fs</italic></highlight>)&plus; . . . ))/(60)</in-line-formula></paragraph>
+<paragraph id="P-0048" lvl="7"><number>&lsqb;0048&rsqb;</number> where Ne<highlight><subscript>11 </subscript></highlight>is the estimated number of a first type of error in the entire code of the software program assigned to a first software developer, Te<highlight><subscript>11 </subscript></highlight>is the estimated amount of times in minutes, e.g., 15 minutes, that each error of the first type requires to be manually analyzed by the first software developer, Ne<highlight><subscript>12 </subscript></highlight>is the estimated number of a second type of error, in the entire code of the software program assigned to the first software developer, Te<highlight><subscript>12 </subscript></highlight>is the estimated amount of times in minutes, e.g., 21 minutes, that each error of the second type requires to be manually analyzed by the first software developer and so forth, Nw<highlight><subscript>11 </subscript></highlight>is the estimated number of internationalization warnings of a first type in the entire code of the software program assigned to the first software developer, Tw<highlight><subscript>11 </subscript></highlight>is the estimated amount of times in minutes, e.g., 16 minutes, that each warning of the first type requires to be manually analyzed by the first software developer, Nw<highlight><subscript>12 </subscript></highlight>is the estimated number of internationalization warnings of a second type in the entire code of the software program assigned to the first software developer, Tw<highlight><subscript>12 </subscript></highlight>is the estimated amount of times in minutes, e.g., 16 minutes, that each warning of the second type requires to be manually analyzed by the first software developer and so forth. It is noted that the above formula may be applied to each software developer assigned the task of analyzing the software program and that the above formula is illustrative. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> It is noted that steps <highlight><bold>201</bold></highlight>-<highlight><bold>209</bold></highlight> may be combined or executed in any order and that steps <highlight><bold>201</bold></highlight>-<highlight><bold>209</bold></highlight> are illustrative. It is further noted that the program of the present invention may reside in disk unit <highlight><bold>20</bold></highlight> or application <highlight><bold>42</bold></highlight>. It is further noted that the program of the present invention maybe implemented to estimate internationalization faults, e.g., errors, warnings, that need to be manually analyzed in the entire software program in any type of programming language. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> Although the method, computer program product and data processing system of the present invention is described in connection with several embodiments, it is not intended to be limited to the specific forms set forth herein, but on the contrary, it is intended to cover such alternatives, modifications, and equivalents, as can be reasonably included within the spirit and scope of the invention as defined by the appended claims. It is noted that the headings are used only for organizational purposes and not meant to limit the scope of the description or claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for estimating the number of internationalization faults in a software program comprising the steps of: 
+<claim-text>scanning a subset of a total number of lines of code of said software program; </claim-text>
+<claim-text>identifying a first number of internationalization faults in said lines of code scanned; </claim-text>
+<claim-text>calculating a first factor based on a count of said lines of code scanned and said first number of internationalization faults identified; </claim-text>
+<claim-text>identifying a second number of internationalization faults in said lines of code scanned; </claim-text>
+<claim-text>calculating a second factor based on said first and said second number of internationalization faults in said lines of code scanned; and </claim-text>
+<claim-text>calculating an estimated number of internationalization faults for said software program based on said first and said second factor and a count of said total number of lines of code of said software program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising the step of: 
+<claim-text>analyzing said lines of code scanned to detect false internationalization faults. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said second number of internationalization faults is determined by subtracting a number of said false internationalization faults detected from said first number of internationalization faults. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said lines of code of said software program are lines of code of source files. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said source files are stored in one or more subdirectories, wherein each subdirectory is associated with a particular component of said software program. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein said lines of code scanned are the lines of code associated with a subset of said source files stored in said one or more subdirectories. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said step of calculating said first factor uses the equation:</claim-text>
+<claim-text><in-line-formula>&agr;&equals;<highlight><italic>E/LOC</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein &agr; is said first factor, wherein E is said first number of internationalization faults in said lines of code scanned, and wherein LOC is a count of said lines of code scanned. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein said step of calculating said second factor uses the equation:</claim-text>
+<claim-text><in-line-formula>&bgr;&equals;<highlight><italic>EWR/E</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein &bgr; is said first factor, wherein EWR is said second number of internationalization faults in said lines of code scanned, and wherein E is said first number of internationalization faults in said lines of code scanned. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said step of calculating said estimated number of internationalization faults for said software program uses the equation:</claim-text>
+<claim-text><in-line-formula><highlight><italic>Eest&equals;&agr;*&bgr;*LOCtot</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein Eest is said estimated number of internationalization faults for said software program, and wherein LOCtot is said count of said total number of lines of code of said software program. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said internationalization faults are internationalization errors and warnings. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A computer program product adaptable for storing in a computer readable medium and operable for estimating the number of internationalization faults in a software program, comprising: 
+<claim-text>programming operable for scanning a subset of a total number of lines of code of said software program; </claim-text>
+<claim-text>programming operable for identifying a first number of internationalization faults in said lines of code scanned; </claim-text>
+<claim-text>programming operable for calculating a first factor based on a count of said lines of code scanned and said first number of internationalization faults identified; </claim-text>
+<claim-text>programming operable for identifying a second number of internationalization faults in said lines of code scanned; </claim-text>
+<claim-text>programming operable for calculating a second factor based on said first and said second number of internationalization faults in said lines of code scanned; and </claim-text>
+<claim-text>programming operable for calculating an estimated number of internationalization faults for said software program based on said first and said second factor and a count of said total number of lines of code of said software program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein a user analyzes said lines of code scanned to detect false internationalization faults. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said second number of internationalization faults is determined by subtracting a number of said false internationalization faults detected from said first number of internationalization faults. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said lines of code of said software program are lines of code of source files. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said source files are stored in one or more subdirectories, wherein each subdirectory is associated with a particular component of said software program. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said lines of code scanned are the lines of code associated with a subset of said source files stored in said one or more subdirectories. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said calculating said first factor uses the equation:</claim-text>
+<claim-text><in-line-formula>&agr;&equals;<highlight><italic>E/LOC</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein &agr; is said first factor, wherein E is said first number of internationalization faults in said lines of code scanned, and wherein LOC is a count of said lines of code scanned. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein said calculating said second factor uses the equation:</claim-text>
+<claim-text><in-line-formula>&bgr;&equals;<highlight><italic>EWR/E</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein &bgr; is said first factor, wherein EWR is said second number of internationalization faults in said lines of code scanned, and wherein E is said first number of internationalization faults in said lines of code scanned. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said calculating said estimated number of internationalization faults for said software program uses the equation:</claim-text>
+<claim-text><in-line-formula><highlight><italic>Eest&equals;&agr;*&bgr;*LOCtot</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein Eest is said estimated number of internationalization faults for said software program, and wherein LOCtot is said count of said total number of lines of code of said software program. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The computer program product as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said internationalization faults are internationalization errors and warnings. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A data processing system, comprising: 
+<claim-text>a processor; </claim-text>
+<claim-text>a memory unit for storing a computer program operable for estimating the number of internationalization faults in a software program; </claim-text>
+<claim-text>an input mechanism; </claim-text>
+<claim-text>an output mechanism; </claim-text>
+<claim-text>a bus system for coupling the processor to the memory unit, input mechanism, and output mechanism, wherein the computer program is operable for performing the following programming steps: 
+<claim-text>scanning a subset of a total number of lines of code of said software program; </claim-text>
+<claim-text>identifying a first number of internationalization faults in said lines of code scanned; </claim-text>
+<claim-text>calculating a first factor based on a count of said lines of code scanned and said first number of internationalization faults identified; </claim-text>
+<claim-text>identifying a second number of internationalization faults in said lines of code scanned; </claim-text>
+<claim-text>calculating a second factor based on said first and said second number of internationalization faults in said lines of code scanned; and </claim-text>
+<claim-text>calculating an estimated number of internationalization faults for said software program based on said first and said second factor and a count of said total number of lines of code of said software program. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein a user analyzes said lines of code scanned to detect false internationalization faults. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein said second number of internationalization faults is determined by subtracting a number of said false internationalization faults detected from said first number of internationalization faults. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein said lines of code of said software program are lines of code of source files. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein said source files are stored in one or more subdirectories, wherein each subdirectory is associated with a particular component of said software program. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein said lines of code scanned are the lines of code associated with a subset of said source files stored in said one or more subdirectories. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein said programming step of calculating said first factor uses the equation:</claim-text>
+<claim-text><in-line-formula>&agr;&equals;<highlight><italic>E/LOC</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein &agr; is said first factor, wherein E is said first number of internationalization faults in said lines of code scanned, and wherein LOC is a count of said lines of code scanned. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, wherein said programming step of calculating said second factor uses the equation:</claim-text>
+<claim-text><in-line-formula>&bgr;&equals;<highlight><italic>EWR/E</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein &bgr; is said first factor, wherein EWR is said second number of internationalization faults in said lines of code scanned, and wherein E is said first number of internationalization faults in said lines of code scanned. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein said programming step of calculating said estimated number of internationalization faults for said software program uses the equation:</claim-text>
+<claim-text><in-line-formula><highlight><italic>Eest&equals;&agr;*&bgr;*LOCtot</italic></highlight></in-line-formula></claim-text>
+<claim-text>wherein Eest is the estimated number of internationalization faults for said software program, and wherein LOCtot is said count of said total number of lines of code of said software program. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The data processing system as recited in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein said internationalization faults are internationalization errors and warnings.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005364A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005364A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005364A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005364A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

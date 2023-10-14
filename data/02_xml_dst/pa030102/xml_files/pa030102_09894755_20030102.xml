@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005240A1-20030102-D00000.TIF SYSTEM "US20030005240A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005240A1-20030102-D00001.TIF SYSTEM "US20030005240A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005240A1-20030102-D00002.TIF SYSTEM "US20030005240A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005240A1-20030102-D00003.TIF SYSTEM "US20030005240A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005240A1-20030102-D00004.TIF SYSTEM "US20030005240A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005240A1-20030102-D00005.TIF SYSTEM "US20030005240A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005240A1-20030102-D00006.TIF SYSTEM "US20030005240A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005240</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894755</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>156000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Successive template generation using minimal random access memory bandwidth</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Jacob</given-name>
+<family-name>Schroeder</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Lyngby</city>
+<country-code>DK</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>PILLSBURY WINTHROP, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 10500</address-1>
+<city>MCLEAN</city>
+<state>VA</state>
+<postalcode>22102</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A memory template initialization system includes a first memory device to store a first memory template. The system also includes a second memory device to store a second memory template, and a dirty bit array to track changes to the second memory template. A processing unit serves to copy a portion of the first memory template into the second memory template based on contents of the dirty bit array. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention generally relates to the initialization of memory templates. More specifically, the present invention relates to a system, method and apparatus for using minimal memory bandwidth to initialize memory templates. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Discussion of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In networking applications, frames of data are sent through a network. A frame is a packet of information that may be transferred on a network, such as a computer network. Each frame typically includes a packet header and a packet payload. The packet header may contain information such as the Internet Protocol (IP) addresses of the source device and the destination device of the frame, as well as port numbers of the source and destination, physical addresses of the source and destination, the application being executed by the source and destination devices (i.e., File Transfer Protocol (FTP), HyperText Transport Protocol (HTTP), etc.), and various other setting information, for example. The packet payload may include data such as a text file or a portion thereof. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Networking applications typically transmit a large number of frames during a given time period. For example, a single networking device may be utilized by several Internet devices each having unique IP and physical addresses. The networking device may create many frames for each of the Internet devices. Each of the frames for the devices may have common elements. For example, in a situation where three computers, A, B and C all utilize the same networking device, and A and B are both HTTP servers, but C is an FTP server, the system may be initially configured to always create a frame where the application is designated as HTTP. However, if the frame is created for C, the application designation has to be changed to FTP. Accordingly, systems typically utilize a frame &ldquo;template&rdquo; containing default settings for a frame, for example. The template may be stored in a Read Only Memory (ROM), or in a remote section of memory, for example. When a frame is to be created and sent over the network, the networking device copies the template into a memory, such as a Random Access Memory (RAM), for example. The networking device then changes the appropriate template data. For example, if the default application source is HTTP, and if the frame is sent for C, the application source is first changed to FTP. Next, the changed template is utilized to create a frame. When the next frame is to be generated, the entire template is copied back into the RAM, and the process repeats. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> However, such a process is very inefficient in situations where large amounts of frames are to be sent over the network. For example, in a situation where a template contains 256 bytes, a 10 Gigabit Ethernet device that supports up to 15 Mega-frames/second may copy over 30 Gigabits in a second from the original template into the template in the RAM. Accordingly, a large amount of the RAM&apos;s bandwidth may be utilized to copy the template into the RAM. Systems in the prior art are therefore inefficient when large amounts of unchanged template data are continually copied from the original template into the memory template.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a frame of data, according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a frame template according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a general overview of the system according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a frame template and a dirty bit array according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates how the system creates frame templates for producing frames according to an embodiment of the present invention; and </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates how the system utilizes the dirty bit array to update the copied frame template in memory according to an embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> An embodiment of the present invention is directed towards an initialization of frame templates in a memory. The embodiment provides an improved system, method and apparatus for using minimal memory bandwidth to initialize memory templates. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a frame of data, according to an embodiment of the present invention. A frame <highlight><bold>100</bold></highlight> is a packet of information that is transferred on a network, such as a computer network. The frame <highlight><bold>100</bold></highlight> includes a frame header <highlight><bold>105</bold></highlight> and a frame payload <highlight><bold>125</bold></highlight>. The frame header <highlight><bold>105</bold></highlight> may contain source and destination information for the frame <highlight><bold>100</bold></highlight>. The frame payload <highlight><bold>125</bold></highlight> may be utilized to hold file data, or a portion of file data, sent over the network. The frame header <highlight><bold>105</bold></highlight> may include information such as an Internet Protocol (IP) address <highlight><bold>110</bold></highlight> of the source and destination of the frame and settings information <highlight><bold>115</bold></highlight> for the source and destination devices. The settings information <highlight><bold>115</bold></highlight> may include information about the application being executed at the source and destination devices such as File Transfer Protocol (FTP), HyperText Transport Protocol (HTTP), etc. The frame <highlight><bold>100</bold></highlight> also includes location information <highlight><bold>120</bold></highlight> about the location of the source and destination devices. This location information <highlight><bold>120</bold></highlight> may contain the physical network address of the source and destination devices. A networking device may utilize the information in the frame header <highlight><bold>105</bold></highlight> to route the frame <highlight><bold>100</bold></highlight> to the correct device on the network, and ensure that the frame is properly received by that device. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a frame template <highlight><bold>200</bold></highlight> according to an embodiment of the present invention. The frame template <highlight><bold>200</bold></highlight> may be utilized, for example, to create a frame header <highlight><bold>105</bold></highlight> for a frame <highlight><bold>100</bold></highlight> of data. The frame template <highlight><bold>200</bold></highlight> may be stored in a memory such as a Read Only Memory (ROM), or in any other suitable storage device. The exemplary frame template <highlight><bold>200</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> includes Media Access Control (MAC) address information <highlight><bold>205</bold></highlight>, for example. The frame template <highlight><bold>200</bold></highlight> contains device settings information <highlight><bold>210</bold></highlight>, to hold device settings. The port information <highlight><bold>215</bold></highlight> may be utilized to hold information about the port utilized by a device on a network. The frame template <highlight><bold>200</bold></highlight> may also include IP address information <highlight><bold>220</bold></highlight> to hold information about an IP address of a device on the network. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Although the frame template <highlight><bold>200</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> only holds four types of information, the frame template <highlight><bold>200</bold></highlight> may store more or fewer types of information in alternative embodiments. The amount of information in the frame template <highlight><bold>200</bold></highlight> may be application-specific or user-specific. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a general overview of the system according to an embodiment of the present invention. The system contains a frame template <highlight><bold>200</bold></highlight>, a memory <highlight><bold>300</bold></highlight>, and a central processing unit (CPU) <highlight><bold>305</bold></highlight>. The CPU <highlight><bold>305</bold></highlight> controls the system. The CPU <highlight><bold>305</bold></highlight> has a general function of creating frames <highlight><bold>100</bold></highlight> of data. The frames <highlight><bold>100</bold></highlight> of data may then be sent to a location on a network, such as a Local Area Network (LAN), a Wide Area Network (WAN), or the Internet, for example. The CPU <highlight><bold>305</bold></highlight> utilizes the memory <highlight><bold>300</bold></highlight> and the frame template <highlight><bold>200</bold></highlight> to create the frames <highlight><bold>100</bold></highlight> of data. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> When the system is to create a frame <highlight><bold>100</bold></highlight> of data, the CPU <highlight><bold>305</bold></highlight> may cause the frame template <highlight><bold>200</bold></highlight> to create a copied frame template <highlight><bold>310</bold></highlight> in the memory <highlight><bold>300</bold></highlight>. The copied frame template <highlight><bold>310</bold></highlight> is typically identical to the frame template <highlight><bold>200</bold></highlight>. In an embodiment of the present invention, common frame settings such as IP address, physical network addresses, and similar settings may be stored in the frame template <highlight><bold>200</bold></highlight>. The use of such common frame settings in a frame template <highlight><bold>200</bold></highlight> serves to maximize the speed in which frames <highlight><bold>100</bold></highlight> may be created under the control of the CPU <highlight><bold>305</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The copied frame template <highlight><bold>310</bold></highlight> may then be altered. For example, if the IP address of a frame <highlight><bold>100</bold></highlight> to be created is different than the IP address in the frame template <highlight><bold>200</bold></highlight> that was copied into the copied frame template <highlight><bold>310</bold></highlight>, then the CPU <highlight><bold>305</bold></highlight> changes the IP address in the copied frame template <highlight><bold>310</bold></highlight>. After all necessary changes have been made to the copied frame template <highlight><bold>310</bold></highlight>, the CPU <highlight><bold>305</bold></highlight> uses the copied frame template <highlight><bold>310</bold></highlight> to create the frame <highlight><bold>100</bold></highlight>. In an embodiment of the present invention, much of the information in the copied frame template <highlight><bold>310</bold></highlight> may be utilized to create the frame header <highlight><bold>105</bold></highlight> for a frame <highlight><bold>100</bold></highlight> of data. The CPU <highlight><bold>305</bold></highlight> uses the copied frame template <highlight><bold>310</bold></highlight> in addition to other data, such as a file, or any other requisite data, to create the entire frame <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a frame template <highlight><bold>200</bold></highlight> and a &ldquo;dirty bit array&rdquo; <highlight><bold>400</bold></highlight> according to an embodiment of the present invention. As illustrated, the frame template <highlight><bold>200</bold></highlight> is comprised of the same four types of information as the frame template <highlight><bold>200</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>: a MAC address information <highlight><bold>205</bold></highlight>, device settings information <highlight><bold>210</bold></highlight>, port information <highlight><bold>215</bold></highlight>, and IP address information <highlight><bold>220</bold></highlight>. The frame template <highlight><bold>200</bold></highlight> has a &ldquo;dirty bit array&rdquo; <highlight><bold>400</bold></highlight> associated therewith, as discussed in further detail below. As shown, the dirty bit array <highlight><bold>400</bold></highlight> in the present embodiment is comprised of four bits: a first bit <highlight><bold>405</bold></highlight>, a second bit <highlight><bold>410</bold></highlight>, a third bit <highlight><bold>415</bold></highlight>, and a fourth bit <highlight><bold>420</bold></highlight>. Each bit in the dirty bit array <highlight><bold>400</bold></highlight> is associated with one of the items of information in the frame template <highlight><bold>200</bold></highlight>. More specifically, the first bit <highlight><bold>405</bold></highlight> is associated with the MAC address information <highlight><bold>205</bold></highlight>, the second bit <highlight><bold>410</bold></highlight> is associated with the device settings information <highlight><bold>210</bold></highlight>, the third bit <highlight><bold>415</bold></highlight> is associated with the port information <highlight><bold>215</bold></highlight>, and the fourth bit <highlight><bold>420</bold></highlight> is associated with the IP address information <highlight><bold>220</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In embodiments having Z number of types of information stored in the frame template <highlight><bold>200</bold></highlight>, the dirty bit array <highlight><bold>400</bold></highlight> may include Z bits, one for each of the items of information in the frame template <highlight><bold>200</bold></highlight>. In additional embodiments where more than one piece of data is stored under the same information type in the frame template <highlight><bold>200</bold></highlight>, each item of information may have more than one dirty bit associated therewith. More specifically, if two IP addresses are stored in the IP address information <highlight><bold>220</bold></highlight>, then each IP address may be associated with its own dirty bit. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Each bit in the dirty bit array <highlight><bold>400</bold></highlight> is either a &ldquo;1&rdquo; or a &ldquo;0&rdquo;. After a network device or computer has initially booted and copied the frame template <highlight><bold>200</bold></highlight> into the copied frame template <highlight><bold>310</bold></highlight>, the system may initialize the dirty bit array <highlight><bold>400</bold></highlight>, setting each bit to &ldquo;0&rdquo;. When the system makes changes to the copied frame template <highlight><bold>310</bold></highlight>, each bit in the dirty bit array <highlight><bold>400</bold></highlight> associated with each item of information in the copied frame template <highlight><bold>310</bold></highlight> that is changed is then set to &ldquo;1&rdquo;. In other words, after the frame template <highlight><bold>200</bold></highlight> is initially copied into the copied frame template <highlight><bold>310</bold></highlight> in the memory <highlight><bold>300</bold></highlight>, the bit associated with IP address information <highlight><bold>220</bold></highlight> is initially set to &ldquo;0&rdquo;. If, before creating a frame <highlight><bold>100</bold></highlight>, the system changes the IP address information <highlight><bold>220</bold></highlight> in the copied frame template <highlight><bold>310</bold></highlight>, the system sets the bit associated with IP address information <highlight><bold>220</bold></highlight> to &ldquo;1&rdquo;. In the embodiment shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the fourth bit <highlight><bold>220</bold></highlight> would then be set to &ldquo;1&rdquo;. This bit is now &ldquo;dirty&rdquo;. In other words, the information in the copied frame template <highlight><bold>310</bold></highlight> associated with the fourth bit <highlight><bold>420</bold></highlight> has been changed. After the system creates a frame <highlight><bold>100</bold></highlight> through the use of the copied frame template <highlight><bold>310</bold></highlight>, the system must again initialize the copied frame template <highlight><bold>310</bold></highlight>, to make it the same as the frame template <highlight><bold>200</bold></highlight>. Whereas systems in the prior art copy the entire frame template <highlight><bold>200</bold></highlight> into the copied frame template <highlight><bold>310</bold></highlight> when the time came to create the next frame <highlight><bold>100</bold></highlight>, an embodiment of the present invention copies only the data associated with bits in the dirty bit array <highlight><bold>400</bold></highlight> that are dirty. In other words, the dirty bit array <highlight><bold>400</bold></highlight> is utilized to determine which parts of the copied frame template have been changed, so the frame <highlight><bold>100</bold></highlight> may be correctly created. After the frame <highlight><bold>100</bold></highlight> has been created, the changed, or &ldquo;dirty&rdquo;, parts of the copied frame template <highlight><bold>310</bold></highlight> must be &ldquo;cleaned&rdquo;. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The dirty portions of the copied frame template <highlight><bold>310</bold></highlight> are cleaned by being set back to their initial values (i.e., the values identical to those in the frame template <highlight><bold>200</bold></highlight>). More specifically, if the IP address information <highlight><bold>220</bold></highlight> was the only item of information in the copied frame template <highlight><bold>310</bold></highlight> that was changed in order to create a frame <highlight><bold>100</bold></highlight>, then the only portion of the frame template <highlight><bold>200</bold></highlight> that must be copied back into the copied frame template <highlight><bold>310</bold></highlight> is the IP address information <highlight><bold>220</bold></highlight>. After the IP address information <highlight><bold>220</bold></highlight> is copied into the copied frame template <highlight><bold>310</bold></highlight>, the fourth bit in the dirty bit array <highlight><bold>400</bold></highlight> is then set to &ldquo;0&rdquo;. Such use of dirty bits ensures that only altered data is reinitialized in the copied frame template <highlight><bold>310</bold></highlight>. If the entire frame template had been copied back into the copied frame template <highlight><bold>310</bold></highlight>, as is done in the prior art, then the MAC address information <highlight><bold>205</bold></highlight>, the computer settings information <highlight><bold>210</bold></highlight>, and the port information <highlight><bold>215</bold></highlight> would have all been copied from the frame template <highlight><bold>200</bold></highlight> back into the copied frame template <highlight><bold>310</bold></highlight> even though such information had not been changed. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates how the system creates frame templates <highlight><bold>200</bold></highlight> for producing frames <highlight><bold>100</bold></highlight> according to an embodiment of the present invention. First, the system using the frame template <highlight><bold>200</bold></highlight> to create a frame <highlight><bold>100</bold></highlight> is booted <highlight><bold>500</bold></highlight>. Next, the system copies <highlight><bold>505</bold></highlight> the frame template <highlight><bold>200</bold></highlight> into the copied frame template <highlight><bold>310</bold></highlight> in the memory <highlight><bold>300</bold></highlight>. The system then processes <highlight><bold>510</bold></highlight> the data. More specifically, the system acquires data to be added to a frame <highlight><bold>100</bold></highlight>. This data may include a text file, or any other type of data, for example. At step <highlight><bold>515</bold></highlight>, the system makes changes to the copied frame template <highlight><bold>310</bold></highlight>. Then, the system generates <highlight><bold>520</bold></highlight> the frame. The frame <highlight><bold>100</bold></highlight> may be routed across the network. Finally, selected data is copied <highlight><bold>525</bold></highlight> from the frame template <highlight><bold>200</bold></highlight> back into the copied frame template <highlight><bold>310</bold></highlight> in the memory <highlight><bold>300</bold></highlight>. As mentioned above, the &ldquo;selected&rdquo; data to be copied is determined by the dirty bit array <highlight><bold>400</bold></highlight>. In other embodiments, the order of the steps may be different. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates how the system utilizes the dirty bit array <highlight><bold>400</bold></highlight> to update the copied frame template <highlight><bold>310</bold></highlight> in memory <highlight><bold>300</bold></highlight> according to an embodiment of the present invention. First, after the system has been booted and the frame template <highlight><bold>200</bold></highlight> has been copied into the copied frame template <highlight><bold>310</bold></highlight>, the system initializes <highlight><bold>600</bold></highlight> the dirty bit array <highlight><bold>400</bold></highlight>. More specifically, each bit in the dirty bit array <highlight><bold>400</bold></highlight> is set to &ldquo;0&rdquo;. Next, appropriate changes <highlight><bold>605</bold></highlight> may be made to the copied frame template <highlight><bold>310</bold></highlight>. As mentioned above, for each changed item of information in the copied frame template <highlight><bold>310</bold></highlight>, the bit in the dirty bit array <highlight><bold>400</bold></highlight> associated therewith is set <highlight><bold>610</bold></highlight> to &ldquo;1&rdquo;. Next, the system generates <highlight><bold>615</bold></highlight> the frame <highlight><bold>100</bold></highlight>. Then, based on the dirty bit array <highlight><bold>400</bold></highlight>, the system acquires <highlight><bold>620</bold></highlight> the changed template data from the frame template <highlight><bold>100</bold></highlight>. More specifically, the information associated with each bit of the dirty bit array <highlight><bold>400</bold></highlight> that is set to &ldquo;1&rdquo; is then copied <highlight><bold>625</bold></highlight> from the frame template <highlight><bold>200</bold></highlight> back into the copied frame template <highlight><bold>310</bold></highlight>. When the next frame <highlight><bold>100</bold></highlight> is to be created, the process repeats at step <highlight><bold>600</bold></highlight>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> An embodiment of the present invention may be particularly useful for a networking device such as a router. Routers on a network can be configured to transmit frames <highlight><bold>100</bold></highlight> of data for numerous devices on a network. For example, a plurality of HTTP servers may be located on a network and may use the same router to transmit frames of data. Accordingly, each of the devices on the network may have settings common with other devices on the network. Therefore, using a memory template including many of the common settings may allow the router to more quickly create and transmit frames <highlight><bold>100</bold></highlight> across the network. Moreover, copying only changed portions of the frame template during the initialization on the copied frame template <highlight><bold>310</bold></highlight> serves to increase the amount of available RAM bandwidth for transmitting frames of data. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> While the description above refers to particular embodiments of the present invention, it will be understood that many modifications may be made without departing from the spirit thereof. The accompanying claims are intended to cover such modifications as would fall within the true scope and spirit of the present invention. The presently disclosed embodiments are therefore to be considered in all respects as illustrative and not restrictive, the scope of the invention being indicated by the appended claims, rather than the foregoing description, and all changes which come within the meaning and range of equivalency of the claims are therefore intended to be embraced therein. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A memory template initialization system, comprising: 
+<claim-text>a first memory device to store a first memory template; </claim-text>
+<claim-text>a second memory device to store a second memory template; </claim-text>
+<claim-text>a dirty bit array to track changes to the second memory template; and </claim-text>
+<claim-text>a processing unit to copy a portion of the first memory template into the second memory template based on contents of the dirty bit array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first memory device is a Read Only Memory (ROM). </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the second memory device is a Random Access Memory (RAM). </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein each of the first memory template and the second memory template include at least one type of information. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the dirty bit array includes a plurality of bits, and each bit corresponds to one of the at least one type of information in the second memory template. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method of initializing a memory template, comprising: 
+<claim-text>accessing a first memory template; </claim-text>
+<claim-text>storing a second memory template in a memory; </claim-text>
+<claim-text>using a dirty bit array to track changes to the second memory template, wherein the dirty bit array includes at least one bit; and </claim-text>
+<claim-text>copying a portion of the first memory template into the second memory template based on contents of the dirty bit array, so that the second memory template contains the same information as the first memory template. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the first memory template is stored in a first memory device. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further including storing at least one type of information in each of the first memory template and the second memory template. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further including using each of the at least one bit of the dirty bit array to track changes to the second memory template. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A memory template initialization device, comprising: 
+<claim-text>a computer-readable medium; and </claim-text>
+<claim-text>a computer-readable program code, stored on the computer-readable medium, having instructions to 
+<claim-text>access a first memory template; </claim-text>
+<claim-text>store a second memory template in a memory; </claim-text>
+<claim-text>use a dirty bit array to track changes to the second memory template, wherein the dirty bit array includes at least one bit; and </claim-text>
+<claim-text>copy a portion of the first memory template into the second memory template based on contents of the dirty bit array, so that the second memory template contains the same information as the first memory template. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The memory template initialization device of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the first memory template is stored in a first memory device. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The memory template initialization device of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein at least one type of information is stored in each of the first memory template and the second memory template. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The memory template initialization device of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein each of the at least one bit of the dirty bit array is utilized to track changes to the second memory template.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005240A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005240A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005240A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005240A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005240A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005240A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005240A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

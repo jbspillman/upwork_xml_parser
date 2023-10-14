@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005230A1-20030102-D00000.TIF SYSTEM "US20030005230A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005230A1-20030102-D00001.TIF SYSTEM "US20030005230A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005230A1-20030102-D00002.TIF SYSTEM "US20030005230A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005230A1-20030102-D00003.TIF SYSTEM "US20030005230A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005230A1-20030102-D00004.TIF SYSTEM "US20030005230A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005230A1-20030102-D00005.TIF SYSTEM "US20030005230A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005230A1-20030102-D00006.TIF SYSTEM "US20030005230A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030005230A1-20030102-D00007.TIF SYSTEM "US20030005230A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005230</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895693</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>128000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>711</class>
+<subclass>003000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Using linked list for caches with variable length data</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Baruch</given-name>
+<family-name>Solomon</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Zichron Yaakov</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Avi</given-name>
+<family-name>Mendelson</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Haifa</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">In general, the cache structure overcomes the deficiency of wasted tag space and reduces associativity. The method provides for storing a single tag along with a pointer to the actual data which is stored in a separate array which includes several lines. Each data block may have a variable length and occupy several lines. These lines are linked together to form a linked list. An invalidation mechanism allows invalidation of lines of the same data block, increasing data efficiency. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to an apparatus and method for caching data in a computer system. More particularly, the invention relates to a new method of organizing tags and data blocks of variable length in a cache memory resulting in a more efficient use of hardware space and a higher cache hit ratio. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> A computer system, in its most essential form, typically comprises a processor, a memory unit, and an I/O device with which the computer system communicates with an end-user. The end-user provides the computer system with a program typically comprising a set of instructions or codes directing the processor to perform tasks. Generally, the tasks involve manipulating data that is provided to the computer system by the end-user. Both the data and the codes are stored in the memory unit. The processor reads the codes and the data, manipulates it according to the program, and then stores the result in the memory unit. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Both processors and memory units have become faster as the technology has advanced in the field of electronics. However, the speed with which today&apos;s processors are able to execute instructions remains much faster relative to the speed with which the memory units are able to deliver stored data. This difference in speed, referred to as memory latency, causes an inefficiency as the processor remains idle while it is waiting for the slower memory to make the next piece of data available. Reducing memory latency is of great interest to computer users because it will result in improved overall performance of the computer system. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> One way to reduce memory latency is to utilize a faster intermediate level of memory known as Cache. A general cache consists of ways, sets and lines. A way is comprises a plurality of sets which in turn includes a plurality of lines, and a line is a container of a fixed length that stores the data. In a single clock cycle, one look-up and one fetch is done, fetching one line from the cache. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Generally, cache stores a tag which identifies a corresponding data. Upon a processor receiving a request for data, a cache controller performs a look-up operation matching an abbreviated portion of the address of the requested data with one or more tags. If the search results in a match, i.e., a cache hit, then the corresponding data in cache is sent to the processor. Otherwise, a cache miss occurs, and the data is transferred from main memory. A look-up operation is costly in terms of power consumption and time savings, and if the data length exceeds the size of a cache line resulting in having to store a referenced data in multiple cache lines, then multiple look-ups are necessary to fully cache the data. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> There are several possibilities for organizing the cache structure. One possibility is for each cache line to contain the entire block of data. In this approach, the length of the cache line is sufficient to hold the longest possible data block. This approach can cause substantial inefficiencies in memory usage, since the average length of a block of data is smaller than the cache line length. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Another approach is to divide a block of data and store it in several cache lines, as illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. Data block <highlight><bold>120</bold></highlight> is 10 bytes long. However, in this example, the size of a cache line is only 4 bytes. Thus in order to store data block <highlight><bold>120</bold></highlight>, three cache lines are needed. In line <highlight><bold>0</bold></highlight>, the first <highlight><bold>4</bold></highlight> blocks of data are stored. In line <highlight><bold>1</bold></highlight>, the next 4 bytes, and in line <highlight><bold>3</bold></highlight>, the remaining 2 bytes. Since each line has a corresponding tag and only the first line of the block is looked-up, the remaining tags for line <highlight><bold>1</bold></highlight>, and line <highlight><bold>2</bold></highlight> are wasted because the tag area is not used, and the cache lines that contain the continuation of the data block occupy lines that could be used for other blocks, hence the effective associativity of the cache is reduced. Now, if the data block contains 100 bytes, instead of 10, then 25 lines are required to cache the data block, resulting in storage of 24 additional tags which serve little or no use. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a variable data length mapping scheme according to prior art. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a block diagram of an exemplary computer system according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an exemplary cache structure with data lines in a separate linked list array according to the method pursuant to the invention is shown. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4A</cross-reference> illustrates a flow diagram of a method to process a memory request from a processor according to the method pursuant to the invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4B</cross-reference> illustrates a flow diagram of a method to process a write operation to cache memory according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates an exemplary cache structure with data lines in a separate linked list array according to the method pursuant to the invention is shown. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a flow chart of a method to write data to an exemplary cache structure. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In the following detailed description of the invention, numerous specific details are set forth in order to provide a thorough understanding of the invention. However, it will be obvious to one skilled in the art that the invention may be practiced without these specific details. In other instances, well known methods, procedures, components, and circuits have not been described in detail so as not to unnecessarily obscure aspects of the present invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The invention includes various functions, which will be described below. The functions of the invention may be performed by hardware components or may be embodied in machine-executable instructions, which may be used to cause a general-purpose processor programmed with the instructions to perform the functions. Alternatively, the functions may be performed by a combination of hardware and software. Importantly, while embodiments of the invention will be described with reference to a trace cache with 4-way set associativity, the method and apparatus described herein are equally applicable to any type of caching strategy and in any memory hierarchy. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The invention relates to a method to overcome the inefficiency of wasted tag space and reduced associativity. The general concept is to store a single tag for a variable length data entity in a separate structure regardless of the size of the cache line or the data length. In one embodiment, a pointer is also stored along with the tag, which identifies the location in which the corresponding data is stored. The data itself is stored in a separate array comprising cache lines. A data array may span several lines, which are linked together to form a link list. An invalidation mechanism allows invalidation of all lines of the same data block, increasing structure efficiency. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> block diagram of an exemplary computer system <highlight><bold>200</bold></highlight> utilizing the method pursuant to an embodiment of the invention is illustrated. The computer system <highlight><bold>200</bold></highlight> comprises a processor <highlight><bold>220</bold></highlight>, a cache <highlight><bold>230</bold></highlight>, a cache controller <highlight><bold>240</bold></highlight>, a main memory <highlight><bold>250</bold></highlight>, and a bus <highlight><bold>270</bold></highlight>. When the processor <highlight><bold>220</bold></highlight> issues a request for data, the request is processed by the cache controller <highlight><bold>240</bold></highlight>. The cache controller <highlight><bold>240</bold></highlight> determines the corresponding tag associated with a memory address, and then searches the cache <highlight><bold>230</bold></highlight> for a match. This look-up procedure will determine whether the requested data resides in cache. If a match results, then the cache controller <highlight><bold>240</bold></highlight> fetches the corresponding data from cache <highlight><bold>230</bold></highlight> and delivers it to the processor. If the search does not result in a match, then a cache miss has occurred and the cache controller <highlight><bold>240</bold></highlight> reports this miss to the processor <highlight><bold>220</bold></highlight> which will in turn fetch the data directly from main memory <highlight><bold>250</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, an exemplary cache structure pursuant to an embodiment of the invention is shown. The cache structure <highlight><bold>300</bold></highlight> comprises a Block Tag Cache (BTC) <highlight><bold>310</bold></highlight>, and a Block Data Array (BDA) <highlight><bold>320</bold></highlight>. The BTC <highlight><bold>310</bold></highlight> stores three pieces of information regarding a cache line. The first entry is Tag <highlight><bold>312</bold></highlight> which is an abbreviated form of the main memory address of the data. The tag address may be formed in accordance with the particular mapping strategy for the cache structure <highlight><bold>300</bold></highlight>. The caching method pursuant to the invention applies to any mapping strategy that is used. For example, the method pursuant to the invention may be implemented with a 2-way set associativity, a 4-way set associativity, or a direct-mapped mapping strategy. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The second entry corresponding to the Tag <highlight><bold>312</bold></highlight>, is a First Pointer <highlight><bold>314</bold></highlight>, which holds the index to the first cache line of the data block. Thus, this information provides an address in the Block Data Array (BDA) where the data corresponding to Tag <highlight><bold>312</bold></highlight> is stored. Finally, the third piece of information corresponding to Tag <highlight><bold>312</bold></highlight> is a Last Pointer <highlight><bold>316</bold></highlight> which provides the address of the last cache line holding the remainder of the data. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Referring still to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, an embodiment of the BDA <highlight><bold>320</bold></highlight> is shown. The BDA <highlight><bold>320</bold></highlight> also contains three pieces of information for every line entry. The Data <highlight><bold>322</bold></highlight> is where the data referenced in the BTC <highlight><bold>310</bold></highlight> is stored. The Last <highlight><bold>324</bold></highlight> entry indicates whether this line entry is the last entry or whether the data length exceeds one cache line and thus additional lines are necessary for complete storage of the data. Finally, the entry marked Next Pointer <highlight><bold>326</bold></highlight>, indicates the address of the next cache line within the BDA <highlight><bold>320</bold></highlight> holding the remainder of the data. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> By storing the actual data in a separate structure from the tag structure, only one tag is necessary for a look-up operation. This is because the BDA <highlight><bold>320</bold></highlight> is organized as a linked list of lines, that can be fetched one line per cycle. Each line includes data and a pointer to the next line in the array. The last line of the data block, which is the last line in a linked list, is marked by Last <highlight><bold>324</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Another structure is a linked list of free lines in the BDA <highlight><bold>320</bold></highlight>. Two pointers and a counter may be utilized to manage the list. The first pointer is the Free Lines Pointer (FLP) <highlight><bold>340</bold></highlight>. The Last free Lines Pointer (LLP) <highlight><bold>342</bold></highlight> holds the second of the two pointers. Thus, FLP <highlight><bold>340</bold></highlight> indicates the address in the BDA <highlight><bold>320</bold></highlight> where an empty line can be allocated for a new data block that should be stored. And, the LLP <highlight><bold>342</bold></highlight> indicates the address of the last free line available for storage. Finally, an Empty lines counter may be keeping track of empty lines within the BDA <highlight><bold>320</bold></highlight> (not shown). </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The First Pointer <highlight><bold>314</bold></highlight>, and the Last Pointer <highlight><bold>316</bold></highlight> are utilized to manage unused lines within BDA <highlight><bold>320</bold></highlight>. When an entry in BTC <highlight><bold>310</bold></highlight> is released or replaced, its corresponding data lines in BDA <highlight><bold>320</bold></highlight> may be freed up for newly cached data. The FLP <highlight><bold>340</bold></highlight> and LLP <highlight><bold>342</bold></highlight> which contain a free list within BDA <highlight><bold>320</bold></highlight> are utilized to keep track of free lines in BDA <highlight><bold>320</bold></highlight>. In order to properly maintain the free list, a First Pointer <highlight><bold>314</bold></highlight>, and a Last Pointer <highlight><bold>316</bold></highlight> are used to hold the beginning and the end of a data block within the BDA <highlight><bold>320</bold></highlight>. Similarly, the free list within the BDA <highlight><bold>320</bold></highlight>, also includes the FLP <highlight><bold>340</bold></highlight>, and the LLP <highlight><bold>342</bold></highlight> to point to the first free line and the last free line respectively. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In one embodiment, the procedure for releasing a block of data in BDA <highlight><bold>320</bold></highlight>, when an entry is replaced in BTC <highlight><bold>310</bold></highlight>, comprises setting the Next Pointer <highlight><bold>326</bold></highlight> of a line pointed to by the Last Pointer <highlight><bold>316</bold></highlight> to the First Pointer <highlight><bold>314</bold></highlight> (the first line of the freed block). Additionally, the LLP <highlight><bold>342</bold></highlight> will be set to the Last Pointer <highlight><bold>316</bold></highlight> of the freed block (whose next pointer is null). This procedure normally takes two cycles to complete regardless of the length of the data block. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 4A, a</cross-reference> flow diagram of the method pursuant to an embodiment of the invention is shown. In functional state <highlight><bold>408</bold></highlight>, a cache controller receives a read request from a processor. The request includes a real memory address. In functional state <highlight><bold>410</bold></highlight>, the cache controller identifies the tag corresponding to the memory address. Once the Tag has been formed, in functional state <highlight><bold>412</bold></highlight>, a search of the BTC <highlight><bold>310</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> takes place. The Tag <highlight><bold>312</bold></highlight> field is searched for an entry matching the tag formed in functional state <highlight><bold>410</bold></highlight>. If a match is found, then a cache hit has occurred. However, if no match has been found, then in functional state <highlight><bold>414</bold></highlight>, a cache miss has occurred and the requested data needs be fetched from main memory <highlight><bold>250</bold></highlight>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In functional state <highlight><bold>416</bold></highlight>, after a determination has been made that the requested data is in the cache, the address in First Pointer <highlight><bold>314</bold></highlight> is used by the cache controller to reach the data in the BDA <highlight><bold>320</bold></highlight>. The address in First Pointer <highlight><bold>314</bold></highlight> contains the address of the first line where the requested data is being stored. In functional state <highlight><bold>418</bold></highlight>, the data in Data <highlight><bold>322</bold></highlight> of BDA <highlight><bold>320</bold></highlight> is transferred to the processor. Next, in functional state <highlight><bold>420</bold></highlight>, Last <highlight><bold>324</bold></highlight> is checked to see whether it indicates that there is additional data. In functional state <highlight><bold>422</bold></highlight>, the Last <highlight><bold>324</bold></highlight> indicates that the current line contained all of the data. In this case, the operation ends as all of the data has been transferred to the processor. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> On the other hand, if in functional state <highlight><bold>420</bold></highlight>, Last <highlight><bold>324</bold></highlight> indicates that there is more data, then the address of the next line of data is read from Next Pointer <highlight><bold>326</bold></highlight> of BDA <highlight><bold>320</bold></highlight> (See <cross-reference target="DRAWINGS">FIG. 3</cross-reference>). In functional state <highlight><bold>424</bold></highlight>, the data is transferred from the address in the Next Pointer <highlight><bold>326</bold></highlight> register to the processor, and once again Last <highlight><bold>324</bold></highlight> corresponding to the new line is checked to see whether this is the last line. This loop will continue until all the data has been read and the Last <highlight><bold>324</bold></highlight> finally indicates this. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 4B, a</cross-reference> flow diagram of a write operation to cache memory according to one embodiment of the invention is shown. During functional state <highlight><bold>480</bold></highlight>, a determination is made to write a given data to the cache. In functional state <highlight><bold>482</bold></highlight>, a BDA <highlight><bold>320</bold></highlight> entry such as entry <highlight><bold>350</bold></highlight> is allocated for this operation. This allocation may be done, for example, by FLP <highlight><bold>340</bold></highlight> which keeps track of free lines within the FLP <highlight><bold>340</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> During functional state <highlight><bold>484</bold></highlight>, the FLP <highlight><bold>340</bold></highlight> is updated by the Next Pointer <highlight><bold>326</bold></highlight> of the BDA entry <highlight><bold>380</bold></highlight>. This reflects the allocation made in functional state <highlight><bold>482</bold></highlight>. In order to accomplish this, the Next Pointer <highlight><bold>326</bold></highlight> may be utilized. In functional state <highlight><bold>486</bold></highlight>, the First Pointer <highlight><bold>314</bold></highlight>, and the Last Pointer <highlight><bold>316</bold></highlight> in the allocated line in BTC <highlight><bold>310</bold></highlight> is set to the line allocated in BDA <highlight><bold>320</bold></highlight>. Next, during functional state <highlight><bold>488</bold></highlight>, the data to be written into the cache is stored in data field <highlight><bold>322</bold></highlight>. For example, the data may be stored in data line <highlight><bold>350</bold></highlight> in BDA <highlight><bold>320</bold></highlight>. Finally, the Last <highlight><bold>324</bold></highlight> bit is set to indicate that this line is the only line of data for the entry at <highlight><bold>350</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> During functional state <highlight><bold>490</bold></highlight>, a determination is made as to whether there is additional data to be stored along with data <highlight><bold>350</bold></highlight> field. In other words, the querry is regarding the length of the data to be written into the cache. If the data length is longer than what may be fitted in one line, i.e., <highlight><bold>350</bold></highlight>, then the result of the inquiry at functional state <highlight><bold>490</bold></highlight> is &ldquo;yes&rdquo; otherwise the write operation comes to an end as indicated in functional state <highlight><bold>492</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> During functional state <highlight><bold>494</bold></highlight>, the Last <highlight><bold>324</bold></highlight> is reset or cleared to indicate that there is more data to be stored. During functional state <highlight><bold>496</bold></highlight>, a subsequent BDA <highlight><bold>320</bold></highlight> entry is allocated such as data <highlight><bold>360</bold></highlight>. In functional state <highlight><bold>497</bold></highlight>, the Next Pointer <highlight><bold>326</bold></highlight> of the corresponding entry is updated to reflect the linked line. In functional state <highlight><bold>498</bold></highlight>, the Last <highlight><bold>324</bold></highlight> is once again set to indicate that the data <highlight><bold>360</bold></highlight> contains the last line of data. In functional state <highlight><bold>499</bold></highlight>, the FLP <highlight><bold>340</bold></highlight> is updated once again by the Next Pointer <highlight><bold>326</bold></highlight> of the entry <highlight><bold>390</bold></highlight>. This loop will continue until there is no more data left in the write operation. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, another variation of the cache structure <highlight><bold>500</bold></highlight> according to the method pursuant to an embodiment of the invention is illustrated. The cache structure <highlight><bold>500</bold></highlight> comprises a Block Head Cache (BHC) <highlight><bold>520</bold></highlight> and a Block Tail Array (BTA) <highlight><bold>560</bold></highlight>. The BHC <highlight><bold>520</bold></highlight> includes a plurality of ways such as way <highlight><bold>530</bold></highlight>, and way <highlight><bold>532</bold></highlight>. Way <highlight><bold>530</bold></highlight> comprises Tag <highlight><bold>522</bold></highlight>, First Data <highlight><bold>524</bold></highlight>, Second Pointer <highlight><bold>526</bold></highlight>, and Last Pointer <highlight><bold>528</bold></highlight>. Tag <highlight><bold>522</bold></highlight> is the tag address corresponding to a given data. First Data <highlight><bold>524</bold></highlight>, is the actual data associated with Tag <highlight><bold>522</bold></highlight>. The Second Pointer <highlight><bold>526</bold></highlight> provides the location within the BTA <highlight><bold>560</bold></highlight> where the next line of data is stored. The Last Pointer <highlight><bold>528</bold></highlight> indicates whether there is a next line with data, or whether the current line is the last line of data. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The BTA <highlight><bold>560</bold></highlight> comprises several entries. Each entry includes Line <highlight><bold>562</bold></highlight>, Last <highlight><bold>564</bold></highlight>, and Next Pointer <highlight><bold>566</bold></highlight>. Line <highlight><bold>562</bold></highlight> contains the data corresponding to a Tag address. The Last <highlight><bold>564</bold></highlight> entry may be simply a bit which if set, it can mean that the current entry is the last entry. If, however, the Last <highlight><bold>564</bold></highlight> is not set, then this means that there is more data, and Next Pointer <highlight><bold>566</bold></highlight> provides the address of the entry in BTA <highlight><bold>560</bold></highlight> where the remainder of data is contained. The BTA <highlight><bold>560</bold></highlight> also has an entry marked Free Line Pointer (FLP) <highlight><bold>568</bold></highlight> which provides a pointer to the BTA <highlight><bold>560</bold></highlight> location with available data. In this embodiment, the tag and the first line of data is stored in BHC <highlight><bold>520</bold></highlight> while the remainder of the data is stored in BTA <highlight><bold>560</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 6, a</cross-reference> flow chart of the operation of cache structure <highlight><bold>500</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is illustrated. In functional state <highlight><bold>600</bold></highlight>, a request to store data in cache structure <highlight><bold>500</bold></highlight> is made, e.g., by a cache controller device not shown. During functional state <highlight><bold>610</bold></highlight>, a tag is formed to identify a data block to be stored within the cache structure <highlight><bold>500</bold></highlight>. Next, in functional state <highlight><bold>612</bold></highlight>, the tag will be stored in BHC <highlight><bold>520</bold></highlight> in Tag <highlight><bold>522</bold></highlight> field. In functional state <highlight><bold>614</bold></highlight>, a first line of the data block is written into First Data <highlight><bold>524</bold></highlight> in BHC <highlight><bold>520</bold></highlight>. The Second Pointer <highlight><bold>526</bold></highlight> may be set to indicate that there is additional data stored in BTA <highlight><bold>560</bold></highlight> at an address pointed to by the Second Pointer <highlight><bold>526</bold></highlight>. However, if the second pointer is not set, then that indicates there is no more data. In other words, there is only one line in that data block. If the length of the data block is greater than one cache line, then the remainder of the data may be stored in the Block Tail Array (BTA) <highlight><bold>560</bold></highlight>. The procedure from this point forward is essentially similar to the write procedure outlined for the cache structure depicted in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> (See flow chart in <cross-reference target="DRAWINGS">FIG. 4B</cross-reference>). </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Where the data block length exceeds a single line, in functional state <highlight><bold>620</bold></highlight>, a free block within the BTA <highlight><bold>560</bold></highlight> is identified. The free block may be identified by a pointer address e.g., Second Pointer <highlight><bold>526</bold></highlight> and Last Pointer <highlight><bold>528</bold></highlight> within BHC <highlight><bold>520</bold></highlight>. Accordingly, in functional state <highlight><bold>622</bold></highlight>, the remainder of the data is stored at a location pointed to by Second Pointer <highlight><bold>526</bold></highlight>. The structure of the BTA is similar to that of the BDA <highlight><bold>320</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> where the length of the data to be stored exceeds one line in BHC <highlight><bold>520</bold></highlight>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The advantage of the embodiment illustrated in <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is for data blocks containing only one cache line, which need only BHC access, and only one Next Pointer <highlight><bold>566</bold></highlight> field is wasted. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The insertion of a new block starts from allocation of an entry in BHC <highlight><bold>520</bold></highlight>, using, for example, a Least Recently Used (LRU) algorithm. If a block contains more than one line, an empty line is also allocated in BTA <highlight><bold>560</bold></highlight>, using the FLP <highlight><bold>568</bold></highlight>. During an eviction of a line from BHC <highlight><bold>520</bold></highlight>, the lines pointed by it in BTA <highlight><bold>560</bold></highlight> are also freed, and appended to a free list of lines using a Last free Lines Pointer (LLP) <highlight><bold>570</bold></highlight>. Thus LLP <highlight><bold>570</bold></highlight> points to the last line of the newly freed list. The empty lines counter is also updated. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> During allocation, in case when there are no more free lines in BTA <highlight><bold>560</bold></highlight>, a random set is chosen in BHC <highlight><bold>520</bold></highlight>, and an LRU block is evicted and all its lines in BTA <highlight><bold>560</bold></highlight> are put in the free list. This operation is repeated as long as needed. Since this operation is time consuming, and can postpone data fetch process, it can start before reaching the point when there are no more free lines. Using a counter of number of free lines, we can start freeing some blocks using some threshold. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> An access starts by BHC <highlight><bold>520</bold></highlight> look-up and fetch as in a regular cache. In case, the block has more than one line, on the next cycle, a line is fetched from BTA <highlight><bold>560</bold></highlight> using a pointer without any tag match. Consecutive block lines are fetched from BTA <highlight><bold>560</bold></highlight> until the end of the block. This is equivalent to the serial cache operation. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The advantages of using the linked list cache over a regular cache that stores a data block in several lines are several fold. First, no tags are wasted since, according to the method pursuant to the invention only a single tag is used for a block of data regardless of what the size of the block is. Thus for example, if a cache line is 8 bytes long, and a given data block is 68 bytes long, instead of using 9 tags (one for each of the 9 cache lines necessary to store the 68 bytes in the data block) only a single tag is utilized. This saving of 8 tags results in reducing the number of ways in the cache which represents reducing power consumption. Alternatively, the reduction in tags results in enabling higher cache hit rate due to increased effective associativity with the same number of ways. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> Another advantage of the method pursuant to the invention is that it avoids the case where only part of the block is evicted during a cache miss, leaving live but unreachable lines in the cache. In other words, a block is either entirely contained in the cache or it is not there at all. </paragraph>
+</section>
+<section>
+<heading lvl="1">APPENDIX A </heading>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> I hereby appoint BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP, a firm including: William E. Alford, Reg. No. 37,764; Farzad E. Amini, Reg. No. 42,261; William Thomas Babbitt, Reg. No. 39,591; Carol F. Barry, Reg. No. 41,600; Jordan Michael Becker, Reg. No. 39,602; Lisa N. Benado, Reg. No. 39,995; Bradley J. Bereznak, Reg. No. 33,474; Michael A. Bernadicou, Reg. No. 35,934; Roger W. Blakely, Jr., Reg. No. 25,831; R. Alan Burnett, Reg. No. 46,149; Gregory D. Caldwell, Reg. No. 39,926; Andrew C. Chen, Reg. No. 43,544; Jae-Hee Choi, Reg. No. 45,288; Thomas M. Coester, Reg. No. 39,637; Donna Jo Coningsby, Reg. No. 41,684; Dennis M. deGuzman, Reg. No. 41,702; Justin Dillon, Reg. No. 42,486; Stephen M. De Klerk, Reg. No. P46,503; Michael Anthony DeSanctis, Reg. No. 39,957; Daniel M. De Vos, Reg. No. 37,813; Sanjeet Dutta, Reg. No. P46,145; Matthew C. Fagan, Reg. No. 37,542; Tarek N. Falmi, Reg. No. 41,402; George Fountain, Reg. No. 36,374; Paramita Ghosh, Reg. No. 42,806; James Y. Go, Reg. No. 40,621; James A. Henry, Reg. No. 41,064; Wilimore F. Holbrow III, Reg. No. P41,845; Sheryl Sue Holloway, Reg. No. 37,850; George W Hoover II, Reg. No. 32,992; Eric S. Hyman, Reg. No. 30,139; William W. Kidd, Reg. No. 31,772; Sang Hui Kim, Reg. No. 40,450; Walter T. Kim, Reg. No. 42,731; Eric T. King, Reg. No. 44,188; Erica W. Kuo, Reg. No. 42,775; Steven Laut, Reg. No. 47,736; George B. Leavell, Reg. No. 45,436; Gordon R. Lindeen III, Reg. No. 33,192; Jan Carol Little, Reg. No. 41,181; Robert G. Litts, Reg. No. 46,876; Kurt P. Leyendecker, Reg. No. 42,799; Julio Loza, Reg. No. 47,758; Joseph Lutz, Reg. No. 43,765; Michael J. Mallie, Reg. No. 36,591; Andre L. Marais, under 37 C.F.R. &sect; 10.9(b); Paul A. Mendonsa, Reg. No. 42,879; Clive D. Menezes, Reg. No. 45,493; Chun M. Ng, Reg. No. 36,878; Thien T. Nguyen, Reg. No. 43,835; Thinh V. Nguyen, Reg. No. 42,034; Dennis A. Nicholls, Reg. No. 42,036; Daniel E. Ovanezian, Reg. No. 41,236; Kenneth B. Paley, Reg. No. 38,989; Marina Portnova, Reg. No. P45,750; Michael A. Proksch, Reg. No. 43,021; William F. Ryari, Reg. 44,313; James H. Salter, Reg. No. 35,668; William W. Schaal, Reg. No. 39,018; James C. Scheller, Reg. No. 31,195; Jeffrey S. Schubert, Reg. No. 43,098; George Simion, Reg. No. P-47,089; Jeffrey Sam Smith, Reg. No. 39,377; Maria McCornack Sobrino, Reg. No. 31,639; Stanley W. Sokoloff, Reg. No. 25,128; Judith A. Szepesi, Reg. No. <highlight><bold>39</bold></highlight>,<highlight><bold>393</bold></highlight>; Ronald S. Tamura, Reg.No. <highlight><bold>43</bold></highlight>,<highlight><bold>179</bold></highlight>; Vincent P. Tassinari, Reg. No. <highlight><bold>42</bold></highlight>,<highlight><bold>179</bold></highlight>; Edwin H. Taylor, Reg. No. 25,129; John F. Travis, Reg. No. 43,203; Joseph A. Twarowski, Reg. No. 42,191; Kerry D. Tweet, Reg. No. 45,959; Mark C. Van Ness, Reg. No. 39,865; Thomas A. Van Zandt, Reg. No. 43,219; Lester J. Vincent, Reg. No. 31,460; Glenn E. Von Tersch, Reg. No. 41,364; John Patrick Ward, Reg. No. 40,216; Mark L. Watson, Reg. No. P46,322; Thomas C. Webster, Reg. No. P46,154; and Norman Zafman, Reg. No. 26,250; my patent attorneys, and Firasat Ali, Reg. No. 45,715; and Justin M. Dillon, Reg. No. 42,486; Raul Martinez, Reg. No. 46,904; my patent agents, of BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP, with offices located at 12400 Wilshire Boulevard, 7th Floor, Los Angeles, Calif. 90025, telephone (714) 557-3800, and Alan K. Aldous, Reg. No. 31,905; Edward R. Brake, Reg. No. 37,784; Ben Burge, Reg. No. 42,372; Paul W. Churilla, Reg. No. P47,495; Jeffrey S. Draeger, Reg. No. <highlight><bold>41</bold></highlight>,<highlight><bold>000</bold></highlight>; Cynthia Thomas Faatz, Reg No. 39,973; John N. Greaves, Reg. No. 40,362; Seth Z. Kalson, Reg. No. 40,670; David J. Kaplan, Reg. No. 41,105; Peter Lam, Reg. No. 44,855; Charles A. Mirho, Reg. No. 41,199; Michael J. Nesheiwat, Reg. No. P47,819; Leo V. Novakoski, Reg. No. 37,198; Thomas C. Reynolds, Reg. No. 32,488; Kenneth M. Seddon, Reg. No. 43,105; Mark Seeley, Reg. No. 32,299; Steven P. Skabrat, Reg. No. 36,279; Howard A. Skaist, Reg. No. <highlight><bold>36</bold></highlight>,<highlight><bold>008</bold></highlight>; Gene I. Su, Reg. No. 45,140; Calvin E. Wells, Reg. No. P43,256, Raymond J. Werner, Reg. No. 34,752; Robert G. Winkle, Reg. No. 37,474; Steven D. Yates, Reg. No. 42,242; and Charles K. Young, Reg. No. 39,435, my patent agents, of INTEL CORPORATION; and James R. Thein, Reg. No. 31,710, my patent attorney; with full power of substitution and revocation, to prosecute this application and to transact all business in the Patent and Trademark Office connected herewith. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>storing a tag in a tag cache wherein said tag identifies a block of data; </claim-text>
+<claim-text>storing said block of data into a first and second lines of data in a block data array; </claim-text>
+<claim-text>storing a first pointer in said tag cache that points to said first line of data; and, </claim-text>
+<claim-text>storing a second pointer in said block data array that points to said second line of data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>storing a last bit in said block data array to indicate whether said second line of data is the last data line of said data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>storing a last pointer in said tag cache to indicate location of the last data line in said block data array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>creating a linked list of free lines in said block data array by storing a free lines pointer, a last free lines pointer, and a counter to manage said linked list of free lines. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said tag cache and said data block array form a trace cache. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method comprising: 
+<claim-text>receiving a request for a block of data in a cache comprising a tag cache and a block data array; </claim-text>
+<claim-text>identifying a tag in said tag cache that corresponds to the requested block of data; </claim-text>
+<claim-text>reading a first pointer associated with said tag that points to a first line of said block of data stored in said block data array; </claim-text>
+<claim-text>reading said first line of said block of data in said block data array; </claim-text>
+<claim-text>reading a second pointer that points to a second line of data in said block data array; and, </claim-text>
+<claim-text>reading said second line of data in said block data array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising reading a last bit associated with said second line of data, said last bit to indicate whether said second line is the last line of data associated with said block of data. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein said cache is a trace cache. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said cache is a micro-operation cache. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method comprising: 
+<claim-text>storing a tag in a block head cache wherein said tag identifies a block of data; </claim-text>
+<claim-text>storing the first line of said block of data into a first line of data in said block head cache; </claim-text>
+<claim-text>storing a pointer in said block head cache that points to a location in a block tail array where the second line of said block of data is stored; and, </claim-text>
+<claim-text>storing the second line of said block of data in said location in said block tail array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said cache is a trace cache. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, further comprising storing a last bit in said block tail array to indicate the last line of said block of data. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said block of data has a variable length. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method comprising: 
+<claim-text>receiving a request for a block of data in a cache comprising a block head cache and a block tail array; </claim-text>
+<claim-text>identifying a tag in said block head cache that corresponds to the requested block of data; </claim-text>
+<claim-text>reading a first data line associated with said tag in said block head cache; </claim-text>
+<claim-text>reading a second pointer associated with said tag in said block head cache that points to a second line of data in said block tail array; and </claim-text>
+<claim-text>reading said second line of data in said block tail array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said block of data is a data block of variable length. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said block of data contains a single cache line. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said block tail array comprises a data field to store a line of data, a last bit to indicate whether said line of data is the last line to contain said data, and a next pointer to indicate the location of a next line of data. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said block tail array further comprises a free lines pointer to indicate an available line within said block tail array, and a last free lines pointer to indicate a last available line. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said block tail array further comprises an empty lines counter. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A system comprising: 
+<claim-text>a block tag cache to store a tag associated with a block of data, and a first pointer; </claim-text>
+<claim-text>a block data array to store said block of data at first and second lines of data, said first line of data designated by said first pointer, and said second line of data designated by a second pointer, said second pointer to be stored in said block data array; and, </claim-text>
+<claim-text>a cache controller to receive a request for said data block and transfer said data block upon receiving said request. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said block tag cache and said block data array comprise a trace cache. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said block tag cache further comprises: 
+<claim-text>a last pointer to indicate the location of last cache line in said block data array to hold the last line of said data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said first line of data is stored in said block tag cache. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein said block data array further comprises a field to indicate the next line that contains said data block. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A computer-readable medium including a program executable by a processor, comprising: 
+<claim-text>a first subroutine to store a tag in a tag cache wherein said tag identifies a block of data; </claim-text>
+<claim-text>a second subroutine to store said block of data into first and second lines of data in a block data array; </claim-text>
+<claim-text>a third subroutine to store a first pointer in said tag cache that points to said first line of data; and, </claim-text>
+<claim-text>a fourth subroutine to store a second pointer in said block data array that points to said second line of data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, further comprising 
+<claim-text>a fifth subroutine to store a last bit in said block data array to indicate the last line to contain said data from said block of data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, further comprising 
+<claim-text>a sixth subroutine to store said first line of data in said tag cache. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A computer-readable medium including a program executable by a processor, comprising: 
+<claim-text>a first subroutine to receive a request for a block of data in a cache comprising a block head cache and a block tail array; </claim-text>
+<claim-text>a second subroutine to identify a tag in said block head cache that corresponds to the requested block of data; </claim-text>
+<claim-text>a third subroutine to read a first data line associated with said tag in said block head cache; </claim-text>
+<claim-text>a fourth subroutine to read a second pointer associated with said tag in said block head cache that points to a second line of data in said block tail array; </claim-text>
+<claim-text>a fifth subroutine to read said second line of data in said block tail array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein said cache is a trace cache. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein said cache is an instruction cache.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005230A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005230A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005230A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005230A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005230A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005230A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005230A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030005230A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002588A1-20030102-D00000.TIF SYSTEM "US20030002588A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002588A1-20030102-D00001.TIF SYSTEM "US20030002588A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002588A1-20030102-D00002.TIF SYSTEM "US20030002588A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002588A1-20030102-D00003.TIF SYSTEM "US20030002588A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002588</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895927</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04B014/04</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>375</class>
+<subclass>242000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and apparatus for controlling buffer overflow in a communication system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Christof</given-name>
+<family-name>Faller</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Murray Hill</city>
+<state>NJ</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Ryan, Mason &amp; Lewis, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>Suite 205</address-1>
+<address-2>1300 Post Road</address-2>
+<city>Fairfield</city>
+<state>CT</state>
+<postalcode>06430</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and apparatus are disclosed for controlling a buffer in a digital audio broadcasting (DAB) communication system. An audio encoder marks a frame as &ldquo;dropped&rdquo; whenever a buffer overflow might occur. Only a small number of bits are utilized to process a lost frame, thereby preventing the buffer from overflowing and allowing the encoder buffer-level to quickly recover from the potential overflow condition. The audio encoder optionally sets a flag that provides an indication to the receivers that a frame has been lost. If a &ldquo;frame lost&rdquo; condition is detected by a receiver, the receiver can optionally employ mitigation techniques to reduce the impact of the lost frame(s). </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to digital audio broadcasting (DAB) and other types of digital communication systems, and more particularly, to buffer control techniques for such digital audio broadcasting (DAB) and other types of digital communication systems. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Proposed systems for providing digital audio broadcasting (DAB) in the FM radio band are expected to provide near compact disk (CD)-quality audio, data services and more robust coverage than existing analog FM transmissions. Digital audio broadcasting systems compress an audio signal using a digital audio encoder, such as a perceptual audio coder (PAC). Perceptual audio coders reduce the amount of information needed to represent an audio signal by exploiting human perception and minimizing the perceived distortion for a given bit rate. Perceptual audio coders are described, for example, in D. Sinha et al., &ldquo;The Perceptual Audio Coder,&rdquo; Digital Audio, Section 42, 42-1 to 42-18, (CRC Press, 1998), incorporated by reference herein </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Digital radio will be offered in a single channel and multiple channel form. The single channel form will use the existing infrastructure of FM broadcasting. Each digital audio channel is broadcast in the bandwidth allocated to one FM channel. Until such time as a transition to an all-digital DAB system can be achieved, many broadcasters require an intermediate solution in which the analog and digital signals can be transmitted simultaneously within the same licensed band. Such systems are typically referred to as hybrid in-band on-channel (HIBOC) DAB systems, and are being developed for both the FM and AM radio bands. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a conventional DAB communication system <highlight><bold>100</bold></highlight>. As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the DAB communication system <highlight><bold>100</bold></highlight> employs a radio transmission link <highlight><bold>130</bold></highlight> that is typically of a fixed bit rate. The bit rate of the audio encoder <highlight><bold>110</bold></highlight> on the other hand is typically variable, depending on the complexity of the current audio signal and the audio quality requirements. On average, the bit rate of the audio encoder <highlight><bold>110</bold></highlight> is equal to or less than the capacity of the transmission link <highlight><bold>130</bold></highlight>, but at any given instance the bit rate of the audio coder <highlight><bold>110</bold></highlight> may be higher. If data from the audio encoder <highlight><bold>110</bold></highlight> was applied directly to the transmission link <highlight><bold>130</bold></highlight>, data would be lost each time the instantaneous bit rate of the encoder <highlight><bold>110</bold></highlight> exceeded the capacity of the transmission link <highlight><bold>130</bold></highlight>. In order to prevent such a loss of data, the output of the encoder <highlight><bold>110</bold></highlight> is buffered into a first-in-first-out (FIFO) buffer <highlight><bold>120</bold></highlight> before being applied to the transmission link <highlight><bold>130</bold></highlight>. If the instantaneous bit rate of the encoder <highlight><bold>110</bold></highlight> is higher than the bit rate of the transmission link, the amount of data in the FIFO buffer <highlight><bold>120</bold></highlight> increases. Similarly, if the instantaneous bit rate of the encoder <highlight><bold>110</bold></highlight> is lower than the bit rate of the transmission link <highlight><bold>130</bold></highlight>, the amount of data in the FIFO buffer <highlight><bold>120</bold></highlight> decreases. The encoder <highlight><bold>110</bold></highlight> (or encoder bank) typically contains a control loop that modifies the bit rate of the encoder <highlight><bold>110</bold></highlight> and prevents the encoder <highlight><bold>110</bold></highlight> from overflowing or underflowing the FIFO buffer <highlight><bold>120</bold></highlight>. Overflow causes a loss of bits, while an underflow wastes some of the capacity the transmission link <highlight><bold>130</bold></highlight>. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> As a result of this scheme, the transmission delay is also variable. The delay between the time when an audio packet is first written into the FIFO buffer <highlight><bold>120</bold></highlight> and the time when the packet is actually received by the receiver <highlight><bold>150</bold></highlight> depends, among other factors, on the amount of data that is currently stored in the FIFO buffer <highlight><bold>120</bold></highlight>. However, the audio decoder <highlight><bold>170</bold></highlight> at the receiver <highlight><bold>150</bold></highlight> needs to get audio packets at a fixed rate (of packets per second) in order to play continuously. Therefore, it is necessary to buffer the audio data at the decoder <highlight><bold>170</bold></highlight> as well as using a buffer <highlight><bold>160</bold></highlight>. When the receiver <highlight><bold>150</bold></highlight> is first powered up or is tuned to a new channel, the decoder <highlight><bold>170</bold></highlight> begins to play only after a certain initialization period, during which time packets are received and stored in the decoder-input buffer <highlight><bold>160</bold></highlight>. After the decoder <highlight><bold>170</bold></highlight> begins playing, the decoder <highlight><bold>170</bold></highlight> consumes packets from the input buffer <highlight><bold>160</bold></highlight> at a fixed rate, while at the same time new packets arrive and are stored in the same buffer <highlight><bold>160</bold></highlight>. The decoder input-buffer <highlight><bold>160</bold></highlight> has to have enough capacity so that even in the worst case of minimal delay and largest packet size, the buffer <highlight><bold>160</bold></highlight> will not overflow. In addition, the initialization period has to be sufficiently long to accumulate enough packets in the buffer <highlight><bold>160</bold></highlight> so that the buffer does not become empty due to transmission delays. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> If the number of data bits in the encoder buffer <highlight><bold>120</bold></highlight> gets higher than the size of the decoder buffer <highlight><bold>160</bold></highlight>, an overflow condition occurs since the frame at which this condition occurs will not arrive in time at the decoder <highlight><bold>170</bold></highlight> to be decoded. It is difficult to design a perceptually good bit-allocation scheme for an audio encoder <highlight><bold>110</bold></highlight> that guarantees that the number of data bits in the encoder buffer <highlight><bold>120</bold></highlight> stays within a specified range. Typically, high bursts of quantization noise are added to prevent the danger of buffer overflow. The perceptual effect of this is referred to as bit-starvation and frequently leads to a severely distorted audio signal. Nonetheless, if there is a danger that the buffer will overflow, then the audio encoder <highlight><bold>110</bold></highlight> typically introduces high noise bursts into the audio signal in order to use less bits for encoding. In the extreme case where a buffer overflow cannot be prevented, bits are wasted for a frame that is known to not arrive in time at the decoder. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> A need therefore exists for an improved buffer control technique that does not waste bits when it is known that a frame will not arrive in time to be processed by the decoder. A further need exists for an improved buffer control technique that allows a decoder to employ mitigation techniques to minimize the impact of one or more dropped frames. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Generally, a method and apparatus are disclosed for controlling a buffer in a digital audio broadcasting (DAB) communication system. According to one aspect of the invention, an audio encoder marks a frame as &ldquo;dropped&rdquo; whenever a buffer overflow might occur indicating that the frame has not been transmitted. Thus, only a small number of bits are utilized to process a dropped frame, thereby preventing the buffer from overflowing. The present invention allows the encoder buffer-level to quickly recover from the potential overflow condition since only a small number of bits are placed in the encoder buffer. In this manner, the danger of further buffer overflows within a short period of time is greatly reduced. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The audio encoder optionally sets a flag that provides an indication to the receivers that a frame has been dropped (i.e., not transmitted). If a &ldquo;frame dropped&rdquo; flag is detected by a receiver, the receiver can optionally employ mitigation techniques to reduce the impact of the dropped frame(s). Thus, the present invention overcomes the problems of conventional buffer control techniques. If an overflow condition is likely to occur, the encoder can mark a frame as dropped when the high noise bursts it would otherwise need to introduce are perceptually more annoying than the effect of mitigation in the decoder. In addition, when a buffer overflow cannot be prevented, additional bits are not wasted for a frame that will not arrive in time at the decoder. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> A more complete understanding of the present invention, as well as further features and advantages of the present invention, will be obtained by reference to the following detailed description and drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a conventional DAB communication system; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a multiple channel DAB communication system in accordance with the present invention; and </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3A through 3D</cross-reference> illustrate various mitigation techniques that may be employed in accordance with the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a multiple channel DAB communication system <highlight><bold>200</bold></highlight> in accordance with the present invention. As shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the DAB communication system <highlight><bold>200</bold></highlight> includes a transmitter <highlight><bold>205</bold></highlight> having an audio encoder <highlight><bold>210</bold></highlight> and a buffer <highlight><bold>220</bold></highlight> and a receiver <highlight><bold>230</bold></highlight> having a buffer <highlight><bold>240</bold></highlight> and an audio decoder <highlight><bold>250</bold></highlight>. A control loop (not shown) modifies the bit rate of the encoder <highlight><bold>210</bold></highlight> and prevents the encoder <highlight><bold>210</bold></highlight> from overflowing or underflowing the decoder buffer <highlight><bold>240</bold></highlight>. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> According to one aspect of the present invention, the audio encoder <highlight><bold>210</bold></highlight> marks a frame as &ldquo;dropped&rdquo; whenever an overflow of the encoder buffer <highlight><bold>220</bold></highlight> might occur (which corresponds to an underflow of the decoder buffer <highlight><bold>240</bold></highlight>, due to the symmetric relationship between the encoder <highlight><bold>210</bold></highlight> and decoder <highlight><bold>250</bold></highlight>). Thus, the audio encoder <highlight><bold>210</bold></highlight> places only a small number of bits into the buffer for the lost frame, thereby preventing a buffer overflow. In this manner, the level of the encoder buffer <highlight><bold>220</bold></highlight> immediately recovers from the dangerous situation because only a small number of bits are placed in the buffer <highlight><bold>220</bold></highlight> for processing. Thus, the danger of a second buffer overflow within a short period of time is greatly reduced. In one implementation, the audio encoder <highlight><bold>210</bold></highlight> sets a flag that indicates to the receiver <highlight><bold>230</bold></highlight> that a frame has been dropped. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The flag provides an indication to the receiver <highlight><bold>230</bold></highlight> that mitigation techniques should be employed, if desired, by a mitigation unit <highlight><bold>260</bold></highlight> to reduce the impact of the dropped frame(s). Although an exemplary mitigation technique is described hereinafter in a section entitled Error Mitigation, any known mitigation technique can be employed by the receiver <highlight><bold>230</bold></highlight> consistent with the present invention, as would be apparent to a person of ordinary skill in the art. In the exemplary embodiment, when a frame is marked as dropped, the mitigation unit <highlight><bold>260</bold></highlight> generates artificial data for the dropped frame, such that no severe artifacts are introduced into the audio signal. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The present invention overcomes the problems of conventional buffer control techniques. If the number of data bits in the encoder buffer <highlight><bold>220</bold></highlight> is close to an overflow, the encoder <highlight><bold>210</bold></highlight> can mark a frame as dropped when the high noise bursts it would otherwise need to introduce to prevent overflow are perceptually more annoying than the effect of mitigation in the decoder <highlight><bold>250</bold></highlight>. In addition, when a buffer overflow cannot be prevented, bits are not wasted for a frame that will not arrive in time at the decoder (only a flag is sent to the decoder <highlight><bold>250</bold></highlight> to indicate that the frame has been dropped). </paragraph>
+</section>
+<section>
+<heading lvl="1">Error Mitigation </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The receiver <highlight><bold>230</bold></highlight> can implement one or more error mitigation mechanisms when (i) an encoded frame is actually lost, e.g., due to transmission channel errors, in a known manner, or (ii) a frame is marked as dropped in accordance with the present invention. <cross-reference target="DRAWINGS">FIGS. 3A through 3D</cross-reference> illustrate four examples of five successive frames generated by an audio coder, such as a PAC coder or an MPEG-2 AAC coder. Either one long transform window is used to encode one audio frame or eight short transform windows are used for encoding one frame. The long windows are used for encoding more or less stationary parts of an audio signal and the short windows are used to encode transient portions of an audio signal. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 3A, a</cross-reference> frame with a long window is marked as dropped. In this case, the dropped frame and its adjacent frames represent a more or less stationary signal and good results can be achieved by substituting the dropped frame with a frame obtained by interpolating the spectral content of the adjacent frames. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 3B, a</cross-reference> frame with short windows is marked as dropped. The dropped frame contained a transient but its adjacent frames are more or less stationary. Therefore, good results can be achieved by substituting the dropped frame with a long window frame obtained by interpolating the spectral content of the adjacent frames. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 3C, a</cross-reference> frame with a long window is marked as dropped. The droppedframe is preceded by a transient. Repeating the transient of the preceding frame would echo the transient and likely be perceived as an artifact. Therefore, the following frame is repeated. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 3D, a</cross-reference> frame with a long window is marked as dropped. The droppedframe is followed by a transient. Repeating the transient of the following frame would echo the transient and likely be perceived as an artifact. Therefore, the previous frame is repeated. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> It is to be understood that the embodiments and variations shown and described herein are merely illustrative of the principles of this invention and that various modifications may be implemented by those skilled in the art without departing from the scope and spirit of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">I claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A buffer control method in a communication system, said method comprising the steps of: 
+<claim-text>detecting a potential overflow of an encoder buffer; and </claim-text>
+<claim-text>marking a frame as dropped if encoding said frame would result in an overflow of said encoder buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said communication system is a digital audio broadcasting (DAB) system. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said frames are audio data. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said frames are video data. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said frames are multimedia data. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said detecting step further comprises the step of monitoring a number of frames in said encoder buffer. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said detecting step further comprises the step of monitoring a number of bits in said encoder buffer. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said potential overflow of said encoder buffer occurs when a bit rate for generating said frames will exceed a capacity of said encoder buffer. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said detecting step further comprises the step of determining if encoding a frame would exceed a capacity of said encoder buffer. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said marking step further comprises the step of setting a flag indicating that a frame has been dropped. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method for processing data in a communication system, said method comprising the steps of: 
+<claim-text>receiving an indication of a dropped frame from a transmitter; and </claim-text>
+<claim-text>processing said indication of a dropped frame. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising the step of employing a mitigation technique to compensate for said dropped frame. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said communication system is a digital audio broadcasting (DAB) system. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said frames are audio data. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said frames are video data. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said frames are multimedia data. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said received indication is a flag indicating that a frame has been dropped. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A buffer control system in a communication system, comprising: 
+<claim-text>a memory that stores computer-readable code; and </claim-text>
+<claim-text>a processor operatively coupled to said memory, said processor configured to implement said computer-readable code, said computer-readable code configured to: </claim-text>
+<claim-text>detect a potential overflow of an encoder buffer; and </claim-text>
+<claim-text>mark a frame as dropped if encoding said frame would result in an overflow of said encoder buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said processor is further configured to determine if encoding a frame would exceed a capacity of said encoder buffer. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said processor is further configured to set a flag indicating that a frame has been dropped. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A system for processing data in a communication system, comprising: 
+<claim-text>a memory that stores computer-readable code; and </claim-text>
+<claim-text>a processor operatively coupled to said memory, said processor configured to implement said computer-readable code, said computer-readable code configured to: </claim-text>
+<claim-text>receive an indication of a dropped frame from a transmitter; and </claim-text>
+<claim-text>process said indication of a dropped frame. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein said processor is further configured to compensate for said dropped frame. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A buffer control system in a communication system, comprising: 
+<claim-text>a buffer for storing frames of encoded data; </claim-text>
+<claim-text>means for detecting a potential overflow of said buffer; and </claim-text>
+<claim-text>means for marking a frame as dropped if encoding said frame would result in an overflow of said buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A system for processing data in a communication system, comprising: 
+<claim-text>means for receiving an indication of a dropped frame from a transmitter; and </claim-text>
+<claim-text>means for processing said indication of a dropped frame. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, further comprising means for compensating for said dropped frame. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. A buffer control method in a communication system, said method comprising the steps of: 
+<claim-text>detecting a potential underflow of a decoder buffer; and </claim-text>
+<claim-text>marking a frame as dropped if encoding said frame would result in an underflow of said decoder buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein said detecting step further comprises the step of monitoring a number of frames in said decoder buffer. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein said detecting step further comprises the step of monitoring a number of bits in said decoder buffer.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002588A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002588A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002588A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002588A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

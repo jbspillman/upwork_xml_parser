@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005294A1-20030102-D00000.TIF SYSTEM "US20030005294A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005294A1-20030102-D00001.TIF SYSTEM "US20030005294A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005294A1-20030102-D00002.TIF SYSTEM "US20030005294A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005294A1-20030102-D00003.TIF SYSTEM "US20030005294A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005294</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09893479</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>713</class>
+<subclass>165000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for restoring a secured terminal to default status</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Dominique</given-name>
+<family-name>Gougeon</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Rocklin</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>HEWLETT-PACKARD COMPANY</name-1>
+<name-2>Intellectual Property Administration</name-2>
+<address>
+<address-1>P.O. Box 272400</address-1>
+<city>Fort Collins</city>
+<state>CO</state>
+<postalcode>80527-2400</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Upon receiving a request to clear or reset a terminal, the terminal displays a random number, the random number is placed in a regular file and signed by a private key to created a signed clear file, the clear file is authenticated, and the original random number is replaced by a new random number, thereby ensuring the authenticity of the clear or reset request while protecting the terminal from replay attacks. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The invention relates to a system and method for resetting or clearing a secured terminal in preparation for the loading of new application programs, certificates, or other files into the terminal, and in particular to a system and method which, upon receiving a request to clear or reset the terminal, creates a single-use &ldquo;clear&rdquo; file that can be digitally signed in order to authenticate the source of the clear or reset request. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> According to the invention, the procedure for clearing or resetting the terminal begins with generation by the terminal of a random number. A dynamic clear file including the random number is then created, digitally signed, and authenticated upon loading the signed clear file into the terminal. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In an especially preferred embodiment of the invention, authentication is accomplished by signing the clear file using the private key of a public key-private key cryptosystem, authenticating the digital signature using a signer public key certificate downloaded into the terminal with the signed clear file, authenticating the signer certificate using a &ldquo;clear&rdquo; certificate stored in a root directory or within factory-installed firmware within the terminal, and initiating the reset operation in response to reading of a clear string stored in the file type field of the signer certificate. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Optionally, the private key used to sign the clear file may be embedded in a smart card and protected by one or more PINs, thereby permitting authentication to be carried out without compromising the private key. In that case, the signer certificate may also be stored on the smartcard and downloaded to the terminal with the signed clear file. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> By providing an authenticatable clear file, the invention allows a terminal to be restored to default status by a technician in the field without having to rely on static password protection of the reset operation. In addition, since the random number included in the clear file changes with every reset operation, thereby ensuring that the clear file can only be used once, the invention prevents a replay attack resulting from copying of the signed clear file. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> 2. Description of Related Art </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Clearing of files or certificates from a terminal and restoration of the terminal to a default status is typically required when a terminal changes ownership, in preparation for the loading of new application programs, certificates, or other files into the terminal. While a number of systems and methods have been proposed to ensure the authenticity of files loaded into the terminal, the clearing operation has conventionally relied on relatively weak static password protection methods. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The problem with use of stronger file authentication techniques to protect clearing of application programs or certificates from an existing terminal is that (i) in the conventional clearing operation, reset is carried out by invoking a &ldquo;clear&rdquo; command in the terminal&apos;s operating program, and therefore there are no files to be signed, and (ii) even if the clear command were required to be provided in an authenticatable file, the &ldquo;clear file&rdquo; would be vulnerable to copying and replay. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> As a result, even where the terminal is part of a system that provides for strong authentication of any files loaded into the terminal, the process of clearing applications and/or certificates from the terminal and restoration of the terminal to a default setting, is currently carried out by either requiring return of the terminal to a secure facility, or by providing a static password and permitting the clearing operation to proceed only upon entry of the static password. Requiring the terminal to be uninstalled and returned to the secure facility for clearing is obviously inconvenient, while permitting the terminal to be cleared based on a static password carries all of the risks normally associated with static passwords, including password theft, leaving the terminal vulnerable to mischief. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> It is accordingly a first objective of the invention to provide a system and method for restoring a terminal to a default status that does not require return of the terminal to a secure facility. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> It is a second objective of the invention to provide a system and method for restoring a terminal to the default status in which authorization to perform the clearing operation can be verified without relying solely on passwords. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> It is a third objective of the invention to provide a system and method for returning a terminal to the default status which provides an authenticatable clear file, and yet that is invulnerable to replay attacks. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> These objectives are achieved in accordance with the principles of a preferred embodiment of the invention, by providing a method and system for returning or resetting a terminal to default status that uses a dynamic password method based on a random value to create an authenticatable clear file, the reset procedure being executed only upon authentication of the clear file. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> More particularly, according to the method of the invention, the following steps are carried out: </paragraph>
+<paragraph id="P-0016" lvl="2"><number>&lsqb;0016&rsqb;</number> a menu in the system mode of the terminal displays an eight-digit random value; </paragraph>
+<paragraph id="P-0017" lvl="2"><number>&lsqb;0017&rsqb;</number> the random value is put is a regular file and the file is signed by a &ldquo;clear&rdquo; signer smartcard using a file signature tool; </paragraph>
+<paragraph id="P-0018" lvl="2"><number>&lsqb;0018&rsqb;</number> a signer&apos;s public key certificate corresponding to the private key is retrieved from the smartcard, the signer&apos;s public key certificate including, in its fileTYPE field, a clear string used to initiate the clear procedure following authentication; </paragraph>
+<paragraph id="P-0019" lvl="2"><number>&lsqb;0019&rsqb;</number> the signature file along with the clear signer certificate is downloaded to the terminal; </paragraph>
+<paragraph id="P-0020" lvl="2"><number>&lsqb;0020&rsqb;</number> the terminal retrieves the random number and compares it with the stored random number using the signer public key certificate, and/or compares values derived from the signed clear file and the stored random number, in order to authenticate the clear file; </paragraph>
+<paragraph id="P-0021" lvl="2"><number>&lsqb;0021&rsqb;</number> the terminal authenticates the signer certificate by referring to a sponsor&apos;s clear certificate stored in the terminal; </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> upon successful authentication of the signed clear file and signer certificate, the existing certificate tree is deleted form the terminal and a manufacturing certificate tree is saved in the flash/rom is restored, after which the terminal is ready to be downloaded with any other certificated configurations; </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> a new random number is generated to prevent a replay attack. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> While the method of the invention may be used with any terminal system capable of file authentication and generation of a random number, and is not to be limited to any particular authentication method, in an especially preferred embodiment of the invention, the clear file containing the random number is signed by a system that includes a private key contained on a smart card protected by multiple PINs, and a corresponding public key certificate modified to include a clear string in, for example, the FileType field, and in particular that includes the following elements: </paragraph>
+<paragraph id="P-0025" lvl="2"><number>&lsqb;0025&rsqb;</number> a certification authority/smartcard management system that issues smartcards containing a signer certificate, a private key for generating digital signatures, one or more PINs for accessing each of the smartcards, and an embedded secured processor capable of performing all digital signing operations that require access to the private key; </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> a customer file signing tool including a smartcard reader arranged to digital sign a file upon input by the user of one or more PINs corresponding to the PIN or PINs on the smart card, the smartcard performing all operations that require access to the private key before supplying the results of the operations to the customer file signing tool for further processing as necessary to generating a digital signature that can be appended to the file together with the signer certificate and downloaded to the terminal; </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> a terminal to which the signed file is to be downloaded, the terminal including a means for verifying the digital signature according to the signer certificate, and a higher level &ldquo;sponsor certificate&rdquo; or &ldquo;owner certificate&rdquo; for authenticating the signer certificate. It is noted that the term &ldquo;sponsor certificate&rdquo; is generally equivalent to the term &ldquo;owner certificate,&rdquo; and that these terms are used interchangeably herein.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a flow chart illustrating a method of clearing or restoring a terminal to its default state in accordance with the principles of a preferred embodiment of the invention. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a schematic diagram of a key management and file authentication system in which the method and system of the preferred embodiment may be utilized. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart of a key management and file authentication method corresponding to the system illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> As illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the preferred method of clearing or restoring a terminal to default status involves the following steps: </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> a menu in the system mode of the terminal displays an eight-digit random value stored in the terminal (step <highlight><bold>100</bold></highlight>); </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> the random value is put in a regular file (step <highlight><bold>110</bold></highlight>); </paragraph>
+<paragraph id="P-0034" lvl="2"><number>&lsqb;0034&rsqb;</number> the clear file thus created is digitally signed (step <highlight><bold>120</bold></highlight>); </paragraph>
+<paragraph id="P-0035" lvl="2"><number>&lsqb;0035&rsqb;</number> the signature file is downloaded to the terminal (step <highlight><bold>130</bold></highlight>); </paragraph>
+<paragraph id="P-0036" lvl="2"><number>&lsqb;0036&rsqb;</number> the terminal authenticates the signer certificate using a sponsor certificate stored in the terminal and checks a value derived from the signature using the signer certificate against a value based on the random number stored in the terminal in order to authenticate the signed clear file (step <highlight><bold>140</bold></highlight>); </paragraph>
+<paragraph id="P-0037" lvl="2"><number>&lsqb;0037&rsqb;</number> upon successful authentication, the terminal is reset or cleared (step <highlight><bold>150</bold></highlight>), for example by deleting an existing certificate tree and installing a manufacturing certificate tree previously saved in the flash/rom of the terminal; and </paragraph>
+<paragraph id="P-0038" lvl="2"><number>&lsqb;0038&rsqb;</number> a new random number is generated to prevent the replay attack (step <highlight><bold>160</bold></highlight>). </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Turning to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the preferred system includes a terminal <highlight><bold>2</bold></highlight> having a random number generator <highlight><bold>20</bold></highlight>, a display <highlight><bold>21</bold></highlight>, and storage for the random number. Also included in the preferred system is a file authentication arrangement, one example of which is discussed in detail below, although it will be appreciated by those skilled in the art that, for purposes of the present invention, any file authentication system capable of authenticating a signed clear file including the random number may be used, and that the specific file authentication system illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and the method illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, are included herein solely for purpose of illustration and not by way of limitation. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> As illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the system of the preferred embodiment of the invention includes, in addition to terminal <highlight><bold>2</bold></highlight> and random number generator <highlight><bold>20</bold></highlight>, a certification authority/smart card management system <highlight><bold>4</bold></highlight> that issues smart cards <highlight><bold>6</bold></highlight> containing one or more signer certificates <highlight><bold>9</bold></highlight>, one or more private keys <highlight><bold>3</bold></highlight> corresponding to the signer certificates for generating digital signatures, and PINs <highlight><bold>13</bold></highlight> for enabling controlled access to the digital signing process carried out by the file signing tool <highlight><bold>5</bold></highlight>, to which the random number generated by the terminal is input during the clearing authentication process. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Smartcards <highlight><bold>6</bold></highlight> are arranged to store the private key <highlight><bold>3</bold></highlight> in such a manner that the private key can only be accessed by a secure processor embedded in the smartcard, and programming of the secure processor so that it performs all digital signing operations that require access to the stored private key. As indicated above, PIN protection may, in some circumstances, be omitted, for example where the smartcard is to be used by the terminal manufacturer to load files during software development. In addition, it is possible within the scope of the invention to convey the clear signer certificate to the terminal by a channel separate from the illustrated channel, which involves storage of the signer certificate on the smartcard and retrieval of the signer certificate by the file signing tool, described in more detail below. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> Smartcards that include a secure processor and the capability of storing information in a manner that ensures that the stored information can only be accessed by the secure processor are commercially available from a number of sources, and the present invention can use any such smartcards. In addition, the present invention could utilize other types of portable storage/processing devices, including optical cards having internal secure processors. The exact structure of the smartcard is not critical, so long as the smartcard is capable of performing all necessary file signing operations that require access to the stored private key. It is possible, for example, to perform all digital signing operations on the smartcard, or to assign operations that do not require key access to the file signing tool <highlight><bold>5</bold></highlight>. of course, it is essential that the private key stored on the card cannot be accessed by physically tampering with the card, but tamper protection features are readily available in conventional smartcards. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> In the preferred embodiment of the invention, the entity that prepares the smartcard <highlight><bold>6</bold></highlight> is certification authority/smartcard management system <highlight><bold>4</bold></highlight>. While the certification authority/smartcard management system of the preferred embodiment of the invention is not to be limited to a particular hardware configuration, one possible configuration is a regular PC <highlight><bold>7</bold></highlight> running Windows NT, a smartcard DataCard reader/printer <highlight><bold>5</bold></highlight> that prints information on the cards and that loads the private keys and certificates into the smartcard, and a GCR410 smartcard reader used to validate the generated smartcard before sending it out. The private key may be generated by any private-public key generating algorithm, of which a number are well-known. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Also in the preferred embodiment, the clear signer certificate <highlight><bold>9</bold></highlight> associated with the private key <highlight><bold>3</bold></highlight> stored on the card may, by way of example and not limitation, comply with the IUT X509-V3 generic certificate standard, and in particular the PKIX-X509 profile. Since this is a publicly available standard well-known to those skilled in the art, further certificate definitions are not included herein, except to note that the signer certificate definition includes a fileTYPE field into which a clear string may be placed, and several private field extensions to the predefined version, serial number, algorithm identifier, issuer, validity period, key owner name, public key, and signature fields of the certificate may be added to define specific key properties. Especially advantageous are extensions that limit file types attached to the certificate, key width (which permits multiple keys to be loaded in the same field is the key is &ldquo;narrow,&rdquo; for example in the case of sponsor certificates), and an identifier for a replacement certificate. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The customer file signing tool <highlight><bold>5</bold></highlight> may also include a regular PC <highlight><bold>10</bold></highlight> running Windows NT, and a GCR410 smartcard reader <highlight><bold>11</bold></highlight> that receives the smartcard and uses it to process files for downloading to the terminal <highlight><bold>1</bold></highlight>. In particular, the file signing tool must at least be capable of receiving the random number generated by the terminal, or a regular file that includes the random number, of supplying data necessary to the digital signing process to the smartcard reader for transfer to the smartcard, of receiving the digital signature <highlight><bold>12</bold></highlight> from the smartcard, and of supplying the digitally signed file to the terminal <highlight><bold>1</bold></highlight>, preferably together with the signer certificate retrieved from the smartcard. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> If the smartcard is to be protected by a PIN <highlight><bold>13</bold></highlight>, then the file signing tool <highlight><bold>5</bold></highlight> must be capable of relaying an input PIN to the smartcard for comparison with a PIN stored on the card by the certification authority <highlight><bold>4</bold></highlight>. In order to enable multiple PINs to be established, it is simply necessary to include a field in the memory area of the card designating the number of PINs, and to store the multiple PINs on the card. Corresponding PINs must be sent separately from the certification authority to the file signing entity, for distribution to the person or persons that carry out the file signing. These PINs may be distributed to multiple individuals and correct entry of all PINs required to enable signing of a file, thus ensuring that a single individual cannot access the card without cooperation from all PIN holders, or the multiple PINs may be associated with multiple access levels. In the latter case, one PIN might be used to permit signing of certain non-critical types of files, while multiple PINs might be required to permit signing of critical file types. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In addition to generating and storing the random number, terminal <highlight><bold>2</bold></highlight> must be capable of authenticating the downloaded clear file by decrypting the digital signature <highlight><bold>12</bold></highlight> with a corresponding public key <highlight><bold>14</bold></highlight> derived from the signer&apos;s public key certificate <highlight><bold>9</bold></highlight>, and of authenticating the public key certificate <highlight><bold>9</bold></highlight> by means of an owner&apos;s or sponsor&apos;s certificate <highlight><bold>15</bold></highlight> that has previously been installed in the terminal, for example by the certification authority, and preferably by using appropriate authentication procedures. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> As indicated above, the invention is not to be limited to a particular type of terminal <highlight><bold>2</bold></highlight>. However, by way of example and not limitation, the terminal <highlight><bold>2</bold></highlight> may be a PINpad terminal of the type commonly used in retail establishments to read credit or debit cards, and to permit the customer to enter an associated PIN. One example of such a transaction terminal is manufactured by VeriFone, Inc., a division of Hewlett Packard. Such PINpads are connected to a central computer that receives customer data from the PINpad, processes the data, and sends the results of the processing back to the PINpad to indicate whether the transaction is approved. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> The VeriFone terminal core, for example, utilizes a single chip microcontroller with GPV3 functionality implemented as an on-chip hard-coded ROM and fixed-use RAM with sufficient input/output capabilities to drive a display, scan a keypad, support a magnetic card reader and primary interface, and a communications port for communicating with a main processor internal or external to the host platform. Additional support for authentication may be provided by an optional transaction speed coprocessor arranged to provide RSA cryptography functions, and to communicate with the core processor by means of triple DES encoding or a similar data protection algorithm. The input/output features of the terminal may be omitted when the core is used as a security module in a PINpad. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> Since the signer certificate used to authenticate the file is downloaded to the terminal <highlight><bold>2</bold></highlight> together with the digitally signed file, it is necessary for the terminal to authenticate the signer certificate. In the embodiment illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the signer certificate is signed by the certification authority <highlight><bold>4</bold></highlight> and authenticated by an owner or sponsor certificate previously installed in the terminal. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Although not shown, the terminal may also include further certificates used to authenticate the one or more owner or sponsor certificates during installation. The terminal <highlight><bold>2</bold></highlight> may include a single partition or multiple partitions which can be assigned to different sponsors, such as different banks and/or credit card companies, for storing application programs that control data communications, customer prompts, and so forth. Each of these partitions has a different owner&apos;s or sponsor&apos;s certificate for authenticating signer&apos;s certificates. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The partitions may, preferably, be arranged in a hierarchy that permits different levels of authentication within a partition. Initially, the terminal is provided with a root platform certificate in a secure root directory. The root certificate is used to authenticate an operating system partition certificate and an application partition certificate that permit operating software loaded by the manufacturer or that authenticates the operating system owner certificate of another party such as the key management authority to be authenticated so that the other party can load operating system software, and that permits the key management authority to authenticate owner or sponsor certificates for the application areas of the terminal. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> Although not required by the present invention, the partitions may advantageously be arranged in a hierarchy that permits different levels of authentication within a partition. Initially, the terminal is provided with a root platform certificate in a secure root directory. The root certificate is used to authenticate an operating system partition certificate and an application partition certificate that permit operating software loaded by the manufacturer or that authenticates the operating system owner certificate of another party such as the key management authority to be authenticated so that the other party can load operating system software, and that permits the key management authority to authenticate owner or sponsor certificates for the application areas of the terminal. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> In addition to securing the terminal against unauthorized access through file transfers, the terminal should of course be physically secured, for example by arranging the terminal to erase information if an attempt is made to pry open the case without proper authentication, or by rendering the terminal inoperative upon repeated such attempts. Similar protection against physical tampering may also be provided for the smartcard or secure processing unit. Such tamper prevention arrangements are well-known and are not part of the present invention. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Turning to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the preferred method of authenticating the clear file involves three principal subroutines or sub-methods carried out, respectively, by certification authority <highlight><bold>4</bold></highlight>, file signing tool <highlight><bold>5</bold></highlight>, and terminal <highlight><bold>2</bold></highlight>. The three sub-methods are certification, signing, and authentication. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> The certification subroutine or method begins when a request for a clear certificate is received by the certification authority (step <highlight><bold>200</bold></highlight>). The certification authority then collects data concerning the identity of the requester for the purpose of creating the certificate or, if the requester is an existing customer, authenticates the requester (step <highlight><bold>210</bold></highlight>) by asking the requester to the use the file signing tool and an existing signer certificate to sign a file supplied by the certification authority, thus enabling the certification authority to verify that the requester is entitled to new signer or clear certificates for a particular sponsor certificate. The order is then confirmed by the requester, signer certificates for the previously generated sponsor certificate are generated, and the signer certificates, private key(s), and PIN(s) are loaded onto a smartcard (step <highlight><bold>220</bold></highlight>). Finally, the smartcard is sent to the requester (step <highlight><bold>230</bold></highlight>), as is a separate communication containing the PIN(s) necessary to use the smartcard. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> When the sponsor wishes to load the clear file into a terminal, the file is transferred to the file signing tool, (step <highlight><bold>240</bold></highlight>), the smartcard is inserted into the card reader of the file signing tool (step <highlight><bold>250</bold></highlight>), and all necessary PINs are input (step <highlight><bold>260</bold></highlight>). If the set of entered PINs is complete and correct, the file signing tool generates a digital signature (step <highlight><bold>270</bold></highlight>), retrieves the signer certificate (step <highlight><bold>280</bold></highlight>), and then downloads the digitally signed file together with the signer certificate to the terminal (step <highlight><bold>290</bold></highlight>). </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> Upon receipt of the digitally signed file, the terminal authenticates the file by decrypting the digital signature and verifying that the resulting plaintext information or values correspond to values computed or derived from the stored random number (step <highlight><bold>300</bold></highlight>). The terminal then authenticates the signer certificate by referring to a sponsor certificate previously stored or loaded into the terminal (step <highlight><bold>310</bold></highlight>), completing the authentication process. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Having thus described a preferred embodiment of the invention in sufficient detail to enable those skilled in the art to make and use the invention, it will nevertheless be appreciated that numerous variations and modifications of the illustrated embodiment may be made without departing from the spirit of the invention, and it is intended that the invention not be limited by the above description or accompanying drawings, but that it be defined solely in accordance with the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">I claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for restoring a terminal to a default condition, comprising: 
+<claim-text>a random number generator included in the terminal; and </claim-text>
+<claim-text>a file authentication arrangement for authenticating a clear file that includes a random number generated by said random number generator upon downloading of the clear file into the terminal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said file authentication arrangement includes a private key and a corresponding public key clear certificate containing information necessary to authenticate the clear file. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said clear certificate contains information necessary to authenticate the clear file, said terminal being arranged to execute a clear instruction upon authentication of said clear file. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said clear certificate is a sponsor public key certificate stored in the terminal and corresponding to a signer certificate downloaded with the digitally signed file, said signer certificate corresponding to a private key used to digitally sign said clear file. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said private key is stored on a smartcard and is only accessible by a secure processor embedded in the smartcard. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein said sponsor public key certificate is stored in a read only memory in said terminal. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising a file signing tool for digitally signing said clear file, said file signing too including a smartcard reader, and wherein all digital signing operations requiring access to said private key are carried out by a secure processor embedded in a smartcard inserted into said smartcard reader. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said smartcard further has stored thereon a signer certificate for authenticating said digital signature, and wherein said clear certificate authenticates said signer certificate. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A system as claimed in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said signer certificate includes a file type field containing a clear string that controls clearing of the terminal in order to restore the terminal to its default status. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method of restoring a terminal to a default condition, comprising the steps of: 
+<claim-text>generating a random number and storing the random number in a terminal; </claim-text>
+<claim-text>placing the random number in a regular file; </claim-text>
+<claim-text>digitally signing the regular file to create a digitally signed clear file; </claim-text>
+<claim-text>downloading the digitally signed clear file to the terminal; </claim-text>
+<claim-text>authenticating the digitally signed clear file by comparing the digital signature with a corresponding value based on the stored random number; </claim-text>
+<claim-text>restoring the terminal to a default condition; </claim-text>
+<claim-text>generating a new random number and replacing the stored random number with the new random number. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said step of placing the random number in a regular file comprises the steps of displaying the random number and inputting the random number to a filing signing tool. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the step of digitally signing the regular file comprises the steps of inserting a smartcard having an embedded secure processor in a smartcard reader connected to the file signing tool, causing the secure processor to access the private key in order to generate the digital signature. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the step of authenticating the digital signature comprises the step of authenticating the digital signature based on a signer public key certificate downloaded into the terminal together with the signed clear file. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the step of authenticating the digital signature further comprises the step of retrieving a sponsor public key certificate from a read only memory in said terminal and authenticating the signer certificate using the sponsor public key certificate. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the step of authenticating the digital signature based on the signer public key certificate comprises the steps of comparing a value derived from the digital signature using the signer public key certificate with a value derived from the stored random number to authenticate said clear file. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the step of restoring said terminal to a default condition comprises the step of reading a clear string in a file type field of said signer public key certificate. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said step of restoring said terminal to a default condition comprises the step of deleting a certificate tree from said terminal.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005294A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005294A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005294A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005294A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

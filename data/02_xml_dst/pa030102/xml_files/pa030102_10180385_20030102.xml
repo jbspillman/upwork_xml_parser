@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005265A1-20030102-D00000.TIF SYSTEM "US20030005265A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005265A1-20030102-D00001.TIF SYSTEM "US20030005265A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005265A1-20030102-D00002.TIF SYSTEM "US20030005265A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005265A1-20030102-D00003.TIF SYSTEM "US20030005265A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005265A1-20030102-D00004.TIF SYSTEM "US20030005265A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005265</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10180385</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020626</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>01115448.1</doc-number>
+</priority-application-number>
+<filing-date>20010627</filing-date>
+<country-code>EP</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/30</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>712</class>
+<subclass>218000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Checkpointing a superscalar, out-of-order processor for error recovery</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Harry</given-name>
+<middle-name>Stefan</middle-name>
+<family-name>Barowski</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Boeblingen</city>
+<country-code>DE</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Hartmut</given-name>
+<family-name>Schwermer</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Stuttgart</city>
+<country-code>DE</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Hans-Werner</given-name>
+<family-name>Tast</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Weil im Schoenbuch</city>
+<country-code>DE</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+</address>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>IBM Corporation</name-1>
+<name-2>Intellectual Property Law</name-2>
+<address>
+<address-1>2455 South Road, P386</address-1>
+<city>Poughkeepsie</city>
+<state>NY</state>
+<postalcode>12601</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention relates to data processing systems with built-in error recovery from a given checkpoint. In order to checkpoint more than one instruction per cycle it is proposed to collect updates of a predetermined maximum number of register contents performed by a respective plurality of CISC/RISC instructions in a buffer (CSB)(<highlight><bold>60</bold></highlight>) for checkpoint states, whereby a checkpoint state comprises as many buffer slots as registers can be updated by said plurality of CISC instructions and an entry for a Program Counter value associated with the youngest external instruction of said plurality, and to update an Architected Register Array (ARA)(<highlight><bold>64</bold></highlight>) with freshly collected register data after determining that no error was detected in the register data after completion of said youngest external instruction of said plurality of external instructions. Handshake synchronization for consistent updates between storage in an L2-cache (<highlight><bold>66</bold></highlight>) via a Store Buffer (<highlight><bold>65</bold></highlight>) and an Architected Register Array (ARA) (<highlight><bold>64</bold></highlight>) is provided which is based on the youngest instruction ID (<highlight><bold>40</bold></highlight>) stored in the Checkpoint State Buffer (CSB) (<highlight><bold>60</bold></highlight>). </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to a method and a system for checkpointing a multiple processor data processing system in order to provide for error-recovery. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> To allow high instruction level parallelism in modern processors several instructions can be executed and finally retired in parallel. This is essential, if complex instructions of a CISC processor are translated in several simpler RISC like instructions and if the number of instructions which are executed per cycle (IPC) should be high. Retiring of these instructions means that the contents of the architected register array are updated with the result of the internal instructions and the corresponding store data are written back into the cache/memory. In order to reflect the instruction sequence given by a program the retirement, i.e. completion of instructions occurs in conceptual order. Thus the terms &ldquo;younger&rdquo; and &ldquo;older&rdquo; instructions represent instructions found later or earlier, respectively, in an instruction sequence. Checkpointing means, that snapshots of the state of the architected registers and the corresponding data stored in the data cache, are taken at a certain frequency, i.e. a fixed time interval. Highest resolution is obtained if the snapshots are taken every cycle. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Such a prior art checkpointing method is disclosed in U.S. Pat. No. 5,418,916. A checkpoint retry facility utilizes a store buffer in order to establish a store queue during normal operation and for providing the data necessary for checkpoint retry during a retry operation. The data buffered therein also includes the register data of the floating point registers, the general-purpose registers and the access registers, and the program status word. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> This is basically done with the help of a plurality of store buffers associated with the L1-Cache of each of the processing units. Each of the store buffers is used as an intermediate buffer for holding the storage data until such data can be released to any other portions of the storage hierarchy where other CPUs can then access the data. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In order to control the release of storage data two information bits are installed in the store queue design: the &ldquo;end of instruction&rdquo; (EOI) bit and the &ldquo;checkpoint complete&rdquo; (COMP) bit. The data in the store buffer is available only to the processor directly associated with it. Other processors cannot access this data until it is written to the L2-cache or the memory, which is public to all other processors. This prior art approach, however, has some weaknesses when it is required to checkpoint more than one external instruction (CISC) per cycle: At most, a single instruction can be checkpointed per cycle. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> It is thus an object of the present invention to provide an improved method and system for checkpointing superscalar systems in which more than one external instruction can be checkpointed per cycle. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> If the processor is able to retire a certain (maximum) number of internal RISC-like instructions per cycle and the number of internal instructions representing an external CISC instruction is not fixed, e.g. is depending on the operation code, checkpointing of the processor&apos;s state may be based on multiples of external instructions. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> An introductory example is shown in <cross-reference target="DRAWINGS">FIG. 11</cross-reference> It is assumed that a CISC instruction <highlight><bold>42</bold></highlight> having a unique External Instruction ID <highlight><bold>40</bold></highlight> (EID) of a processor can be translated into one to four internal instructions <highlight><bold>44</bold></highlight> which act on architected registers and into one to four load/store instructions <highlight><bold>46</bold></highlight> which deal with data fetches and stores from the cache/memory. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Assuming that a maximum of four internal instructions can be retired simultaneously implies that up to four external CISC instructions must be checkpointed, if snapshots of the processor&apos;s state are taken every cycle. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The checkpointing of the processor&apos;s architected registers may be done by copying the register contents into a checkpointing array where every register possesses a master copy. The checkpointing of store data may be based on the memory hierarchy where the store data may first be written back into a low order (e.g. L1) cache but are released in a higher order cache memory (e.g. L2) upon completion of a checkpoint. To ensure that register based internal instructions and the corresponding store instructions can be related to the external instructions these instructions must be tagged with a unique instruction identifier number (ID). </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> According to its broadest aspect, a method for checkpointing a single or multiple processor data processing system is provided in order to achieve error-recovery, which is characterized by the steps of: </paragraph>
+<paragraph id="P-0012" lvl="2"><number>&lsqb;0012&rsqb;</number> a.) collecting updates of a predetermined maximum number of register contents, e.g., a maximum number of four register updates performed by a respective plurality of CISC/RISC instructions in a checkpoint state buffer, a checkpoint state comprising: </paragraph>
+<paragraph id="P-0013" lvl="3"><number>&lsqb;0013&rsqb;</number> as many buffering slots as registers can be updated by said plurality of (CISC-derived) instructions, and </paragraph>
+<paragraph id="P-0014" lvl="3"><number>&lsqb;0014&rsqb;</number> an entry for a Program Counter value associated with the youngest external instruction of said plurality, </paragraph>
+<paragraph id="P-0015" lvl="2"><number>&lsqb;0015&rsqb;</number> b.) updating an Architected Register Array (ARA) with freshly collected register data after determining that no error was detected in the register data after completion of said youngest external instruction of said plurality of external instructions. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Thus, the advantage results that an instruction sequence comprising more than one external instruction operating each on registers can be checkpointed per cycle. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> An object of the present invention is to update the register contents performed by one or several external CISC instructions per cycle are collected by forming said checkpoint states. A checkpoint state preferably consists of as many slots as registers can be updated by one or several CISC instructions per cycle. In addition every instruction will update the processor&apos;s status, e.g. the program counter. For checkpointing several instructions only the final status is of importance, e.g., if several external CISC instructions are completed simultaneously the program counter is determined by the last instruction completed within the sequence of external instructions. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> If no error has been detected in program runtime this checkpoint state is (finally) used to perform the update of the checkpointing array. This update may occur several cycles after the checkpoint state has been built up. Several checkpoint states may be collected in a checkpoint state buffer (CSB) which collects a new checkpoint state every cycle until the checkpoint states are finally used for the update of the checkpointing array, e.g., the above ARA. If an error in the processor is detected, the checkpointing array update mechanism is immediately blocked thus preventing that corrupted data is poisoning the checkpointing array. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> When, further the disclosed method comprises the step of providing Error Detection and Correction (ECC) bits with the ARA entries an efficient and area-saving error correction facility will be provided against bit failures. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> When, further the disclosed method comprises the steps of: </paragraph>
+<paragraph id="P-0021" lvl="2"><number>&lsqb;0021&rsqb;</number> a.) providing in parallel to said ARA update a second control path which controls the release of STORE data resulting from a plurality of STORE instructions from a Store Buffer (STB) into an architected state cache memory, and </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> b.) synchronizing said STORE data release with said ARA update by tagging said checkpoint state buffer entry with the external instruction ID of the youngest external instruction of said plurality of instructions, and </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> c.) releasing only such data into the architected state cache memory which has an older ID than that youngest one, then the advantage results that the above-mentioned sequence may also contain one or more STORE instructions. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Thus a mixed sequence of register operating and cache operating instructions can be checkpointed per cycle. The disclosed concept is thus not restricted to be focused on register updating instructions only. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The basic idea for synchronization between the checkpoint state update and the store of data into the cache/memory is that all checkpoint states are tagged with the ID of the last external instruction in the checkpointed sequence. The store data is tagged with the ID of the corresponding instruction ID. All STORE data is hold in said Store Buffer until it is released into the cache/memory. Synchronization is obtained if only that STORE data is released into the system memory (i.e. L2 cache), which possesses older or equal IDs compared with the ID of the last checkpoint state used to update the checkpointing array. Store data corresponding to instructions, which are not yet checkpointed into the checkpointing array, is hold in a Store Buffer until the corresponding checkpoint state is used to update the checkpointing array. Thus, it is assured that the contents of the checkpointing array and the data stored in the system memory is consistent all the time. If an error occurs inside the processor no corrupted data has entered the system memory. If the recovery will restore the architected registers by using the checkpointing array and restoring the processor status, e.g. the program counter, the processor will be able to restart program execution without damaging data in the system memory. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> When, further the above synchronizing step comprises a double handshake operation between ARA update control and STORE data release control, comprising a first step of: </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> a.) signaling the youngest external instruction ID to said ARA update control when respective STORE data associated with at least said youngest instruction is residing in said Store Queue, whereby an ARA update is triggered comprising register instructions having an older ID compared to said signaled youngest external instruction ID, and a second step of: </paragraph>
+<paragraph id="P-0028" lvl="3"><number>&lsqb;0028&rsqb;</number> b.) signaling the youngest external instruction ID associated with the latest ARA update to the STORE data release control thus triggering a STORE data release from the Store Buffer to said architected state cache memory, said release comprising STORE data resulting from instructions having an older ID compared to said signaled youngest external instruction ID, </paragraph>
+<paragraph id="P-0029" lvl="3"><number>&lsqb;0029&rsqb;</number> then, a preferred way of synchronization is provided because it provides for an efficient and consistent checkpointing system. More details are given with reference to <cross-reference target="DRAWINGS">FIG. 6</cross-reference> down below. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The disclosed concept may be advantageously extended for collecting updates of a predetermined extended maximum number of register contents, e.g., a maximum number of <highlight><bold>16</bold></highlight> register updates, which are performed by a respective complex external instruction, as e.g., a LOAD MULTIPLE instruction updating up to <highlight><bold>16</bold></highlight> registers in a checkpoint state buffer, preferably by providing the steps of: </paragraph>
+<paragraph id="P-0031" lvl="2"><number>&lsqb;0031&rsqb;</number> a.) reserving a respective extended plurality of checkpoint state buffer entries, e.g., 16/4&equals;4 entries for receiving the register update data, and </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> b.) marking subsequent entries being associated with one and the same complex external instruction with a glue bit, and </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> c.) updating the thus extended checkpoint state in an atomic operation in more than one cycle. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> With this feature, very complex external CISC instructions which need to be translated into more than four internal instructions, may be checkpointed in an atomic way, i.e., successfully completed or not at all begun, but within more than one cycle&mdash;provided that there is no operation failure, as e.g., a power failure during those checkpoint cycles. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Preferably, a processor unit having logic circuit means for performing the steps of one or more of the above mentioned variations is provided such that the means for collecting updates of a predetermined maximum number of register contents is a checkpoint state buffer with a plurality of entries each of which comprises preferably an instruction ID, a target register address, the target register data, and the program counter. A logic checkpoint state then covers a plurality, preferably four of such entries (see FIGS. <highlight><bold>2</bold></highlight>-<highlight><bold>4</bold></highlight>). </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> In this way, each internal instruction may basically update one register&mdash;which is often occurring&mdash;, and the buffer is large enough for receiving up to 4 internal instructions. This CSB buffer organization is found to be a good compromise between area consumption and performance gain implied by the increased runtime stability. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Thus, as a person skilled in the art may appreciate that the present invention proposes a new scheme for checkpointing multiple external CISC instructions and ensures consistency between the architected register contents and the data stored in the cache/system main memory.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> These and other objects will be apparent to one skilled in the art from the following detailed description of the invention taken in conjunction with the accompanying drawings in which: </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic representation illustrating the concept of translating a CISC instruction into several RISC instructions introducing the disclosed instruction ID; </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a schematic representation of a checkpoint state definition according to the invention; </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a schematic representation of a checkpoint state comprising a CISC instruction, which is translated into <highlight><bold>2</bold></highlight> internal instructions with two register updates, each; </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a representation according to <cross-reference target="DRAWINGS">FIG. 2</cross-reference> with three CISC instruction translated into 4 internal instructions with 2&plus;1&plus;1 register updates; </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a schematic representation of a checkpoint state tagged with the ID of the last checkpointed CISC instruction; </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a schematic representation illustrating the synchronization of register checkpointing with STORE data processes according to the invention; and </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a schematic representation illustrating the principle of extended checkpoint states according to the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> With general reference to the figures and with special reference now to <cross-reference target="DRAWINGS">FIG. 2</cross-reference> an exemplary processor architecture is chosen for illustrating one preferred embodiment of the disclosed concept. This is a processor architecture in which register data is operated on separately from the data to be stored or loaded from or to the caches. The register data &lsquo;stream&rsquo; is operated in a processor part called Instruction Window Buffer (IWB) whereas the Store or Load data &lsquo;stream&rsquo; is operated in a different part, i.e., the Storage Window Buffer (SWB). Both data streams must be made consistent when checkpointing is envisaged. It is to be understood, however, that the disclosed concept covers any other type of processor architecture which implements a different scheme maybe according to other criteria of data separation as long as it is a must for the checkpointing control to hold register data consistent with other system memory data. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> An advantageous checkpoint state definition for such IWB/SWB architecture is described in more detail next below. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> A checkpoint state comprises as many slots as registers can be updated per cycle. Thus, in an example one CISC instruction may update a number of four registers. Thus, a checkpoint state comprises four slots, i.e., slot 0, slot 1, slot 2 and slot 3 and an additional slot for storing the program counter. Each of the four target slots contains the register address <highlight><bold>10</bold></highlight> and the respective register data <highlight><bold>12</bold></highlight>. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> With this exemplary checkpoint state definition four internal instructions representing up to four external CISC instructions may be retired per cycle. This implies that up to four registers are updated every cycle. In addition, every instruction will update the processor&apos;s status, e.g. the program counter stored in slot <highlight><bold>14</bold></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> For checkpointing several instructions according to the invention only the final status is of importance, i.e., if several external CISC instructions are completed simultaneously the program counter is determined by the last instruction completed within the sequence of external instructions. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Two examples are given next below and are discussed with reference to <cross-reference target="DRAWINGS">FIGS. 3 and 4</cross-reference> respectively: </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> A CISC instruction&mdash;see <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, upper part, first column which is translated into four RISC-like instructions corresponding to four lines of the upper part table&mdash;writes two target registers by means of the first and third RISC instruction. Thus, it will occupy two slots in the checkpoint state; see bottom part, the both leftmost slots structured as depicted in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The program counter <highlight><bold>14</bold></highlight> will determine the instruction address of the next sequential instruction. Two slots of the checkpoint state (i.e., the both leftmost slots) are used and marked by a valid bit. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> A further example given in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> assumes that three CISC instructions CISC&num;0, . . . CISC&num;2 are translated into four RISC-like instructions: In particular, the first CISC&num;0 instructions is translated into two instructions corresponding to the two uppermost lines in the upper part of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, whereas the following CISC&num;1 and CISC&num;2 instructions are represented by a single RISC-like instruction covering each only one table row. The sequence will update four registers, thus the corresponding checkpoint state will use four, i.e., all available slots. The status information for this checkpoint is derived from the last instruction in this checkpointed sequence of CISC instructions, i.e., the program counter is extracted from the third instruction, CISC&num;2. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> With reference now to <cross-reference target="DRAWINGS">FIG. 5</cross-reference> and <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, an additional synchronization mechanism (double handshake) feature is disclosed which can be applied advantageously in microprocessor architectures in which Register data as e.g. Instruction operands and the above mentioned STORE data as e.g., a variable to be stored into the memory is used by one and the same CISC instruction. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Basically, all checkpoint states&mdash;refer back to <cross-reference target="DRAWINGS">FIG. 2</cross-reference> for basics&mdash;are advantageously tagged with the ID <highlight><bold>40</bold></highlight> of the last external instruction in the checkpointed sequence. This is depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference> and <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 6</cross-reference> the right-hand SWB part comprises all STORE data. In this exemplary STORE Data processing architecture, data as e.g., that one associated with a program variable comes from a Store Queue <highlight><bold>62</bold></highlight>. STORE data is sent to a store-through (or write-through) L1-cache <highlight><bold>61</bold></highlight><highlight><italic>a </italic></highlight>and a ECC generation <highlight><bold>61</bold></highlight><highlight><italic>b </italic></highlight>covering for example a quadword and corresponding advantageously to a complete L1-cache line containing the new STORE data is subsequently ECC-processed after instruction execution. Then the respective data generation <highlight><bold>61</bold></highlight><highlight><italic>b </italic></highlight>is buffered error-free within the Store Buffer <highlight><bold>65</bold></highlight> which can be preferably located also in a L1-cache department or alternatively near the L1-cache department. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Then said data is released into the L2-cache <highlight><bold>66</bold></highlight> or other adapted part of the memory hierarchy in a form, which is synchronized, with the release of register data. Said STORE data processing is preferred because data which may eventually be corrected during ECC processing is completely processed on-chip which is more fast compared to ECC processing of data which located off the chip, e.g., in a L2-cache. The left-hand IWB part, however, comprises the checkpoint state buffer <highlight><bold>60</bold></highlight> and basically the checkpointing array <highlight><bold>64</bold></highlight> which comprises the error-checked and error-corrected architected Register data. It is thus abbreviated as (ECC-ARA). </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> Generally, the checkpointing into the checkpointing array <highlight><bold>64</bold></highlight> (ECC-ARA) is done in an atomic procedure. &ldquo;Atomic&rdquo; means, a checkpoint procedure must be expected to be done completely, i.e., finished successfully or it is not allowed to be even begun in order to guarantee a reliable reset point for one or a plurality of processors. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Generally, as long as a checkpoint is not completed no read accesses to the ECC-ARA <highlight><bold>64</bold></highlight>, nor reset functions concerning the ECC-ARA are possible. This guarantees that only complete external instructions are checkpointed into the ECC-ARA. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> In particular, a preferred synchronization (double handshake) scheme between updates of the ECC-ARA <highlight><bold>64</bold></highlight> and the corresponding &ldquo;architected&rdquo; memory portion, the L2-cache <highlight><bold>66</bold></highlight>, is as follows: In order to synchronize the register contents stored in the checkpointing array <highlight><bold>64</bold></highlight> with the data stored in the L2-cache <highlight><bold>66</bold></highlight> a first synchronization is established between the store queue <highlight><bold>62</bold></highlight> (STQ) and the checkpoint state buffer <highlight><bold>60</bold></highlight> (CSB), and another second synchronization between the (control logic of the) checkpointing array <highlight><bold>64</bold></highlight> (ESS-ARA(and the store buffer <highlight><bold>65</bold></highlight> (STB). </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> Assuming an empty store queue <highlight><bold>62</bold></highlight>, checkpointing will always occur if a complete checkpoint state is available in the register address <highlight><bold>10</bold></highlight> and data <highlight><bold>12</bold></highlight> as described above with reference to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> and <cross-reference target="DRAWINGS">FIG. 4</cross-reference> must be present. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> If STORE data is found in the STQ <highlight><bold>62</bold></highlight>, and instruction identifier ID will signal&mdash;see first handshake signal, are <highlight><bold>68</bold></highlight>&mdash;to the CSB <highlight><bold>60</bold></highlight> which checkpoint states are allowed to be checkpointed into the checkpointing array <highlight><bold>64</bold></highlight> (ECC-ARA). Thus, this is preferable done via a control logic comprising a MUX element <highlight><bold>63</bold></highlight> arranged to access the CSB <highlight><bold>60</bold></highlight> for read and the ECC-ARA <highlight><bold>64</bold></highlight> for read/write accesses when this is accordingly signaled. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> When a checkpoint state has been completely checkpointed into the ECC-ARA <highlight><bold>64</bold></highlight> the corresponding ID is read out from the CSB <highlight><bold>60</bold></highlight> or preferably from ECC-ARA <highlight><bold>64</bold></highlight> via the read port <highlight><bold>63</bold></highlight> and is then sent&mdash;see second handshake signal, arc <highlight><bold>69</bold></highlight>&mdash;to the Store Buffer <highlight><bold>65</bold></highlight>, which contains ECC protected STORE data. The STORE data stored in a respective entry of the Store Buffer <highlight><bold>65</bold></highlight> is released into the L2-cache only if the respective ID has been received from the checkpointing array (ECC-ARA) <highlight><bold>64</bold></highlight>. Thus, this is done after having received the ID. As can be appreciated by a person skilled in the art&mdash;when these rules are followed&mdash;the memory content of L2-cache <highlight><bold>66</bold></highlight> is always consistent with the register data found in the ECC-ARA <highlight><bold>64</bold></highlight>. The data associated with the same instruction have the same IDs in each of said storing means <highlight><bold>60</bold></highlight>, <highlight><bold>64</bold></highlight>, <highlight><bold>62</bold></highlight>, <highlight><bold>65</bold></highlight>, and <highlight><bold>66</bold></highlight>. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> In other words, a synchronization is basically obtained only if the particular STORE data is released into the system memory which possesses IDs which are older or equal compared with the ID of the last checkpoint state used to update the checkpointing array <highlight><bold>64</bold></highlight>. Store data corresponding to instructions, which are not yet checkpointed into the checkpointing array, is hold until the corresponding checkpoint state is used to update the checkpointing array <highlight><bold>64</bold></highlight>. Thus, it is assured that the contents of the checkpointing array and the data stored in the L2 cache or memory is consistent all the time. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> If an error occurs inside the processor no corrupted data has entered the L2 cache or memory. If the recovery will restore the architected registers by using the checkpointing array <highlight><bold>64</bold></highlight> and restoring the processor status, e.g., the program counter, the processor will be able to restart program execution without damaging data in the system memory, the content of the Ll cache must be purged. It should be noted that all older entries with respect to the ID of the last checkpointed instruction must also be erased in the Store Buffer <highlight><bold>65</bold></highlight>. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> It should be added that when the CSB <highlight><bold>60</bold></highlight> is full the instruction committer will be stopped, thus no new instructions are committed. This leads to a stop of the processor until the Store Queue <highlight><bold>62</bold></highlight> will store data into the Store Buffer <highlight><bold>65</bold></highlight>. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Further, the ECC-ARA <highlight><bold>64</bold></highlight> update may occur several cycles after the checkpoint state has been built up. During this time several checkpoint states&mdash;preferably one per cycle&mdash;can be collected in said checkpoint state buffer (CSB) until the checkpoint states are finally used for a consistent update of the checkpointing array <highlight><bold>64</bold></highlight>. Upon recognition of an error by some prior art error detection logic provided separately, and not being a subject of the present invention, the checkpointing of the next checkpoint states stored in the CSB <highlight><bold>60</bold></highlight> is immediately blocked. Thus, it is guaranteed that the error will not affect the checkpointing array <highlight><bold>64</bold></highlight> nor corrupt &ldquo;correct&rdquo; data stored in the L2 cache. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> Further, and with reference to <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, an extension of checkpoint states for very complex external instructions consisting of more than four internal instructions will be disclosed additionally: </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> If very complex external (CISC) instructions need to be translated into more than four internal instructions under taking profit of the disclosed disclosure then the disclosed scheme is able to be extended without giving up the basic technical disclosed features and without to be constraint to provide a much broader and thus more area-consuming CSB <highlight><bold>60</bold></highlight> for receiving the respective increased number of internal instructions: </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> Under this premise the retiring of the complex instruction will last several cycles if only a maximum of four internal instructions can be retired per cycle. This implies that the checkpoint states that are built up every cycle do not represent a complete external instruction and thus must not be used to update the checkpointing array. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> The solution for this problem is based on the idea that several checkpoint states are considered to form a single &ldquo;extended checkpoint state&rdquo; representing the complex external instruction as a whole. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> According to a preferred embodiment these incomplete checkpoint states occupy several entries of the checkpoint state buffer <highlight><bold>60</bold></highlight>. Said several entries preferably form a sequence. A glue/link bit <highlight><bold>72</bold></highlight> provided at some location in each entry of the checkpoint state buffer <highlight><bold>65</bold></highlight> marks that consecutive checkpoint states stored in the buffer <highlight><bold>65</bold></highlight> form an extended checkpoint state, see <cross-reference target="DRAWINGS">FIG. 7</cross-reference>. Therefore it is necessary that the checkpoint state buffer <highlight><bold>65</bold></highlight> possesses at least as many entries as are necessary to represent an extended checkpoint state for every possible complete CISC instruction. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> Further, the updating of the checkpointing array <highlight><bold>64</bold></highlight>&mdash;see back to <cross-reference target="DRAWINGS">FIG. 6</cross-reference>&mdash;must not be interrupted until the atomic operation is updated completely. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> Upon detection of an error the update mechanism must not be blocked until the atomic operation is checkpointed completely. This also implies that checkpointing the extended checkpoint state into the checkpointing array <highlight><bold>64</bold></highlight> may last several cycles. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> In the foregoing specification the invention has been described with reference to a specific exemplary embodiment thereof. It will, however, be evident that various modifications and changes may be made thereto without departing from the broader spirit and scope of the invention as set forth in the appended claims. The specification and drawings are accordingly to be regarded as illustrative rather than in a restrictive sense. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> As a person skilled in the art may appreciate the present invention proposes a new, advantageous scheme for updating the contents of a checkpointing buffer means as e.g., array <highlight><bold>64</bold></highlight> for multiple CISC instructions which are retired simultaneously, and for synchronizing the update of the checkpointing buffer means with the release of STORE data into the cache hierarchy as e.g., L2-cache <highlight><bold>66</bold></highlight> in order to achieve most precise checkpoints of the processors register contents and the data in the system memory. The precise way of checkpointing allows recovery of the processor upon detection of soft or hard errors in the processor without corrupting the data stored in the memory. This is considered as important for satisfying increased level computing requirements. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> While the preferred embodiment of the invention has been illustrated and described herein, it is to be understood that the invention is not limited to the precise construction herein disclosed, and the right is reserved to all changes and modifications coming within the scope of the invention as defined in the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for checkpointing a multiple-processor data processing system in order to provide for error-recovery, said method comprising the steps of: 
+<claim-text>collecting updates of a predetermined maximum number of register contents performed by a respective plurality of CISC or RISC instructions in a checkpoint state buffer, a checkpoint state comprising as many buffering slots as registers can be updated by said plurality of CISC instructions and an entry for a Program Counter value associated with the youngest external instruction of said plurality of CISC instructions; and </claim-text>
+<claim-text>updating an Architected Register Array (ARA) with currently collected register data after determining that no error was detected in the register data prior or with the completion of said youngest external instruction of said plurality of external instructions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising the step of providing Error Detection and Correction bits with the ARA entries. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising the steps of: 
+<claim-text>providing in parallel to said ARA update a second control path which controls the release of STORE data resulting from a plurality of STORE instructions from a Store Buffer into an architected state cache memory; </claim-text>
+<claim-text>synchronizing said STORE data release with said ARA update by tagging said checkpoint state buffer entry with the external instruction ID of the youngest external instruction of said plurality of instructions; and </claim-text>
+<claim-text>releasing only such data into architected state cache memory which has an older or equal ID than that youngest one. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> in which the synchronizing step comprises a double handshake operation between an ARA update control and STORE data release control, wherein said double handshake operation comprises the steps of: 
+<claim-text>signaling the youngest external instruction ID to said ARA update control when respective STORE data associated with at least said youngest instruction is residing in said Store Buffer, whereby an ARA update is triggered comprising register instructions having an older ID compared to said signaled youngest external instruction ID; and </claim-text>
+<claim-text>signaling the youngest external instruction ID associated with the latest ARA update to the STORE data release control thus triggering a STORE data release from the Store Buffer to said architected state cache memory, said release comprising STORE data resulting from instructions having an older ID compared to said signaled youngest external instruction ID. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> including collecting updates of a predetermined extended maximum number of register contents performed by a respective complex external instruction in a checkpoint state buffer, comprising the steps of: 
+<claim-text>reserving a respective extended plurality of checkpoint state buffer (<highlight><bold>60</bold></highlight>) entries for receiving the register update data; </claim-text>
+<claim-text>marking subsequent entries being associated with one and the same complex external instruction with a glue bit; and </claim-text>
+<claim-text>updating the thus extended checkpoint state in an atomic operation in more than one cycle. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. In a system for checkpointing a multiple-processor data processing system in order to provide for error-recovery, a logic circuit comprising: 
+<claim-text>a checkpoint state buffer collecting updates of a predetermined maximum number of register contents performed by a respective plurality of instructions, said checkpoint state buffer comprising as many buffering slots as registers being updated by said plurality of instructions; </claim-text>
+<claim-text>an entry for a Program Counter value associated with the youngest external instruction of said plurality of instructions; and </claim-text>
+<claim-text>an Architected Register Array (ARA) updated with currently collected register data after determining that no error was detected in the register data prior or with the completion of said youngest instruction of said plurality of instructions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The logic circuit according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising the Error Detection and Correction bits associated with the ARA entries. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The logic circuit according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising: 
+<claim-text>a Store Buffer; </claim-text>
+<claim-text>an architected state cache memory; and </claim-text>
+<claim-text>a second control path in parallel to said ARA update which controls the release of STORE data resulting from a plurality of STORE instructions from said Store Buffer into said architected state cache memory, said STORE data release being synchronized with said ARA update by tagging said checkpoint state buffer entry with the instruction ID of the youngest instruction of said plurality of instructions, and wherein only such data is released into architected state cache memory which has an older or equal ID than that youngest one. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The logic circuit according to <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein said second control path further comprises a double handshake operation during said synchronizing between an ARA update and STORE data release, wherein said double handshake operation comprises: 
+<claim-text>a first signal generator signaling the youngest external instruction ID to said ARA update control when respective STORE data associated with at least said youngest instruction is residing in said Store Buffer, whereby an ARA update is triggered comprising register instructions having an older ID compared to said signaled youngest external instruction ID; and </claim-text>
+<claim-text>a second signal generator signaling the youngest external instruction ID associated with the latest ARA update to the STORE data release control thus triggering a STORE data release from the Store Buffer to said architected state cache memory, said release comprising STORE data resulting from instructions having an older ID compared to said signaled youngest external instruction ID. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The logic circuit according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising: 
+<claim-text>a checkpoint state buffer having multiple entries; </claim-text>
+<claim-text>a complex external instruction collecting updates of a predetermined extended maximum number of register contents in said checkpoint state buffer, wherein said complex external instruction: 
+<claim-text>reserves a respective extended plurality of checkpoint state buffer entries for receiving the register update data; </claim-text>
+<claim-text>marks subsequent entries being associated with one and the same complex external instruction with a glue bit; and </claim-text>
+<claim-text>updates the thus extended checkpoint state in an atomic operation in more than one cycle. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The logic circuit according to <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein said checkpoint state buffer comprises a plurality of buffer entries, each of which comprises an instruction ID, a target register address, target register data, and a program counter, whereby a checkpoint state covers a plurality of preferably four entries. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A data processing system comprising: 
+<claim-text>multiple processors; </claim-text>
+<claim-text>a checkpointing logic circuit providing for error-recovery; </claim-text>
+<claim-text>a checkpoint state buffer in said checkpointing logic circuit collecting updates of a predetermined maximum number of register contents performed by a respective plurality of instructions, said checkpoint state buffer comprising as many buffering slots as registers being updated by said plurality of instructions; </claim-text>
+<claim-text>an entry for a Program Counter value associated with the youngest external instruction of said plurality of instructions; and </claim-text>
+<claim-text>an Architected Register Array (ARA) updated with currently collected register data after determining that no error was detected in the register data prior or with the completion of said youngest instruction of said plurality of instructions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The data processing system unit according to <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further comprising the Error Detection and Correction bits associated with the ARA entries. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The data processing system according to <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further comprising: 
+<claim-text>a Store Buffer; </claim-text>
+<claim-text>an architected state cache memory; and </claim-text>
+<claim-text>a second control path in parallel to said ARA update which controls the release of STORE data resulting from a plurality of STORE instructions from said Store Buffer into said architected state cache memory, said STORE data release being synchronized with said ARA update by tagging said checkpoint state buffer entry with the instruction ID of the youngest instruction of said plurality of instructions, and wherein only such data is released into architected state cache memory which has an older or equal ID than that youngest one. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The data processing system according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein said second control path further comprises a double handshake operation during said synchronizing between an ARA update and STORE data release, wherein said double handshake operation comprises: 
+<claim-text>a first signal generator signaling the youngest external instruction ID to said ARA update control when respective STORE data associated with at least said youngest instruction is residing in said Store Buffer, whereby an ARA update is triggered comprising register instructions having an older ID compared to said signaled youngest external instruction ID; and </claim-text>
+<claim-text>a second signal generator signaling the youngest external instruction ID associated with the latest ARA update to the STORE data release control thus triggering a STORE data release from the Store Buffer to said architected state cache memory, said release comprising STORE data resulting from instructions having an older ID compared to said signaled youngest external instruction ID. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The data processing system according to <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further comprising: 
+<claim-text>a checkpoint state buffer having multiple entries; </claim-text>
+<claim-text>a complex external instruction collecting updates of a predetermined extended maximum number of register contents in said checkpoint state buffer, wherein said complex external instruction: 
+<claim-text>reserves a respective extended plurality of checkpoint state buffer entries for receiving the register update data; </claim-text>
+<claim-text>marks subsequent entries being associated with one and the same complex external instruction with a glue bit; and </claim-text>
+<claim-text>updates the thus extended checkpoint state in an atomic operation in more than one cycle. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The data processing system according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein said checkpoint state buffer comprises a plurality of buffer entries, each of which comprises an instruction ID, a target register address, target register data, and a program counter, whereby a checkpoint state covers a plurality of preferably four entries.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>6</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005265A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005265A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005265A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005265A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005265A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

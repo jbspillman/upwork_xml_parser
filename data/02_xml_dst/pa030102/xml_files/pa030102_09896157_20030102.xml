@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005249A1-20030102-D00000.TIF SYSTEM "US20030005249A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005249A1-20030102-D00001.TIF SYSTEM "US20030005249A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005249A1-20030102-D00002.TIF SYSTEM "US20030005249A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005249A1-20030102-D00003.TIF SYSTEM "US20030005249A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005249A1-20030102-D00004.TIF SYSTEM "US20030005249A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005249A1-20030102-D00005.TIF SYSTEM "US20030005249A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005249A1-20030102-D00006.TIF SYSTEM "US20030005249A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030005249A1-20030102-D00007.TIF SYSTEM "US20030005249A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005249</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896157</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>165000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>711</class>
+<subclass>202000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Relocation table for use in memory management</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Kenneth</given-name>
+<middle-name>Mark</middle-name>
+<family-name>Wilson</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Robert</given-name>
+<middle-name>B.</middle-name>
+<family-name>Aglietti</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>HEWLETT-PACKARD COMPANY</name-1>
+<name-2>Intellectual Property Administration</name-2>
+<address>
+<address-1>P.O. Box 272400</address-1>
+<city>Fort Collins</city>
+<state>CO</state>
+<postalcode>80527-2400</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention, in various embodiments, provides techniques for managing memory in computer systems. In one embodiment, each memory page is divided into relocation blocks located at various physical locations, and a relocation table is created with entries used to locate these blocks. To access memory for a particular piece of data, a program first uses a virtual address of the data, which, through a translation look-aside buffer, is translated into a physical address within the computer system. Using the relocation table, the physical address is then translated to a relocation address that identifies the relocation block containing the requested data. From the identified relocation block, the data is returned to the program. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to computer memory management and, more specifically, to a relocation table and corresponding relocation blocks for use in such management. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Virtual memory, which is an imaginary memory area supported by the operating system of a computer, increases the set of addresses a program can use. Usually, this set of addresses is referred to as the address space and is divided into units or pages. While virtual addresses are used to access virtual memory, physical addresses are used to locate data stored in physical locations or physical memory corresponding to the virtual addresses. Contemporary computers commonly use translation look-aside buffers or tables to cache virtual to physical page address translations. As program applications grow in size and their data requirements increase, the number of pages required by the applications and hence the number of translations that need to be cached in the translation look-aside buffer increases. Unfortunately, the translation look-aside buffer is often the cycle-time limiter in processors and increasing its size exacerbates the problem. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> To limit the number of entries needed in a translation look-aside buffer and thereby reducing its cycle time, designers usually increase the size of memory pages, which decreases the number of entries the translation look-aside buffer needs to contain. This is because a given amount of memory can be represented by fewer pages. However, this approach also increases the time needed for moving a memory page and the number of page faults, which occur when a memory page is accessed but the page is not in memory. In addition, larger pages in memory, especially those of gigabyte sizes, result in more chance that large fractions of the page are not used by the portion of the applications currently executing. This leads to inefficient use of memory. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Some approaches have balanced the disparate needs of large page sizes, small number of translation look-aside buffer entries, and penalties due to moving or copying large pages. However, in these approaches, translation look-aside buffers are still cycle time limiters. &ldquo;Super pages&rdquo; have been investigated to combine multiple smaller pages to create one larger page, which combines several translation look-aside buffer entries into one and allows each individual page creating the super page to be stored in non-contiguous memory locations. Nevertheless, all pages are usually stored in system memory or swap memory, which refers to storage areas for data that is not in system memory. Normally, the operating system, during execution of a program, keeps as much data in the system memory as possible, and leaves the rest of the data somewhere else, e.g., in a hard disc. When the system needs the data, it swaps some of the data in system memory with some of the data in the disc. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Based on the foregoing, it is clearly desirable that mechanisms be provided to solve the above deficiencies and related problems. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The present invention, in various embodiments, provides techniques for managing memory in computer systems. In one embodiment, each memory page is divided into relocation blocks located at various physical locations, and a relocation table is created with entries used to locate these blocks. To access memory for a particular piece of data, a program first uses a virtual address of the data, which, through a translation look-aside buffer, is translated into a physical address within the computer system. Using the relocation table, the physical address is then translated to a relocation address that identifies the relocation block containing the requested data. From the identified relocation block, the data is returned to the program with the original physical address. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In one aspect, the relocation blocks are much smaller than the pages maintained by the translation look-aside buffer. Moving these blocks, e.g., between memory and disc, from disc to buffers, etc., is therefore more efficient. In accordance with the techniques disclosed herein, a computer system can define a page to be as large as needed, and the bigger the page, the bigger the number of relocation blocks is divided from a page. Consequently, the conflicting effects of increasing or decreasing the page sizes in various current approaches are removed. Because the page is divided into smaller blocks, the problem of finding enough contiguous free memory to hold a large memory page is also eliminated. Additionally, each relocation block can be located at various locations, e.g., some blocks are in physical memory, some are in hard disc, etc. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The present invention is illustrated by way of example, and not by way of limitation, in the figures of the accompanying drawings in which like reference numerals refer to similar elements and in which: </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a processor system upon which embodiments of the invention may be implemented; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> shows a first embodiment of the relocation table in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2B</cross-reference> shows a second embodiment of the relocation table in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is used for illustration of converting a virtual address to a relocation address; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart illustrating a method for a memory access; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart detailing step <highlight><bold>420</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>; and </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> shows a computer system upon which embodiments of the invention may be implemented. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The present invention, in various embodiments, provides techniques for managing memory in computer systems. In one embodiment, each memory page is divided into relocation blocks located at various physical locations, and a relocation table is created with entries used to locate these blocks. In the following description, for the purposes of explanation, numerous specific details are set forth in order to provide a thorough understanding of the invention. However, it will be apparent to one skilled in the art that the invention may be practiced without these specific details. In other instances, well-known structures and devices are shown in block diagram form in order to avoid obscuring the invention. </paragraph>
+<paragraph id="P-0017" lvl="7"><number>&lsqb;0017&rsqb;</number> Hardware Overview </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a uni-processor system <highlight><bold>100</bold></highlight> upon which embodiments of the invention may be implemented. System <highlight><bold>100</bold></highlight> includes, in relevant part, a central processing unit (CPU) <highlight><bold>102</bold></highlight>, a memory system <highlight><bold>104</bold></highlight>, and a hard disc <highlight><bold>130</bold></highlight>. CPU <highlight><bold>102</bold></highlight> in turns includes a processor <highlight><bold>105</bold></highlight>, cache memory <highlight><bold>140</bold></highlight>, and a translation look-aside buffer <highlight><bold>150</bold></highlight>, while memory system <highlight><bold>104</bold></highlight> includes a memory controller <highlight><bold>110</bold></highlight>, physical memory <highlight><bold>120</bold></highlight>, and a relocation table <highlight><bold>160</bold></highlight>. Memory system <highlight><bold>104</bold></highlight> is commonly referred to as main memory from which program instructions are executed and program data are manipulated. System <highlight><bold>100</bold></highlight> normally runs by an operating system <highlight><bold>170</bold></highlight> resided in physical memory <highlight><bold>120</bold></highlight>. Processor <highlight><bold>105</bold></highlight>, memory controller <highlight><bold>110</bold></highlight>, physical memory <highlight><bold>120</bold></highlight>, hard disc <highlight><bold>130</bold></highlight>, cache memory <highlight><bold>140</bold></highlight>, translation look-aside buffer <highlight><bold>150</bold></highlight>, and operating system <highlight><bold>170</bold></highlight> are common computer components. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In this document, the configuration of system <highlight><bold>100</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is used only as an example; any other configuration of a processing system can be effectively used by the techniques disclosed herein. For example, either one or both of cache <highlight><bold>140</bold></highlight> and look-aside buffer <highlight><bold>150</bold></highlight> can be part of processor <highlight><bold>105</bold></highlight>, cache <highlight><bold>140</bold></highlight> may be outside of CPU <highlight><bold>102</bold></highlight> or part of memory system <highlight><bold>104</bold></highlight>, there may be more than one processor <highlight><bold>105</bold></highlight> in CPU <highlight><bold>102</bold></highlight>, etc. In one embodiment, processor <highlight><bold>105</bold></highlight>, upon an access to memory system <highlight><bold>104</bold></highlight> for some data, uses the data&apos;s virtual address on processor bus <highlight><bold>1005</bold></highlight>, which is translated by translation look-aside buffer <highlight><bold>150</bold></highlight> to a physical address on system bus <highlight><bold>1010</bold></highlight>. This physical address is in turns translated to a relocation address on memory bus <highlight><bold>1015</bold></highlight>. In various approaches, physical addresses on system bus <highlight><bold>1010</bold></highlight> are used to locate data stored in physical locations or physical memory corresponding to the virtual addresses on processor bus <highlight><bold>1005</bold></highlight>. However, in accordance with the techniques disclosed herein, to identify relocations blocks containing the requested data, relocation table <highlight><bold>160</bold></highlight>, in one embodiment, converts the physical addresses on system bus <highlight><bold>1010</bold></highlight> to relocation addresses on memory bus <highlight><bold>1015</bold></highlight>. Further, the requested data in the identified relocation block is then returned to processor <highlight><bold>105</bold></highlight> or the program accessing the data with the original physical address on system bus <highlight><bold>1010</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="7"><number>&lsqb;0020&rsqb;</number> The Relocation Table </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Relocation table <highlight><bold>160</bold></highlight> includes entries used to locate relocation blocks divided from memory pages. In one embodiment, relocation table <highlight><bold>160</bold></highlight> is part of memory controller <highlight><bold>110</bold></highlight>. However, relocation table <highlight><bold>160</bold></highlight> can be at any convenient locations such as in a memory unit, physical memory, main memory, cache, part of the processor, etc. In one embodiment, operating system <highlight><bold>170</bold></highlight>, through various program routines, updates relocation table <highlight><bold>160</bold></highlight>, and these routines are separate from other memory management routines of operating system <highlight><bold>170</bold></highlight> currently found in other approaches. During a standard access to memory system <highlight><bold>104</bold></highlight>, operating system <highlight><bold>170</bold></highlight>, CPU <highlight><bold>102</bold></highlight>, and the routines managing translation look-aside buffer <highlight><bold>150</bold></highlight> do not need to know that relocation table <highlight><bold>160</bold></highlight> exists. This is because memory system <highlight><bold>104</bold></highlight>, receiving the physical address on system bus <highlight><bold>1010</bold></highlight>, returns the accessed data with the same physical address. In some special situations, such as when a page fault occurs, the routines managing relocation table <highlight><bold>160</bold></highlight> may be invoked as part of the process for dealing with such page faults. In one embodiment, relocation table <highlight><bold>160</bold></highlight> is implemented in hardware such as in random access memory (RAM) or memory controller <highlight><bold>110</bold></highlight>, which normally can be run at high speed and thus does not add significant delay to a memory access. Alternatively, relocation table <highlight><bold>160</bold></highlight> can be implemented in software. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> shows a relocation table <highlight><bold>200</bold></highlight> being in use with memory system <highlight><bold>104</bold></highlight> as one embodiment of relocation table <highlight><bold>160</bold></highlight>. Table <highlight><bold>200</bold></highlight> includes a plurality of table entries, e.g., <highlight><bold>210</bold></highlight>-<highlight><bold>1</bold></highlight> to <highlight><bold>210</bold></highlight>-N for N entries. In one embodiment, if there is no reference to a relocation block <highlight><bold>220</bold></highlight>, an entry <highlight><bold>210</bold></highlight> is &ldquo;NIL.&rdquo; However, if a relocation block <highlight><bold>220</bold></highlight> has been allocated in memory system <highlight><bold>104</bold></highlight>, a corresponding entry <highlight><bold>210</bold></highlight> points to that relocation block <highlight><bold>220</bold></highlight> and holds the upper bits of the physical addresses on system bus <highlight><bold>1010</bold></highlight>. In this <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> example, entries <highlight><bold>210</bold></highlight>-<highlight><bold>1</bold></highlight>, <highlight><bold>210</bold></highlight>-<highlight><bold>2</bold></highlight>, and <highlight><bold>210</bold></highlight>-<highlight><bold>3</bold></highlight> point to relocation blocks <highlight><bold>220</bold></highlight>-<highlight><bold>1</bold></highlight>, <highlight><bold>220</bold></highlight>-<highlight><bold>2</bold></highlight>, and <highlight><bold>220</bold></highlight>-<highlight><bold>3</bold></highlight>, respectively. These relocation blocks are located at various random locations. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2B</cross-reference> shows a relocation table <highlight><bold>250</bold></highlight> as a second embodiment of table <highlight><bold>160</bold></highlight>. In this embodiment, a particular entry <highlight><bold>210</bold></highlight> corresponds to a particular relocation block <highlight><bold>220</bold></highlight>. For example, a first entry, e.g., <highlight><bold>210</bold></highlight>-<highlight><bold>1</bold></highlight>, corresponds to a first relocation block <highlight><bold>220</bold></highlight>-<highlight><bold>1</bold></highlight> in a block of memory, a second entry <highlight><bold>210</bold></highlight>-<highlight><bold>2</bold></highlight> corresponds to a second relocation block <highlight><bold>220</bold></highlight>-<highlight><bold>2</bold></highlight>, a third entry <highlight><bold>210</bold></highlight>-<highlight><bold>3</bold></highlight> corresponds to a third relocation block <highlight><bold>220</bold></highlight>-<highlight><bold>3</bold></highlight>, etc. Consequently, no pointer is needed to reference relocation blocks <highlight><bold>220</bold></highlight>. Dotted pointers shown in this <cross-reference target="DRAWINGS">FIG. 2B</cross-reference> illustrate that these pointers are implied, but no actual pointer exists. </paragraph>
+<paragraph id="P-0024" lvl="7"><number>&lsqb;0024&rsqb;</number> Entries of Relocation Table </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In one embodiment, an entry <highlight><bold>210</bold></highlight> includes address bits corresponding to the upper bits of the address maintained by translation look-aside buffer <highlight><bold>150</bold></highlight> for a memory access. When an address is used to access memory, the lower bits of the address correspond to the requested data&apos;s offset within a relocation block <highlight><bold>220</bold></highlight>, and the upper bits are used to index into relocation table <highlight><bold>160</bold></highlight>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In one embodiment, a fully-associative mechanism is used to perform a translation lookup in relocation table <highlight><bold>160</bold></highlight>. For example, the upper bits of an address presented to memory system <highlight><bold>104</bold></highlight> are compared to the address in each entry of relocation table <highlight><bold>160</bold></highlight>. In an alternative embodiment, a hash table is used to perform translation lookups. Further, the number of entries in relocation table <highlight><bold>160</bold></highlight> depends on a hash table and whether the algorithm used in the hash table can help locate the desired data. For example, if a hash table is used, and a good algorithm is not found, then the number of entries <highlight><bold>210</bold></highlight> in relocation table <highlight><bold>160</bold></highlight> can be increased to increase the effectiveness of the hash function. In accordance with techniques of the invention, the fully-associative method and hash functions are used as examples only, any other effective method for translation lookups can be used. </paragraph>
+<paragraph id="P-0027" lvl="7"><number>&lsqb;0027&rsqb;</number> Translating from Virtual Address to Relocation Address </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> for an illustration of converting a virtual address on processor bus <highlight><bold>1005</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> to a physical address on system bus <highlight><bold>1010</bold></highlight>, and then to a relocation address on memory bus <highlight><bold>1015</bold></highlight>, upon a memory access. In this example, a page is 16K, and is divided into four relocation blocks, each of which is 4K. The virtual address is 48 bits. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Box <highlight><bold>304</bold></highlight> shows the 48-bit virtual address represented by bits <highlight><bold>0</bold></highlight>-<highlight><bold>47</bold></highlight> in which bits <highlight><bold>0</bold></highlight>-<highlight><bold>13</bold></highlight> represent an offset. With a 14-bit (bits <highlight><bold>0</bold></highlight>-<highlight><bold>13</bold></highlight>) offset, all 16K (2**14) bytes can be addressed within a page. Thirty four bits <highlight><bold>14</bold></highlight>-<highlight><bold>47</bold></highlight> represent the virtual page numbers covering all 2**34 pages in the virtual address space. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Box <highlight><bold>308</bold></highlight> shows a 32-bit physical address, represented by bits <highlight><bold>0</bold></highlight>-<highlight><bold>31</bold></highlight>. Bits <highlight><bold>0</bold></highlight>-<highlight><bold>13</bold></highlight> also serve as an offset. Bits <highlight><bold>14</bold></highlight>-<highlight><bold>31</bold></highlight> are translated from bits <highlight><bold>14</bold></highlight>-<highlight><bold>47</bold></highlight> in box <highlight><bold>304</bold></highlight>, using translation look-aside buffer <highlight><bold>150</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Box <highlight><bold>312</bold></highlight> shows a 30-bit relocation address used for finding relocation blocks, which are represented by bits <highlight><bold>0</bold></highlight>-<highlight><bold>29</bold></highlight> and are typically located in physical memory <highlight><bold>120</bold></highlight>. Bits <highlight><bold>0</bold></highlight>-<highlight><bold>11</bold></highlight> represent the offset. With this 12-bit offset, all 4K (2*12) bytes can be addressed within a relocation block. Bits <highlight><bold>12</bold></highlight>-<highlight><bold>29</bold></highlight> are translated from bits <highlight><bold>14</bold></highlight>-<highlight><bold>31</bold></highlight> in box <highlight><bold>308</bold></highlight> by relocation table <highlight><bold>160</bold></highlight> to locate a relocation block in physical memory <highlight><bold>120</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Box <highlight><bold>316</bold></highlight> shows the addresses translated from bits <highlight><bold>12</bold></highlight>-<highlight><bold>29</bold></highlight> in box <highlight><bold>312</bold></highlight>. Each address corresponds to an entry in relocation table <highlight><bold>160</bold></highlight>, and identifies a relocation block pointed to by the entry. </paragraph>
+<paragraph id="P-0033" lvl="7"><number>&lsqb;0033&rsqb;</number> Creation of the Relocation Table and Relocation Blocks </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In one embodiment, relocation table <highlight><bold>160</bold></highlight> implemented in hardware is created when the computer system is designed. In this embodiment, a certain amount of hardware space is allocated for table <highlight><bold>160</bold></highlight> and for entries <highlight><bold>210</bold></highlight>. In an alternative embodiment, table <highlight><bold>160</bold></highlight> implemented in software is created and initialized during system boot-up. Table <highlight><bold>160</bold></highlight> can be created having a fixed size or a variable size in which some space is first allocated and additional space is appended as necessary. When table <highlight><bold>160</bold></highlight> is initially created, all entries <highlight><bold>210</bold></highlight> are &ldquo;NIL,&rdquo; indicating that entries <highlight><bold>210</bold></highlight> do not point to any relocation block. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> In one embodiment, when operating system <highlight><bold>170</bold></highlight> allocates memory pages, relocations blocks <highlight><bold>220</bold></highlight> corresponding to those pages are created. Operating system <highlight><bold>170</bold></highlight> first allocates a virtual memory page corresponding to a physical address range. The physical address range is then translated into relocation address blocks for each relocation block <highlight><bold>220</bold></highlight> contained within the physical page. For each relocation block <highlight><bold>220</bold></highlight>, a corresponding table entry <highlight><bold>210</bold></highlight> is updated with information to locate the relocation block. In one embodiment, relocation blocks <highlight><bold>220</bold></highlight> are of the same size, but they can be of different sizes. Further, relocation blocks <highlight><bold>220</bold></highlight> corresponding to a page are concurrently in physical memory. Alternatively, some of the blocks may be in physical memory, some other blocks may be in hard disc or other convenient locations including swap memory. In one embodiment, even though the pages have been divided into relocation blocks, the computer system still considers the relocation blocks divided from a page as a page. </paragraph>
+<paragraph id="P-0036" lvl="7"><number>&lsqb;0036&rsqb;</number> Method Steps in Accordance with One Embodiment </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart illustrating a method for a memory access in accordance with one embodiment. In step <highlight><bold>404</bold></highlight>, a program is performing a memory access for some data. In one embodiment, the program uses a virtual address of the data for this memory access. Those skilled in the art will recognize that a memory access includes finding a memory page having the address to be accessed. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In step <highlight><bold>408</bold></highlight>, it is determined whether the accessed page is in translation look-aside buffer <highlight><bold>150</bold></highlight>. If the page is not in translation look-aside buffer <highlight><bold>150</bold></highlight>, then in step <highlight><bold>412</bold></highlight> operating system <highlight><bold>170</bold></highlight> finds the page, and in step <highlight><bold>416</bold></highlight> translation look-aside buffer <highlight><bold>150</bold></highlight> is updated to reflect that the page is in translation look-aside buffer <highlight><bold>150</bold></highlight>. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In step <highlight><bold>418</bold></highlight>, it is determined whether the requested data is in cache <highlight><bold>140</bold></highlight>. If the data is in cache <highlight><bold>140</bold></highlight>, then the data is returned to the program in step <highlight><bold>424</bold></highlight>. However, if the data is not in cache <highlight><bold>140</bold></highlight>, then a memory access is performed in step <highlight><bold>420</bold></highlight>, and after a successful memory access the data is returned in step <highlight><bold>424</bold></highlight>. In one embodiment, the data is returned to the program with the original physical address. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> In the above illustration, determining whether the page is in translation look-aside buffer <highlight><bold>150</bold></highlight> and in cache <highlight><bold>140</bold></highlight> can be done in parallel. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart illustrating the steps in performing step <highlight><bold>420</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. In step <highlight><bold>504</bold></highlight>, relocation table <highlight><bold>160</bold></highlight> is checked. In step <highlight><bold>508</bold></highlight>, it is determined whether the address of the data to be accessed is in relocation table <highlight><bold>160</bold></highlight>. If the address is in relocation table <highlight><bold>160</bold></highlight>, then, using the entries in relocation table <highlight><bold>160</bold></highlight>, the data is located in step <highlight><bold>528</bold></highlight>. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> However, if the address is not in relocation table <highlight><bold>160</bold></highlight>, which indicates that the relocation block covering the address, in one embodiment, is not in physical memory, then, in step <highlight><bold>512</bold></highlight>, a signal is sent to operating system <highlight><bold>170</bold></highlight>. In step <highlight><bold>516</bold></highlight>, operating system <highlight><bold>170</bold></highlight>, through appropriate program routines, loads the relocation block corresponding to the address to physical memory. Operating system <highlight><bold>170</bold></highlight> updates relocation table <highlight><bold>160</bold></highlight> in step <highlight><bold>520</bold></highlight> to reflect that the page can now be located using an entry in relocation table <highlight><bold>160</bold></highlight>. </paragraph>
+<paragraph id="P-0043" lvl="7"><number>&lsqb;0043&rsqb;</number> Benefit of the Invention </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> In one aspect, relocation blocks <highlight><bold>220</bold></highlight> are much smaller than the page sizes maintained by translation look-aside buffer <highlight><bold>150</bold></highlight>. It is therefore more efficient to move these blocks, e.g., between memory and disc, from disc to buffers, etc. A computer system can define a page to be as large as needed, and the bigger the page, the bigger the number of relocation blocks is divided from the page. Consequently, the conflicting effects of increasing or decreasing the page sizes in various current approaches are removed. Because the page is divided into smaller blocks, the problem of finding enough contiguous free memory to hold a large memory page is also eliminated. Additionally, each relocation block <highlight><bold>220</bold></highlight> can be located at various locations, e.g., some blocks are in physical memory, some are in hard disc, swap memory, etc. Techniques of the invention are advantageously applicable in case of larger sizes, e.g., gigabytes. </paragraph>
+<paragraph id="P-0045" lvl="7"><number>&lsqb;0045&rsqb;</number> Computer System Overview </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram showing a computer system <highlight><bold>600</bold></highlight> upon which embodiments of the invention may be implemented. In one embodiment, computer system <highlight><bold>600</bold></highlight> includes a central processing unit (CPU) <highlight><bold>604</bold></highlight>, random access memories (RAMs) <highlight><bold>608</bold></highlight>, read-only memories (ROMs) <highlight><bold>612</bold></highlight>, a storage device <highlight><bold>616</bold></highlight>, and a communication interface <highlight><bold>620</bold></highlight>, all of which are connected to a bus <highlight><bold>624</bold></highlight>. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> Processor <highlight><bold>604</bold></highlight> controls logic, processes information, and coordinates activities within computer system <highlight><bold>600</bold></highlight>. In one embodiment, processor <highlight><bold>604</bold></highlight> executes instructions stored in RAMs <highlight><bold>608</bold></highlight> and ROMs <highlight><bold>612</bold></highlight>, by, for example, coordinating the movement of data from input device <highlight><bold>628</bold></highlight> to display device <highlight><bold>632</bold></highlight>. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> RAMs <highlight><bold>608</bold></highlight>, usually being referred to as main memory, temporarily store information and instructions to be executed by processor <highlight><bold>604</bold></highlight>. Information in RAMs <highlight><bold>608</bold></highlight> may be obtained from input device <highlight><bold>628</bold></highlight> or generated by processor <highlight><bold>604</bold></highlight> as part of the algorithmic processes required by the instructions that are executed by processor <highlight><bold>604</bold></highlight>. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> ROMs <highlight><bold>612</bold></highlight> store information and instructions that, once written in a ROM chip, are read-only and are not modified or removed. In one embodiment, ROMs <highlight><bold>612</bold></highlight> store commands for configurations and initial operations of computer system <highlight><bold>600</bold></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> Storage device <highlight><bold>616</bold></highlight>, such as floppy disks, disk drives, or tape drives, durably stores information for used by computer system <highlight><bold>600</bold></highlight>. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Communication interface <highlight><bold>620</bold></highlight> enables computer system <highlight><bold>600</bold></highlight> to interface with other computers or devices. Communication interface <highlight><bold>620</bold></highlight> may be, for example, a modem, an integrated services digital network (ISDN) card, a local area network (LAN) port, etc. Those skilled in the art will recognize that modems or ISDN cards provide data communications via telephone lines while a LAN port provides data communications via a LAN. Communication interface <highlight><bold>620</bold></highlight> may also allow wireless communications. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Bus <highlight><bold>624</bold></highlight> can be any communication mechanism for communicating information for use by computer system <highlight><bold>600</bold></highlight>. In the example of <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, bus <highlight><bold>624</bold></highlight> is a media for transferring data between processor <highlight><bold>604</bold></highlight>, RAMs <highlight><bold>608</bold></highlight>, ROMs <highlight><bold>612</bold></highlight>, storage device <highlight><bold>616</bold></highlight>, communication interface <highlight><bold>620</bold></highlight>, etc. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> Computer system <highlight><bold>600</bold></highlight> is typically coupled to an input device <highlight><bold>628</bold></highlight>, a display device <highlight><bold>632</bold></highlight>, and a cursor control <highlight><bold>636</bold></highlight>. Input device <highlight><bold>628</bold></highlight>, such as a keyboard including alphanumeric and other keys, communicates information and commands to processor <highlight><bold>604</bold></highlight>. Display device <highlight><bold>632</bold></highlight>, such as a cathode ray tube (CRT), displays information to users of computer system <highlight><bold>600</bold></highlight>. Cursor control <highlight><bold>636</bold></highlight>, such as a mouse, a trackball, or cursor direction keys, communicates direction information and commands to processor <highlight><bold>604</bold></highlight> and controls cursor movement on display device <highlight><bold>632</bold></highlight>. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Computer system <highlight><bold>600</bold></highlight> may communicate with other computers or devices through one or more networks. For example, computer system <highlight><bold>600</bold></highlight>, using communication interface <highlight><bold>620</bold></highlight>, communicates through a network <highlight><bold>640</bold></highlight> to another computer <highlight><bold>644</bold></highlight> connected to a printer <highlight><bold>648</bold></highlight>, or through the world wide web <highlight><bold>652</bold></highlight> to a server <highlight><bold>656</bold></highlight>. The world wide web <highlight><bold>652</bold></highlight> is commonly referred to as the &ldquo;Internet.&rdquo; Alternatively, computer system <highlight><bold>600</bold></highlight> may access the Internet <highlight><bold>652</bold></highlight> via network <highlight><bold>640</bold></highlight>. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Computer system <highlight><bold>600</bold></highlight> may be used to implement the techniques described above. In various embodiments, processor <highlight><bold>604</bold></highlight> performs the steps of the techniques by executing instructions brought to RAMs <highlight><bold>608</bold></highlight>. In alternative embodiments, hard-wired circuitry may be used in place of or in combination with software instructions to implement the described techniques. Consequently, embodiments of the invention are not limited to any one or a combination of software, hardware, or circuitry. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> Instructions executed by processor <highlight><bold>604</bold></highlight> may be stored in and carried through one or more computer-readable media, which refer to any medium from which a computer reads information. Computer-readable media may be, for example, a floppy disk, a hard disk, a zip-drive cartridge, a magnetic tape, or any other magnetic medium, a CD-ROM, a CD-RAM, a DVD-ROM, a DVD-RAM, or any other optical medium, paper-tape, punchcards, or any other physical medium having patterns of holes, a RAM, a ROM, an EPROM, or any other memory chip or cartridge. Computer-readable media may also be coaxial cables, copper wire, fiber optics, acoustic, or light waves, etc. As an example, the instructions to be executed by processor <highlight><bold>604</bold></highlight> are in the form of one or more software programs and are initially stored in a CD-ROM being interfaced with computer system <highlight><bold>600</bold></highlight> via bus <highlight><bold>624</bold></highlight>. Computer system <highlight><bold>600</bold></highlight> loads these instructions in RAMs <highlight><bold>608</bold></highlight>, executes some instructions, and sends some instructions via communication interface <highlight><bold>620</bold></highlight>, a modem, and a telephone line to a network, e.g. network <highlight><bold>640</bold></highlight>, the Internet <highlight><bold>652</bold></highlight>, etc. A remote computer, receiving data through a network cable, executes the received instructions and sends the data to computer system <highlight><bold>600</bold></highlight> to be stored in storage device <highlight><bold>616</bold></highlight>. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Computer system <highlight><bold>600</bold></highlight> may be implemented to include system <highlight><bold>100</bold></highlight>. For example, CPU <highlight><bold>604</bold></highlight> may be implemented as CPU <highlight><bold>102</bold></highlight>, RAM <highlight><bold>608</bold></highlight> as memory system <highlight><bold>104</bold></highlight>, storage device <highlight><bold>616</bold></highlight> as hard disc <highlight><bold>130</bold></highlight>, etc. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> In the foregoing specification, the invention has been described with reference to specific embodiments thereof. However, it will be evident that various modifications and changes may be made thereto without departing from the broader spirit and scope of the invention. Accordingly, the specification and drawings are to be regarded as illustrative rather than as restrictive. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for managing memory in a computer system, comprising: 
+<claim-text>for at least one memory page, 
+<claim-text>dividing the page into a plurality of relocation blocks, and </claim-text>
+<claim-text>placing the plurality of relocation blocks at a plurality of locations; and </claim-text>
+</claim-text>
+<claim-text>using a relocation table having a plurality of entries to locate the relocation blocks at the plurality of locations; </claim-text>
+<claim-text>wherein, upon a memory access, using the relocation table to convert an address of the memory page to a relocation address of a relocation block containing the data intended for the memory access. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprises the step of converting a virtual address of the data to the address of the memory page. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprises the step of allocating the plurality of relocation blocks corresponding to the memory page upon receiving the address of the memory page. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further comprises the step of corresponding each entry of the plurality of entries to a particular location of a relocation block. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A system for managing memory in a computer system, comprising: 
+<claim-text>a plurality of relocation blocks located at a plurality of locations; wherein a set of relocation blocks is divided from a memory page; </claim-text>
+<claim-text>a relocation table having a plurality of entries used to locate the relocation blocks at the plurality of locations; and </claim-text>
+<claim-text>means for using the relocation table to convert an address of the memory page to a relocation address of a relocation block containing the data intended for a memory access. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the address of the memory page was translated from a virtual address of the data. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> further comprises means for allocating the plurality of relocation blocks corresponding to the memory page upon receiving the address of the memory page. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein each entry of the plurality of entries corresponds to a particular location of a relocation block. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A computer-readable medium embodying instructions that cause a computer to perform a method for managing memory in a computer system, the method comprising the steps of: 
+<claim-text>for at least one memory page, 
+<claim-text>dividing the page into a plurality of relocation blocks, and </claim-text>
+<claim-text>placing the plurality of relocation blocks at a plurality of locations; and </claim-text>
+</claim-text>
+<claim-text>using a relocation table having a plurality of entries to locate the relocation blocks at the plurality of locations; </claim-text>
+<claim-text>wherein, upon a memory access, using the relocation table to convert an address of the memory page to a relocation address of a relocation block containing the data intended for the memory access. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the method further comprises the step of converting a virtual address of the data to the address of the memory page. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the method further comprises the step of allocating the plurality of relocation blocks corresponding to the memory page upon receiving the address of the memory page. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the method further comprises the step of corresponding each entry of the plurality of entries to a particular location of a relocation block.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005249A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005249A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005249A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005249A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005249A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005249A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005249A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030005249A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

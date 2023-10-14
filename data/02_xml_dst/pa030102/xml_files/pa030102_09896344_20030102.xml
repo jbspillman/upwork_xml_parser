@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002677A1-20030102-D00000.TIF SYSTEM "US20030002677A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002677A1-20030102-D00001.TIF SYSTEM "US20030002677A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002677A1-20030102-D00002.TIF SYSTEM "US20030002677A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002677A1-20030102-D00003.TIF SYSTEM "US20030002677A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002677A1-20030102-D00004.TIF SYSTEM "US20030002677A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002677A1-20030102-D00005.TIF SYSTEM "US20030002677A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030002677A1-20030102-D00006.TIF SYSTEM "US20030002677A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002677</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896344</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>380</class>
+<subclass>265000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Software implementations of input independent LFSR-based algorithms</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Amit</given-name>
+<family-name>Dagan</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Haifa</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Orly</given-name>
+<family-name>Abramovich</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Netanya</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Marina Portnova</name-1>
+<name-2>BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP</name-2>
+<address>
+<address-1>12400 Wilshire Boulevard, Seventh Floor</address-1>
+<city>Los Angeles</city>
+<state>CA</state>
+<postalcode>90025-1026</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and apparatus for software implementations of input independent LFSR-based algorithms are provided. In one embodiment, an initial location is identified in a cyclic sequence of entries representing a set of possible output values of a Linear Feedback Shift Register. Based on the initial location and a predefined group size, an initial group of entries is identified in the cyclic sequence of entries. Further, a predefined operation is performed on the initial group of entries in the cyclic sequence and an initial portion of input data. The predefined operation is repeated for each remaining portion of input data and a corresponding group of entries in the cyclic sequence. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to the field of telecommunication, and more specifically to optimizing telecommunication algorithms that use a Linear Feedback Shift Register. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Open Systems Interconnection (OSI) is a standard description or &ldquo;reference model&rdquo; for how messages should be transmitted between any two points in a telecommunication network. The purpose of OSI is to guide product implementors so that their products will consistently work with other products. The reference model defines seven layers of functions that take place at each end of communication. The first layer (also referred to as the physical layer) conveys the bit stream through the network at the electrical and mechanical levels. The physical layer provides the hardware means of sending and receiving data on a carrier. The physical layer is defined by various specifications. For instance, the IEEE 802.11a standard, IEEE std. 802.11a-1999, published Dec. 30, 1999, defines the physical layer for wireless LAN communications, the Bluetooth&trade; specification, Bluetooth&trade;, v1.0 B, published Dec. 1, 1999, defines the physical layer for communications involving mobile phones, computers, and personal digital assistants, etc. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> A number of current physical layer algorithms use Linear Feedback Shift Register (LFSR) to process input data. LFSR is an n-element shift register where values in each element may be shifted into an adjacent element. The values move from element to element in response to the clock. The values in some elements may be combined by a boolean logic operation. Typically, an LFSR-based algorithm performs one or more operations on LFSR output and the stream of input data. Examples of LFSR-based algorithms include the &ldquo;Scrambler&rdquo; and &ldquo;Pilot Insertion&rdquo; algorithms specified as part of the IEEE 802.11a-1999 standard, and the &ldquo;Whitening&rdquo; algorithm specified as part of the Bluetooth Specification Version 1.0B. The &ldquo;Scrambler&rdquo; algorithm is used to scramble the transmitted packets and to descramble the received packets. The &ldquo;Scrambler&rdquo; algorithm and the &ldquo;Whitening&rdquo; algorithm are capable of randomizing the data from highly redundant patterns and minimizing DC bias in the transmitted packets. The &ldquo;Pilot Insertion&rdquo; algorithm is responsible for adding known values into the transmitted signal so that the receiver can better tune the analog side. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Current implementations of the above algorithms use the dedicated hardware (i.e., an LFSR machine) to perform required operations on input data. The use of LFSR limits the size of input data that can be processed during one cycle. Specifically, hardware implementations of these algorithms can only process one bit of input data per cycle, resulting in inefficient and slow performance. Thus, a method for optimizing the performance of the above algorithms is needed. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The present invention is illustrated by way of example, and not by way of limitation, in the figures of the accompanying drawings and in which like reference numerals refer to similar elements and in which: </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates an example of a hardware implementation of a scrambler algorithm, according to a prior art embodiment; </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is block diagram of a system for performing LFSR-based telecommunication algorithms, according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow diagram of a method for performing LFSR-based telecommunication algorithms, according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow diagram of a method for performing a scrambler algorithm, according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates data structures used in software implementation of the &ldquo;Scrambler&rdquo; algorithm, according to one embodiment of the present invention; and </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram of one embodiment of a processing system. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF EMBODIMENTS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> A method and apparatus for performing input independent LFSR-based algorithms are described. In the following description, for purposes of explanation, numerous specific details are set forth in order to provide a thorough understanding of the present invention. It will be apparent, however, to one skilled in the art that the present invention can be practiced without these specific details. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Some portions of the detailed descriptions which follow are presented in terms of algorithms and symbolic representations of operations on data bits within a computer memory. These algorithmic descriptions and representations are the means used by those skilled in the data processing arts to most effectively convey the substance of their work to others skilled in the art. An algorithm is here, and generally, conceived to be a self-consistent sequence of steps leading to a desired result. The steps are those requiring physical manipulations of physical quantities. Usually, though not necessarily, these quantities take the form of electrical or magnetic signals capable of being stored, transferred, combined, compared, and otherwise manipulated. It has proven convenient at times, principally for reasons of common usage, to refer to these signals as bits, values, elements, symbols, characters, terms, numbers, or the like. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> It should be borne in mind, however, that all of these and similar terms are to be associated with the appropriate physical quantities and are merely convenient labels applied to these quantities. Unless specifically stated otherwise as apparent from the following discussions, it is appreciated that throughout the present invention, discussions utilizing terms such as &ldquo;processing&rdquo; or &ldquo;computing&rdquo; or &ldquo;calculating&rdquo; or &ldquo;determining&rdquo; or &ldquo;displaying&rdquo; or the like, may refer to the action and processes of a computer system, or similar electronic computing device, that manipulates and transforms data represented as physical (electronic) quantities within the computer system&apos;s registers and memories into other data similarly represented as physical quantities within the computer system memories or registers or other such information storage, transmission or display devices. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The present invention also relates to apparatus for performing the operations herein. This apparatus may be specially constructed for the required purposes, or it may comprise a general purpose computer selectively activated or reconfigured by a computer program stored in the computer. Such a computer program may be stored in a computer readable storage medium, such as, but is not limited to, any type of disk including floppy disks, optical disks, CD-ROMs, and magnetic-optical disks, read-only memories (ROMs), random access memories (RAMs), EPROMs, EEPROMs, magnetic or optical cards, or any type of media suitable for storing electronic instructions, and each coupled to a computer system bus. Instructions are executable using one or more processing devices (e.g., processors, central processing units, etc.). </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The algorithms and displays presented herein are not inherently related to any particular computer or other apparatus. Various general purpose machines may be used with programs in accordance with the teachings herein, or it may prove convenient to construct more specialized apparatus to perform the required method steps. The required structure for a variety of these machines will appear from the description below. In addition, the present invention is not described with reference to any particular programming language. It will be appreciated that a variety of programming languages may be used to implement the teachings of the invention as described herein. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In the following detailed description of the embodiments, reference is made to the accompanying drawings that show, by way of illustration, specific embodiments in which the invention may be practiced. In the drawings, like numerals describe substantially similar components throughout the several views. These embodiments are described in sufficient detail to enable those skilled in the art to practice the invention. Other embodiments may be utilized and structural, logical, and electrical changes may be made without departing from the scope of the present invention. Moreover, it is to be understood that the various embodiments of the invention, although different, are not necessarily mutually exclusive. For example, a particular feature, structure, or characteristic described in one embodiment may be included within other embodiments. The following detailed description is, therefore, not to be taken in a limiting sense, and the scope of the present invention is defined only by the appended claims, along with the full scope of equivalents to which such claims are entitled. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The present invention relates to software implementations of telecommunication algorithms that use a linear feedback shift register (LFSR) with a finite sequence of storage element values that are not dependent on input data. Such algorithms may include, for example, the &ldquo;Scrambler&rdquo; and &ldquo;Pilot Insertion&rdquo; algorithms defined in the IEEE 802.11a standard, the &ldquo;Whitening&rdquo; algorithm defined in the Bluetooth&trade; specification, etc. Current implementations of the above algorithms process one bit of input data per cycle using an LFSR machine. LFSR is a structure for producing sequences that includes n storage elements used to execute a generator polynomial, as will be described in more detail below. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a machine <highlight><bold>100</bold></highlight> for implementing the &ldquo;Scrambler&rdquo; algorithm, according to a prior art embodiment. As described above, the &ldquo;Scrambler&rdquo; algorithm is capable of randomizing data from highly redundant patterns and minimizing DC bias in the transmitted packet. The &ldquo;Scrambler&rdquo; algorithm is used to scramble the transmitted packets and to descramble the received packets. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, machine <highlight><bold>100</bold></highlight> includes LFSR <highlight><bold>112</bold></highlight> which consists of 7 storage elements x<highlight><superscript>1 </superscript></highlight>through x<highlight><superscript>7</superscript></highlight>. The values in storage elements x<highlight><superscript>7 </superscript></highlight>and x<highlight><superscript>4 </superscript></highlight>are combined by an exclusive-OR (XOR) operator <highlight><bold>110</bold></highlight> and the result is connected to the first element x<highlight><superscript>1</superscript></highlight>, based on the generator polynomial S(x)&equals;x<highlight><superscript>7</superscript></highlight>&plus;x<highlight><superscript>4</superscript></highlight>&plus;1. Machine <highlight><bold>100</bold></highlight> also includes a XOR operator <highlight><bold>106</bold></highlight> to combine the resulting output value of LFSR <highlight><bold>112</bold></highlight> with input data <highlight><bold>102</bold></highlight>, thereby generating scrambled output data <highlight><bold>108</bold></highlight>. Specifically, the &ldquo;Scrambler&rdquo; algorithm begins with initializing LFSR <highlight><bold>112</bold></highlight> with the appropriate value, and then running input data <highlight><bold>102</bold></highlight>, bit-by-bit, on machine <highlight><bold>100</bold></highlight> to generate scrambled output data <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Machines similar to machine <highlight><bold>100</bold></highlight> are used in hardware implementations of the &ldquo;Pilot Insertion&rdquo; algorithm and the &ldquo;Whitening&rdquo; algorithm. Although the number of LFSR storage elements may be different for these algorithms, they all use LFSR with a finite sequence of possible states. An LFSR state represents a particular combination of values of LFSR storage elements. In one embodiment, the number of LFSR possible states is equal to 2<highlight><superscript>n</superscript></highlight>-1, where n is the number of LFSR storage elements. For instance, for the &ldquo;Scrambler&rdquo; algorithm, the number of LFSR states is <highlight><bold>127</bold></highlight>. Alternatively, the number of LFSR possible states may be equal to a certain portion of the result from the 2<highlight><superscript>n </superscript></highlight>expression. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Further, for all of the above algorithms, the sequence of LFSR states is cyclic, i.e., the last state of LFSR is followed by the first state of LFSR in the sequence. The current state of LFSR depends only on the prior state of LFSR, and not on input data. Accordingly, the output of LFSR (the value at point <highlight><bold>104</bold></highlight>) does not depend on the input data either. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The present invention provides a mechanism for performing such algorithms as &ldquo;Scrambler&rdquo;, &ldquo;Whitening&rdquo;, and &ldquo;Pilot Insertion&rdquo;, without implementing LFSR <highlight><bold>112</bold></highlight>. It should be emphasized, however, that the mechanism of the present invention is not limited to the above algorithms and can be used for any other algorithm that is based on LFSR with a fixed cyclic sequence of states that are not dependent on input data. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is block diagram of a system <highlight><bold>200</bold></highlight> for performing LFSR-based telecommunication algorithms, according to one embodiment of the present invention. System <highlight><bold>200</bold></highlight> includes data structures <highlight><bold>210</bold></highlight> and <highlight><bold>212</bold></highlight>, a processing module <highlight><bold>202</bold></highlight>, and an output buffer <highlight><bold>208</bold></highlight>. Data structure <highlight><bold>210</bold></highlight> includes a cyclic sequence of entries that represent a set of possible output values of LFSR (value at point <highlight><bold>104</bold></highlight>). As described above, algorithms being implemented by the present invention (e.g., &ldquo;Scrambler&rdquo;, &ldquo;Whitening&rdquo;, &ldquo;Pilot Insertion&rdquo;, etc.) are based on LFSR with a fixed cyclic group of LFSR states. Using these states, a cyclic sequence of LFSR output values is determined and stored as data structure <highlight><bold>210</bold></highlight>. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Data structure <highlight><bold>212</bold></highlight> includes an array of location entries. In one embodiment, each location entry contains a state of LFSR and a corresponding location in data structure <highlight><bold>210</bold></highlight>. In one embodiment, each location identifies a certain record number in data structure <highlight><bold>210</bold></highlight>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Processing module <highlight><bold>202</bold></highlight> is responsible for processing input data <highlight><bold>214</bold></highlight> using the entries in cyclic sequence <highlight><bold>210</bold></highlight>. In one embodiment, processing module <highlight><bold>202</bold></highlight> includes a location identifier <highlight><bold>204</bold></highlight> and a data manipulator <highlight><bold>206</bold></highlight>. Location identifier <highlight><bold>204</bold></highlight> is responsible for identifying the initial location in cyclic sequence <highlight><bold>210</bold></highlight> from which the performance of a required operation should start. In one embodiment, the initial location is identified using array <highlight><bold>212</bold></highlight>. That is, the initial location is selected from a number of location values stored in array <highlight><bold>212</bold></highlight> based on a given initial state of LFSR, as will be described in more detail below. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Data manipulator <highlight><bold>206</bold></highlight> is responsible for identifying an initial group of entries in cyclic sequence <highlight><bold>210</bold></highlight> based on a predefined group size and the initial location determined by location identifier <highlight><bold>204</bold></highlight>. The initial group includes a group of entries of the predefined size that follow the initial location in cyclic sequence <highlight><bold>210</bold></highlight>. Data manipulator <highlight><bold>206</bold></highlight> is further responsible for performing a predefined operation on the initial group of entries in cyclic sequence <highlight><bold>210</bold></highlight> and an initial portion of input data <highlight><bold>214</bold></highlight>. The size of the initial portion of input data <highlight><bold>214</bold></highlight> is the same as the size of the initial group of entries in cyclic sequence <highlight><bold>210</bold></highlight>. The predefined operation may include one or more operations required by the LFSR-based algorithm. For example, for the &ldquo;Scrambler&rdquo; algorithm, the predefined operation is an XOR operation. Other examples of predefined operations may include various boolean logic operations, data interleaving operations, data encoding operations, etc. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The predefined operation is repeated for each of the remaining portions of input data <highlight><bold>214</bold></highlight> and a corresponding group of entries in cyclic sequence <highlight><bold>210</bold></highlight>. The size of each remaining portion of input data <highlight><bold>214</bold></highlight> and the size of each corresponding group of entries in cyclic sequence <highlight><bold>210</bold></highlight> are the same as the size of the initial group of entries in cyclic sequence <highlight><bold>210</bold></highlight>. Data generated by data manipulator <highlight><bold>206</bold></highlight> is then stored in an output buffer <highlight><bold>208</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow diagram of a method <highlight><bold>300</bold></highlight> for performing an LFSR-based algorithm, according to one embodiment of the present invention. At processing block <highlight><bold>304</bold></highlight>, an initial location from which the performance of the LFSR-based algorithm should start is identified in a cyclic sequence of entries representing a set of possible output values of LFSR. Because the present invention is used with algorithms that are based on LFSR with a fixed group of states that are not dependent on input data, all possible output values can be calculated before the algorithm is performed without implementing the LFSR itself. In one embodiment, the initial location is identified using an array of location entries. In one embodiment, each location entry in this array includes a state of LFSR and a corresponding location in the cyclic sequence of entries. The initial location can be found by searching the array of location entries using a given initial state of LFSR. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> At processing block <highlight><bold>306</bold></highlight>, an initial group of entries is identified in the cyclic sequence based on the initial location and a predefined group size. In one embodiment, the predefined group size is the size of a register in which the initial group of entries is stored when identified. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> At processing block <highlight><bold>308</bold></highlight>, an initial portion of input data is identified based on the predefined group size. In one embodiment, the initial portion of input data is then stored in a second register. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> At processing block <highlight><bold>310</bold></highlight>, a predefined operation is performed on the initial portion of input data and the initial group of entries in the cyclic sequence. The predefined operation may include one or more operations required by the LFSR-based algorithm. For example, for the &ldquo;Scrambler&rdquo; algorithm, the predefined operation is an XOR operation. In one embodiment, the result of the predefined operation is stored in a third register. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> At decision box <highlight><bold>314</bold></highlight>, a determination is made as to whether the entire input data has been processed. If the determination is negative, processing block <highlight><bold>316</bold></highlight> is performed. Otherwise, method <highlight><bold>300</bold></highlight> ends. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> At processing block <highlight><bold>316</bold></highlight>, the predefined operation is performed for the next portion of input data and the next group of entries in the cyclic sequence. The size of each group in the cyclic sequence is the same as the size of each portion of input data. This size is equal to the size of the initial portion of input data unless the size of the remaining input data is smaller than the size of the initial portion of input data. That is, the size of the two groups is also determined by the size of the remaining input data. Processing block <highlight><bold>316</bold></highlight> is repeated until the entire input data is processed. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Accordingly, the present invention provides a mechanism for processing a group of input data bits per cycle, as opposed to bit-by-bit processing in the dedicated hardware. As a result, the performance of LFSR-based algorithms is improved. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow diagram of a method <highlight><bold>400</bold></highlight> for performing a scrambler algorithm, according to one embodiment of the present invention. As described above, the &ldquo;Scrambler&rdquo; algorithm is used to scramble the transmitted packets and to descramble the received packets. The &ldquo;Scrambler&rdquo; algorithm uses the generator polynomial S(x)&equals;x<highlight><superscript>7</superscript></highlight>&plus;x<highlight><superscript>4</superscript></highlight>&plus;1. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> At processing block <highlight><bold>404</bold></highlight>, cyclic sequence C is defined. Entries in the cyclic sequence C represent the set of all possible output values of the LFSR. The output values of LFSR are determined using the above generator polynomial. In one embodiment, cyclic sequence C is created in advance and stored in memory for subsequent use during each execution of the &ldquo;Scrambler&rdquo; algorithm. Alternatively, cyclic sequence C is created during the execution of the &ldquo;Scrambler&rdquo; algorithm. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> At processing block <highlight><bold>406</bold></highlight>, array A is defined. Each entry in array A includes a state of LFSR and a corresponding location in cyclic sequence C. In one embodiment, array A is created in advance and stored in memory for subsequent use during each execution of the &ldquo;Scrambler&rdquo; algorithm. Alternatively, array A is created during the execution of the &ldquo;Scrambler&rdquo; algorithm. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates data structures used in software implementation of the &ldquo;Scrambler&rdquo; algorithm, according to one embodiment of the present invention. These data structures include cyclic sequence C and array A. In cyclic sequence C (<highlight><bold>508</bold></highlight>), the entries represent the set of possible output values of the LFSR. Each entry is determined using a corresponding LFSR state <highlight><bold>502</bold></highlight>. Each binary representation of LFSR state <highlight><bold>502</bold></highlight> is converted into a decimal value <highlight><bold>504</bold></highlight>. Array A includes a group of LFSR states <highlight><bold>512</bold></highlight> represented in decimal form and corresponding locations in cyclic sequence C. Each location identifies a record number <highlight><bold>506</bold></highlight> in cyclic sequence C. Array A is sorted by state <highlight><bold>512</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Returning to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, at processing block <highlight><bold>408</bold></highlight>, an initial LFSR state from which the required operation should start is identified. In one embodiment, the initial state of LFSR is encoded in the input data (e.g., in the first 7 bits of input data). In this embodiment (which may be used to descramble the received packets), the appropriate portion of the input data is decoded to determine the initial state of LFSR. Alternatively, an actual value of the initial state may be provided (e.g., by a prior phase), and no decoding is needed. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> At processing block <highlight><bold>410</bold></highlight>, initial location P from which the required operation should start is determined in cyclic sequence C based on the initial state of LFSR. Specifically, array A is searched using the initial state to find the initial location in cyclic sequence C. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> At processing block <highlight><bold>412</bold></highlight>, N bits following location P in cyclic sequence C are copied to register R<highlight><bold>1</bold></highlight>. At processing block <highlight><bold>414</bold></highlight>, N bits of input data are copied to register R<highlight><bold>2</bold></highlight>. In one embodiment, the size of R<highlight><bold>1</bold></highlight> and R<highlight><bold>2</bold></highlight> is N bits. Alternatively, the size of R<highlight><bold>1</bold></highlight> and/or R<highlight><bold>2</bold></highlight> is greater than N bits. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> At processing block <highlight><bold>416</bold></highlight>, N bits from register R<highlight><bold>1</bold></highlight> are XORed with N bits from register R<highlight><bold>2</bold></highlight>. The result of this operation is stored in register R<highlight><bold>3</bold></highlight> and then copied to the output buffer (processing block <highlight><bold>417</bold></highlight>). </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> At decision box <highlight><bold>418</bold></highlight>, a determination is made as to whether the entire input data has been processed. If the determination is negative, at processing block <highlight><bold>420</bold></highlight>, location P is advanced by N bits in cyclic sequence C, and processing flow returns to block <highlight><bold>412</bold></highlight>. If needed, overflow calculations are performed when advancing location P and/or copying N bits following location P in cyclic sequence C. When the entire input data is processed, method <highlight><bold>400</bold></highlight> ends. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram of one embodiment of a processing system. Processing system <highlight><bold>600</bold></highlight> includes processor <highlight><bold>620</bold></highlight> and memory <highlight><bold>630</bold></highlight>. Processor <highlight><bold>620</bold></highlight> can be any type of processor capable of executing software, such as a microprocessor, digital signal processor, microcontroller, or the like. Processing system <highlight><bold>600</bold></highlight> can be a personal computer (PC), mainframe, handheld device, portable computer, set-top box, or any other system that includes software. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Memory <highlight><bold>630</bold></highlight> can be a hard disk, a floppy disk, random access memory (RAM), read only memory (ROM), flash memory, or any other type of machine medium readable by processor <highlight><bold>620</bold></highlight>. Memory <highlight><bold>630</bold></highlight> can hold data and also store instructions for performing the execution of the various method embodiments of the present invention such as methods <highlight><bold>300</bold></highlight> and <highlight><bold>400</bold></highlight> described above in conjunction with <cross-reference target="DRAWINGS">FIGS. 3 and 4</cross-reference>. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> Thus, a method and apparatus for performing LFSR-based algorithms have been described. It is to be understood that the above description is intended to be illustrative, and not restrictive. Many other embodiments will be apparent to those of skill in the art upon reading and understanding the above description. The scope of the invention should, therefore, be determined with reference to the appended claims, along with the full scope of equivalents to which such claims are entitled. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A computerized method comprising: 
+<claim-text>identifying an initial location in a cyclic sequence of entries representing a set of possible output values of a linear feedback shift register (LFSR); </claim-text>
+<claim-text>identifying an initial group of entries in the cyclic sequence based on the initial location and a predefined group size; </claim-text>
+<claim-text>identifying an initial portion of input data based on the predefined group size; </claim-text>
+<claim-text>performing a predefined operation on the initial portion of input data and the initial group of entries in the cyclic sequence; and </claim-text>
+<claim-text>repeating the predefined operation for each of the remaining portions of input data and a corresponding group of entries in the cyclic sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>determining the possible output values of the LFSR; and </claim-text>
+<claim-text>storing the possible output values as the cyclic sequence of entries. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the possible output values of the LSFR are not dependent on the input data. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>defining an array of location entries, each location entry in the array including a state of the LFSR and an associated location in the cyclic sequence of entries; and </claim-text>
+<claim-text>searching the array of location entries for the initial location in the cyclic sequence of entries using an initial state of the LFSR. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> further comprising receiving the initial state of the LFSR with the input data. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> further comprising decoding the input data to determine the initial state of the LFSR. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein each state of the LFSR is a decimal value resulting from conversion of a corresponding set of binary values of LFSR storage elements. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein executing the predefined operation further comprises: 
+<claim-text>storing the initial group of input data in a first register; </claim-text>
+<claim-text>storing the initial group of input data in a second register; and </claim-text>
+<claim-text>storing results of the predefined operation in a third register. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the predefined group size is a size of the first register. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the predefined operation is an XOR instruction. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein: 
+<claim-text>the LFSR includes 7 storage elements; and </claim-text>
+<claim-text>the cyclic sequence includes 127 entries. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the predefined operation is part of any one of a scrambler algorithm, a whitening algorithm, and a pilot insertion algorithm. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein each of the remaining portions of input data and a corresponding group of entries in the cyclic sequence are of the predefined group size. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. An apparatus comprising: 
+<claim-text>a cyclic sequence of entries representing a set of possible output values of a linear feedback shift register (LFSR); </claim-text>
+<claim-text>a location identifier to identify an initial location in the cyclic sequence of entries; and </claim-text>
+<claim-text>a data manipulator to identify an initial group of entries in the cyclic sequence based on the initial location and a predefined group size, to perform a predefined operation on an initial portion of input data and the initial group of entries in the cyclic sequence, and to repeat the predefined operation for each of the remaining portions of input data and a corresponding group of entries in the cyclic sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the location identifier is to determine the possible output values of the LFSR. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the possible output values of the LFSR are not dependent on the input data. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising: 
+<claim-text>an array of location entries to be searched for the initial location in the cyclic sequence of entries using an initial state of the LFSR, each location entry in the array including a state of the LFSR and an associated location in the cyclic sequence of entries. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> the initial state of the LFSR is received with the input data. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> wherein each state of the LFSR is a decimal value resulting from conversion of a corresponding set of binary values of LFSR storage elements. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the data manipulator is to execute the predefined operation by storing the initial group of input data in a first register, storing the initial group of input data in a second register, and storing results of the predefined operation in a third register. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference> wherein the predefined group size is a size of the first register. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the predefined operation is an XOR instruction. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the predefined operation is part of any one of a scrambler algorithm, a whitening algorithm, and a pilot insertion algorithm. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein each of the remaining portions of input data and a corresponding group of entries in the cyclic sequence are of the predefined group size. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A computer system comprising: 
+<claim-text>a memory to store a cyclic sequence of entries representing a set of possible output values of a linear feedback shift register (LFSR); and </claim-text>
+<claim-text>a processor, coupled to the memory, to identifying an initial location in the cyclic sequence, to identify an initial group of entries in the cyclic sequence based on the initial location and a predefined group size, to identify an initial portion of input data based on the predefined group size, to perform a predefined operation on the initial portion of input data and the initial group of entries in the cyclic sequence, and to repeat the predefined operation for each of the remaining portions of input data and a corresponding group of entries in the cyclic sequence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> wherein the possible output values of the LFSR are not dependent on the input data. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the memory is to store an array of location entries, each location entry in the array including a state of the LFSR and an associated location in the cyclic sequence of entries, the processor is to search the array of location entries for the initial location in the cyclic sequence of entries using an initial state of the LFSR. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A computer readable medium that provides instructions, which when executed on a processor, cause said processor to perform operations comprising: 
+<claim-text>identifying an initial location in a cyclic sequence of entries representing a set of possible output values of a linear feedback shift register (LFSR); 
+<claim-text>identifying an initial group of entries in the cyclic sequence based on the initial location and a predefined group size; </claim-text>
+<claim-text>identifying an initial portion of input data based on the predefined group size; </claim-text>
+<claim-text>performing a predefined operation on the initial portion of input data and the initial group of entries in the cyclic sequence; and </claim-text>
+<claim-text>repeating the predefined operation for each of the remaining portions of input data and a corresponding group of entries in the cyclic sequence. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein the possible output values of the LSFR are not dependent on the input data. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> providing further instructions causing the processor to perform operations comprising: 
+<claim-text>defining an array of location entries, each location entry in the array including a state of the LFSR and an associated location in the cyclic sequence of entries; and </claim-text>
+<claim-text>searching the array of location entries for the initial location in the cyclic sequence of entries using an initial state of the LFSR.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002677A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002677A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002677A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002677A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002677A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002677A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030002677A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

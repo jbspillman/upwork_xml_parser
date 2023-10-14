@@ -1,0 +1,916 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005036A1-20030102-M00001.NB SYSTEM "US20030005036A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030005036A1-20030102-M00001.TIF SYSTEM "US20030005036A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-M00002.NB SYSTEM "US20030005036A1-20030102-M00002.NB" NDATA NB>
+<!ENTITY US20030005036A1-20030102-M00002.TIF SYSTEM "US20030005036A1-20030102-M00002.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-M00003.NB SYSTEM "US20030005036A1-20030102-M00003.NB" NDATA NB>
+<!ENTITY US20030005036A1-20030102-M00003.TIF SYSTEM "US20030005036A1-20030102-M00003.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-M00004.NB SYSTEM "US20030005036A1-20030102-M00004.NB" NDATA NB>
+<!ENTITY US20030005036A1-20030102-M00004.TIF SYSTEM "US20030005036A1-20030102-M00004.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-M00005.NB SYSTEM "US20030005036A1-20030102-M00005.NB" NDATA NB>
+<!ENTITY US20030005036A1-20030102-M00005.TIF SYSTEM "US20030005036A1-20030102-M00005.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-M00006.NB SYSTEM "US20030005036A1-20030102-M00006.NB" NDATA NB>
+<!ENTITY US20030005036A1-20030102-M00006.TIF SYSTEM "US20030005036A1-20030102-M00006.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-D00000.TIF SYSTEM "US20030005036A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-D00001.TIF SYSTEM "US20030005036A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005036A1-20030102-D00002.TIF SYSTEM "US20030005036A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005036</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09827557</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010406</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F015/16</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>G06F015/167</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>203000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>216000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>214000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Distributed, compressed Bloom filter Web cache server</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Michael</given-name>
+<family-name>Mitzenmacher</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Lexington</city>
+<state>MA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Law Office of A. P. Durigon</name-1>
+<name-2></name-2>
+<address>
+<address-1>20 Eustis Street</address-1>
+<city>Cambridge</city>
+<state>MA</state>
+<postalcode>02140</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Compressed Bloom filters that act as a message as well as a data structure provide smaller false positive rates, reduced bits broadcast and/or reduced computational overhead in distributed Web proxy servers and other distributed networks. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<federal-research-statement>
+<heading lvl="1">STATEMENT OF GOVERNMENT INTEREST </heading>
+<paragraph-federal-research-statement id="P-0001"><number>&lsqb;0001&rsqb;</number> This invention was made in partwith government supportunder grant number CCR-9983832 from the National Science Foundation. The government may have certain rights in this invention.</paragraph-federal-research-statement>
+</federal-research-statement>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention is drawn to the field of distributed caching networks, and more particularly, to a novel distributed, compressed-bloom filter Web cache server system and method. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> As Web usage increases, so does user perceived fetch latency. Distributed Web caching systems reduce fetch latency by maintaining in the cache memory of each Web server information representative of its Web objects as well as that of other, neighboring Web servers. By allowing for retrieval of desired Web objects from a neighbor&apos;s cache closer to the client than the original source, such distributed or cooperative Web caching systems reduce user perceived fetch latency. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> For such distributed or cooperative Web caching systems to be effective, Web servers must have reasonably accurate information regarding the contents of other Web server caches. One possibility is for Web servers to periodically broadcast a list of their contents to other neighboring Web servers. The natural form of this list would be as a list of Uniform Resource Locators, or URLS, such as &ldquo;http://www.yahoo.com.&rdquo; A list written in this textual form might be quite long, as Web servers may cache thousands, tens of thousands, or more Web pages. Moreover, these lists must be broadcast sufficiently often so that they are mostly accurate even as the contents in the Web server caches change over time. Hence this straightforward solution may lead to significant network traffic, undermining the possible advantages of distributed Web caching. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Fan et al. in an article entitled &ldquo;Summary Cache: a Scalable Wide-area Web Cache Sharing Protocol,&rdquo; appearing at Proceedings of SIGCOMM &apos;98, (1998: pp 254-265), incorporated herein by reference, disclose a distributed, Bloom filter Web cache server that maintains Bloom filter array data representative of its Web objects, as well as of other, neighboring Web servers, and that periodically broadcasts the Bloom filter array data that represents the contents of its cache to its neighbors whenever sufficiently many changes have occurred since the last broadcast. If a Web server wishes to determine if another neighboring Web server has a page in its cache upon a query miss, it checks the appropriate Bloom filter array data. Message traffic is reduced in Fan et al., since Web servers do not broadcast URL lists corresponding to the exact contents of their memory caches, but rather the succinct Bloom filter array data representative thereof. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The size of the Bloom filter array data is typically determined by the transmission protocol of the communications infrastructure. While the Bloom filter has a zero probability of producing false negatives when queried, it has an optimum non-zero probability of producing false positives for Bloom filter array data of given size. That is, it may incorrectly return that an element is in a set when it in fact is not, which leads to more message traffic and to increased user perceived fetch latency. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> There is thus a need to reduce the probability of producing false positives in distributed, summary cache Web servers. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It is accordingly an object of the present invention to disclose a distributed, compressed Bloom filter Web cache server providing reduced optimum probabilities of producing false positives than the heretofore known summary cache Web servers for any given Bloom filter data array size. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In accord therewith, a distributed, compressed Bloom filter Web server providing reduced probabilities of false positives is disclosed that includes a plurality of cache servers each having a cache memory and a cache processor coupled to the memory and operative to (1) represent Web objects stored in its cache memory as a compressed Bloom filter data array having a preselected number of hash functions and a preselected array size which have been chosen to minimize the rate of false positives for a preselected target compression size; and operative (2) to periodically disseminate the compressed Bloom filter data array to neighboring servers when there is a predetermined change in its stored Web objects. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In further accord therewith, a method reducing false positives in a network having distributed Web servers each storing information in cache memory as a Bloom filter data array and broadcasting that data array to other Web servers is disclosed that includes the steps of (1) fixing a compression size for transmission of the Bloom filter data array at each Web server; (2) choosing the number of hash functions and the array size so that the Bloom filter data array minimizes the rate of false positives when it is compressed down to the fixed compression size; and (3) broadcasting the compressed Bloom filter data array to neighboring Web servers whenever there is a predetermined change in the contents of its cache memory. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> User perceived fetch latency is improved, due to the reduced probabilities of false positives provided by the compressed Bloom filter data arrays in accord with the present invention, and, among other advantages, computational requirements are generally softened, due to generally reduced processing required for generating the compressed Bloom filter data arrays in accord with the present invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The principles of the distributed, compressed Bloom filter Web server system and method in accord with the present invention, that the Bloom filter is both a data structure in memory and an object that is broadcast, that, as having both said attributes, may be optimized for a target compression size, are applicable to distributed networks other than the distributed, compressed Bloom filter Web servers of the solely exemplary, presently preferred embodiments. For example, the inventive principles are applicable in geographic location sharing systems, where each server contains location information about mobile clients that should be distributed elsewhere, or to distributed file-sharing systems (such as, for example, Napster), where the Bloom filter would record file information instead of URL information. In any instance where information is passed in a distributed system according to a Bloom filter the compressed Bloom filter in accord with the present invention may be used to improve performance. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> These and other objects, inventive aspects and advantageous features of the present invention will become apparent as the invention becomes better understood by referring to the following, solely exemplary detailed description of the presently preferred embodiments, and to the drawings, wherein: </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> in the <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> thereof is a functional block diagram illustrating a distributed, compressed Bloom filter Web server arrangement in accord with the present invention, in the </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> thereof is a functional block diagram illustrating a distributed, compressed Bloom filter Web server in accord with the present invention, in the </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1C</cross-reference> thereof is a block diagram of a prior art Bloom filter, in the </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1D</cross-reference> thereof is a block diagram of a compressed Bloom filter in accord with the present invention, and in the </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1E</cross-reference> thereof is a graph illustrating the improved false positive rejection of an exemplary embodiment of the distributed, compressed Bloom filter Web server in accord with the present invention; and </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> in the <cross-reference target="DRAWINGS">FIGS. 2A, 2B</cross-reference> thereof are flowcharts illustrating the operation of the distributed, compressed Bloom filter Web server in accord with the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PRESENTLY PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>A, generally designated at <highlight><bold>10</bold></highlight> is a functional block diagram illustrating a distributed, compressed Bloom filter Web server arrangement in accord with the present invention. A plurality of cooperative cache servers <highlight><bold>12</bold></highlight> are operatively connected to a communications infrastructure, not shown. Any suitable communications infrastructure, such as optical fiber, or the cables of the telephone network, may be employed, and any suitable communications protocol, such as TCP/IP or UDP, may be employed. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As schematically illustrated by box <highlight><bold>14</bold></highlight>, the plurality of cooperative cache servers <highlight><bold>12</bold></highlight> may, for example, be the cache servers of a LAN or those inside an ISP. As schematically illustrated by box <highlight><bold>16</bold></highlight>, each of the plurality of cooperative cache servers is operatively connected to the outside world, as, for example, the Internet or the servers outside the ISP. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Each cache server <highlight><bold>12</bold></highlight> includes a cache processor <highlight><bold>30</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1B</cross-reference>) operatively coupled to cache memory <highlight><bold>32</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1B</cross-reference>) in which are stored a compressed Bloom filter data array <highlight><bold>34</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1B</cross-reference>) representative of the Web objects located on that server and a plurality of compressed Bloom filter data arrays <highlight><bold>36</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1B</cross-reference>) to be described, each representative of the Web objects located on another cooperative Web server <highlight><bold>14</bold></highlight>. The Web objects stored in cache memory <highlight><bold>32</bold></highlight> of each proxy server <highlight><bold>12</bold></highlight> will generally be URL&apos;s. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Each cache server <highlight><bold>12</bold></highlight> responds to a client query to determine if the requested Web object is located in the cache memory of that server, or is located in the cache memory of a cooperative cache server <highlight><bold>14</bold></highlight>. If it is, it retrieves the requested object either from itself, or, as schematically illustrated by arrow <highlight><bold>18</bold></highlight>, from that one of the cooperative cache servers that does have the requested Web object. If not, it seeks the requested object in the outside world <highlight><bold>16</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Whenever the contents of the cache memory of any cache server <highlight><bold>12</bold></highlight> changes sufficiently, where the amount of change might depend on the application or the parameters of the system (such as the number of cooperating machines), it disseminates a compressed Bloom filter data array to be described representative of the new contents to its neighbors <highlight><bold>14</bold></highlight> as schematically illustrated by arrows <highlight><bold>20</bold></highlight>, which, in turn, decompress it, and update the compressed Bloom filter data array for that node. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The programs, not shown, controlling data structure coding, compression, transmission, and reception are stored in program memory, not shown, of each cache server. Other data structures, objects or programs, not shown, are also stored in cache, program or other memory of each cache server, such as, for example, the program that determines which Web objects and when Web are removed from the cache. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>C, generally designated at <highlight><bold>40</bold></highlight> is a block diagram useful in explaining the operation of a prior art Bloom filter. The filter <highlight><bold>40</bold></highlight> includes as inputs the Bloom filter data array size m and the number of Web objects n to be represented thereby. The parameters m and n to the left of the Bloom filter <highlight><bold>40</bold></highlight> are given as inputs, and the parameter k to the top of the Bloom filter <highlight><bold>40</bold></highlight>, the number of hash functions, is optimized to minimize the rate f of false positives. In the typical case, the Bloom filter array size m is determined by the desired message traffic of the communications protocol and infrastructure, which generally is in the range of 4-32 bits per data item, and usually is 8-16 bits, and/or by the cache memory space available. Reference in this connection may be had to Fan et al, supra, and general reference may be had to an article by Bloom entitled &ldquo;Space/time Trade-offs in Hash Coding with Allowable Errors,&rdquo; appearing at Communication of the ACM (1970, 13 (7): pp. 422-426), incorporated herein by reference. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> As appears more fully below, the number of hash functions k of the prior art Bloom filter <highlight><bold>40</bold></highlight> is optimized to provide Bloom filter array data schematically illustrated by arrow <highlight><bold>42</bold></highlight> that minimizes the rate f of false positives given the Bloom filter data array m and the number of Web objects n. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> A Bloom filter for representing a set S&equals;&lcub;s<highlight><subscript>1</subscript></highlight>, s<highlight><subscript>2</subscript></highlight>, s<highlight><subscript>n</subscript></highlight>&rcub; of n elements is described by an array of m bits, initially all set to zero (0). A Bloom filter uses k independent hash functions h<highlight><subscript>1</subscript></highlight>, . . . , h<highlight><subscript>k </subscript></highlight>with range &lcub;1, . . . , m&rcub;. For mathematical convenience, assume these hash functions map each item in the universe to a random number uniform over the range &lcub;1, . . . , m&rcub;. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> For each element s&isin;S, the bits h<highlight><subscript>1 </subscript></highlight>(s) are set to one (1) for 1&lE;i&lE;k. A location can be set to one (1) multiple times, but only the first change has an effect. To check if an item x is in S. check whether all h<highlight><subscript>1</subscript></highlight>(x) are set to one (1). If not, then x is clearly not a member of S. If all h<highlight><subscript>1</subscript></highlight>(x) are set to one (1), assume that x is in S, although a Bloom filter may yield a false positive, where it suggests that an element x is in S even though it is not. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The probability of a false positive for an element not in the set, or the false positive rate, can be calculated in a straightforward fashion, given the assumption that hash functions are perfectly random. After all the elements of S are hashed into the Bloom filter, the probability that a specific bit is still zero (0) is:  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mrow>
+  <msup>
+    <mrow>
+      <mo>(</mo>
+      <mrow>
+        <mn>1</mn>
+        <mo>-</mo>
+        <mfrac>
+          <mn>1</mn>
+          <mi>m</mi>
+        </mfrac>
+      </mrow>
+      <mo>)</mo>
+    </mrow>
+    <mi>kn</mi>
+  </msup>
+  <mo>&TildeTilde;</mo>
+  <mrow>
+    <msup>
+      <mi>&ee;</mi>
+      <mrow>
+        <mrow>
+          <mo>-</mo>
+          <mi>kn</mi>
+        </mrow>
+        <mo>/</mo>
+        <mi>m</mi>
+      </mrow>
+    </msup>
+    <mo>.</mo>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030005036A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="18.96615" file="US20030005036A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0031" lvl="7"><number>&lsqb;0031&rsqb;</number> Let p&equals;(e<highlight><superscript>&minus;kn/m</superscript></highlight>)<highlight><superscript>k</superscript></highlight>. The probability of a false positive is then:  
+<math-cwu id="MATH-US-00002">
+<number>2</number>
+<math>
+<mrow>
+  <mrow>
+    <msup>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <msup>
+            <mrow>
+              <mo>(</mo>
+              <mrow>
+                <mn>1</mn>
+                <mo>-</mo>
+                <mfrac>
+                  <mn>1</mn>
+                  <mi>m</mi>
+                </mfrac>
+              </mrow>
+              <mo>)</mo>
+            </mrow>
+            <mi>kn</mi>
+          </msup>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+      <mi>k</mi>
+    </msup>
+    <mo>&TildeTilde;</mo>
+    <msup>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <msup>
+            <mi>&ee;</mi>
+            <mrow>
+              <mrow>
+                <mo>-</mo>
+                <mi>kn</mi>
+              </mrow>
+              <mo>/</mo>
+              <mi>m</mi>
+            </mrow>
+          </msup>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+      <mi>k</mi>
+    </msup>
+  </mrow>
+  <mo>=</mo>
+  <mrow>
+    <msup>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <mi>p</mi>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+      <mi>k</mi>
+    </msup>
+    <mo>.</mo>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00002" file="US20030005036A1-20030102-M00002.NB"/>
+<image id="EMI-M00002" wi="216.027" he="19.93005" file="US20030005036A1-20030102-M00002.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0032" lvl="7"><number>&lsqb;0032&rsqb;</number> Let f&equals;(1&minus;e<highlight><superscript>&minus;kn/m</superscript></highlight>)<highlight><superscript>k</superscript></highlight>&equals;(1&minus;p)<highlight><superscript>k</superscript></highlight>. Note the asymptotic assumption is used herein for convenience of representation. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Now suppose m and n are given and the number of hash functions k is to be optimized. There are two competing forces; using more hash functions gives more chances to find a zero (0) bit for an element that is not a member of S, while on the other hand, using fewer hash functions increases the fraction of zero (0) bits in the array. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The optimal number of hash functions that minimizes f as a function of k is found taking the derivative. More conveniently, note that f equals exp(k ln(1&minus;e<highlight><superscript>&minus;kn/m</superscript></highlight>)). Let g&equals;k ln(1&minus;e<highlight><superscript>&minus;kn/m</superscript></highlight>).  
+<math-cwu id="MATH-US-00003">
+<number>3</number>
+<math>
+<mrow>
+  <mfrac>
+    <mrow>
+      <mo>&dd;</mo>
+      <mi>g</mi>
+    </mrow>
+    <mrow>
+      <mo>&dd;</mo>
+      <mi>k</mi>
+    </mrow>
+  </mfrac>
+  <mo>=</mo>
+  <mrow>
+    <mrow>
+      <mi>ln</mi>
+      <mo>&af;</mo>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <msup>
+            <mi>&ee;</mi>
+            <mrow>
+              <mrow>
+                <mo>-</mo>
+                <mi>kn</mi>
+              </mrow>
+              <mo>/</mo>
+              <mi>m</mi>
+            </mrow>
+          </msup>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mrow>
+    <mo>+</mo>
+    <mrow>
+      <mfrac>
+        <mi>kn</mi>
+        <mi>m</mi>
+      </mfrac>
+      <mo>&it;</mo>
+      <mrow>
+        <mfrac>
+          <msup>
+            <mi>&ee;</mi>
+            <mrow>
+              <mrow>
+                <mo>-</mo>
+                <mi>kn</mi>
+              </mrow>
+              <mo>/</mo>
+              <mi>m</mi>
+            </mrow>
+          </msup>
+          <mrow>
+            <mn>1</mn>
+            <mo>-</mo>
+            <msup>
+              <mi>&ee;</mi>
+              <mrow>
+                <mrow>
+                  <mo>-</mo>
+                  <mi>kn</mi>
+                </mrow>
+                <mo>/</mo>
+                <mi>m</mi>
+              </mrow>
+            </msup>
+          </mrow>
+        </mfrac>
+        <mo>.</mo>
+      </mrow>
+    </mrow>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00003" file="US20030005036A1-20030102-M00003.NB"/>
+<image id="EMI-M00003" wi="216.027" he="18.96615" file="US20030005036A1-20030102-M00003.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0035" lvl="7"><number>&lsqb;0035&rsqb;</number> Minimizing the false positive rate f is equivalent to minimizing g with respect to k: The derivative is zero (0) when k&equals;In 2*(m/n). This is a global minimum. In this case, the false positive rate f is (&frac12;)<highlight><superscript>k</superscript></highlight>&equals;(0.6185)<highlight><superscript>m/n</superscript></highlight>. In practice, of course, k will be an integer, and smaller k might be preferred, insofar as that reduces the amount of computation necessary. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>D, generally designated at <highlight><bold>50</bold></highlight> is a block diagram useful in explaining the principles of a compressed Bloom filter in accord with the present invention. In accord with the present invention, the Bloom filter is notjust an object that resides in cache memory, but an object that is transferred between proxy servers, that, as such, may be optimized to minimize the false positive rate for Bloom filter array data compressed to a transmission compression size z. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The filter <highlight><bold>50</bold></highlight> includes as inputs to the left thereof the Bloom filter data array compression size z and the number of Web objects n to be represented thereby. Unlike the prior art filter <highlight><bold>40</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1C</cross-reference>), the size of the Bloom filter data array m of the compressed Bloom filter <highlight><bold>50</bold></highlight> is not limited by network traffic constraints, but only by cache memory size, since it is to be compressed to the compression size z, which enables compressed Bloom filters in accord with the present invention to obtain better rates of false positive rejection than the prior art Bloom filter <highlight><bold>40</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1C</cross-reference>) for any given Bloom filter data array compression size. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> As appears more fully below, the two parameters to the top of the compressed Bloom filter <highlight><bold>50</bold></highlight> in accord with the present invention, namely, the number of hash functions k and the Bloom filter array size m, are optimized to provide compressed Bloom filter array data schematically illustrated by arrow <highlight><bold>52</bold></highlight> that minimizes the false positive rate f given the Bloom filter data array compression size z and the number of Web objects n. In the typical case, m is set as big as possible, given any cache memory space constraints, and k is optimized to provide compressed Bloom filter data that minimizes the false positive ratef given the Bloom filter data array compression size z, data array m and the number of Web objects n. In general, fewer hash functions are required than in the prior art filter <highlight><bold>40</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1C</cross-reference>), which eases the computational overhead. In the typical case, the Bloom filter array compression size z is determined by the communications protocol and infrastructure, in the range of 4-32 bits per data item, usually 8-16 bits. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Let z&lE;n be the desired compressed size. Each bit in the bit array is zero (0) with probability p if the bits are assumed to be independent. Also, as a mathematically convenient approximation, assume an optimal compressor. That is, assume that the m bit filter can be compressed down to only mH(p) bits, where H(p)&equals;&minus;plog<highlight><subscript>2</subscript></highlight>p&minus;(1&minus;p)log<highlight><subscript>2</subscript></highlight>(1&minus;p) is the entropy function. The compressor therefore uses the optimal H(p) bits on average for each bit in the original string. Note that near-optimal compressors exist; arithmetic coding, for example, requires on average less than H(p)&plus;C bits per character for any &isin;&gt;0 given suitably large strings. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Optimization proceeds as follows. Given n and z, choose m and k to minimize f subject to mH(p)&lE;z. For the prior art optimized Bloom filter where m&equals;z and k&equals;ln 2*(m/n), p&equals;&frac12;, and f is &lE;(0.6185)<highlight><superscript>z/n</superscript></highlight>. This choice of k is the worst choice possible for the design of compressed Bloom filters in accord with the present invention. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> To see this, parametrize so that k&equals;&agr;m/n. Then p&equals;e<highlight><superscript>&minus;&agr;</superscript></highlight>, and m and n are chosen to minimize f&equals;(1&minus;e<highlight><superscript>&minus;&agr;</superscript></highlight>)<highlight><superscript>&agr;m/n </superscript></highlight>subject to m&equals;z/H (e<highlight><superscript>&minus;&agr;</superscript></highlight>), where, without loss of generality, m may be chosen as large as possible. Equivalently, we have: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>f</italic></highlight>&equals;(1<highlight><italic>&minus;e</italic></highlight><highlight><superscript>&minus;&agr;</superscript></highlight>)<highlight><superscript>&agr;z/(nH(e</superscript></highlight><highlight><subscript><highlight><subscript>&minus;&agr;</subscript></highlight></subscript></highlight><highlight><superscript>))</superscript></highlight>. </in-line-formula></paragraph>
+<paragraph id="P-0042" lvl="7"><number>&lsqb;0042&rsqb;</number> Since z and n are fixed with z &gt;n, we wish to maximize: </paragraph>
+<paragraph lvl="0"><in-line-formula>&bgr;&equals;<highlight><italic>f</italic></highlight><highlight><superscript>n/z</superscript></highlight>&equals;(1&minus;<highlight><italic>e</italic></highlight><highlight><superscript>&minus;&agr;</superscript></highlight>)<highlight><superscript>&agr;/H(e</superscript></highlight><highlight><subscript><highlight><subscript>&minus;&agr;</subscript></highlight></subscript></highlight><highlight><superscript>)</superscript></highlight>. </in-line-formula></paragraph>
+<paragraph id="P-0043" lvl="7"><number>&lsqb;0043&rsqb;</number> Let &agr;&equals;&minus;ln x. Then:  
+<math-cwu id="MATH-US-00004">
+<number>4</number>
+<math>
+<mrow>
+  <mi>&beta;</mi>
+  <mo>=</mo>
+  <mrow>
+    <msup>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <mi>x</mi>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+      <mrow>
+        <mrow>
+          <mo>-</mo>
+          <mi>ln</mi>
+        </mrow>
+        <mo>&it;</mo>
+        <mstyle>
+          <mtext>&emsp;</mtext>
+        </mstyle>
+        <mo>&it;</mo>
+        <mrow>
+          <mi>x</mi>
+          <mo>/</mo>
+          <mrow>
+            <mi>H</mi>
+            <mo>&af;</mo>
+            <mrow>
+              <mo>(</mo>
+              <mi>x</mi>
+              <mo>)</mo>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mrow>
+    </msup>
+    <mo>=</mo>
+    <mrow>
+      <mrow>
+        <mi>exp</mi>
+        <mo>&af;</mo>
+        <mrow>
+          <mo>(</mo>
+          <mfrac>
+            <mrow>
+              <mrow>
+                <mo>-</mo>
+                <mrow>
+                  <mi>ln</mi>
+                  <mo>&af;</mo>
+                  <mrow>
+                    <mo>(</mo>
+                    <mi>x</mi>
+                    <mo>)</mo>
+                  </mrow>
+                </mrow>
+              </mrow>
+              <mo>&CenterDot;</mo>
+              <mrow>
+                <mi>ln</mi>
+                <mo>&af;</mo>
+                <mrow>
+                  <mo>(</mo>
+                  <mrow>
+                    <mn>1</mn>
+                    <mo>-</mo>
+                    <mi>x</mi>
+                  </mrow>
+                  <mo>)</mo>
+                </mrow>
+              </mrow>
+            </mrow>
+            <mrow>
+              <mrow>
+                <mo>(</mo>
+                <mrow>
+                  <mrow>
+                    <mo>-</mo>
+                    <msub>
+                      <mi>log</mi>
+                      <mn>2</mn>
+                    </msub>
+                  </mrow>
+                  <mo>&it;</mo>
+                  <mi>e</mi>
+                </mrow>
+                <mo>)</mo>
+              </mrow>
+              <mo>&it;</mo>
+              <mrow>
+                <mo>(</mo>
+                <mrow>
+                  <mrow>
+                    <mi>x</mi>
+                    <mo>&it;</mo>
+                    <mstyle>
+                      <mtext>&emsp;</mtext>
+                    </mstyle>
+                    <mo>&it;</mo>
+                    <mi>ln</mi>
+                    <mo>&it;</mo>
+                    <mstyle>
+                      <mtext>&emsp;</mtext>
+                    </mstyle>
+                    <mo>&it;</mo>
+                    <mi>x</mi>
+                  </mrow>
+                  <mo>+</mo>
+                  <mrow>
+                    <mrow>
+                      <mo>(</mo>
+                      <mrow>
+                        <mn>1</mn>
+                        <mo>-</mo>
+                        <mi>x</mi>
+                      </mrow>
+                      <mo>)</mo>
+                    </mrow>
+                    <mo>&it;</mo>
+                    <mrow>
+                      <mi>ln</mi>
+                      <mo>&af;</mo>
+                      <mrow>
+                        <mo>(</mo>
+                        <mrow>
+                          <mn>1</mn>
+                          <mo>-</mo>
+                          <mi>x</mi>
+                        </mrow>
+                        <mo>)</mo>
+                      </mrow>
+                    </mrow>
+                  </mrow>
+                </mrow>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+          </mfrac>
+          <mo>)</mo>
+        </mrow>
+      </mrow>
+      <mo>.</mo>
+    </mrow>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00004" file="US20030005036A1-20030102-M00004.NB"/>
+<image id="EMI-M00004" wi="216.027" he="18.96615" file="US20030005036A1-20030102-M00004.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0044" lvl="7"><number>&lsqb;0044&rsqb;</number> The value of &bgr; is maximized when the exponent is maximized, or equivalently when the term,  
+<math-cwu id="MATH-US-00005">
+<number>5</number>
+<math>
+<mrow>
+  <mrow>
+    <mi>&gamma;</mi>
+    <mo>=</mo>
+    <mrow>
+      <mfrac>
+        <mi>x</mi>
+        <mrow>
+          <mi>ln</mi>
+          <mo>&af;</mo>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <mn>1</mn>
+              <mo>-</mo>
+              <mi>x</mi>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+      </mfrac>
+      <mo>+</mo>
+      <mfrac>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <mi>x</mi>
+        </mrow>
+        <mrow>
+          <mi>ln</mi>
+          <mo>&af;</mo>
+          <mrow>
+            <mo>(</mo>
+            <mi>x</mi>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+      </mfrac>
+    </mrow>
+  </mrow>
+  <mo>,</mo>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00005" file="US20030005036A1-20030102-M00005.NB"/>
+<image id="EMI-M00005" wi="216.027" he="18.00225" file="US20030005036A1-20030102-M00005.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0045" lvl="7"><number>&lsqb;0045&rsqb;</number> is minimized. </paragraph>
+<paragraph id="P-0046" lvl="7"><number>&lsqb;0046&rsqb;</number> Note that:  
+<math-cwu id="MATH-US-00006">
+<number>6</number>
+<math>
+<mrow>
+  <mfrac>
+    <mrow>
+      <mo>&dd;</mo>
+      <mi>&gamma;</mi>
+    </mrow>
+    <mrow>
+      <mo>&dd;</mo>
+      <mi>x</mi>
+    </mrow>
+  </mfrac>
+  <mo>=</mo>
+  <mrow>
+    <mfrac>
+      <mn>1</mn>
+      <mrow>
+        <mi>ln</mi>
+        <mo>&af;</mo>
+        <mrow>
+          <mo>(</mo>
+          <mrow>
+            <mn>1</mn>
+            <mo>-</mo>
+            <mi>x</mi>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </mrow>
+    </mfrac>
+    <mo>-</mo>
+    <mfrac>
+      <mn>1</mn>
+      <mrow>
+        <mi>ln</mi>
+        <mo>&it;</mo>
+        <mstyle>
+          <mtext>&emsp;</mtext>
+        </mstyle>
+        <mo>&it;</mo>
+        <mi>x</mi>
+      </mrow>
+    </mfrac>
+    <mo>+</mo>
+    <mfrac>
+      <mi>x</mi>
+      <mrow>
+        <mrow>
+          <mo>(</mo>
+          <mrow>
+            <mn>1</mn>
+            <mo>-</mo>
+            <mi>x</mi>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+        <mo>&it;</mo>
+        <mrow>
+          <msup>
+            <mi>ln</mi>
+            <mn>2</mn>
+          </msup>
+          <mo>&af;</mo>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <mn>1</mn>
+              <mo>-</mo>
+              <mi>x</mi>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mfrac>
+    <mo>-</mo>
+    <mrow>
+      <mfrac>
+        <mrow>
+          <mn>1</mn>
+          <mo>-</mo>
+          <mi>x</mi>
+        </mrow>
+        <mrow>
+          <mi>x</mi>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mrow>
+            <msup>
+              <mi>ln</mi>
+              <mn>2</mn>
+            </msup>
+            <mo>&af;</mo>
+            <mrow>
+              <mo>(</mo>
+              <mi>x</mi>
+              <mo>)</mo>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mfrac>
+      <mo>.</mo>
+    </mrow>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00006" file="US20030005036A1-20030102-M00006.NB"/>
+<image id="EMI-M00006" wi="216.027" he="18.96615" file="US20030005036A1-20030102-M00006.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The value of &bgr; is clearly zero (0) when x&equals;&frac12;, and using symmetry it is easy to check that d&ggr;/dx is negative for x&lt;&frac12; and positive for x&gt;&frac12;. Hence the maximum probability of a false positive using a compressed Bloom filter occurs when x&equals;&frac12;, corresponding to &agr;&equals;ln 2. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> This shows that &ggr; is maximized and hence &bgr; and f are minimized in one of the limiting situations as x goes to zero (0) or one (1), corresponding to &agr; going to infinity or zero (0). In each case, using for example the expansion ln (1&minus;x)&ap;&minus;x&minus;x<highlight><superscript>2</superscript></highlight>/2&minus;x<highlight><superscript>3</superscript></highlight>/3&minus; . . . , we find that &ggr; goes to negative one (&minus;1). Hence &bgr; goes to one-half (&frac12;) in both limiting cases, and a false positive rate arbitrarily close to (0.5)<highlight><subscript>z/n </subscript></highlight>can be achieved by letting the number of hash functions go to zero (0) or infinity. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> In practice, these values are constrained as, for example, at least one hash function must be used, and the number of hash functions will be an integer. Note, however, that improved performance may be achieved by taking k&lt;ln 2* (m/n) for the compressed Bloom filter. This has the additional benefit that a compressed Bloom filter uses fewer hash functions and hence requires less computation for lookup. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> Compression therefore improves performance, in terms of reducing the false positive rate for a desired compressed size. An additional benefit of the compressed Bloom filters in accord with the present invention is that they generally use a smaller number of hash functions, so that lookups are more efficient. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> It is instructive to compare the prior art Bloom and the compressed Bloom filters in accord with the present invention pictorially in the case shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>E, which is a graph plotting the false positive ratefas the ordinate against the number of hash functions k as the abscissa, where for the standard Bloom filter m/n&equals;8 and for the compressed Bloom filter z/n&equals;8, and where k conformably to the foregoing analysis is assumed to behave as a continuous variable. The curve <highlight><bold>62</bold></highlight> represents the performance of the prior art Bloom filters. The curve <highlight><bold>64</bold></highlight> that of the compressed Bloom filters in accord with the present invention. The point marked <highlight><bold>66</bold></highlight> depicts the value of k that gives optimal false positives for the prior art Bloom filter. Note that the optimized uncompressed filter actually yields the largest false positive rate vis-a-vis the compressed Bloom filters of the present invention. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Any suitable hash functions, such as the standard universal families of hash functions described by Carter et al. in an article entitled &ldquo;Universal Classes of Hash Functions,&rdquo; appearing at Journal of Computer and System Sciences, (1979: pp. 143-154), and by Ramakrishna in an article entitled &ldquo;Practical Performance of Bloom Filters and Parallel Free-text Searching,&rdquo; appearing at Communications of the ACM (1989, 32 (10): pp. 1237-1239), both incorporated herein by reference, or the MD5 used by Fan et al. in the hereinabove incorporated article, may be employed. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> In situations where hashing performance is not sufficiently random, compressed Bloom filters will still generally outperform the uncompressed Bloom filters of the prior art. The point is that if the false positive rate of a compressed Bloom filter is increased because of weak hash functions, the false positive rate of the uncompressed Bloom filter will increase as well. Moreover, since compressed Bloom filters generally use fewer hash functions, the effect will be worse for the uncompressed prior art filters. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Any suitable compression technique, such as arithmetic coding described by Moffat et al. in an article entitled &ldquo;Arithmetic Coding Revisited,&rdquo; appearing at ACM Transactions on Information Systems, (1998, 16(3): pp. 256-294), and by Witten et al. in a book entitled Managing Gigabytes, (1999: pp. 35-41), both incorporated herein by reference, may be employed. Arithmetic coding provides a flexible compression mechanism for achieving near-optimal performance with low variability. Generally speaking, for a random m bit string of where the bit values are independent and each bit is zero (0) with probability p and one (1) with probability 1&minus;p, arithmetic coding compresses the string to near mH (p) bits with high probability, with the deviation from the average having a Chernoff-like bound. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>A, generally designated at 70 is a flow chart illustrating the operation of a cache processor of the distributed, compressed Bloom filter cache server in accord with the present invention whenever any cache processor needs to broadcast upon change of the Web objects stored in its cache memory. At such times, the processor is operative to generate a compressed Bloom filter data array as shown by block <highlight><bold>72</bold></highlight>. The compressed Bloom filter parameters can be optimized to reduce the number of bits broadcast, the false positive rate, and/or the amount of computation per lookup. As shown by block <highlight><bold>74</bold></highlight>, the cache server processor then compresses it using a preselected compression algorithm, such as arithmetic coding, and as shown by block <highlight><bold>76</bold></highlight>, it then broadcasts the compressed Bloom filter data array, together with header information identifying itself, to all its neighbors. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B, generally designated at <highlight><bold>80</bold></highlight> is a flow chart illustrating the operation of a cache processor of the distributed, compressed Bloom filter cache server in accord with the present invention whenever it receives a broadcast from one of its neighbors. At such times, the processor is operative to receive the compressed Bloom filter data array as shown by block <highlight><bold>82</bold></highlight>, and, as shown by block <highlight><bold>84</bold></highlight>, it then decompresses the received compressed Bloom filter data array and extracts the decompressed Bloom filter data array and the identifying header. As shown by block <highlight><bold>86</bold></highlight>, the cache processor then updates its cache memory with the compressed Bloom filter data array corresponding to the appropriate cache server. </paragraph>
+</section>
+<section>
+<heading lvl="1">SIMULATION EXAMPLES </heading>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> It may be instructive to consider some simulation examples. A maximum desired uncompressed size m was chosen and arithmetic coding using the publicly available arithmetic coding compressor described by Carpinelli et al. in an article entitled &ldquo;Source Code for Arithmetic Coding, Version 1,&rdquo; available at HTTP://www.cs.mu.oz.au/&tilde;alistair/arith_coder/, (March, 1995), incorporated herein by reference, and described by Moffat et al., supra, was employed. The parameters of the compressed Bloom filter were chosen using a slightly smaller compressed size than desired to provide room for some variability in compression. The amount of room necessary depends on m. A similar effect may be achieved by slightly overestimating n. If the uncompressed filter is more than half full of zeros, then we can have fewer than expected elements in the set, and the filter will tend to have even more zeros than expected, and hence will compress better. In this manner, the compressed filter should be the desired size with high probability. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> The following experiment was repeated 100,000 times. A Bloom filter for n&equals;10,000 elements and m&equals;140,000 bits was created. Each element was hashed into two positions chosen independently and uniformly at random in the bit array. The resulting array was compressed using the Carpinelli et al. arithmetic coding compressor. Using z&equals;mH (p), the compressed size was near 9,904 bytes; to meet the bound of eight bits per element required the compressed size not exceed 10,000 bytes. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Over the 100,000 trials, the average compressed array size was found to be 9,920 bytes, including all overhead. The standard deviation was 11.375 bytes. The maximum compressed array size was only 9,971 bytes, giving several bytes of room to spare. For larger m and n, even greater concentration of the compressed size around its mean is expected; for smaller m and n, the variance would be a larger fraction of the compressed size. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Better performance could have been achieved by using just one hash function, although this would have increased the number of array bits per element, as seen in Table 1, below.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="1" colwidth="84PT" align="left"/>
+<colspec colname="2" colwidth="28PT" align="center"/>
+<colspec colname="3" colwidth="35PT" align="char"/>
+<colspec colname="4" colwidth="35PT" align="char"/>
+<colspec colname="5" colwidth="35PT" align="char"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>Array bits/element</entry>
+<entry>m/n</entry>
+<entry>8</entry>
+<entry>14</entry>
+<entry>92</entry>
+</row>
+<row>
+<entry>Transmission bits/element</entry>
+<entry>z/n</entry>
+<entry>8</entry>
+<entry>7.923</entry>
+<entry>7.923</entry>
+</row>
+<row>
+<entry>Hash functions</entry>
+<entry>k</entry>
+<entry>6</entry>
+<entry>2</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>False positive rate</entry>
+<entry>f</entry>
+<entry>0.0216</entry>
+<entry>0.0177</entry>
+<entry>0.0108</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> A Bloom filter where z/n&equals;m/n&equals;16 was considered, where 11 hash functions were employed to achieve an optimal false positive rate of 0.000459. As 11 hash functions was seemingly large it was noted that the number of hash functions could be reduced without applying compression, but using only six hash functions more than doubles f to 0.000935. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> Table 2, below, summarizes the improvements available using compressed Bloom filters in accord with the present invention.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="1" colwidth="84PT" align="left"/>
+<colspec colname="2" colwidth="28PT" align="center"/>
+<colspec colname="3" colwidth="35PT" align="char"/>
+<colspec colname="4" colwidth="35PT" align="char"/>
+<colspec colname="5" colwidth="35PT" align="char"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>Array bits/element</entry>
+<entry>m/n</entry>
+<entry>16</entry>
+<entry>28</entry>
+<entry>48</entry>
+</row>
+<row>
+<entry>Transmission bits/element</entry>
+<entry>z/n</entry>
+<entry>16</entry>
+<entry>15.846</entry>
+<entry>15.829</entry>
+</row>
+<row>
+<entry>Hash functions</entry>
+<entry>k</entry>
+<entry>11</entry>
+<entry>4</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry>False positive rate</entry>
+<entry>f</entry>
+<entry>0.000459</entry>
+<entry>0.000314</entry>
+<entry>0.000222</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> For 28 array bits per element, the false positive rate fell about 30 percent while using only four hash functions. For 48 array bits per element, the false positive rate fell over 50 percent using only three hash functions. The case where n&equals;10,000 elements, m&equals;480,000 bits, and k&equals;3 hash functions was simulated using 100,000 trials. The considerations described above suggested the compressed size was 19,787 bytes. Over the simulation trials, the average compressed array size was 19,805 bytes, including all overhead. The standard deviation was 14,386 bytes, and the maximum compressed array size was only 19,865 bytes, well below the 20,000 bytes available. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> Many modifications of the presently disclosed invention will become apparent to those of skill in the art who have benefitted from the present disclosure. For example, multiple filter types may be employed in cases where the array data does not compress adequately. For example, each filter type t is associated with an array of size m, a set of hash functions, and a compression technique. These types are agreed on ahead of time. A few bits of the header can be used to represent the filter type. If one of the filter types is the prior art Bloom filter, then the set can always be sent appropriately using at least one of the types. In most cases two types, compressed and uncompressed, would be sufficient. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> Fan et al. in their article entitled &ldquo;Summary Cache: a Scalable Wide-area Web Cache Sharing Protocol,&rdquo; appearing at Proceedings of SIGCOMM &apos;98, (1998: pp 254-265), describe two possible approaches that may be improved using compressed Bloom filters in accord with the present invention. First, when update messages are sent among neighboring Web servers, it may be possible to send a bit vector representing the difference between the last update rather than an entirely new Bloom filter. For example, suppose the system is set so that when five (5) % of the bits in the Bloom filter have changed, an update is sent denoting only which bits in the Bloom filter array have been changed. Rather than sending a Bloom filter, the message sent is therefore a Bloom filter delta representing the change in the Bloom filter. Just as the present invention demonstrates that a Bloom filter can be compressed to improve performance, similarly the Bloom filter delta can be compressed to improve performance, in an entirely similar manner. Using compressed Bloom filter delta may therefore allow even larger Bloom filters to be used, further decreasing the probability of a false positive. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> Fan et al. also describe a counting Bloom filter, in which each entry in the size m table representing the Bloom filter is not a bit but a counter that can represent for example the numbers 0-15 using four bits. Counting Bloom filters are not passed as messages in the application described in the paper. If it is desirable to pass counting Bloom filters as messages, then improvements could be made by sending a compressed counting Bloom filter in a manner similar to that described above for the standard Bloom filter. That is, the counts represented in the counting Bloom filter would be compressed via arithmetic coding or some other compression method, and the compressed form would be transmitted. Again this allows a decrease in the probability of a false positive while transmitting the same or fewer bits throughout the system. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> The principles of the distributed, compressed Bloom filter Web server in accord with the present invention may be implemented in distributed systems or networks other than that of the distributed Web server of the exemplary, presently preferred embodiments. For example, compressed Bloom filters in accord with the present invention may advantageously be employed in geographic location sharing systems. An example of a geographic location sharing system based on Bloom filters is described, for example, in the paper &ldquo;Geographical Region Summary Service for Geographical Routing&rdquo; by Pai-Hsiang Hsiao (2000, submitted to Mobicom 2001), incorporated herein by reference. Mobile agents wander through a neighborhood, represented by, for example, a square grid (other shapes are possible; the square grid is described for convenience). This square grid is divided recursively into several subsquares. The IDs of mobile agents in each subsquare can be succinctly represented by a Bloom filter, which is passed among mobile or stationary agents that keep track of location data. In this case finding the approximate location of a mobile agent can be done with high probability by checking the appropriate Bloom filters; this information can be used to route packets toward a mobile agent when data is to be sent. These Bloom filters must be updated regularly in order to cope with mobility. Using compressed Bloom filters will improve the accuracy while allowing the same number of bits to be transmitted. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> The principles of the distributed, compressed Bloom filter Web server in accord with the present invention may be implemented in applications for other distributed systems or networks. For example, general file names instead of URLs may be used in a distributed file sharing system with compressed Bloom filters.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A distributed, compressed bloom filter Web server providing reduced probabilities of false positives, comprising: 
+<claim-text>a plurality of cache servers each having a cache memory and a cache processor coupled to the memory that is operative (1) to represent Web objects stored in its cache memory as a compressed Bloom filter data array having a preselected number of hash functions and a preselected array size which have been chosen to minimize the rate of false positives for a preselected transmission compression size, (2) to compress the Bloom filter data array to said transmission compression size, and (3) to periodically disseminate the compressed Bloom filter data array to neighboring servers when there is a change in its stored Web objects. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The distributed, compressed Bloom filter Web server providing reduced probabilities of false positives of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the Bloom filter data array size is made as large as possible for a given cache memory size and the number of hash functions is chosen to minimize the rate of false positives for a preselected transmission compression size. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The distributed, compressed Bloom filter Web server providing reduced probabilities of false positives of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein arithmetic coding is employed to compress the Bloom filter data array to said transmission compression size. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The distributed, compressed Bloom filter Web server providing reduced probabilities of false positives of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said cache processor is further operative to store in its cache memory at least one other decompressed Bloom filter data array each representative of the Web objects of another, at least one neighboring Web server. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method reducing false positives in a network having distributed Web servers each storing information in cache memory as a Bloom filter data array representative of the information in its cache memory and broadcasting that data array to other Web servers periodically, comprising: 
+<claim-text>1) fixing a compression size for transmission of the Bloom filter data array at each Web server; </claim-text>
+<claim-text>(2) choosing the number of hash functions and the array size so that the Bloom filter data array minimizes the rate of false positives when it is compressed down to the fixed compression size; and </claim-text>
+<claim-text>(3) broadcasting the compressed Bloom filter data array of the fixed compression size to neighboring Web servers whenever there is a change in the contents of its cache memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A distributed computer network, comprising: 
+<claim-text>a plurality of periodically intercommunicating distributed network nodes; </claim-text>
+<claim-text>each node including a cache memory and a processor coupled to the cache memory operative to (1) represent its memory contents as a compressed Bloom filter data structure having a preselected number of hash functions and a preselected array size which have been chosen for a target compression size to optimize at least one of the rate of false positives of the Bloom filter representing the memory contents and the computational requirements of the preselected number of hash functions, to (2) compress the Bloom filter data structure to the target compression size using a predetermined compression algorithm, and to (3) broadcast the compressed Bloom filter data structure to at least one other node whenever the contents of its cache memory has changed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The distributed computer network of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said nodes are Web proxy servers. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The distributed computer network of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said nodes are mobile or stationary agents in a network of mobile nodes, and the Web objects correspond to agent locations. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The distributed computer network of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said predetermined compression algorithm is arithmetic coding. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method employing compressed Bloom filters for storing and transmitting data in a distributed network of nodes each having a processor coupled to a memory, comprising: 
+<claim-text>representing the data contents of a memory of a node as a compressed Bloom filter data structure stored in memory of a node having a preselected number of hash functions and a preselected array size which have been chosen to optimize at least one of the rate of false positives of the Bloom filter representing the data contents and the computational requirements of the preselected number of hash functions for a transmission compression size; </claim-text>
+<claim-text>compressing the Bloom filter data structure to the transmission compression size; and </claim-text>
+<claim-text>periodically transmitting the compressed Bloom filter data structure to at least one other node. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method of storing data in memory for transmission, comprising: 
+<claim-text>representing the data as a compressed Bloom filter data structure in said memory having a preselected number of hash functions and a preselected array size which have been chosen for a target transmission compression size to optimize at least one of the rate of false positives of the Bloom filter representing the data and the computational requirements of the preselected number of hash functions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A distributed computer network, comprising: 
+<claim-text>a plurality of periodically intercommunicating distributed network nodes; </claim-text>
+<claim-text>each node including a cache memory and a processor coupled to the cache memory operative to (1) represent its memory contents as a compressed Bloom filter data structure having a preselected number of hash functions and a preselected array size which have been chosen for a target rate of false positives to optimize at least one of the compression size of the Bloom filter representing the memory contents and the computational requirements of the preselected number of hash functions, to (2) compress the Bloom filter data structure to the target compression size using a predetermined compression algorithm, and to (3) broadcast the compressed Bloom filter data structure to at least one other node whenever the contents of its cache memory has changed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The distributed computer network of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said nodes are Web proxy servers. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The distributed computer network of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said nodes are mobile or stationary agents in a network of mobile nodes, and the Web objects correspond to agent locations. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The distributed computer network of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said predetermined compression algorithm is arithmetic coding. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method employing compressed Bloom filters for storing and transmitting data in a distributed network of nodes each having a processor coupled to a memory, comprising: 
+<claim-text>representing the data contents of a memory of a node as a compressed Bloom filter data structure stored in memory of a node having a preselected number of hash functions and a preselected array size which have been chosen to optimize at least one of the transmission compression size of the Bloom filter representing the data contents and the computational requirements of the preselected number of hash functions for a given rate of false positives; </claim-text>
+<claim-text>compressing the Bloom filter data structure to the transmission compression size; and </claim-text>
+<claim-text>periodically transmitting the compressed Bloom filter data structure to at least one other node. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method of storing data in memory for transmission, comprising: 
+<claim-text>representing the data as a compressed Bloom filter data structure in said memory having a preselected number of hash functions and a preselected array size which have been chosen for a target rate of false positives to optimize at least one of the transmission compression size of the Bloom filter representing the data and the computational requirements of the preselected number of hash functions.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2A</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005036A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005036A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005036A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005283A1-20030102-D00000.TIF SYSTEM "US20030005283A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005283A1-20030102-D00001.TIF SYSTEM "US20030005283A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005283A1-20030102-D00002.TIF SYSTEM "US20030005283A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005283A1-20030102-D00003.TIF SYSTEM "US20030005283A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005283A1-20030102-D00004.TIF SYSTEM "US20030005283A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005283A1-20030102-D00005.TIF SYSTEM "US20030005283A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005283A1-20030102-D00006.TIF SYSTEM "US20030005283A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030005283A1-20030102-D00007.TIF SYSTEM "US20030005283A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005283</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895344</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>713</class>
+<subclass>151000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Intelligently determining which traffic streams to offload efficiently</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Avraham</given-name>
+<family-name>Mualem</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Linden</given-name>
+<family-name>Minnick</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Hillsboro</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and apparatus for intelligently determining which traffic streams to offload efficiently. A metric value is associated with a Security Association (SA) for each network traffic stream coupled to an electronic system. The metric is used to determine which of multiple methods to perform cryptography operations should be used to handle which streams. The metric is modified based on network traffic, and increased when the SA is cached. The metric of all SAs is periodically decreased. In one embodiment, a network interface driver determines which SAs should be cached on a network interface card and handled using Inline Receive, and which SAs should not be cached and handled using Secondary Use. Cached SAs are replaced by non-cached SAs only if the metric value of a non-cached SA is greater than the metric value of a cached SA by at least a predetermined amount representing the cost of cache replacement. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to performing cryptography operations on data streams. More particularly, the present invention relates to IP security offload. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> IP Security (IPsec) standard, IP Security Internet Engineering Task Force (IETF) Request for Comments (RFC) <highlight><bold>2401</bold></highlight>, published November 1998, is one method of protecting both the confidentiality and integrity of data transferred on a network. Because IPsec provides a way to encrypt and decrypt data below the Transmission Control Protocol (TCP)/User Datagram Protocol (UDP) layer, the protection is transparent to applications that transfer data. Thus, a system may utilize IPsec without requiring changes at the application level. However, the algorithms used for cryptography (crypto) operations (e.g., encryption, decryption, authentication) on the data for IPsec require many processor cycles to execute. The processor cycles spent on crypto operations decrease the cycles available to applications and other parts of the protocol stack. This in turn decreases throughput in the system. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> One solution to this problem is to offload the crypto operations to an external piece of hardware, such as a Network Interface Card (NIC). One way to offload the crypto operations is by encrypting data immediately before transmitting a packet and decrypting data directly from the wire before the packet is transferred via Direct Memory Access (DMA) to host memory. A Security Association (SA) is a data structure of cryptography information that contains all of the information necessary to perform crypto operations on a packet. The device that interfaces the system to the network, for example a NIC, detects which SA is needed to process the packet and performs crypto operations on the packet directly from the wire. The process for performing crypto operations on ingress data before it is transferred to host memory is called &ldquo;Inline Receive.&rdquo;</paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Another solution is to offload using the &ldquo;Secondary Use&rdquo; model. This model uses an out-of-band acceleration method to decrypt receive packets. In this scenario, all received packets are DMA transferred to host memory. The network interface driver then parses each received packet to match it with its corresponding Security Association (SA). Assuming that the crypto accelerator is on the NIC, the driver then instructs the NIC to transfer the packet across the bus, perform the crypto operation on the packet, and then transfer the packet back to host memory. Secondary Use results in inefficient use of the available bandwidth on the system bus because the packet is transferred across the bus three times. Secondary Use also creates additional latency, which can degrade the throughput of protocols sensitive to the round trip time of packets (e.g., TCP). Furthermore, performing the extra transfers across the bus often requires the use of an additional interrupt, causing the system to do more work, and increasing CPU utilization. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The network interface driver must determine which traffic streams will be handled using Inline Receive, and which traffic streams will be handled using either Secondary Use or software processing. A traditional approach is to add SAs to the Inline Receive cache on a first come, first served basis. Under the traditional approach, packets associated with SAs in the cache will be handled using Inline Receive. Once there are no available entries in the cache, packets for non-cached SAs must be handled using either Secondary Use or software processing. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> From a performance perspective (both processor utilization and throughput), Inline Receive is a more efficient solution than Secondary Use. On the other hand, Inline Receive is expensive to implement in hardware because the SAs necessary for the crypto operations must be stored in an SA cache on the NIC. Because of this, the number of connections that can use Inline Receive is often limited. Because it is common for the number of open connections to exceed the size of the Inline Receive cache, the other connections must use the Secondary Use model in order to offload secure traffic. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The present invention is illustrated by way of example, and not by way of limitation, in the figures of the accompanying drawings in which like reference numerals refer to similar elements. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is one embodiment of a block diagram of an electronic system. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is one embodiment of a block diagram of a network interface system. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is one embodiment of a block diagram of a driver agent. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is one embodiment of a flow diagram for adding a security association to a driver agent. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is one embodiment of a flow diagram for handling a packet received by a driver agent. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is one embodiment of a flow diagram for replacing security association entries in a cache. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is one embodiment of a flow diagram for decreasing the value of a security association metric. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Methods and apparatuses for dynamically mapping traffic streams to one of multiple methods to perform cryptography operations based on network traffic analysis are described. In the following description, for purposes of explanation, numerous specific details are set forth in order to provide a thorough understanding of the present invention. It will be apparent, however, to one skilled in the art that the present invention can be practiced without these specific details. In other instances, well-known structures and devices are shown in block diagram form in order to avoid obscuring the present invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Reference in the specification to &ldquo;one embodiment&rdquo; or &ldquo;an embodiment&rdquo; means that a particular feature, structure or characteristic described in connection with the embodiment is included in at least one embodiment of the present invention. Thus, the appearances of the phrase &ldquo;in one embodiment&rdquo; appearing in various places throughout the specification are not necessarily all referring to the same embodiment. Likewise, the appearances of the phrase &ldquo;in another embodiment,&rdquo; or &ldquo;in an alternate embodiment&rdquo; appearing in various places throughout the specification are not all necessarily all referring to the same embodiment. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Briefly, a technique for associating a metric value with a Security Association (SA) for each network traffic stream coupled through a network interface to an electronic system is described. The metric is used to determine which of multiple methods to perform cryptography (crypto) operations (e.g., encryption, decryption, authentication) should be used to handle which streams. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The crypto operations can be offloaded to improve system performance. Offloading is a process whereby the system processor does not perform the crypto operations. One form of offloading is &ldquo;Inline&rdquo; Operation. With Inline Operation, hardware external to the system processor, for example a processor or co-processor on a Network Interface Card (NIC), performs the crypto operations directly off the wire. For example, a packet entering the system would be operated on before the packet was transferred to host memory. Another method is &ldquo;Secondary Use.&rdquo; With Secondary Use, a driver agent, for example a software network interface driver, uses hardware external to the system processor, for example a processor or co-processor on a NIC, to perform the operations. For example, a packet entering the system would be transferred to host memory, and the network interface driver would instruct the NIC hardware to process the packet. Inline Receive is a more efficient method of offloading than Secondary Use in terms of system performance. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In one embodiment, an electronic system uses a predetermined policy to decide to handle one network traffic stream with Inline Operation and another network traffic stream with the Secondary Use model. For example, a network traffic stream with heavy traffic will be handled with Inline Receive, and a network traffic stream with lesser traffic will be handled with the Secondary Use model. By determining which of multiple methods to perform crypto operations to use with which traffic streams, system performance is increased. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is one embodiment of an electronic system. Electronic system <highlight><bold>100</bold></highlight> may be, for example, a computer, a Personal Digital Assistant (PDA), a set top box, or any other electronic system. System <highlight><bold>100</bold></highlight> includes bus <highlight><bold>101</bold></highlight> or other communication device to communicate information, and processor <highlight><bold>102</bold></highlight> coupled with bus <highlight><bold>101</bold></highlight> to process information and to execute instructions. System <highlight><bold>100</bold></highlight> further includes memory <highlight><bold>103</bold></highlight>, coupled to bus <highlight><bold>101</bold></highlight> to store information and instructions to be executed by processor <highlight><bold>102</bold></highlight>. Memory <highlight><bold>103</bold></highlight> may also be used to store temporary variables or other intermediate information during execution of instructions by processor <highlight><bold>102</bold></highlight>. Memory <highlight><bold>103</bold></highlight> may include random access memory (RAM), read-only memory (ROM), flash, or other static or dynamic storage media. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> User interfaces <highlight><bold>104</bold></highlight> are coupled to bus <highlight><bold>101</bold></highlight> too allow interaction with a user. Mass storage <highlight><bold>105</bold></highlight> can be coupled to system <highlight><bold>100</bold></highlight> to provide instructions to memory <highlight><bold>103</bold></highlight>. Mass storage <highlight><bold>105</bold></highlight> can be, for example, a magnetic disk or optical disc and its corresponding drive, a memory card, or another device capable of storing machine-readable instructions. Network interfaces <highlight><bold>106</bold></highlight> can be coupled to bus <highlight><bold>101</bold></highlight> to enable system <highlight><bold>100</bold></highlight> to communicate with other electronic systems via a network. Driver agent <highlight><bold>107</bold></highlight> may be coupled to system <highlight><bold>100</bold></highlight> to perform driver features in hardware. Driver agent <highlight><bold>107</bold></highlight> may be an Application Specific Integrated Circuit (ASIC), a special function controller or processor, a Field Programmable Gate Array (FPGA), or other hardware device to perform the functions of a driver. Driver agent <highlight><bold>107</bold></highlight> is not a necessary part of system <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Electronic system <highlight><bold>100</bold></highlight> can improve system performance by determining which components of system <highlight><bold>100</bold></highlight> should handle traffic streams coupled to bus <highlight><bold>101</bold></highlight> by network interfaces <highlight><bold>106</bold></highlight>. According to one embodiment, a driver agent determines which traffic streams should be mapped to more efficient techniques of performing crypto operations based on the value of a corresponding SA metric. For example, the driver agent can use a predetermined policy to compare metric values and use the most efficient technique to handle traffic stream corresponding to the highest metric value. The driver agent can be driver agent <highlight><bold>107</bold></highlight> or a software driver agent incorporated from a series of machine-readable instructions stored within memory <highlight><bold>103</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Instructions can be provided to memory <highlight><bold>103</bold></highlight> from a storage device, such as magnetic disk, CD-ROM, DVD, via a remote connection (e.g., over a network), etc. In alternative embodiments, hard-wired circuitry can be used in place of or in combination with software instructions to enable system <highlight><bold>100</bold></highlight> to practice the present invention. Thus, the electronic system depicted above is not limited to any specific combination of hardware circuitry and software structure. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Instructions can be provided to memory <highlight><bold>103</bold></highlight> from a form of machine-accessible medium. A machine-accessible medium includes any mechanism that provides (i.e., stores and/or transmits) information in a form readable by a machine (e.g., a computer). For example, a machine-accessible medium includes read only memory (ROM); random access memory (RAM); magnetic disk storage media; optical storage media; flash memory devices; electrical, optical, acoustical or other form of propagated signals (e.g., carrier waves, infrared signals, digital signals); etc. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is one embodiment of a block diagram of a network interface system coupled to a network. In one embodiment, Network Interface (NI) <highlight><bold>210</bold></highlight> is a communication interface that enables an electronic system to communicate with other electronic systems coupled to network <highlight><bold>220</bold></highlight>. For example, NI <highlight><bold>210</bold></highlight> can be a Network Interface Card (NIC). In one embodiment, traffic streams are received from network <highlight><bold>220</bold></highlight> into buffer <highlight><bold>211</bold></highlight> on NI <highlight><bold>210</bold></highlight>. NI processor <highlight><bold>215</bold></highlight> determines whether NI <highlight><bold>210</bold></highlight> has the SA information in cache <highlight><bold>212</bold></highlight> necessary to perform crypto operations on the packet. If the SA information is in cache <highlight><bold>212</bold></highlight>, crypto services <highlight><bold>216</bold></highlight> handles the packet. If the SA information is not in cache <highlight><bold>212</bold></highlight>, the packet is transferred across bus <highlight><bold>101</bold></highlight> to memory <highlight><bold>103</bold></highlight>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Memory <highlight><bold>103</bold></highlight> contains operating system (OS) <highlight><bold>231</bold></highlight> which controls the flow of instructions to processor <highlight><bold>102</bold></highlight>. In one embodiment, OS <highlight><bold>231</bold></highlight> is the highest layer of control of the electronic system. Driver agent <highlight><bold>233</bold></highlight> is a lower layer of system control. In one embodiment, SAs are delivered to driver agent <highlight><bold>233</bold></highlight> by OS <highlight><bold>231</bold></highlight>. In another embodiment, applications <highlight><bold>232</bold></highlight> can contain agents of a higher layer of control than driver agent <highlight><bold>233</bold></highlight> and deliver SAs to driver agent <highlight><bold>233</bold></highlight>. Applications <highlight><bold>232</bold></highlight> can also contain other programs (e.g., word processor(s); electronic mail (e-mail) programs). Memory <highlight><bold>103</bold></highlight> also contains SA table <highlight><bold>234</bold></highlight> that is a data structure of SAs. In one embodiment, driver agent <highlight><bold>233</bold></highlight> accesses SA table <highlight><bold>234</bold></highlight> to determine how to map traffic streams to one of multiple components that perform crypto operations. In one embodiment, crypto services <highlight><bold>216</bold></highlight> and driver agent <highlight><bold>233</bold></highlight> are components that perform crypto operations. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Processor <highlight><bold>102</bold></highlight> performs operations based on instructions received from memory <highlight><bold>103</bold></highlight>. For example, sets of instructions can control timers for use by functions that must be performed on a periodic basis. In one embodiment, driver agent <highlight><bold>233</bold></highlight> responds to the use of a timer to periodically determine whether SA entries of cache <highlight><bold>212</bold></highlight> should be replaced by non-cached SAs. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is one embodiment of a block diagram of a driver agent. Control logic <highlight><bold>310</bold></highlight> directs the flow of operation of driver agent <highlight><bold>300</bold></highlight>. In one embodiment, control logic <highlight><bold>310</bold></highlight> is a series of software instructions to perform logic operations. In another embodiment, control logic <highlight><bold>310</bold></highlight> can be implemented by hardware control logic, or a combination of hardware-based control logic and software instructions. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> System interfaces <highlight><bold>340</bold></highlight> couples driver agent <highlight><bold>300</bold></highlight> to an electronic system. For example, in one embodiment, driver agent <highlight><bold>300</bold></highlight> can be part of a computer system and system interfaces <highlight><bold>340</bold></highlight> couples driver agent <highlight><bold>300</bold></highlight> to the computer system via a system bus. Thus, control logic <highlight><bold>310</bold></highlight> can receive a series of instructions from application software external to driver agent <highlight><bold>300</bold></highlight>. Driver agent <highlight><bold>300</bold></highlight> is not limited to being local to an electronic system. For example, system interfaces <highlight><bold>340</bold></highlight> may couple driver agent <highlight><bold>300</bold></highlight> to an electronic system through a network. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> In one embodiment, driver agent <highlight><bold>300</bold></highlight> may contain applications <highlight><bold>320</bold></highlight>. Thus, applications <highlight><bold>320</bold></highlight> can supplement external instructions to control logic <highlight><bold>310</bold></highlight>. Applications <highlight><bold>320</bold></highlight> are not necessary to the function of driver agent <highlight><bold>300</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In one embodiment, mapping feature <highlight><bold>351</bold></highlight> dynamically maps traffic streams to one of multiple components that perform crypto operations. For example, mapping feature <highlight><bold>351</bold></highlight> can enable driver agent <highlight><bold>300</bold></highlight> to direct a NIC to handle a packet received into host memory by the Secondary Use model. In one embodiment, SA metric operation feature <highlight><bold>352</bold></highlight> enables driver agent <highlight><bold>300</bold></highlight> to operate on the value of SA metrics. For example, driver agent <highlight><bold>300</bold></highlight> can initialize, increment, add value to, or decrease the SA metrics. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In one embodiment, cache replacement feature <highlight><bold>353</bold></highlight> enables driver agent <highlight><bold>300</bold></highlight> to intelligently replace SA entries in a cache. For example, cache replacement feature <highlight><bold>353</bold></highlight> can enable driver agent <highlight><bold>300</bold></highlight> to determine whether to replace entries in an SA cache on a NIC based on SA metric values. Mapping feature <highlight><bold>351</bold></highlight>, SA metric operation feature <highlight><bold>352</bold></highlight>, and cache replacement feature <highlight><bold>353</bold></highlight> can exist independently of and be external to driver agent <highlight><bold>300</bold></highlight>. For example, upper layers of an electronic system may perform the same or similar functions as mapping feature <highlight><bold>351</bold></highlight>, SA metric operation feature <highlight><bold>352</bold></highlight>, and cache replacement feature <highlight><bold>353</bold></highlight>. Likewise, driver engine <highlight><bold>350</bold></highlight> may exist as a more complex or less complex embodiment, containing some, all, or additional features to those represented in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is one embodiment of a flow diagram for adding an SA to a driver agent. In one embodiment, the upper system layers add an SA to a network interface driver, <highlight><bold>410</bold></highlight>. The upper layers can be, for example, an OS or another application that performs control functions. A network interface driver is one embodiment of a driver agent. In one embodiment, the SA is added to the network interface driver by the upper layers as one step in the execution of a set of instructions for offloading a received packet. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The SA added in <highlight><bold>410</bold></highlight> is associated with an SA metric and initialized to a predetermined value Y, <highlight><bold>420</bold></highlight>. In one embodiment, Y is a value greater than zero that is selected based on experimentation, for example, 10,000. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The driver agent determines whether there is a cache entry available, <highlight><bold>430</bold></highlight>. If there is a cache entry available, the SA is added to the cache and a value X is added to the SA metric, <highlight><bold>440</bold></highlight>. In one embodiment, the value of X is predetermined based on experimentation, for example, 10,000. Adding X to the SA metric according to the present invention will give advantage to the SA added to the cache so that it is likely remain in the cache. If there is no cache entry available, the SA is not added to the cache, <highlight><bold>450</bold></highlight>. In one embodiment, SAs not cached remain in an SA table in system memory. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is one embodiment of a flow diagram for handling a packet received by a driver agent. In one embodiment, a packet associated with a traffic stream is received by a driver agent and the SA information is extracted, <highlight><bold>510</bold></highlight>. For example, a packet can be received by a NIC and DMA transferred to host memory, and a network interface driver can parse out its SA information. The SA information is extracted to determine which SA is associated with the packet, and contains all the information necessary to perform crypto operations on the packet. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In one embodiment, the metric value of the associated SA is incremented, <highlight><bold>520</bold></highlight>. In one embodiment, for example, a driver agent will perform a numerical operation on the SA metric. Crypto operations are performed on the packet, <highlight><bold>530</bold></highlight>. In one embodiment, for example, the driver agent will direct a NIC to perform crypto operations on the packet by Secondary Use. Alternatively, the packet may be handled using software processing with any crypto operation known in the art. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is one embodiment of a flow diagram for replacement of SA entries in a cache. A timer T<highlight><bold>1</bold></highlight> expires indicating a timeout condition, <highlight><bold>610</bold></highlight>. A timer can be any form of counter, timer, capture and compare, or other device or method used to indicate to an electronic system process when a time-dependent operation or series of operations should be performed. Detection of the timeout condition may be performed by either software or hardware interrupt, by timer functions provided by the operating system, or by polling. In one embodiment, the timeout period for T<highlight><bold>1</bold></highlight> is determined by experimentation to minimize SA replacement cost, for example, one second. Thus, cache replacement is performed based on time, rather than caused by a cache miss. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In one embodiment, the expiration of timer T<highlight><bold>1</bold></highlight> indicates to a system that a predetermined policy for cache replacement should be performed. For example, a system processor can have a timer that causes an interrupt on overflow to indicate when to execute a command to a driver agent to perform a function for determining whether entries in an SA cache on a NIC should be replaced. For example, a cache replacement feature can enable a driver agent to perform a cost-based analysis to determine when a cached SA should be replaced by a non-cached SA. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> It is determined whether there are any non-cached SAs, <highlight><bold>620</bold></highlight>. In one embodiment, SAs not in the cache will exist in memory within the system. For example, SAs not in an SA cache on a NIC can be stored in an SA table in system memory. If all SAs are cached, no entries will be replaced, <highlight><bold>690</bold></highlight>. If there are non-cached SAs, the list of cached SAs is searched for the best candidate (B) for eviction, <highlight><bold>630</bold></highlight>. In one embodiment, B is the SA with the lowest SA metric value. For example, the metric associated with cached SA B may be periodically decreased by a driver agent, and the traffic stream associated with B may concurrently have a long period of disuse, resulting in a low SA metric value. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The list of non-cached SAs is searched for the best candidate (A) for addition to the cache, <highlight><bold>640</bold></highlight>. In one embodiment, A is the SA with the highest SA metric value. For example, an SA metric associated with A may be increased by a driver agent if A is added to the driver agent, and the traffic stream may be highly active, resulting in a high SA metric value. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The SA metric values of A and B are compared, <highlight><bold>650</bold></highlight>. In one embodiment, A will only be added to the cache if the metric value of A is greater than B by at least C. In one embodiment, C is a predetermined value based on experimentation that estimates the cost of cache entry replacement, for example, 100. For example, C may be a high number if cache replacement results in large delays or packet loss, or C may be zero if there is little or no cost associated with cache replacement. If the value of the SA metric for A is not greater than the SA metric for B by at least C, no cache entries will be replaced, <highlight><bold>690</bold></highlight>. If the SA metric for A is greater than the SA metric for B by at least C, then B is removed from the cache, <highlight><bold>660</bold></highlight>. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> A is added to the cache and the value X is added to the SA metric for A, <highlight><bold>670</bold></highlight>. In one embodiment, X is a predetermined value based on experimentation, for example, 10,000. Adding X to the SA metric for A gives advantage to A so that it is likely remain in the cache. Timer T<highlight><bold>1</bold></highlight> is reset, <highlight><bold>680</bold></highlight>. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is one embodiment of a flow diagram for decreasing the value of the metrics of the SAs. A timer T<highlight><bold>2</bold></highlight> expires indicating a timeout condition, <highlight><bold>710</bold></highlight>. A timer can be any form of counter, timer, capture and compare, or other device or method used to indicate to a computer system process when a time-dependent operation or series of operations should be performed. Detection of the timeout may be performed by either software or hardware interrupt, or by polling. The timeout period for T<highlight><bold>2</bold></highlight> is determined by experimentation, for example, one second. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> In one embodiment, the expiration of timer T<highlight><bold>2</bold></highlight> indicates to a system that a predetermined policy for decreasing the SA metric value of all SAs should be performed. Decreasing the SA metrics may be performed by subtracting a value from the SA metrics, by shifting the SA metric value to the right, or by dividing down the SA metrics. For example, a system processor can have a timer that causes an interrupt on overflow to indicate when to execute a command to a driver agent to perform a numerical operation to decrease the value of the SA metrics. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The value of the SA metric of all SAs is decreased, <highlight><bold>720</bold></highlight>. For example, the driver agent can divide the metric values by two. In one embodiment, decreasing the SA metric value ages the metrics to give advantage to an SA that has more recent activity over a cached SA associated with a traffic stream that previously had heavy traffic that subsequently fell into disuse. Timer T<highlight><bold>2</bold></highlight> is reset, <highlight><bold>730</bold></highlight>. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In the foregoing specification, the invention has been described with reference to specific embodiments thereof. It will, however, be evident that various modifications and changes can be made thereto without departing from the broader spirit and scope of the invention. The specification and drawings are, accordingly, to be regarded in an illustrative rather than a restrictive sense. </paragraph>
+</section>
+<section>
+<heading lvl="1">Appendix A </heading>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> William E. Alford, Reg. No. 37,764; Farzad E. Amini, Reg. No. 42,261; William Thomas Babbitt, Reg. No. 39,591; Carol F. Barry, Reg. No. 41,600; Jordan Michael Becker, Reg. No. 39,602; Lisa N. Benado, Reg. No. 39,995; Bradley J. Bereznak, Reg. No. 33,474; Michael A. Bernadicou, Reg. No. 35,934; Roger W. Blakely, Jr., Reg. No. 25,831; R. Alan Burnett, Reg. No. 46,149; Gregory D. Caldwell, Reg. No. 39,926; Andrew C. Chen, Reg. No. 43,544; Thomas M. Coester, Reg. No. 39,637; Donna Jo Coningsby, Reg. No. 41,684; Florin Corie, Reg. No. 46,244; Dennis M. deGuzman, Reg. No. 41,702; Stephen M. De Klerk, Reg. No. P46,503; Michael Anthony DeSanctis, Reg. No. 39,957; Daniel M. De Vos, Reg. No. 37,813; Justin M. Dillon, Reg. No. 42,486; Sanjeet Dutta, Reg. No. P46,145; Matthew C. Fagan, Reg. No. 37,542; Tarek N. Fahmi, Reg. No. 41,402; Mark W. Farrell, Reg. No. 45,988; George Fountain, Reg. No. 37,374; James Y. Go, Reg. No. 40,621; James A. Henry, Reg. No. 41,064; Willmore F. Holbrow III, Reg. No. P41,845; Sheryl Sue Holloway, Reg. No. 37,850; George W Hoover II, Reg. No. 32,992; Eric S. Hyman, Reg. No. 30,139; William W. Kidd, Reg. No. 31,772; Sang Hui Kim, Reg. No. 40,450; Walter T. Kim, Reg. No. 42,731; Eric T. King, Reg. No. 44,188; George B. Leavell, Reg. No. 45,436; Kurt P. Leyendecker, Reg. No. 42,799; Gordon R. Lindeen III, Reg. No. 33,192; Jan Carol Little, Reg. No. 41,181; Robert G. Litts, Reg. No. 46,876; Julio Loza, Reg. No. 47,758; Joseph Lutz, Reg. No. 43,765; Michael J. Mallie, Reg. No. 36,591; Andre L. Marais, under 37 C.F.R. &sect;10.9(b); Paul A. Mendonsa, Reg. No. 42,879; Clive D. Menezes, Reg. No. 45,493; Chun M. Ng, Reg. No. 36,878; Thien T. Nguyen, Reg. No. 43,835; Thinh V. Nguyen, Reg. No. 42,034; Dennis A. Nicholls, Reg. No. 42,036; Daniel E. Ovanezian, Reg. No. 41,236; Kenneth B. Paley, Reg. No. 38,989; Gregg A. Peacock, Reg. No. 45,001; Marina Portnova, Reg. No. P45,750; Michael A. Proksch, Reg. No. 43,021; William F. Ryann, Reg. 44,313; James H. Salter, Reg. No. 35,668; WilliamW. Schaal, Reg. No. 39,018; James C. Scheller, Reg. No. 31,195; Jeffrey S. Schubert, Reg. No. 43,098; George Simion, Reg. No. P47,089; Maria McCormack Sobrino, Reg. No. 31,639; Stanley W. Sokoloff, Reg. No. 25,128; Edwin H. Taylor, Reg. No. 25,129; Lance A. Termes, Reg. No. 43,184; John F. Travis, Reg. No. 43,203; Joseph A. Twarowski, Reg. No. 42,191; Kerry D. Tweet, Reg. No. 45,959; Mark C. Van Ness, Reg. No. 39,865; Thomas A. Van Zandt, Reg. No. 43,219; Lester J. Vincent, Reg. No. 31,460; Glenn E. Von Tersch, Reg. No. 41,364; John Patrick Ward, Reg. No. 40,216; Mark L. Watson, Reg. No. P46,322; Thomas C. Webster, Reg. No. P46,154; and Norman Zafman, Reg. No. 26,250; my patent attorneys, and Firasat Ali, Reg. No. 45,715; Richard Nakashima, Reg. No. 42,023, my patent agents of BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP, with offices located at 12400 Wilshire Boulevard, 7th Floor, Los Angeles, Calif. 90025, telephone (310) 207-3800, and and Alan K. Aldous, Reg. No. 31,905; Robert D. Anderson, Reg. No. 33,826; Joseph R. Bond, Reg. No. 36,458; Richard C. Calderwood, Reg. No. 35,468; Jeffrey S. Draeger, Reg. No. 41,000; Cynthia Thomas Faatz, Reg. No. 39,973; Sean Fitzgerald, Reg. No. 32,027; John F. Kacvinsky, Reg. No. 40,040; Seth Z. Kalson, Reg. No. 40,670; David J. Kaplan, Reg. No. 41,105; Charles A. Mirho, Reg. No. 41,199; Leo V. Novakoski, Reg. No. 37,198; Naomi Obinata, Reg. No. 39,320; Thomas C. Reynolds, Reg. No. 32,488; Kenneth M. Seddon, Reg. No. 43,105; Mark Seeley, Reg. No. 32,299; Steven P. Skabrat, Reg. No. 36,279; Howard A. Skaist, Reg. No. 36,008; Steven C. Stewart, Reg. No. 33,555; Robert G. Winkle, Reg. No. 37,474; Steven D. Yates, Reg. No. 42,242, and Charles K. Young, Reg. No. 39,435; my patent attorneys, Thomas Raleigh Lane, Reg. No. 42,781; Calvin E. Wells; Reg. No. P43,256, Peter Lam, Reg. No. 44,855; Michael J. Nesheiwat, Reg. No. P47,819; and Gene I. Su, Reg. No. 45,140; my patent agents, of INTEL CORPORATION; and James R. Them, Reg. No. 31,710, my patent attorney; with full power of substitution and revocation, to prosecute this application and to transact all business in the Patent and Trademark Office connected herewith. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>associating a security association with a traffic stream; </claim-text>
+<claim-text>associating a metric value with the security association; </claim-text>
+<claim-text>modifying the metric value based on network traffic; and </claim-text>
+<claim-text>dynamically mapping the traffic stream to one of multiple components that perform cryptography operations based on the metric value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the dynamic mapping is performed using a time-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the multiple components comprise a driver agent and a network interface. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein dynamically mapping traffic streams to one of multiple components comprises selecting between performing cryptography operations with a driver agent and performing cryptography operations with a network interface using cached cryptography information. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the dynamic mapping further comprises replacing a cached security association with a non-cached security association when the metric value of the non-cached security association differs from the metric value of the cached security association by at least a predetermined amount. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the predetermined amount is selected based on a cost-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein modifying the metric value further comprises initializing the metric to a predetermined value when the security association is received by a driver agent. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value by a predetermined amount when the security association is added to a cache. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value when a packet is received. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein modifying the metric value further comprises periodically changing the metric value independent of network traffic. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. An apparatus comprising: 
+<claim-text>a network interface coupled to receive network traffic streams; and </claim-text>
+<claim-text>a driver agent coupled to communicate with the network interface, the driver agent to associate a security association with a traffic stream, associate a metric value with the security association, modify the metric value based on network traffic, and dynamically map the traffic stream to one of multiple components that perform cryptography operations based on the metric value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the dynamic mapping is performed using a time-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the multiple components comprise a driver agent and a network interface. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein dynamically mapping traffic streams to one of multiple components comprises selecting between performing cryptography operations with a driver agent and performing cryptography operations with a network interface using cached cryptography information. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the dynamic mapping further comprises replacing a cached security association with a non-cached security association when the metric value of the non-cached security association is greater than the metric value of the cached security association by at least a predetermined amount. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the predetermined amount is selected based on a cost-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein modifying the metric value further comprises initializing the metric to a predetermined value when the security association is received by a driver agent. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value by a predetermined amount when the security association is added to a cache. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value when a packet is received. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein modifying the metric value further comprises periodically changing the metric value independent of network traffic. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. An article comprising a machine-accessible medium to provide machine-readable instructions that, when executed, cause one or more electronic systems to: 
+<claim-text>associate a security association with a traffic stream; </claim-text>
+<claim-text>associate a metric value with the security association; </claim-text>
+<claim-text>modify the metric value based on network traffic; and </claim-text>
+<claim-text>dynamically map the traffic stream to one of multiple components that perform cryptography operations based on the metric value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the dynamic mapping is performed using a time-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the multiple components comprise a driver agent and a network interface. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein dynamically mapping traffic streams to one of multiple components comprises selecting between performing cryptography operations with a driver agent and performing cryptography operations with a network interface using cached cryptography information. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the dynamic mapping further comprises replacing a cached security association with a non-cached security association when the metric value of the non-cached security association is greater than the metric value of the cached security association by at least a predetermined amount. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> wherein the predetermined amount is selected based on a cost-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein modifying the metric value further comprises initializing the metric to a predetermined value when the security association is received by a driver agent. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value by a predetermined amount when the security association is added to a cache. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value when a packet is received. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein modifying the metric value further comprises periodically changing the metric value independent of network traffic. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A electronic data signal embodied in a data communications medium shared among a plurality of network devices comprising sequences of instructions that, when executed, cause one or more electronic systems to: 
+<claim-text>associate a security association with a traffic stream; </claim-text>
+<claim-text>associate a metric value with the security association; </claim-text>
+<claim-text>modify the metric value based on network traffic; and </claim-text>
+<claim-text>dynamically map the traffic stream to one of multiple components that perform cryptography operations based on the metric value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein the dynamic mapping is performed using a time-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein the multiple components comprise a driver agent and a network interface. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein dynamically mapping traffic streams to one of multiple components comprises selecting between performing cryptography operations with a driver agent and performing cryptography operations with a network interface using cached cryptography information. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein the dynamic mapping further comprises replacing a cached security association with a non-cached security association when the metric value of the non-cached security association is greater than the metric value of the cached security association by at least a predetermined amount. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference> wherein the predetermined amount is selected based on a cost-based analysis. </claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein modifying the metric value further comprises initializing the metric to a predetermined value when the security association is received by a driver agent. </claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value by a predetermined amount when the security association is added to a cache. </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein modifying the metric value further comprises changing the associated metric value when a packet is received. </claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. The electronic data signal of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein modifying the metric value further comprises periodically changing the metric value independent of network traffic. </claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. A method comprising: 
+<claim-text>associating a security association with a traffic stream; </claim-text>
+<claim-text>determining whether the security association necessary for performing cryptography operations on the packet is cached; </claim-text>
+<claim-text>determining whether the security association should be cached based on a predetermined policy; and </claim-text>
+<claim-text>caching the security association if it is determined from the predetermined policy that the security association should be cached. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00044">claim 41</dependent-claim-reference> wherein the predetermined policy is performed on a periodic basis. </claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00044">claim 41</dependent-claim-reference> wherein the predetermined policy comprises: 
+<claim-text>associating a metric value with a security association; </claim-text>
+<claim-text>initializing the metric value to a predetermined value when the security association is received by a driver agent; </claim-text>
+<claim-text>increasing the value of the security association metric by a predetermined value when the associated security association is added to a cache; </claim-text>
+<claim-text>incrementing the value of the associated security association metric when a packet is received; and </claim-text>
+<claim-text>determining whether the metric value is greater than the lowest metric value of cached security associations by at least a predetermined amount. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00044">claim 43</dependent-claim-reference> further comprising periodically decreasing the metric value.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005283A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005283A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005283A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005283A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005283A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005283A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005283A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030005283A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

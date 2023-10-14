@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005203A1-20030102-D00000.TIF SYSTEM "US20030005203A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005203A1-20030102-D00001.TIF SYSTEM "US20030005203A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005203A1-20030102-D00002.TIF SYSTEM "US20030005203A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005203A1-20030102-D00003.TIF SYSTEM "US20030005203A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005203A1-20030102-D00004.TIF SYSTEM "US20030005203A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005203A1-20030102-D00005.TIF SYSTEM "US20030005203A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005203</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895688</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F013/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>710</class>
+<subclass>305000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Detecting transfer of Universal Serial Bus (USB) Host Controller information from operating system drivers to Basic Input Output System (BIOS)</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Rajeev</given-name>
+<middle-name>K.</middle-name>
+<family-name>Nalawadi</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Folsom</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A first driver bypasses execution of a transaction descriptor that causes a non-maskable interrupt (NMI) when executed by a host controller while under control of a second driver. The transaction descriptor is pointed to by an entry in a frame list. The host controller has a plurality of host controller registers including a frame list base address register defining a base address of the frame list and a frame number register addressing the entry. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates to Universal Serial Bus (USB). In particular, the invention relates to USB Host Controllers. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The Universal Serial Bus (USB) is an industry standard extension to the Personal Computer (PC) architecture with focus on PC peripherals. The USB supports functional data and control exchange between the USB host and a USB device as a set of either unidirectional or bi-directional pipes. USB data transfers take place between host software and a particular endpoint on a USB device. The USB host interacts with USB devices through a USB Host Controller (HC). The USB system software on the host manages interactions between USB devices and host-based device software. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The USB system software includes USB drivers, client driver software, and HC driver. In a typical PC environment, the USB drivers may exist in the Basic Input/Output System (BIOS) and the Operating System (OS). When control is transferred from the USB HC from the BIOS device driver to the OS device driver, the OS device driver saves a snapshot of all the USB input/output (I/O) registers. The OS driver will restore the snapshot of these USB I/O registers when the user wishes to perform one of the following tasks: (1) restart to Microsoft-Disk Operating System (MS-DOS), (2) select &ldquo;Shutdown of OS&rdquo;, and (3) unload OS USB drivers using device manager in the OS. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The BIOS needs to determine when the transfer of control from the OS driver to the BIOS is completed. Existing techniques include use of the Configure Flag (CF). The USB HC driver sets this bit as the last action in its process of configuring the Host Controller. However, the OS device driver will have re-enumerated the USB devices and assigned new addresses. Therefore, restoring the USB I/O registers will not restore the BIOS Legacy functionality. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Therefore, there is a need to have an efficient technique to detect when the control transfer from OS device driver to BIOS is completed. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The features and advantages of the present invention will become apparent from the following detailed description of the present invention in which: </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagram illustrating a system in which one embodiment of the invention can be practiced. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a diagram illustrating a frame list shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart illustrating a process to initialize USB operations during boot-up according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart illustrating a process to support USB operations by the BIOS USB driver during boot-up according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart illustrating a process to support USB operations by the OS USB driver during control transfer from OS to BIOS according to one embodiment of the invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In the following description, for purposes of explanation, numerous details are set forth in order to provide a thorough understanding of the present invention. However, it will be apparent to one skilled in the art that these specific details are not required in order to practice the present invention. In other instances, well-known electrical structures and circuits are shown in block diagram form in order not to obscure the present invention. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagram illustrating a computer system <highlight><bold>100</bold></highlight> in which one embodiment of the invention can be practiced. The computer system <highlight><bold>100</bold></highlight> includes a processor <highlight><bold>110</bold></highlight>, a host bus <highlight><bold>120</bold></highlight>, a memory control hub (MCH) <highlight><bold>130</bold></highlight>, a Basic Input/Output System (BIOS) memory <highlight><bold>135</bold></highlight>, a system memory <highlight><bold>140</bold></highlight>, an input/output control hub (ICH) <highlight><bold>150</bold></highlight>, a mass storage device <highlight><bold>170</bold></highlight>, and input/output devices <highlight><bold>180</bold></highlight><highlight><subscript>1 </subscript></highlight>to <highlight><bold>180</bold></highlight><highlight><subscript>K</subscript></highlight>. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The processor <highlight><bold>110</bold></highlight> represents a central processing unit of any type of architecture, such as embedded processors, micro-controllers, digital signal processors, superscalar computers, vector processors, single instruction multiple data (SIMD) computers, complex instruction set computers (CISC), reduced instruction set computers (RISC), very long instruction word (VLIW), or hybrid architecture. In one embodiment, the processor <highlight><bold>110</bold></highlight> is compatible with the Intel Architecture (IA) processor, such as the IA-32 and the IA-64. The processor <highlight><bold>110</bold></highlight> typical contains a number of control registers to support memory management tasks such as virtual memory and cache memory. These tasks may include paging and segmentation. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The host bus <highlight><bold>120</bold></highlight> provides interface signals to allow the processor <highlight><bold>110</bold></highlight> to communicate with other processors or devices, e.g., the MCH <highlight><bold>130</bold></highlight>. The host bus <highlight><bold>120</bold></highlight> may support a uni-processor or multiprocessor configuration. The host bus <highlight><bold>120</bold></highlight> may be parallel, sequential, pipelined, asynchronous, synchronous, or any combination thereof. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The MCH <highlight><bold>130</bold></highlight> provides control and configuration of memory and input/output devices such as the system memory <highlight><bold>140</bold></highlight> and the ICH <highlight><bold>150</bold></highlight>. The MCH <highlight><bold>130</bold></highlight> maybe integrated into a chipset that integrates multiple functionalities such as the isolated execution mode, host-to-peripheral bus interface, memory control. For clarity, not all the peripheral buses are shown. It is contemplated that the system <highlight><bold>100</bold></highlight> may also include peripheral buses such as Peripheral Component Interconnect (PCI), accelerated graphics port (AGP), Industry Standard Architecture (ISA) bus, and Universal Serial Bus (USB), etc. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The BIOS memory <highlight><bold>135</bold></highlight> stores boot-up code and data. The BIOS memory <highlight><bold>135</bold></highlight> typically is implemented with non-volatile memory such as Read Only Memory (ROM), flash memory, and other similar memories. The BIOS memory <highlight><bold>135</bold></highlight> may also be stored inside the MCH <highlight><bold>130</bold></highlight>. The BIOS memory <highlight><bold>135</bold></highlight> contains a BIOS USB driver <highlight><bold>138</bold></highlight> and other drivers. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The system memory <highlight><bold>140</bold></highlight> stores system code and data. The system memory <highlight><bold>140</bold></highlight> is typically implemented with dynamic random access memory (DRAM) or static random access memory (SRAM). The system memory may include program code or code segments implementing one embodiment of the invention. The system memory includes an Operating System (OS) <highlight><bold>141</bold></highlight> and USB memory <highlight><bold>149</bold></highlight>. The OS <highlight><bold>141</bold></highlight> contains an OS USB driver <highlight><bold>142</bold></highlight>. The USB memory <highlight><bold>149</bold></highlight> contains data structures and scratchpad data for controlling USB devices. Examples of these data structures include frame lists, transaction descriptors, queues, etc. In particular, the USB memory <highlight><bold>149</bold></highlight> includes a frame list <highlight><bold>143</bold></highlight>, a non-maskable interrupt (NMI) transaction descriptor (TD) <highlight><bold>144</bold></highlight>, and a dummy TD <highlight><bold>145</bold></highlight> and data TD&apos;s <highlight><bold>146</bold></highlight>. The system memory <highlight><bold>140</bold></highlight> may also include other programs or data which are not shown, such as an operating system. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The ICH <highlight><bold>150</bold></highlight> has a number of functionalities that are designed to support I/O functions. The ICH <highlight><bold>150</bold></highlight> may also be integrated into a chipset together or separate from the MCH <highlight><bold>130</bold></highlight> to perform I/O functions. The ICH <highlight><bold>150</bold></highlight> may include a number of interface and I/O functions such as PCI bus interface, processor interface, interrupt controller, direct memory access (DMA) controller, power management logic, timer, universal serial bus (USB) interface, mass storage interface, low pin count (LPC) interface, etc. In particular, the ICH <highlight><bold>150</bold></highlight> includes a USB host controller (HC) <highlight><bold>151</bold></highlight> and interface to the USB bus <highlight><bold>155</bold></highlight>. The USB host controller <highlight><bold>151</bold></highlight> contains a number of host controller registers as defined in the Universal Host Controller Interface (UHCI) Design Guide, Revision 1.1, published by Intel Corporation, March 1996. Examples of these registers include USB command register, USB status register, USB interrupt enable register, USB frame number register, USB frame list base address register, USB start of frame (SOF) register, USB Port 0 Status and Control register, and USB Port 1 Status and Control register. The USB bus <highlight><bold>155</bold></highlight> is coupled to a number of USB devices such as USB keyboard <highlight><bold>152</bold></highlight>, USB mouse <highlight><bold>154</bold></highlight>, USB camera <highlight><bold>156</bold></highlight>, and other USB devices <highlight><bold>158</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The mass storage device <highlight><bold>170</bold></highlight> stores archive information such as code, programs, files, data, applications, and operating systems. The mass storage device <highlight><bold>170</bold></highlight> may include compact disk (CD) ROM <highlight><bold>172</bold></highlight>, floppy diskettes <highlight><bold>174</bold></highlight>, and hard drive <highlight><bold>176</bold></highlight>, and any other magnetic or optic storage devices. The mass storage device <highlight><bold>170</bold></highlight> provides a mechanism to read machine-readable media. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The I/O devices <highlight><bold>180</bold></highlight><highlight><subscript>1 </subscript></highlight>to <highlight><bold>180</bold></highlight><highlight><subscript>K </subscript></highlight>may include any I/O devices to perform I/O functions. Examples of I/O devices <highlight><bold>180</bold></highlight><highlight><subscript>1 </subscript></highlight>to <highlight><bold>180</bold></highlight><highlight><subscript>K </subscript></highlight>include controller for input devices (e.g., keyboard, mouse, trackball, pointing device), media card (e.g., audio, video, graphics), network card, and any other peripheral controllers. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The present invention may be implemented by hardware, software, firmware, microcode, or any combination thereof. When implemented in software, firmware, or microcode, the elements of the present invention are the program code or code segments to perform the necessary tasks. A code segment may represent a procedure, a function, a subprogram, a program, a routine, a subroutine, a module, a software package, a class, or any combination of instructions, data structures, or program statements. A code segment may be coupled to another code segment or a hardware circuit by passing and/ or receiving information, data, arguments, parameters, or memory contents. Information, arguments, parameters, data, etc. may be passed, forwarded, or transmitted via any suitable means including memory sharing, message passing, token passing, network transmission, etc. The program or code segments may be stored in a processor readable medium or transmitted by a computer data signal embodied in a carrier wave, or a signal modulated by a carrier, over a transmission medium. The &ldquo;processor readable medium&rdquo; may include any medium that can store or transfer information. Examples of the processor readable medium include an electronic circuit, a semiconductor memory device, a ROM, a flash memory, an erasable ROM (EROM), a floppy diskette, a compact disk (CD-ROM), an optical disk, a hard disk, a fiber optic medium, a radio frequency (RF) link, etc. The computer data signal may include any signal that can propagate over a transmission medium such as electronic network channels, optical fibers, air, electromagnetic, RF links, etc. The code segments may be downloaded via computer networks such as the Internet, Intranet, etc. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> It is noted that the invention may be described as a process which is usually depicted as a flowchart, a flow diagram, a structure diagram, or a block diagram. Although a flowchart may describe the operations as a sequential process, many of the operations can be performed in parallel or concurrently. In addition, the order of the operations may be re-arranged. A process is terminated when its operations are completed. A process may correspond to a method, a function, a procedure, a subroutine, a subprogram, etc. When a process corresponds to a function, its termination corresponds to a return of the function to the calling function or the main function. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a diagram illustrating the USB memory <highlight><bold>149</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> according to one embodiment of the invention. The USB memory <highlight><bold>149</bold></highlight> includes the frame list <highlight><bold>143</bold></highlight>, the NMI TD <highlight><bold>144</bold></highlight>, the dummy TD <highlight><bold>145</bold></highlight>, and the data TA&apos;s <highlight><bold>146</bold></highlight>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The frame list <highlight><bold>142</bold></highlight> includes a number of entries <highlight><bold>210</bold></highlight><highlight><subscript>1 </subscript></highlight>to <highlight><bold>210</bold></highlight><highlight><subscript>N</subscript></highlight>. The N entries <highlight><bold>210</bold></highlight><highlight><subscript>1 </subscript></highlight>to <highlight><bold>210</bold></highlight><highlight><subscript>N </subscript></highlight>are addressed by the USB frame number stored in the USB frame number register in the host controller <highlight><bold>151</bold></highlight>. Each of the N entries <highlight><bold>210</bold></highlight><highlight><subscript>1 </subscript></highlight>to <highlight><bold>210</bold></highlight><highlight><subscript>N </subscript></highlight>corresponds to a frame number. In one embodiment, N is 1024 and each entry is composed of 4 bytes, corresponding to 4 KB of frame list. For USB devices, each entry corresponds to a particular frame of approximately 1 millisecond (ms). Each of the N entries <highlight><bold>210</bold></highlight><highlight><subscript>1 </subscript></highlight>to <highlight><bold>210</bold></highlight><highlight><subscript>N </subscript></highlight>contains a pointer to other data structures (e.g., Transaction Descriptors, Queue Heads) and control bits. In particular, there is the non-maskable interrupt (NMI) TD <highlight><bold>144</bold></highlight>, the dummy TD <highlight><bold>145</bold></highlight>, and data TD&apos;s <highlight><bold>146</bold></highlight>. The NMI TD <highlight><bold>144</bold></highlight> is used to indicate that the control transfer from the OS USB driver <highlight><bold>142</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>) to the BIOS USB driver <highlight><bold>138</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>) has been completed. The dummy TD <highlight><bold>145</bold></highlight> is used to provide rollback at 1 second interval. The data TD&apos;s <highlight><bold>146</bold></highlight> are used for the control and operation of the USB devices. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The base address of the frame list <highlight><bold>143</bold></highlight> is defined or provided by the USB frame list base address stored in the USB frame list base address register in the USB HC <highlight><bold>151</bold></highlight>. By changing the USB frame list base address, it is possible to allow the USB HC <highlight><bold>151</bold></highlight> to access to a different frame list which points to different TD&apos;s. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> The BIOS USB driver <highlight><bold>138</bold></highlight> or the OS USB driver <highlight><bold>142</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>) programs the Host Controller <highlight><bold>151</bold></highlight> with the starting address of the frame list in the USB frame list base address register and the Frame list index. Then, the driver causes the HC <highlight><bold>151</bold></highlight> to execute the schedule by setting the Run/Stop bit in the USB Control register to Run. The USB HC <highlight><bold>151</bold></highlight> then processes the schedule one entry at a time. Executing the schedule refers to fetching the entry and obtaining the Transaction Descriptor or the Queue Head. If the frame list entry indicates that it points to a TD, the HC <highlight><bold>151</bold></highlight> fetches the entry and begins the operations necessary to initiate a transaction on the USB. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The USB HC <highlight><bold>151</bold></highlight> provides interrupt capability based on two types: one is related to the execution of the transactions in the schedule, and one is related to the HC operation error. The transaction-based interrupts are maskable. These interrupts include Cyclic Redundancy Code (CRC) error or time-out, Interrupt on Completion, Short Packet Detect, Serial Bus Babble, Stalled, Data Buffer Error, and Bit Stuff Error The non-transaction based interrupts include Resume Receive, HC Process Error, and Host System Error. Out of these three non-transaction based interrupts, the HC Process Error and the Host System Error are non maskable. The NMI TD can be forced to be generated by using the HC Process Error interrupt. This HC Process Error can be created by using a non valid Packet Identifier (PID) or use a maximum length of greater than the allowable maximum value (e.g., 1280). </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> To set a positive flag that indicates a control transfer from the OS USB driver <highlight><bold>143</bold></highlight> to the BIOS USB driver has occurred, the OS USB driver can cause NMI to occur by restoring the previously saved USB HC registers and setting the HC to execute the USB schedule that contains the NMI. When the HC executes the NMI TD, a non-maskable interrupt is generated which can be converted into a legacy USB System Management Interrupt (SMI). On the occurrence of this interrupt, the HC <highlight><bold>151</bold></highlight> clears the Run/Stop bit which prevents further execution of the TD. The BIOS SMI handler then passes control to the BIOS USB driver <highlight><bold>138</bold></highlight>. The BIOS USB driver <highlight><bold>138</bold></highlight> is therefore in control when the NMI is generated. Upon receiving control, the BIOS USB driver <highlight><bold>138</bold></highlight> reprograms the USB frame list base register to prevent or bypass execution of the NMI. Then the BIOS USB driver <highlight><bold>138</bold></highlight> can go through parsing the TD&apos;s in the frame list after positively confirming that the control is transferred from the OS USB driver <highlight><bold>142</bold></highlight>. It is noted that the NMI TD is part of the BIOS-built USB schedule. The frame number that corresponds to the entry pointing to the NMI TD is known to the BIOS but not to the OS. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In other words, when the BIOS USB driver <highlight><bold>138</bold></highlight> is in control as a result of a legacy SMI caused by execution of an NMI TD, a positive detection of control transfer from the OS to the BIOS is achieved. To prevent or bypass execution of the NMI TD by the OS USB driver <highlight><bold>142</bold></highlight> when control is transferred to OS USB driver <highlight><bold>142</bold></highlight>, the BIOS <highlight><bold>138</bold></highlight> re-programs the frame list base address to another frame list which does not point to the NMI TD. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart illustrating a process <highlight><bold>300</bold></highlight> to initialize USB operations during boot-up according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Upon START, the system is powered on and the boot-up begins (Block <highlight><bold>310</bold></highlight>). Next, the BIOS code starts execution and initializes system memory and other devices (Block <highlight><bold>320</bold></highlight>). Then, the BIOS USB driver executes the USB schedule (Block <highlight><bold>330</bold></highlight>). Next, the BIOS USB driver processes control and data from USB devices (Block <highlight><bold>340</bold></highlight>). </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Then, the BIOS loads the OS from mass storage to the system memory (Block <highlight><bold>350</bold></highlight>). Next, the BIOS transfers control to the OS (Block <highlight><bold>360</bold></highlight>). The OS USB driver then saves the current state of the USB host controller registers as initialized by the BIOS USB driver (Block <highlight><bold>370</bold></highlight>). Next, the OS loads the OS USB driver (Block <highlight><bold>380</bold></highlight>). The OS USB driver then handles control and data from the USB devices (Block <highlight><bold>390</bold></highlight>). The process <highlight><bold>300</bold></highlight> is then terminated. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart illustrating a process <highlight><bold>400</bold></highlight> to support USB operations by the BIOS USB driver during boot-up according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Upon START, the process <highlight><bold>400</bold></highlight> determines if there is a data transfer to or from USB devices or if there is execution of dummy TD which occurs approximately every one second for rollback (Block <highlight><bold>410</bold></highlight>). If no, the process <highlight><bold>400</bold></highlight> is terminated. Otherwise, the process <highlight><bold>400</bold></highlight> invokes the BIOS USB driver (Block <highlight><bold>420</bold></highlight>). Then, the BIOS USB driver checks the USB frame number in the USB frame number register in the Host Controller (HC) (Block <highlight><bold>430</bold></highlight>). From this USB frame number, the BIOS USB driver determines whether it is time to bypass the execution of the NMI TD (Block <highlight><bold>440</bold></highlight>). If not, the process <highlight><bold>400</bold></highlight> goes to Block <highlight><bold>460</bold></highlight>. Otherwise, the BIOS USB driver programs the frame list base address in the USB frame list base address register (Block <highlight><bold>450</bold></highlight>). By changing the base address, the frame list is positioned at a different memory address from that contains the entry pointing to the NMI TD. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Next, the BIOS USB driver parses the data TD&apos;s to process the data transferred to or from the USB devices accordingly (Block <highlight><bold>460</bold></highlight>). Then the BIOS USB driver enables the data TD&apos;s for the next iteration processing if necessary (Block <highlight><bold>470</bold></highlight>). Next, the BIOS USB driver passes control back to the regular code execution (Block <highlight><bold>480</bold></highlight>) and is then terminated. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart illustrating a process <highlight><bold>500</bold></highlight> to support USB operations by the OS USB driver during control transfer from OS to BIOS according to one embodiment of the invention. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Upon START, the process <highlight><bold>500</bold></highlight> determines if it is desire to transfer control from the OS USB driver to the BIOS USB driver (Block <highlight><bold>510</bold></highlight>). Typically, this is provided by the user&apos;s selection of one of the following tasks: (1) restart to Microsoft-Disk Operating System (MS-DOS), (2) select &ldquo;Shutdown of OS&rdquo;, and (3) unload OS USB drivers using device manager in the OS. If not, the process <highlight><bold>500</bold></highlight> continues execution of the OS USB drivers or other OS functions (Block <highlight><bold>515</bold></highlight>) and is then terminated. Otherwise, the OS USB driver unloads the OS USB driver by restoring the USB HC registers previously saved prior to installation of the OS USB driver (Block <highlight><bold>520</bold></highlight>). </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Then, the USB HC executes the USB schedule using the restored registers (Block <highlight><bold>530</bold></highlight>). Next, the USB HC executes the USB NMI TD which has not been bypassed by the BIOS USB driver (Block <highlight><bold>540</bold></highlight>). Next, the process <highlight><bold>500</bold></highlight> generates the NMI as result of the execution of NMI TD to transfer control to the BIOS USB driver (Block <highlight><bold>550</bold></highlight>). This NMI is redirected or converted to the legacy SMI which will be serviced by the BIOS SMI handler. The BIOS SMI handler then passes control to BIOS USB driver. When the BIOS USB driver takes control, it parses through the USB TD&apos;s to confirm the control transfer from OS USB driver (Block <highlight><bold>560</bold></highlight>). After confirming, the BIOS USB driver re-initializes the USB devices and starts normal processing of USB device data as needed (Block <highlight><bold>570</bold></highlight>). Then, the process <highlight><bold>500</bold></highlight> exits the BIOS USB driver and returns to regular code execution (Block <highlight><bold>580</bold></highlight>) and is then terminated. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> While this invention has been described with reference to illustrative embodiments, this description is not intended to be construed in a limiting sense. Various modifications of the illustrative embodiments, as well as other embodiments of the invention, which are apparent to persons skilled in the art to which the invention pertains are deemed to lie within the spirit and scope of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. An apparatus comprising: 
+<claim-text>a first driver to bypass execution of a transaction descriptor that causes a non-maskable interrupt (NMI) when executed by a host controller while under control of a second driver, the transaction descriptor being pointed to by an entry in a frame list, the host controller having a plurality of host controller registers including a frame list base address register defining a base address of the frame list and a frame number register addressing the entry. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein first driver programs the frame list base address register based on a frame number in the frame number register. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the second driver restores the host controller registers before execution of the transaction descriptor that causes the NMI when a first control transfer from the second driver to the first driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the host controller registers are saved when a second control transfer from the first driver to the second driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein the first driver parses the transaction descriptor that causes the NMI to confirm the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the first driver re-initializes devices controlled by the host controller after confirming the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the host controller is a Universal Serial Bus (USB) host controller. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the first driver is a Basic Input/Output System (BIOS) driver. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the second driver is an Operating System (OS) driver. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the NMI is a host controller process error. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method comprising: 
+<claim-text>bypassing execution of a transaction descriptor by a first driver, the transaction descriptor causing a non-maskable interrupt (NMI) when executed by a host controller while under control of a second driver, the transaction descriptor being pointed to by an entry in a frame list, the host controller having a plurality of host controller registers including a frame list base address register defining a base address of the frame list and a frame number register addressing the entry. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein bypassing comprises programming the frame list base address register based on a frame number in the frame number register. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further comprising restoring the host controller registers by the second driver before execution of the transaction descriptor that causes the NMI when a first control transfer from the second driver to the first driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> further comprising saving the host controller registers when a second control transfer from the first driver to the second driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising parsing the transaction descriptor that causes the NMI by the first driver to confirm the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> further comprising re-initializing devices controlled by the host controller after confirming the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the host controller is a Universal Serial Bus (USB) host controller. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the first driver is a Basic Input/Output System (BIOS) driver. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the second driver is an Operating System (OS) driver. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the NMI is a host controller process error. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A computer program product comprising: 
+<claim-text>a machine useable medium having computer program code embedded therein, the computer program product having: </claim-text>
+<claim-text>computer readable program code to bypass execution of a transaction descriptor by a first driver, the transaction descriptor causing a non-maskable interrupt (NMI) when executed by a host controller while under control of a second driver, the transaction descriptor being pointed to by an entry in a frame list, the host controller having a plurality of host controller registers including a frame list base address register defining a base address of the frame list and a frame number register addressing the entry. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the computer readable program code to bypass comprises computer readable program code to program the frame list base address register based on a frame number in the frame number register. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> further comprising computer readable program code to restore the host controller registers by the second driver before execution of the transaction descriptor that causes the NMI when a first control transfer from the second driver to the first driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> further comprising computer readable program code to save the host controller registers when a second control transfer from the first driver to the second driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> further comprising computer readable program code to parse the transaction descriptor that causes the NMI by the first driver to confirm the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> further comprising computer readable program code to re-initialize devices controlled by the host controller after confirming the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the host controller is a Universal Serial Bus (USB) host controller. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the first driver is a Basic Input/Output System (BIOS) driver. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein the second driver is an Operating System (OS) driver. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the NMI is a host controller process error. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A system comprising: 
+<claim-text>a processor; </claim-text>
+<claim-text>a host controller having a plurality of host controller registers including a frame list base address register and a frame number register; </claim-text>
+<claim-text>a first storage coupled to the processor to store a first driver; and </claim-text>
+<claim-text>a second storage coupled to the processor to store a second driver; </claim-text>
+<claim-text>wherein the first driver bypasses execution of a transaction descriptor that causes a non-maskable interrupt (NMI) when executed by the host controller while under control of the second driver, the transaction descriptor being pointed to by an entry in a frame list, the frame list base address register defining a base address of the frame list, the frame number register addressing the entry. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein first driver programs the frame list base address register based on a frame number in the frame number register. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference> wherein the second driver restores the host controller registers before execution of the transaction descriptor that causes the NMI when a first control transfer from the second driver to the first driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 33</dependent-claim-reference> wherein the host controller registers are saved when a second control transfer from the first driver to the second driver occurs. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> wherein the first driver parses the transaction descriptor that causes the NMI to confirm the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference> wherein the first driver re-initializes devices controlled by the host controller after confirming the first control transfer. </claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein the host controller is a Universal Serial Bus (USB) host controller. </claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein the first driver is a Basic Input/Output System (BIOS) driver. </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference> wherein the second driver is an Operating System (OS) driver. </claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> wherein the NMI is a host controller process error.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005203A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005203A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005203A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005203A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005203A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005203A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

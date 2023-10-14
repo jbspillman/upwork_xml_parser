@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005229A1-20030102-D00000.TIF SYSTEM "US20030005229A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005229A1-20030102-D00001.TIF SYSTEM "US20030005229A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005229A1-20030102-D00002.TIF SYSTEM "US20030005229A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005229A1-20030102-D00003.TIF SYSTEM "US20030005229A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005229A1-20030102-D00004.TIF SYSTEM "US20030005229A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005229A1-20030102-D00005.TIF SYSTEM "US20030005229A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005229</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894469</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F013/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>122000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>711</class>
+<subclass>154000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Mechanism for bank conflict resolution for an out-of-order cache</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Srinivasa</given-name>
+<family-name>Rangan</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Mark L. Watson</name-1>
+<name-2>BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP</name-2>
+<address>
+<address-1>Seventh Floor</address-1>
+<address-2>12400 Wilshire Boulevard</address-2>
+<city>Los Angeles</city>
+<state>CA</state>
+<postalcode>90025-1026</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">According to one embodiment, a computer system is disclosed. The computer system includes a microprocessor and a first cache coupled to the microprocessor. The first cache detects conflicts between multiple requests to access a bank within the first cache. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">COPYRIGHT NOTICE </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> Contained herein is material that is subject to copyright protection. The copyright owner has no objection to the facsimile reproduction of the patent disclosure by any person as it appears in the Patent and Trademark Office patent files or records, but otherwise reserves all rights to the copyright whatsoever. </paragraph>
+</section>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to computer systems; more particularly, the present invention relates to the resolution of bank conflicts between memory accesses in high performance microprocessors. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Due to the difference in cycle time between microprocessors and main memory in a computer system, microprocessors typically implement one or more cache memories (cache). A cache is a small, fast intermediary memory device that typically only includes data and instructions most recently used. In some designs caches include multiple banks in order to enable multiple accesses to be performed during each clock cycle. A multiple bank cache is divided such that datum can be stored in one bank. Each bank allows for one access each clock cycle. An interconnection network is implemented to route each instruction/datum to the correct bank. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Moreover, a cache may employ non-blocking behavior that allows multiple misses from higher-level caches to be pending. Non-blocking behavior also enables a microprocessor core to continue execution until requested data can be retrieved and used. The multiple miss requests are usually stored in a queue structure. For example, if there are multiple misses in a first level (e.g., L<highlight><bold>1</bold></highlight>) cache, the misses are stored in a queue that needs access to a second level (e.g., L<highlight><bold>2</bold></highlight>) cache. Entries from the queue can be used to access the L<highlight><bold>2</bold></highlight> cache in a first in first out (FIFO) scheme or an out-of-order scheme. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> However, in order to increase queue bandwidth, multiple ports from the queue may access the bank array. The multiple ports may have miss requests that attempt to simultaneously access the same banks in the cache, thus, leading to conflicts. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The present invention will be understood more fully from the detailed description given below and from the accompanying drawings of various embodiments of the invention. The drawings, however, should not be taken to limit the invention to the specific embodiments, but are for explanation and understanding only. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of one embodiment of a computer system; </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of one embodiment of a cache; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of one embodiment of a conflict detection unit; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram of another embodiment of a conflict detection unit; and </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates one embodiment of a bank conflict array. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> A mechanism for resolving bank conflicts in an out-of-order cache is described. Reference in the specification to &ldquo;one embodiment&rdquo; or &ldquo;an embodiment&rdquo; means that a particular feature, structure, or characteristic described in connection with the embodiment is included in at least one embodiment of the invention. The appearances of the phrase &ldquo;in one embodiment&rdquo; in various places in the specification are not necessarily all referring to the same embodiment. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of one embodiment of a computer system <highlight><bold>100</bold></highlight>. The computer system <highlight><bold>100</bold></highlight> includes a processor <highlight><bold>101</bold></highlight> that processes data signals. Processor <highlight><bold>101</bold></highlight> may be a complex instruction set computer (CISC) microprocessor, a reduced instruction set computing (RISC) microprocessor, a very long instruction word (VISW) microprocessor, a processor implementing a combination of instruction sets, or other processor device. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In one embodiment, processor <highlight><bold>101</bold></highlight> is a processor in the Pentium&reg; family of processors including the Pentium&reg; II family and mobile Pentium&reg; and Pentium&reg; II processors available from Intel Corporation of Santa Clara, Calif. Alternatively, other processors may be used. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows an example of a computer system <highlight><bold>200</bold></highlight> employing a single processor computer. However, one of ordinary skill in the art will appreciate that computer system <highlight><bold>100</bold></highlight> may be implemented using having multiple processors. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Processor <highlight><bold>101</bold></highlight> is coupled to a processor bus <highlight><bold>110</bold></highlight>. Processor bus <highlight><bold>110</bold></highlight> transmits data signals between processor <highlight><bold>101</bold></highlight> and other components in computer system <highlight><bold>200</bold></highlight>. In one embodiment, processor <highlight><bold>101</bold></highlight> is also coupled to cache memory <highlight><bold>107</bold></highlight>, which is a second level (L<highlight><bold>2</bold></highlight>) cache memory, via dedicated cache bus <highlight><bold>103</bold></highlight>. Alternatively, cache memory <highlight><bold>107</bold></highlight> may be coupled to processor <highlight><bold>110</bold></highlight> by a shared bus. According to one embodiment, a cache memory <highlight><bold>102</bold></highlight> resides within processor <highlight><bold>101</bold></highlight> which is a first level (L<highlight><bold>1</bold></highlight>) cache that stores data signals that are also stored in an external memory <highlight><bold>113</bold></highlight>. Cache memories <highlight><bold>102</bold></highlight> and <highlight><bold>107</bold></highlight> speed up memory accesses by processor <highlight><bold>101</bold></highlight> by taking advantage of their locality of access. In another embodiment, cache <highlight><bold>102</bold></highlight> resides external to processor <highlight><bold>101</bold></highlight> and is a non-blocking cache. The L<highlight><bold>1</bold></highlight> and L<highlight><bold>2</bold></highlight> cache memories can also be integrated into a single device. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Computer system <highlight><bold>100</bold></highlight> also includes a memory <highlight><bold>113</bold></highlight>. In one embodiment, memory <highlight><bold>113</bold></highlight> is a dynamic random access memory (DRAM) device. However, in other embodiments, memory <highlight><bold>113</bold></highlight> may be a static random access memory (SRAM) device, or other memory device. Memory <highlight><bold>113</bold></highlight> may store instructions and code represented by data signals that may be executed by processor <highlight><bold>101</bold></highlight>. Computer system <highlight><bold>100</bold></highlight> further comprises a bridge memory controller <highlight><bold>111</bold></highlight> coupled to processor bus <highlight><bold>110</bold></highlight> and memory <highlight><bold>113</bold></highlight>. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Bridge/memory controller <highlight><bold>111</bold></highlight> directs data signals between processor <highlight><bold>101</bold></highlight>, memory <highlight><bold>113</bold></highlight>, and other components in computer system <highlight><bold>100</bold></highlight> and bridges the data signals between processor bus <highlight><bold>110</bold></highlight>, memory <highlight><bold>113</bold></highlight>, and a first input/output (I/O) bus <highlight><bold>120</bold></highlight>. In one embodiment, I/O bus <highlight><bold>220</bold></highlight> may be a single bus or a combination of multiple buses. In a further embodiment, I/O bus <highlight><bold>120</bold></highlight> may be a Peripheral Component Interconnect adhering to a Specification Revision 2.1 bus developed by the PCI Special Interest Group of Portland, Oreg. In another embodiment, I/O bus <highlight><bold>120</bold></highlight> may be a Personal Computer Memory Card International Association (PCMCIA) bus developed by the PCMCIA of San Jose, Calif. Alternatively, other busses may be used to implement I/O bus. I/O bus <highlight><bold>120</bold></highlight> provides communication links between components in computer system <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> A network controller <highlight><bold>121</bold></highlight> is coupled I/O bus <highlight><bold>120</bold></highlight>. Network controller <highlight><bold>121</bold></highlight> links computer system <highlight><bold>100</bold></highlight> to a network of computers (not shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>) and supports communication among the machines. A display device controller <highlight><bold>122</bold></highlight> is also coupled to I/O bus <highlight><bold>120</bold></highlight>. Display device controller <highlight><bold>122</bold></highlight> allows coupling of a display device to computer system <highlight><bold>100</bold></highlight>, and acts as an interface between the display device and computer system <highlight><bold>100</bold></highlight>. In one embodiment, display device controller <highlight><bold>122</bold></highlight> is a monochrome display adapter (MDA) card. In other embodiments, display device controller <highlight><bold>122</bold></highlight> may be a color graphics adapter (CGA) card, an enhanced graphics adapter (EGA) card, an extended graphics array (XGA) card or other display device controller. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The display device may be a television set, a computer monitor, a flat panel display or other display device. The display device receives data signals from processor <highlight><bold>201</bold></highlight> through display device controller <highlight><bold>122</bold></highlight> and displays the information and data signals to the user of computer system <highlight><bold>100</bold></highlight>. A video camera <highlight><bold>123</bold></highlight> is also coupled to I/O bus <highlight><bold>120</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Computer system <highlight><bold>100</bold></highlight> includes a second I/O bus <highlight><bold>130</bold></highlight> coupled to I/O bus <highlight><bold>120</bold></highlight> via a bus bridge <highlight><bold>124</bold></highlight>. Bus bridge <highlight><bold>124</bold></highlight> operates to buffer and bridge data signals between I/O bus <highlight><bold>120</bold></highlight> and I/O bus <highlight><bold>130</bold></highlight>. I/O bus <highlight><bold>130</bold></highlight> may be a single bus or a combination of multiple buses. In one embodiment, I/O bus <highlight><bold>130</bold></highlight> is an Industry Standard Architecture (ISA) Specification Revision 1.0a bus developed by International Business Machines of Armonk, N.Y. However, other bus standards may also be used, for example Extended Industry Standard Architecture (EISA) Specification Revision 3.12 developed by Compaq Computer, et al. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> I/O bus <highlight><bold>130</bold></highlight> provides communication links between components in computer system <highlight><bold>100</bold></highlight>. A data storage device <highlight><bold>131</bold></highlight> is coupled to I/O bus <highlight><bold>130</bold></highlight>. I/O device <highlight><bold>131</bold></highlight> may be a hard disk drive, a floppy disk drive, a CD-ROM device, a flash memory device or other mass storage device. A keyboard interface <highlight><bold>132</bold></highlight> is also coupled to I/O bus <highlight><bold>130</bold></highlight>. Keyboard interface <highlight><bold>132</bold></highlight> may be a keyboard controller or other keyboard interface. In addition, keyboard interface <highlight><bold>132</bold></highlight> may be a dedicated device or can reside in another device such as a bus controller or other controller. Keyboard interface <highlight><bold>132</bold></highlight> allows coupling of a keyboard to computer system <highlight><bold>100</bold></highlight> and transmits data signals from the keyboard to computer system <highlight><bold>100</bold></highlight>. An audio controller is also coupled to I/O bus <highlight><bold>130</bold></highlight>. Audio controller <highlight><bold>133</bold></highlight> operates to coordinate the recording and playing of sounds. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of one embodiment of cache <highlight><bold>107</bold></highlight>. Cache <highlight><bold>107</bold></highlight> includes queue <highlight><bold>210</bold></highlight>, bank array <highlight><bold>220</bold></highlight>, bank conflict array <highlight><bold>230</bold></highlight>, a conflict detection unit <highlight><bold>240</bold></highlight> and a conflict correction unit <highlight><bold>250</bold></highlight>. Queue <highlight><bold>210</bold></highlight> temporarily stores requests to access memory banks in bank array <highlight><bold>220</bold></highlight>. According to one embodiment, queue <highlight><bold>210</bold></highlight> stores thirty-two access requests at any time. However, in other embodiments queue <highlight><bold>210</bold></highlight> may be implemented with other sizes. In a further embodiment, entries stored in queue <highlight><bold>210</bold></highlight> may access bank array <highlight><bold>220</bold></highlight> in an out-of-order mode. As a result, requests may be issued in any order based upon the dependency of the particular requests. In yet another embodiment, queue <highlight><bold>210</bold></highlight> receives new requests via four connected ports at any one time. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Each request stored in queue <highlight><bold>210</bold></highlight> includes the physical address bits (bank bits) for the bank in bank array <highlight><bold>210</bold></highlight> the request is to access. In addition, the request includes the nature of the access. For example, the request may include a load, store, fill, etc. Bank array <highlight><bold>220</bold></highlight> is an array of memory storage banks. According to one embodiment, bank array includes thirty-two memory banks. However, one of ordinary skill in the art will appreciate that other quantities of banks may be implemented in bank array <highlight><bold>220</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> According to one embodiment, each queue <highlight><bold>210</bold></highlight> entry may have a conflict with another entry. However, an entry cannot have a conflict with itself. Bank conflict array <highlight><bold>230</bold></highlight> is used to track bank conflict within cache <highlight><bold>107</bold></highlight>. In particular, bank conflict array <highlight><bold>230</bold></highlight> provides a listing for each queue <highlight><bold>210</bold></highlight> entry of other entries that have a conflict. <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates one embodiment of information stored by bank conflict array <highlight><bold>230</bold></highlight>. Array <highlight><bold>230</bold></highlight> includes a n&times;n matrix wherein n corresponds to the depth (e.g., the number of entries) of queue <highlight><bold>210</bold></highlight>. Thus, the embodiment illustrated in <cross-reference target="DRAWINGS">FIG. 5</cross-reference> includes a 32&times;32 matrix since queue <highlight><bold>210</bold></highlight> has a depth of 32 requests at any given time. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In a further embodiment, each entry listed on the horizontal and vertical axis of the matrix corresponds to a particular queue <highlight><bold>210</bold></highlight> entry. A &ldquo;0&rdquo; in array <highlight><bold>230</bold></highlight> indicates that a particular entry does not have a conflict with another entry. Conversely, a &ldquo;1&rdquo; in array <highlight><bold>230</bold></highlight> indicates that there is a conflict with two entries. For example, following the horizontal conflict listings for entry 0, the &ldquo;1&rdquo; at entry 1 indicates that there is a conflict between entries 0 and 1. According to one embodiment, the value in the matrix corresponds to a bank conflict bit that is set to indicate a conflict/no conflict status. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Once a request stored in a particular entry is issued, the conflict is resolved and the value in the matrix is reset. In one embodiment, array <highlight><bold>230</bold></highlight> is updated each time new entries are received at queue <highlight><bold>210</bold></highlight>. Referring back to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, conflict detection unit <highlight><bold>240</bold></highlight> is used to detect multiple requests in queue <highlight><bold>210</bold></highlight> to access the same bank in bank array <highlight><bold>220</bold></highlight>. If there is a conflict between two or more requests, the results are reflected in array <highlight><bold>230</bold></highlight> as described above. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of one embodiment of conflict detection unit <highlight><bold>240</bold></highlight>. Conflict detection unit <highlight><bold>240</bold></highlight> includes an existing compare circuit <highlight><bold>310</bold></highlight>, a new compare circuit <highlight><bold>320</bold></highlight>, or-gates <highlight><bold>330</bold></highlight> and <highlight><bold>340</bold></highlight>, and set/reset <highlight><bold>350</bold></highlight>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Compare circuit <highlight><bold>310</bold></highlight> compares the physical address bank bits of new request entries received at queue <highlight><bold>210</bold></highlight> with the physical address bank bits of existing queue <highlight><bold>210</bold></highlight> entries. According to one embodiment, the comparison between the new and existing entries are implemented using content addressable memory (CAM) structures (not shown). In a further embodiment, compare circuit <highlight><bold>310</bold></highlight> transmits a high logic value (e.g., logic 1) if bank bits of one or more new entries match the bank bits of one or more existing entries. On the contrary, compare circuit <highlight><bold>310</bold></highlight> transmits a low logic level (e.g., logic 0) if none of the bank bits of the new entries match bank bits of an existing entry. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> New compare circuit <highlight><bold>320</bold></highlight> compares new entries among themselves inserted into queue <highlight><bold>210</bold></highlight> based upon physical address bank bits. As described above, the comparison between the new entries are implemented using content addressable memory (CAM) structures. In one embodiment, compare circuit <highlight><bold>320</bold></highlight> transmits a logic 1 if there is a match between one or more new bank bits, and a logic 0 if there are no matches. The values of compare circuits <highlight><bold>310</bold></highlight> and <highlight><bold>320</bold></highlight> are transmitted to or-gate <highlight><bold>330</bold></highlight>. Or-gate <highlight><bold>330</bold></highlight> transmits a logic 1 if a logic 1 is received from compare circuit <highlight><bold>310</bold></highlight> or compare circuit <highlight><bold>320</bold></highlight>. Otherwise or-gate <highlight><bold>330</bold></highlight> transmits a logic 0 to set/reset <highlight><bold>350</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Set/reset <highlight><bold>350</bold></highlight> sets or resets bank conflict bits in bank conflict array <highlight><bold>220</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>). In one embodiment, set/reset <highlight><bold>350</bold></highlight> sets a bank conflict bit corresponding to an entry bank conflict array <highlight><bold>230</bold></highlight> upon a match being detected at compare circuit <highlight><bold>310</bold></highlight> or compare circuit <highlight><bold>320</bold></highlight>. In one embodiment, set/reset <highlight><bold>350</bold></highlight> is implemented using a latch. Upon receiving a reset signal, set/reset <highlight><bold>350</bold></highlight> resets a bank conflict bit corresponding to an entry bank conflict array <highlight><bold>230</bold></highlight>. In one embodiment a pointer is used to indicate which bank conflict bit in array <highlight><bold>230</bold></highlight> one to be set/reset. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> According to one embodiment, or-gate <highlight><bold>340</bold></highlight> transmits a logic 1 to set/reset <highlight><bold>350</bold></highlight> based upon one of three reset conditions. One condition may be a global reset (e.g., a pipeline flush in processor <highlight><bold>101</bold></highlight>, wherein the conflict bits for all queue <highlight><bold>210</bold></highlight> entries are invalidated). A second reset condition may result from an entry becoming invalid prior to issuance. Such a situation may occur upon a speculative fetch request to another cache in computer system <highlight><bold>100</bold></highlight>. Nevertheless, an invalid entry cannot be issued, thus, corresponding bank conflict bits are irrelevant. The third reset condition occurs whenever an entry gets issued. When an older entry is issued from queue <highlight><bold>210</bold></highlight>, the bank conflict bits of dependent younger entries waiting to be issued will be reset, as will be described in further detail below. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram of another embodiment of conflict detection unit <highlight><bold>240</bold></highlight>. In this embodiment, a type compare circuit <highlight><bold>420</bold></highlight> is included. Type compare circuit compares the nature of access requests to bank array <highlight><bold>220</bold></highlight>. As described above, the nature of access requests may include loads, stores and fills. If there is a match at compare circuit <highlight><bold>310</bold></highlight>, the results of compare circuit <highlight><bold>420</bold></highlight> are detected by and-gate <highlight><bold>440</bold></highlight> to determine whether a match signal is to be transmitted to set/reset <highlight><bold>350</bold></highlight> via or-gate <highlight><bold>330</bold></highlight>. For instance, a load access for a new load entry being inserted into queue <highlight><bold>210</bold></highlight> will conflict with an existing entry that also needs a load from the same bank of bank array <highlight><bold>230</bold></highlight>. Thus, in such an embodiment, different types of access to the same bank may not result in a conflict. In one embodiment, load and store conflicts are dependent upon cache <highlight><bold>107</bold></highlight> pipeline implementation. For example, if loads are completed in a pipeline stage X and stores are completed at pipeline stage X&plus;2, all entries requiring loads in pipeline stage X should be compared to stores in pipeline stage X&plus;2. Referring back to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, conflict correction unit <highlight><bold>250</bold></highlight> corrects conflicts detected at conflict detection unit. According to one embodiment, conflict correction unit <highlight><bold>250</bold></highlight> implements a priority ordering among entries in queue <highlight><bold>210</bold></highlight>. In such an embodiment, an entry inserted into queue <highlight><bold>210</bold></highlight> after a previous entry is considered to be dependent upon the previous entry. A dependent entry may be issued only after the previous entry accessing the same bank has been issued. For example, if a new request at entry 1 of array <highlight><bold>230</bold></highlight> has a bank conflict with older entry 0, entry 1 may not issue until after entry 0 has issued and set/reset <highlight><bold>350</bold></highlight> has reset the bank conflict bit for entry 1. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The bank conflict resolution mechanism provides a processor such as processor <highlight><bold>101</bold></highlight> with an efficient method of handling bank conflicts between different cache accesses. In particular, a non-blocking cache supporting the processor may perform more efficiently without experiencing bank conflict penalties, resulting in stalling until the conflict is resolved. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Whereas many alterations and modifications of the present invention will no doubt become apparent to a person of ordinary skill in the art after having read the foregoing description, it is to be understood that any particular embodiment shown and described by way of illustration is in no way intended to be considered limiting. Therefore, references to details of various embodiments are not intended to limit the scope of the claims which in themselves recite only those features regarded as the invention. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Thus, a mechanism for resolving bank conflicts has been described. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A computer system comprising: 
+<claim-text>a microprocessor; and </claim-text>
+<claim-text>a first cache coupled to the microprocessor, wherein the first cache detects conflicts between multiple requests to access a bank within the first cache. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the first cache comprises: 
+<claim-text>a queue; </claim-text>
+<claim-text>a bank array; </claim-text>
+<claim-text>a bank conflict array; </claim-text>
+<claim-text>a conflict detection unit: and 
+<claim-text>a conflict correction unit. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the queue stores requests to access the bank array </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the bank conflict array tracks conflicts between two or more entries within the queue that are requesting to access the same bank within the bank array. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the conflict detection unit comprises: 
+<claim-text>a first compare circuit that compares one or more new queue entries with one or more existing queue entries; and </claim-text>
+<claim-text>a latch coupled to the first compare circuit, wherein the latch sets bank conflict bits within the bank conflict array upon a match being detected at the first compare circuit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the conflict detection unit further comprises: 
+<claim-text>a second compare circuit that compares two or more new queue entries; and </claim-text>
+<claim-text>a first or-gate coupled to the first compare circuit, the second compare circuit and the latch, wherein the latch sets bank conflict bits within the bank conflict array upon a match being detected at the second compare circuit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising a second or-gate coupled to the latch, wherein the latch resets bank conflict bits within the bank conflict array upon receiving reset signals from the second or-gate. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the conflict detection unit further comprises: 
+<claim-text>a third compare circuit that compares the access type of one or more new queue entries with one or more existing queue entries; and </claim-text>
+<claim-text>an and-gate coupled to the first compare circuit, the third compare circuit and the first or-gate. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the conflict correction unit corrects bank conflicts based upon priority ordering of entries in the queue. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A cache memory comprising a conflict detection unit that detects conflicts between multiple requests to access a bank within the cache memory. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> further comprising: 
+<claim-text>a queue; </claim-text>
+<claim-text>a bank array; </claim-text>
+<claim-text>a bank conflict array; and </claim-text>
+<claim-text>a conflict correction unit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the queue stores requests to access the bank array </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the bank conflict array tracks conflicts between two or more entries within the queue that are requesting to access the same bank within the bank array. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the conflict detection unit comprises: 
+<claim-text>a first compare circuit that compares one or more new queue entries with one or more existing queue entries; and </claim-text>
+<claim-text>a latch coupled to the first compare circuit, wherein the latch sets bank conflict bits within the bank conflict array upon a match being detected at the first compare circuit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the conflict detection unit further comprises: 
+<claim-text>a second compare circuit that compares two or more new queue entries; and </claim-text>
+<claim-text>a first or-gate coupled to the first compare circuit, the second compare circuit and the latch, wherein the latch sets bank conflict bits within the bank conflict array upon a match being detected at the second compare circuit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> further comprising a second or-gate coupled to the latch, wherein the latch resets bank conflict bits within the bank conflict array upon receiving reset signals from the second or-gate. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the conflict detection unit further comprises: 
+<claim-text>a third compare circuit that compares the access type of one or more new queue entries with one or more existing queue entries; and </claim-text>
+<claim-text>an and-gate coupled to the first compare circuit, the third compare circuit and the first or-gate. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The cache memory of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the conflict correction unit corrects bank conflicts based upon priority ordering of entries in the queue. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A method comprising: 
+<claim-text>receiving a first access request at a cache memory; and </claim-text>
+<claim-text>determining whether the first access request is to access the same bank as a second access request stored in a queue within the cache memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein determining whether the first access request is to access the same bank as a second access request comprises comparing a bank bit of the first access request with a bank bit of the second access request. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference> further comprising setting a bit at a bank conflict array indicating that there is a conflict between the first access request and the second access request. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> further comprising resolving the conflict between the first access request and the second access request. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> further comprising: 
+<claim-text>receiving a third access request at the cache memory; </claim-text>
+<claim-text>determining whether the third access request is to access the same bank as the second access request stored in a queue within the cache memory; and </claim-text>
+<claim-text>determining whether the third access request is to access the same bank as the first access request.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005229A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005229A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005229A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005229A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005229A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005229A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

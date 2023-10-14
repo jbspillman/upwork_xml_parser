@@ -1,0 +1,1335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002474A1-20030102-D00000.TIF SYSTEM "US20030002474A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002474A1-20030102-D00001.TIF SYSTEM "US20030002474A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002474A1-20030102-D00002.TIF SYSTEM "US20030002474A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002474A1-20030102-D00003.TIF SYSTEM "US20030002474A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002474A1-20030102-D00004.TIF SYSTEM "US20030002474A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002474A1-20030102-D00005.TIF SYSTEM "US20030002474A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030002474A1-20030102-D00006.TIF SYSTEM "US20030002474A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030002474A1-20030102-D00007.TIF SYSTEM "US20030002474A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002474</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09812821</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010321</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L012/28</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>G06F015/16</ipc>
+</classification-ipc-secondary>
+<classification-ipc-secondary>
+<ipc>H04J007/00</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>370</class>
+<subclass>351000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>247000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>212000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>535000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Multi-stream merge network for data width conversion and multiplexing</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Thomas</given-name>
+<family-name>Alexander</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Mulino</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>David</given-name>
+<family-name>Wong</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Vancouver</city>
+<country-code>CA</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Pascal &amp; Associates</name-1>
+<name-2>Station D</name-2>
+<address>
+<address-1>P.O. Box 3440</address-1>
+<city>Ottawa</city>
+<state>ON</state>
+<postalcode>K1P 6P1</postalcode>
+<country>
+<country-code>CA</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention relates to a merging network for multiple data streams comprising a pipelined butterfly network. The pipelined butterfly network comprises an input network for receiving a plurality of data streams of mutually constant widths, each data stream having logically related data bits carried on contiguous signal lines, a butterfly network containing suitably interconnected register and multiplexer means for rearranging the received data streams into a time-multiplexed constant-width output data stream, the output data stream having a width equal to or greater than the sum of the widths of the input data streams, and an output network for providing the output data stream interleaved to an output bus. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This invention relates to the field of data transmission, and in particular to a system and method for converting data between various widths or formats. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND TO THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> It is frequently necessary to convert data between various widths or formats. For example, interconnecting buses of different widths (e.g. an 8-bit bus to be interfaced with a 32-bit bus) requires that data be transformed from or to an 8-bit format to or from a 32-bit format. As an example of a more specific requirement, a physical layer device for a telecommunications network interface may need to convert data widths between an optical fiber link on one side of the interface and a local system bus on the other. The data received from the optical fiber may consist of 8-bit bytes, but must be placed on a 32-bit system bus as contiguous 32-bit words. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> It is also sometimes necessary to merge different data streams received from separate physical entities into a single stream, or to split one stream among multiple receivers. In this case, the single data stream of high bandwidth would normally be time-division-multiplexed among the several lower-bandwidth streams. For example, 32-bit words carried on a 32-bit bus may have to be split into four streams, with successive 32-bit words being sent to different 8-bit destinations (i.e. the first 32-bit word would be assigned to destination <highlight><bold>0</bold></highlight>, the second to destination <highlight><bold>1</bold></highlight>, etc.). The reverse may also be required, wherein data arriving on four separate 8-bit channels must be accumulated and time-multiplexed to form a single 32-bit channel. This type of processing finds application wherein a single wide data bus must be interfaced to several narrow data buses, or where several physical layer interface devices must be interfaced to a single wide high-speed local system bus. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates the multiplexing and demultiplexing process. An example of four independent 8-bit data streams A, B, C and D, formed of successive 8-bit words A<highlight><bold>0</bold></highlight>, A<highlight><bold>1</bold></highlight>, A<highlight><bold>2</bold></highlight> . . . , B<highlight><bold>0</bold></highlight>, B<highlight><bold>1</bold></highlight>, B<highlight><bold>2</bold></highlight> . . . , C<highlight><bold>0</bold></highlight>, C<highlight><bold>1</bold></highlight>, C<highlight><bold>2</bold></highlight> . . . and D<highlight><bold>0</bold></highlight>, D<highlight><bold>1</bold></highlight>, D<highlight><bold>2</bold></highlight> . . . , are input to a merge apparatus <highlight><bold>1</bold></highlight> which accumulates four bytes at a time from each stream and then outputs parallel 32-bit words to a 32-bit bus <highlight><bold>2</bold></highlight>. Consecutive words <highlight><bold>3</bold></highlight>A, <highlight><bold>3</bold></highlight>B, <highlight><bold>3</bold></highlight>C and <highlight><bold>3</bold></highlight>D carried by the 32-bit bus each consists of four bytes from successive input streams (4 bytes&times;8 bits/word&equals;32 bit words). </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Further, a single 32-bit data stream carrying 32-bit words belonging to logically separate channels is sometimes required to be de-multiplexed into four physically separate 8-bit streams. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> It is sometimes required for some applications to be able to merge data from, or split data to, different physical data streams of variable widths, while maintaining a wider constant data bus width. For example, a 128-bit bus may be required to be interfaced with a combination of 8-bit and 32-bit buses, with the aggregate bandwidth of the 128-bit bus being split among the narrower buses in direct proportion to their width. This could be required if several physical layer interface devices are to be connected to the same logical system bus, but the interface devices have different data rates and produce data of different widths. </paragraph>
+</section>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PRIOR ART </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> A number of different ways to solve the above-described data width conversion and merging problems have been employed in widely disparate applications, such as those described in the following U.S. Pat. Nos.: 5,016,011 issued May 14, 1991, invented by R. I. Hartley et al; 4,942,396 issued Jul. 17, 1990, invented by R. I. Hartley et al; 5,802,399 issued Sep. 1, 1998,invented by M. Yumoto et al; 4,747,070 issued May 24, 1988, invented by R. R. Trottier et al; 4,309,754 issued Jan. 5, 1982, invented by J. M. Dinwiddie, Jr.; 4,271,480 issued June 2, 1981, invented by D. Vinot; 4,162,534 issued Jul. 24, 1979, invented by G. H. Barnes; 3,800,289 issued Mar. 26, 1974, invented by K. E. Batcher; 3,686,640 issued Aug. 22, 1972, invented by S. R. Andersen et al; 3,934,132 issued Jan. 20, 1976, invented by D. J. Desmonds; 3,747,070 issued Jul. 17, 1973, invented by J. H. Huttenhoff; and 3,812,467 issued May 21, 1974, invented by K. E. Batcher. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> For example, one way in the prior art of solving the merge problem is to use an arrangement of shift registers and multiplexers such that the narrower-width data are shifted into independent, wide, shift registers, one per input data stream, and then the contents of the shift registers are successively multiplexed on to a single wide output bus. The 8-bit to 32-bit conversion example above requires four 32-bit shift registers into which the data streams A, B, C, D are shifted, 8-bits at a time. When a complete 32-bit word becomes available from a particular stream, it is output as a unit on the 32-bit output bus. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> This solution suffers from the problem that the complexity of the logic and routing grows as the square of the size of the output bus; an output bus of 256 bits registers and a 32:1 multiplexer that is also 256 bits wide, plus the connection routing area occupied by 32 256-bit data buses. The result is a very large and expensive circuit that is not capable of running at high speeds. In addition, the control complexity becomes substantial when data of different widths must be combined on to the output bus. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Some of the difficulties encountered with the above approach can be solved by utilizing a data random access memory (RAM) to buffer the data. Some degree of reduction in the routing and logic impact may be obtained in this manner. The RAM is required to be operated at a high data rate, high enough to permit data to be written to it from each narrow stream in succession, the narrow streams being multiplexed together on a shared, high-speed data bus. When sufficient data becomes available within the RAM buffer for any one input stream to form a complete word on the wider data bus, the data are read out on to the output bus. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> This solution, however, requires the use of a RAM and surrounding logic of extremely high speed, operating at N times the data rate of any one input stream, wherein N is the number of separate streams. This is not feasible or inexpensive when high data rates must be encountered. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Similar structures using individual registers in place of the RAM have also been proposed, but also possess similar problems. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Approaches using shifting networks have been implemented. These are relatively more flexible than the simple shift register mechanism described above, and involve the use of multi-stage shifting networks to shift and align incoming data from narrower streams to various positions in a wider stream, followed by register and buffer logic to merge the various narrow data words together into the desired time-multiplexed output. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> However, they suffer from the same problems as noted earlier with respect to the shift register approach, in which the complexity of the logic and routing grows as the square of the size of the output bus, and in addition are not feasible at high speeds and/or large data widths. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE PRESENT INVENTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> An embodiment of the present invention as will be described herein can provide much less complexity of the implementation logic, layout and routing of interconnections than that required by the earlier shift register implementation described earlier. It is simple and regular, and requires only simple control apparatus. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> It can accommodate a number of input data streams, each of which may be a different number of bits in width, and can concatenate consecutive data units from each input stream to produce wider data words which are placed on a wide output data bus. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The number of individual (atomic) data-units in the output data stream is restricted to a power of 2, and the various widths of the input data streams are restricted to power of 2 multiples of each other. The description and claims herein should be construed to contain this limitation if not otherwise stated. For example, a combination of an output data stream of 128 bits in width and various numbers of input data streams that are 8, 16, 32, 64 and 128 bits wide meets this requirement. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The invention can be constructed so that data can flow in either direction of merging/demultiplexing, narrow streams being merged into a wide stream, and wide streams being split into several narrow streams. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The physical assignment of signal lines to channels (i.e. narrow streams) can be arbitrarily modifiable within the power of 2 constraints noted above. For example, considering the example given above, the narrow streams may be distributed in some arbitrary fashion across a set of 128 input signal lines. Thus there may be one 8-bit stream assigned to the first 8 lines, two 32-bit streams assigned to the next 64 lines, three 8-bit streams assigned to the next 32 lines, and one 32 bit stream assigned to the remaining 32 lines. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In accordance with an embodiment of the invention, a merging network for multiple data streams comprises a pipelined butterfly network, wherein the pipelined butterfly network comprises: (a) an input network for receiving a plurality of data streams of mutually constant widths, each data stream having logically related data bits carried on contiguous signal lines, (b) a butterfly network containing suitably interconnected register and multiplexer means for rearranging the received data streams into a time-multiplexed constant-width output data stream, the output data stream having a width equal to or greater than the sum of the widths of the input data streams, and (c) an output network for providing the output data stream interleaved to an output bus. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In accordance with another embodiment, a multi-data-stream merge network comprises: (a) a plurality of shuffle buffers for receiving plural input data streams, (i) each data stream but one having a width which is the same as all other input data streams, and (ii) at least one stream of data having different data width than other ones of the input streams of data and in which the data widths of the streams of data have a power of 2 relationship; the shuffle buffer having a structure for reordering the input streams of data into an interleaved order if not already in interleaved order and providing the interleaved order of data streams at its output, (b) a permutation network for receiving the interleaved order of data streams and rearranging the spatial order of the data streams if desirable or necessary and locating each stream on a specific spatial boundary, and (c) a pipelined butterfly network for receiving the data streams from the permutation network and concatenating data from the received data streams into constant width interleaved words having a width which is wider than any of the input streams of data, and merging the constant width words onto an output bus in a time-division-multiplexed manner. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In accordance with another embodiment, a multi-data-stream merge network comprises a pipelined butterfly network for receiving streams of data which are in interleaved order and which are located at specific spatial boundaries, and includes apparatus for concatenating data from the received streams of data into constant width interleaved words having a width which is wider than any of the received streams of data, and apparatus for merging the constant width words onto an output bus in a time-division multiplexed form so as to produce a constant-width interleaved output data stream.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF INTRODUCTION TO THE DRAWINGS </heading>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> A better understanding of the invention may be obtained by reading the detailed description of the invention below, in conjunction with the following drawings, in which: </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a multiplexing and demultiplexing process achieved by the present invention, </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram illustrating one embodiment of the invention, </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram illustrating another embodiment of the invention, </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram of a shuffle buffer used in the group of shuffle buffers described in <cross-reference target="DRAWINGS">FIGS. 2 and 3</cross-reference>, </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a block diagram of a Benes network of which the permutation network may be comprised, </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram of a node used in the Benes network of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a block diagram of a pipelined butterfly network, </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> FIGS. <highlight><bold>8</bold></highlight>A-<highlight><bold>8</bold></highlight>F depict the pipelined butterfly network of <cross-reference target="DRAWINGS">FIG. 7</cross-reference> in successive clock cycles, illustrating passage of data therethrough, </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 9</cross-reference> is a block diagram of a pipelined butterfly network having a larger number of inputs than the pipelined butterfly network of <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, and </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 10</cross-reference> is a block diagram of an embodiment of a system which includes a pipelined butterfly network and input shuffle buffer network for handling data streams of different widths in the same apparatus.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF EMBODIMENTS OF THE INVENTION </heading>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Turning to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> plurality of input buses <highlight><bold>5</bold></highlight> carry mixed width data streams, having the power of 2 relationship described above, i.e. the various widths of the input data streams are restricted to power of 2 multiples of each other. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The mixed width data streams are input to a shuffle buffer network <highlight><bold>7</bold></highlight> formed of a plurality of shuffle buffers. The shuffle buffer network accepts, buffers and reorders incoming data from the multiple different-data-width input buses, if required, as will be described later. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> The output of the shuffle buffer system <highlight><bold>7</bold></highlight> is applied to a permutation network <highlight><bold>9</bold></highlight>. The permutation network <highlight><bold>9</bold></highlight> rearranges the different data streams to create interleaved groups based on the input data width, again if necessary as will be described later. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The output of the permutation network <highlight><bold>9</bold></highlight> is applied to a pipelined butterfly network <highlight><bold>11</bold></highlight>, which outputs its data to a wide output bus <highlight><bold>13</bold></highlight>. The pipelined butterfly network performs the actual merging and data width conversion process on the input data streams to produce a time-division-multiplexed output stream. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> It should be noted that these three elements may be used in reverse order, to accomplish the reverse process of accepting a single wide time-multiplexed data stream, splitting it into its constituent parts, and outputting them as multiple narrower streams of different data widths. Due to this operational reciprocity, keeping in mind that the splitting operation is but a reversal of the merging operation, a detailed description of the splitting operation would be redundant to a person skilled in the art. Therefore while a detailed description of the structure of and operation of the system for performing the merging operation will be given, only a brief description, as given later, of the splitting operation is believed necessary for a person skilled in the art. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Concerning operation of the system illustrated in <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> number of constant streams of data <highlight><bold>5</bold></highlight>, possibly of several data widths, are presented to the inputs of the shuffle buffers <highlight><bold>7</bold></highlight>, into which the data is written. The data stored in the shuffle buffers is read out in accordance with a specific process to be described later, and is presented to the input of the permutation network <highlight><bold>9</bold></highlight>. The-permutation network <highlight><bold>9</bold></highlight> rearranges the streams and applies the rearranged streams to the inputs of the pipelined butterfly network <highlight><bold>11</bold></highlight>. The pipelined butterfly network <highlight><bold>11</bold></highlight> concatenates data from each input stream separately into wider data words (of constant width, regardless of the width of the input stream) and then merges the words for different streams on to the single output bus in a time-division-multiplexed manner. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> The output of the pipelined butterfly network <highlight><bold>11</bold></highlight> is interleaved, i.e. each word output on the bus in any given clock cycle will contain consecutive data units from a single specific data stream; data from different data streams will not be mixed into the same word, and data units are not re-ordered within a given data word with respect to their order of presentation at the input. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The resulting time-division-multiplexed data stream, having the highly desirable properties of constant width, interleaved and predictability (i.e. the order in which words from different streams are presented on the output bus is fixed, regular and is known in advance) can be processed much more simply than the different physically separate data streams of arbitrary width at the inputs. For example, buffering the data for any number of data streams can be accomplished using a single physical memory block that is logically partitioned into separate buffer units utilizing an addressing arrangement which ensures that the sequence of data words are written to the appropriate buffer. Alternatively the output data can be placed on a single wider bus that is connected to some other processing entity, permitting the processing entity from having to be replicated in order to deal with physically distinct data streams. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> More particularly, the shuffle buffers which serve to accept data from upstream entities perform three principal functions, one of which is necessary if the shuffle buffers are used, and the other two being additional desirable features but are not absolutely required. These functions are described below, the first function being the necessary function. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> 1. The input data are accumulated until sufficient data are available in each buffer. At this point, the data are read out in a shuffled order relative to the order in which they were written to the buffer. The shuffling is performed differently depending on the ratio of the width of the input data stream to the width of the output bus <highlight><bold>13</bold></highlight>. The purpose of the shuffling is to properly order the data input to the pipelined butterfly network such that they may appear in interleaved fashion at its outputs. The shuffling is done in a deterministic manner, which is described in more detail later. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> 2. In the event the data are arriving in an intermittent or bursty fashion (i.e. with long gaps between blocks of data), the shuffle buffers may be configured to accumulate data until complete blocks of data are available within the buffer prior to outputting the data to the permutation network. Once a complete block is available, the shuffle buffer should write out the entire block in sequence (per the shuffling process described in item <highlight><bold>1</bold></highlight> above) with no breaks. The size of each block should be normally equal to the width of the output data bus from the pipelined butterfly network. The purpose of this is to ensure that the data presented on the output of the stream merging device has no gaps within individual words. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> It should be noted that an ancillary function that can be implemented by the shuffle buffer units is to present dummy data to the permutation network when it is empty, or when insufficient data are present to form a complete block. Various other useful functions related to block formation may also be implemented by the shuffle buffers, as will be described later. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The block formation function by the shuffle buffers is optional; the stream merging process will continue to operate in its absence, but in this case the output data may have &ldquo;holes&rdquo; in the words. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> 3. In the event the input data streams are synchronous to different clock signals (as is common when different data streams are being generated by separate physical layer devices), the shuffle buffers may be configured to synchronize the data to a common clock reference. This synchronization process may be done in a well known manner used to transport data between different clock domains. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> This synchronization function is an optional function of the shuffle buffer. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> The permutation network rearranges the spatial order of the inputs from the upstream data sources before they are presented to the pipelined butterfly network. This is done to permit any arbitrary arrangement of input data streams (i.e. to allow arbitrary assignment of logical streams or components of streams to the physical wires on which data are presented to the shuffle buffers). For example, a particular 32-bit stream may be configured such that its constituent 8-bit byte lanes are scattered over the various input data buses in some random order, possibly intermixed with byte lanes belonging to other streams. The permutation network should in this case be configured to reorder the positions of the streams such that the byte lanes for the 32-bit stream are contiguous and located on a specific boundary. This will be described in more detail later. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The pipelined butterfly network provides the actual merging and width-extension of the various data streams. This network is topologically related to a butterfly graph, and is comprised of three sub-sections: (a) an input delay network, which imposes different fixed delays (in units of clock cycles) on the various input streams, (b) a pipelined butterfly network, which switches and sequences the streams in successive stages to merge and extend the data, and (c) an output delay network, which functions similarly to the input delay network, but serves to align the outgoing data properly, such that interleaved words are placed on the output of the complete apparatus. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> It should be noted that the invention does not mandate that all three of the units (shuffle buffers, permutation network and pipelined butterfly network) must be present for all embodiments. One or more of the above (other than the pipelined butterfly network) may be omitted according to the following criteria: </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> 1. In the event the input data streams are all of the same width (e.g. all 8-bit data streams, all 32-bit data streams, etc.) then the shuffle buffer stage may be omitted. This is because no shuffling of data is required if the data are all of identical width. Of course, other auxiliary functions that may be implemented by the shuffle buffers, such as block accumulation and data synchronization may still be required. In this case, a set of simple First In First Out (FIFO) buffers can accomplish such processing. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> 2. If the input data streams are logically grouped and organized on appropriate boundaries with respect to the signal lines connected to the pipelined butterfly network, then the permutation network may be omitted. For example, if the input data consists of all 8-bit data streams, or all 32-bit data streams, then the streams are inherently organized properly and permutation (or shuffling) is not required. If the input comprises a mixture of, say eight 8-bit streams and two 32-bit streams presented on 128 bit signal lines, but the 32-bit streams are grouped logically and placed on the first 64 lines (i.e. on 32-bit boundaries), and the 8-bit data streams are placed on the next 64 lines, then the shuffle buffers are required to handle the differing data widths but no permutation network is needed to properly organize the streams spatially. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> The most basic embodiment of the invention, therefore, comprises the pipelined Butterfly network <highlight><bold>11</bold></highlight>. The shuffle buffers <highlight><bold>7</bold></highlight> are added if data of different widths must be handled. The permutation network <highlight><bold>9</bold></highlight> is included if data must be re-organized to bring logically related data streams together on contiguous signal lines. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> As has been already noted, the apparatus has the desirable property that its constituent parts may be rearranged to perform a data splitting function rather than a data merging function. This is depicted in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> As seen in <cross-reference target="DRAWINGS">FIG. 3, a</cross-reference> reversal and mirroring of the blocks in the merging system is used to realize a splitting system. The splitting apparatus accepts a time-division-multiplexed stream of constant-width input data words on a wide input bus <highlight><bold>13</bold></highlight>A; the input stream must be regular and repeating in the same format as the output of a similar merging network. The apparatus then follows a reverse procedure to take each input data word, which belongs to a different output stream of some arbitrary (and different) width, and serialize the data word on to the appropriate physical signal wires assigned to that output stream at the output of the apparatus. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> The wide input bus <highlight><bold>13</bold></highlight>A inputs the wide data stream to the pipelined butterfly network <highlight><bold>11</bold></highlight>A, which is a mirror image of the network <highlight><bold>11</bold></highlight> used in the merge system described with respect to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. Similarly, the outputs of the pipelined butterfly network <highlight><bold>11</bold></highlight>A are input to the inputs of permutation network <highlight><bold>9</bold></highlight>A. The output signals of the permutation network <highlight><bold>9</bold></highlight>A are input to shuffle buffers <highlight><bold>7</bold></highlight>A, and the outputs of shuffle buffers <highlight><bold>7</bold></highlight>A are applied to mixed width stream output buses <highlight><bold>15</bold></highlight>. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> Since the basic operation and construction of the splitting network of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> are identical to the merge apparatus of <cross-reference target="DRAWINGS">FIG. 2</cross-reference> but with mirror symmetry, no further description of the splitting apparatus will be made as its structure and operation will be understood by a person skilled in the art who has read and understood the reverse direction embodiment. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> The structure and operation of each block will now be described in detail. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Note that W represents below the lowest common divisor of the width of each of the (narrow) data streams that are merged to form the wide time-division--multiplexed output, and N represents the ratio of the width of the output stream to W. As a specific example, if 8-bit, 32-bit and 64-bit streams are being merged by the invention to create a single 128-bit time-division-multiplexed output stream, then W is 8 (the minimum stream size is 8 bits, and this is also the common factor among all the input streams) and N is 16 (there are 16 such 8-bit streams that can be multiplexed into a 128-bit output). Various other parameters will be defined as required. The fundamental data unit in this case is an 8-bit byte. </paragraph>
+</section>
+<section>
+<heading lvl="1">Shuttle Buffer </heading>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> With reference to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, each shuffle buffer <highlight><bold>7</bold></highlight> is comprised of three primary sub-sections: a RAM buffer memory <highlight><bold>19</bold></highlight>, write logic containing a write address generation counter <highlight><bold>21</bold></highlight> and some control logic <highlight><bold>23</bold></highlight>, and read logic containing a read address sequencer <highlight><bold>25</bold></highlight> and some control logic <highlight><bold>27</bold></highlight>. Input interface <highlight><bold>28</bold></highlight> receives serial data at its input and outputs the serial data to inputs of the RAM buffer memory <highlight><bold>19</bold></highlight>. Output interface <highlight><bold>29</bold></highlight> receives shuffled data from the memory <highlight><bold>19</bold></highlight> and provides it to an output bus. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> The RAM buffer memory <highlight><bold>19</bold></highlight> stores input data at memory locations controlled by the write logic, and holds and accumulates the data input to it from input <highlight><bold>28</bold></highlight> until it can be read out in shuffled order as controlled by the read logic. The buffer memory <highlight><bold>19</bold></highlight> is B by W bits in size, where B is the number of data units (words) that can be held and W is the width of each data unit as supplied to the permutation network <highlight><bold>9</bold></highlight>. Typically, B is expected to be some multiple of the number of data units N that comprise a single data word applied on the output bus of the pipelined butterfly network; thus if the butterfly network output is 128 bits wide and the input data units are in terms of 8-bit bytes, the buffer memory will be some multiple of sixteen 8-bit bytes in size. The shuffling process requires this multiple to be a minimum of 1, as shuffling cannot begin until an entire output word&apos;s worth of data are present in the buffer; normal values for the multiple range between 2 and 3 (implying a 32&times;8 or 48&times;8 RAM). The purpose of having more than N units of storage in the RAM is to permit fresh data to be written into the buffer while previously stored data are being read out in a shuffled fashion. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The write logic generates the address sequence required for writing data into the RAM buffer, and also implements the control functions needed to prevent data from being written into the buffer when no free space exists (i.e., normal FIFO write control functions). The address sequence is very simple, being an incrementing series of addresses starting at 0 and wrapping around after the end of the RAM buffer has been reached. The write logic is virtually identical to standard write addressing and control logic used in common FIFO queue structures. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The read logic generates the special sequence of addresses that causes the data to be read out of the buffer memory in shuffled fashion. This logic is also very similar to that of standard FIFO queue read control units, but with two exceptions. Firstly, the series of read addresses generated for successive words read out of the FIFO is not sequential, but instead forms an interleaved pattern. Secondly, the read logic does not permit reading to begin until there is sufficient data to form a complete sequence (i.e., enough to form a complete data word at the output of the butterfly network). </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The table 1 below gives some examples of the time sequence in which data must be read out for various ratios between the output and input data word sizes for various streams. It is assumed that the width of the output data word is always 16 bytes (i.e., the data unit being a byte of 8 bits). Successive rows of table 1 give the successive addresses generated by the read logic.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="7">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="35PT" align="center"/>
+<colspec colname="3" colwidth="21PT" align="center"/>
+<colspec colname="4" colwidth="35PT" align="center"/>
+<colspec colname="5" colwidth="21PT" align="center"/>
+<colspec colname="6" colwidth="35PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="6" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="6" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>&num; byte lanes per</entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Input Word</entry>
+<entry>1</entry>
+<entry>2</entry>
+<entry>4</entry>
+<entry>8</entry>
+<entry>16</entry>
+</row>
+<row>
+<entry></entry>
+<entry>(Intrinsic Input</entry>
+<entry>(8-</entry>
+<entry>(16-</entry>
+<entry>(32-</entry>
+<entry>(64-</entry>
+<entry>(128-</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Word Width)</entry>
+<entry>bits)</entry>
+<entry>bits)</entry>
+<entry>bits)</entry>
+<entry>bits)</entry>
+<entry>bits)</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="7">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="35PT" align="char" char="."/>
+<colspec colname="3" colwidth="21PT" align="char" char="."/>
+<colspec colname="4" colwidth="35PT" align="char" char="."/>
+<colspec colname="5" colwidth="21PT" align="char" char="."/>
+<colspec colname="6" colwidth="35PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Read Addr &num;0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;1</entry>
+<entry>1</entry>
+<entry>8</entry>
+<entry>4</entry>
+<entry>2</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;2</entry>
+<entry>2</entry>
+<entry>1</entry>
+<entry>8</entry>
+<entry>4</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;3</entry>
+<entry>3</entry>
+<entry>9</entry>
+<entry>12</entry>
+<entry>6</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;4</entry>
+<entry>4</entry>
+<entry>2</entry>
+<entry>1</entry>
+<entry>8</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;5</entry>
+<entry>5</entry>
+<entry>10</entry>
+<entry>5</entry>
+<entry>10</entry>
+<entry>5</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;6</entry>
+<entry>6</entry>
+<entry>3</entry>
+<entry>9</entry>
+<entry>12</entry>
+<entry>6</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;7</entry>
+<entry>7</entry>
+<entry>11</entry>
+<entry>13</entry>
+<entry>14</entry>
+<entry>7</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;8</entry>
+<entry>8</entry>
+<entry>4</entry>
+<entry>2</entry>
+<entry>1</entry>
+<entry>8</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;9</entry>
+<entry>9</entry>
+<entry>12</entry>
+<entry>6</entry>
+<entry>3</entry>
+<entry>9</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;10</entry>
+<entry>10</entry>
+<entry>5</entry>
+<entry>10</entry>
+<entry>5</entry>
+<entry>10</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;11</entry>
+<entry>11</entry>
+<entry>13</entry>
+<entry>14</entry>
+<entry>7</entry>
+<entry>11</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;12</entry>
+<entry>12</entry>
+<entry>6</entry>
+<entry>3</entry>
+<entry>9</entry>
+<entry>12</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;13</entry>
+<entry>13</entry>
+<entry>14</entry>
+<entry>7</entry>
+<entry>11</entry>
+<entry>13</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;14</entry>
+<entry>14</entry>
+<entry>7</entry>
+<entry>11</entry>
+<entry>13</entry>
+<entry>14</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Read Addr &num;15</entry>
+<entry>15</entry>
+<entry>15</entry>
+<entry>15</entry>
+<entry>15</entry>
+<entry>15</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> The general process for obtaining the sequence of addresses to use in order to properly shuffle the data read out of the buffer may be described as follows. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Let N represent the number of atomic data units in each output word (at the output of the butterfly network), and let k represent the number of atomic data units in each input word for a given stream. The quantity d should be computed as being the ratio of N divided by k. This quantity is referred to as the step distance. Now the method below should be followed: </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> 1. Start the read address sequence at zero (i.e., let the first read address be 0) and read out the first data word. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> 2. Increment the read address by the step distance d. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> 3. If the incremented read address is greater than N then subtract N from the result and add 1 to it. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> 4. Read the next data unit at the current read address. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> 5. Repeat steps <highlight><bold>2</bold></highlight>, <highlight><bold>3</bold></highlight> and <highlight><bold>4</bold></highlight> until the read address becomes 15 (or, equivalently, sixteen words have been read out of the buffer) then stop. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> Note that the address sequence described above assumes that the buffer size B is only N data units. If B is some multiple of N, the same method is used to derive the sequence, but the first read address generated by step <highlight><bold>1</bold></highlight> of the method is offset by an incrementing multiple of N prior to using it to access the buffer. The effect is to divide the buffer into blocks of N units, and to read the data within a given block according to the computed sequence, after which the next block is read, and so on. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> As previously mentioned, two optional features may be included as part of the functions to be implemented by the shuffle buffer: synchronization and data accumulation. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> With respect to synchronization, it should be noted that the shuffle buffer structure resembles a standard synchronizing FIFO queue (with the exception of the read logic, which generates a variable sequence of addresses rather than a simple incrementing sequence as in a standard synchronizing FIFO). Therefore, a standard means of clock synchronization and transport of data values across clock boundaries may be employed to allow the read and write ports of the shuffle buffer to use different clock references. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> Data accumulation is required when either the input (write) data rate is lower than the output (read) data rate, or when gaps exist in the write data stream. Well known means of handling gaps in the data stream, as usually implemented in a regular FIFO queue, are employed on the write side of the shuffle buffer. On the read side, however, there may be periods when the buffer is either completely empty or does not contain enough data to permit the reading process to start (i.e., there are less than N data units in it). The shuffle buffer in this case may be constructed so as to send exactly N &ldquo;dummy&rdquo; (invalid) data values to the permutation network whenever this situation is encountered, and to continue to send groups of N dummy values until the FIFO contains N or more data items. This ensures that the data stream between the shuffle buffer and the permutation network is delimited in units of N, and avoids &ldquo;holes&rdquo; within the output data words produced by the pipelined butterfly network. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> As many shuffle buffers, each of width equal to one data unit W, are required as there are data units in the input streams. A total of N buffers is therefore needed (according to the notation already described). All of these buffers can operate independently with regard to the input (writing) of data, but must be synchronized to each other with respect to reading, i.e., the same clock is supplied to all buffers for reading, and data unit &num;<highlight><bold>0</bold></highlight> is read out of all buffers within the same clock cycle. This ensures that the data presented to the permutation network will be aligned with regard to the different data streams, a necessary condition for merging data so as to obtain properly ordered words at the output of the pipelined butterfly network. If this condition is not satisfied (i.e., the read-out of data from different buffers is not aligned) then the pipelined Butterfly network will maintain interleaving with regard to the separate streams (i.e., it will not merge data units from different streams into the same output word) but there may be &ldquo;holes&rdquo; in the output words, and data may be misaligned within individual output words. </paragraph>
+</section>
+<section>
+<heading lvl="1">Permutation Network </heading>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> The function of the permutation network is to allow any arbitrary (but non-conflicting) assignment of input signal lines to data streams, or to byte lanes within a given data stream. Given such an arbitrary assignment, the permutation network can be configured to re-order the spatial distribution of the data streams to allow the pipelined Butterfly network to function properly. The permutation network may be formed from any rearrangeable multistage network, i.e., a network where any arbitrary one-to-one mapping between the set of inputs and the set of outputs may be implemented without blocking between paths, and a subset of the paths may be altered without disturbing the remainder. One of the simplest rearrangeable networks is the Benes network, which is well known in the literature. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> As an example, a Benes network capable of connecting 8 input buses to 8 output buses in any one-to-one order is depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, the Benes network is comprised of a set of elements (or nodes <highlight><bold>33</bold></highlight>, indicated by the circles) interconnected by wires (or arcs). The width of each arc of the network is equal to the number of bits W in the basic data units presented on the input data streams to the apparatus (typically, 8 bits). Each of the nodes of the network can be separately configured to act as a &ldquo;pass-through&rdquo; or a &ldquo;crossover&rdquo;. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> A node is formed from a pair of multiplexer units as shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. Each of a pair of signal inputs Input <highlight><bold>1</bold></highlight> and Input <highlight><bold>2</bold></highlight> is connected to inputs A and B of the multiplexers <highlight><bold>35</bold></highlight> and <highlight><bold>37</bold></highlight>; Inputs <highlight><bold>1</bold></highlight> and <highlight><bold>2</bold></highlight> are respectively connected to corresponding inputs A of the multiplexers and to corresponding inputs B of the other multiplexers. A select control input signal is applied to the S (select) inputs of both multiplexers. </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> When the select control input signal is set to a logical <highlight><bold>0</bold></highlight>, Input <highlight><bold>1</bold></highlight> is connected to Output <highlight><bold>1</bold></highlight> of one multiplexer and Input <highlight><bold>2</bold></highlight> is connected to Output <highlight><bold>2</bold></highlight> of the other multiplexer (i.e. the node is configured to pass data straight through). When Select is a 1, then Input <highlight><bold>1</bold></highlight> is connected to Output <highlight><bold>2</bold></highlight> and Input <highlight><bold>2</bold></highlight> is connected to Output <highlight><bold>1</bold></highlight> (i.e. the node is set up in a crossed configuration). </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> With this multiplexer arrangement, any one-to-one mapping can be set up between the inputs and outputs. An example of an arbitrarily chosen mapping for the 8&times;8 Benes network being considered herein as an example, and the corresponding Select control input signals required to be presented to the nodes, is shown in the table 2, 3 and 4 below.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 2</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Mapping</entry>
+</row>
+<row>
+<entry>In-&gt;Out</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>I0-&gt;O6</entry>
+</row>
+<row>
+<entry>I1-&gt;O5</entry>
+</row>
+<row>
+<entry>I2-&gt;O4</entry>
+</row>
+<row>
+<entry>I3-&gt;O3</entry>
+</row>
+<row>
+<entry>I4-&gt;O2</entry>
+</row>
+<row>
+<entry>I5-&gt;O1</entry>
+</row>
+<row>
+<entry>I6-&gt;O0</entry>
+</row>
+<row>
+<entry>I7-&gt;O7</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number>  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="11">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="center"/>
+<colspec colname="2" colwidth="28PT" align="center"/>
+<colspec colname="3" colwidth="14PT" align="center"/>
+<colspec colname="4" colwidth="28PT" align="center"/>
+<colspec colname="5" colwidth="14PT" align="center"/>
+<colspec colname="6" colwidth="28PT" align="center"/>
+<colspec colname="7" colwidth="14PT" align="center"/>
+<colspec colname="8" colwidth="28PT" align="center"/>
+<colspec colname="9" colwidth="14PT" align="center"/>
+<colspec colname="10" colwidth="21PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center">TABLE 3</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+</row>
+<row>
+<entry></entry>
+<entry>00</entry>
+<entry>01</entry>
+<entry>02</entry>
+<entry>03</entry>
+<entry>10</entry>
+<entry>11</entry>
+<entry>12</entry>
+<entry>13</entry>
+<entry>20</entry>
+<entry>21</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0085" lvl="0"><number>&lsqb;0085&rsqb;</number>  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="11">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="center"/>
+<colspec colname="2" colwidth="28PT" align="center"/>
+<colspec colname="3" colwidth="14PT" align="center"/>
+<colspec colname="4" colwidth="28PT" align="center"/>
+<colspec colname="5" colwidth="14PT" align="center"/>
+<colspec colname="6" colwidth="28PT" align="center"/>
+<colspec colname="7" colwidth="14PT" align="center"/>
+<colspec colname="8" colwidth="28PT" align="center"/>
+<colspec colname="9" colwidth="14PT" align="center"/>
+<colspec colname="10" colwidth="21PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center">TABLE 4</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+<entry>S</entry>
+</row>
+<row>
+<entry></entry>
+<entry>22</entry>
+<entry>23</entry>
+<entry>30</entry>
+<entry>31</entry>
+<entry>32</entry>
+<entry>33</entry>
+<entry>40</entry>
+<entry>41</entry>
+<entry>42</entry>
+<entry>43</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="10" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0086" lvl="0"><number>&lsqb;0086&rsqb;</number> Any other desired mapping will have some other unique combination of Select signals S that establishes a set of paths from the inputs to the outputs to satisfy that mapping. It is preferred that these Select signals should be statically configured prior to operation of the apparatus in accordance with the distribution of input data streams on the actual input signal lines, so as to re-order the data streams in a regular fashion (i.e., byte lanes belonging to the same data stream should be adjacent to each other, in ascending order, and aligned to natural boundaries). </paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number> As an example of such a rearrangement, consider the case of four 8-bit streams A<highlight><subscript>0</subscript></highlight>, A<highlight><subscript>1</subscript></highlight>, A<highlight><subscript>2 </subscript></highlight>and A<highlight><subscript>3</subscript></highlight>; two 32-bit streams &lcub;B<highlight><subscript>03</subscript></highlight>, B<highlight><subscript>02</subscript></highlight>, B<highlight><subscript>01</subscript></highlight>, B<highlight><subscript>00</subscript></highlight>&rcub; and &lcub;B<highlight><subscript>13</subscript></highlight>, B<highlight><subscript>12</subscript></highlight>, B<highlight><subscript>11</subscript></highlight>, B<highlight><subscript>10</subscript></highlight>&rcub; (where &ldquo;&lcub;x, y, z, w&rcub;&rdquo; represents the concatenation of byte lanes x, y, z and w); and one 64-bit stream denoted as &lcub;C<highlight><subscript>07</subscript></highlight>, C<highlight><subscript>06</subscript></highlight>, C<highlight><subscript>05</subscript></highlight>, C<highlight><subscript>04</subscript></highlight>, C<highlight><subscript>03</subscript></highlight>, C<highlight><subscript>02</subscript></highlight>, C<highlight><subscript>01</subscript></highlight>, C<highlight><subscript>00</subscript></highlight>&rcub;. If these streams are input in a &ldquo;jumbled&rdquo; order from left to right as follows: </paragraph>
+<paragraph id="P-0088" lvl="1"><number>&lsqb;0088&rsqb;</number> &lcub;C<highlight><subscript>06</subscript></highlight>, A<highlight><subscript>0</subscript></highlight>, B<highlight><subscript>00</subscript></highlight>, B<highlight><subscript>01</subscript></highlight>, B<highlight><subscript>02</subscript></highlight>, B<highlight><subscript>03</subscript></highlight>, B<highlight><subscript>13</subscript></highlight>, A<highlight><subscript>1</subscript></highlight>, B<highlight><subscript>12</subscript></highlight>, C<highlight><subscript>07</subscript></highlight>, C<highlight><subscript>05</subscript></highlight>, C<highlight><subscript>04</subscript></highlight>, C<highlight><subscript>03</subscript></highlight>, C<highlight><subscript>02</subscript></highlight>, C<highlight><subscript>01</subscript></highlight>, C<highlight><subscript>00</subscript></highlight>, B<highlight><subscript>11</subscript></highlight>, A<highlight><subscript>2</subscript></highlight>, B<highlight><subscript>10</subscript></highlight>, A<highlight><subscript>3</subscript></highlight>&rcub;, </paragraph>
+<paragraph id="P-0089" lvl="1"><number>&lsqb;0089&rsqb;</number> then a 16&times;16 Benes network with 8-bit wide arcs may be used to re-order the streams into the regular form: </paragraph>
+<paragraph id="P-0090" lvl="1"><number>&lsqb;0090&rsqb;</number> &lcub;C<highlight><subscript>07</subscript></highlight>, C<highlight><subscript>06</subscript></highlight>, C<highlight><subscript>05</subscript></highlight>, C<highlight><subscript>04</subscript></highlight>, C<highlight><subscript>03</subscript></highlight>, C<highlight><subscript>02</subscript></highlight>, C<highlight><subscript>01</subscript></highlight>, C<highlight><subscript>00</subscript></highlight>, B<highlight><subscript>03</subscript></highlight>, B<highlight><subscript>02</subscript></highlight>, B<highlight><subscript>01</subscript></highlight>, B<highlight><subscript>00</subscript></highlight>, B<highlight><subscript>13</subscript></highlight>, B<highlight><subscript>12</subscript></highlight>, B<highlight><subscript>11</subscript></highlight>, B<highlight><subscript>10</subscript></highlight>, A<highlight><subscript>3</subscript></highlight>, A<highlight><subscript>2</subscript></highlight>, A<highlight><subscript>1</subscript></highlight>, A<highlight><subscript>0</subscript></highlight>&rcub;</paragraph>
+<paragraph id="P-0091" lvl="1"><number>&lsqb;0091&rsqb;</number> which is required by the pipelined butterfly network to operate properly. </paragraph>
+<paragraph id="P-0092" lvl="0"><number>&lsqb;0092&rsqb;</number> As can be seen from the example, the byte lanes for individual streams must be grouped together in descending order, and the streams must be aligned on proper boundaries (64-bit streams on 64-bit boundaries, 32-bit streams on 32-bit boundaries, and 8-bit streams on any boundary). </paragraph>
+<paragraph id="P-0093" lvl="0"><number>&lsqb;0093&rsqb;</number> Benes networks can be constructed for an arbitrarily large total number of input data units N in the input data streams. For a system having N input data units, where N must be a power of 2, the Benes network requires (2&times;log<highlight><subscript>2</subscript></highlight>N&minus;1) columns of multiplexer nodes. </paragraph>
+<paragraph id="P-0094" lvl="0"><number>&lsqb;0094&rsqb;</number> It will be understood by a person skilled in the art that register elements may be interposed between stages of the permutation network in order to pipeline the network and permit it to operate at high speeds. Further, the permutation network may be placed upstream of the shuffle buffers rather than downstream, so that the data is re-arranged in the spatial domain before being re-ordered or shuffled in the time domain, rather than after. </paragraph>
+<paragraph id="P-0095" lvl="0"><number>&lsqb;0095&rsqb;</number> As noted earlier, the permutation network may be omitted if the input data streams are already properly arranged. </paragraph>
+</section>
+<section>
+<heading lvl="1">Pipelined Butterfly Network </heading>
+<paragraph id="P-0096" lvl="0"><number>&lsqb;0096&rsqb;</number> As mentioned earlier, the pipelined butterfly network performs the actual data width extension and merging functions. As shown in <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, it is comprised of an input delay network <highlight><bold>39</bold></highlight>, which feeds a butterfly network <highlight><bold>41</bold></highlight>, which feeds an output delay network <highlight><bold>43</bold></highlight>. As in the case of the Benes network, the pipelined butterfly network increases in size according to the total number of data units N in the input data streams. An example of a 4&times;4 pipelined butterfly network for handling 8-bit data will be described below, and is shown in <cross-reference target="DRAWINGS">FIG. 7</cross-reference>. </paragraph>
+<paragraph id="P-0097" lvl="0"><number>&lsqb;0097&rsqb;</number> The pipelined butterfly network shown can extend and merge four data streams A, B, C and D, each of 8-bits in width, into a time-division-multiplexed sequence of 32-bit words <highlight><bold>1</bold></highlight>, <highlight><bold>0</bold></highlight>, <highlight><bold>2</bold></highlight>, <highlight><bold>3</bold></highlight> at the output bus. </paragraph>
+<paragraph id="P-0098" lvl="0"><number>&lsqb;0098&rsqb;</number> The uncrosshatched circles <highlight><bold>45</bold></highlight> represent simple registers (delay stages), and the cross-hatched circles M<highlight><bold>0</bold></highlight>-M<highlight><bold>7</bold></highlight> represent registers <highlight><bold>47</bold></highlight> with 2:1 multiplexers <highlight><bold>49</bold></highlight> at their inputs. All of the registers are clocked at the same time (i.e. the entire network is synchronous). Each multiplexer has a single select control input S that is used to select one of the two inputs which connect to the outputs of a pair of registers in adjacent input delay network output paths, as shown. The select inputs S are modified on every clock cycle in a regular and repeating pattern, as will be described later. </paragraph>
+<paragraph id="P-0099" lvl="0"><number>&lsqb;0099&rsqb;</number> FIGS. <highlight><bold>8</bold></highlight>A-<highlight><bold>8</bold></highlight>F illustrate the state of the network in 6 successive clock cycles, whereby four 8-bit streams of data at the inputs may be organized by the shown 4&times;4 network into interleaved 32-bit data words at the outputs. </paragraph>
+<paragraph id="P-0100" lvl="0"><number>&lsqb;0100&rsqb;</number> It is assumed that all of the input streams present their first byte, their second byte, their third byte, etc. in unison on successive clock cycles. After six clock cycles, the first 32-bit word of data (containing four consecutive bytes drawn from the first input stream) will appear at the output bus. From then on, successive 32-bit words of data belonging to consecutive streams will be placed on the output bus on every clock. </paragraph>
+<paragraph id="P-0101" lvl="0"><number>&lsqb;0101&rsqb;</number> In FIGS. <highlight><bold>8</bold></highlight>A-<highlight><bold>8</bold></highlight>F, the input data streams are represented by &lcub;A<highlight><bold>1</bold></highlight>, A<highlight><bold>2</bold></highlight>, A<highlight><bold>3</bold></highlight>, A<highlight><bold>4</bold></highlight>, A<highlight><bold>5</bold></highlight>, A<highlight><bold>6</bold></highlight> . . . &rcub;, &lcub;B<highlight><bold>1</bold></highlight>, B<highlight><bold>2</bold></highlight>, B<highlight><bold>3</bold></highlight>, B<highlight><bold>4</bold></highlight>, B<highlight><bold>5</bold></highlight>, B<highlight><bold>6</bold></highlight> . . . &rcub;, &lcub;C<highlight><bold>1</bold></highlight>, C<highlight><bold>2</bold></highlight>, C<highlight><bold>3</bold></highlight>, C<highlight><bold>4</bold></highlight>, C<highlight><bold>5</bold></highlight>, C<highlight><bold>6</bold></highlight> . . . &rcub;, and &lcub;D<highlight><bold>1</bold></highlight>, D<highlight><bold>2</bold></highlight>, D<highlight><bold>3</bold></highlight>, D<highlight><bold>4</bold></highlight>, D<highlight><bold>5</bold></highlight>, D<highlight><bold>6</bold></highlight> . . . &rcub;; the output data words follow the sequence &lcub;A<highlight><bold>1</bold></highlight>, A<highlight><bold>2</bold></highlight>, A<highlight><bold>3</bold></highlight>, A<highlight><bold>4</bold></highlight>&rcub;, &lcub;B<highlight><bold>1</bold></highlight>, B<highlight><bold>2</bold></highlight>, B<highlight><bold>3</bold></highlight>, B<highlight><bold>4</bold></highlight>&rcub;, &lcub;C<highlight><bold>1</bold></highlight>, C<highlight><bold>2</bold></highlight>, C<highlight><bold>3</bold></highlight>, C<highlight><bold>4</bold></highlight>&rcub;, &lcub;D<highlight><bold>1</bold></highlight>, D<highlight><bold>2</bold></highlight>, D<highlight><bold>3</bold></highlight>, D<highlight><bold>4</bold></highlight>&rcub;, &lcub;A<highlight><bold>5</bold></highlight>, A<highlight><bold>6</bold></highlight>, A<highlight><bold>7</bold></highlight>, A<highlight><bold>8</bold></highlight>&rcub;, &lcub;B<highlight><bold>5</bold></highlight>, B<highlight><bold>6</bold></highlight>, B<highlight><bold>7</bold></highlight>, B<highlight><bold>8</bold></highlight>&rcub;, etc. </paragraph>
+<paragraph id="P-0102" lvl="0"><number>&lsqb;0102&rsqb;</number> Turning to <cross-reference target="DRAWINGS">FIG. 8</cross-reference>A, it may be seen that the input data stream A(x) is received at input A, data stream B(x) is received at input B, data stream C(x) is received at input C and data stream D(x) is received at input D. Data stream A(x) is passed directly without delay to an input register <highlight><bold>41</bold></highlight>A of the butterfly network <highlight><bold>41</bold></highlight>; data stream B(x) is passed to the input register <highlight><bold>41</bold></highlight>B of the butterfly network through one delay unit (e.g. clock period) <highlight><bold>45</bold></highlight>A; data stream C(x) is passed to the input register <highlight><bold>41</bold></highlight>C of the butterfly network through two delay units <highlight><bold>45</bold></highlight>B; data stream D(x) is passed to the input register <highlight><bold>41</bold></highlight>D of the butterfly network through three delay units <highlight><bold>45</bold></highlight>C. </paragraph>
+<paragraph id="P-0103" lvl="0"><number>&lsqb;0103&rsqb;</number> To generalize, each respective successive parallel input data stream passes through a delay network which contains P serial delay stages, where P&equals;(M&minus;1), M being a whole number counting from 1 representing a count of each respective successive input data stream, for receiving the streams of data and passing each stream to an input of a corresponding multiplexer of a first stage of the multiplexers. It may be seen that the first data stream does not encounter any delay in the input delay network. </paragraph>
+<paragraph id="P-0104" lvl="0"><number>&lsqb;0104&rsqb;</number> It should be noted that while the input register of the butterfly network is considered to be part of the butterfly register, it could as easily be considered as the last delay element of the delay network for each data stream. In that case the &ldquo;&minus;1&rdquo; would disappear from the above equation. In this specification, the equations should be considered to be the same, depending on whether the input register is or is not considered to be part of the delay network. </paragraph>
+<paragraph id="P-0105" lvl="0"><number>&lsqb;0105&rsqb;</number> The first byte of each of the data streams is stored, with the first clock pulse (clock &num;<highlight><bold>1</bold></highlight>), in the first delay (e.g. register) it encounters, as is shown in FIG. </paragraph>
+<paragraph id="P-0106" lvl="0"><number>&lsqb;0106&rsqb;</number> The outputs of each pair of the input registers of the butterfly network <highlight><bold>41</bold></highlight> are connected to each of the two inputs of a pair of multiplexers. Thus the output of register <highlight><bold>41</bold></highlight>A is connected to the 0 inputs of multiplexers <highlight><bold>42</bold></highlight>A and <highlight><bold>42</bold></highlight>B; the output of register <highlight><bold>41</bold></highlight>B is connected to the 1 inputs of multiplexers <highlight><bold>42</bold></highlight>A and <highlight><bold>42</bold></highlight>B. Similarly the output of input register <highlight><bold>41</bold></highlight>C is connected to 0 inputs of multiplexers <highlight><bold>42</bold></highlight>C and <highlight><bold>42</bold></highlight>D, and the outputs of register <highlight><bold>41</bold></highlight>D are connected to the 1 inputs of registers <highlight><bold>42</bold></highlight>C and <highlight><bold>42</bold></highlight>D. </paragraph>
+<paragraph id="P-0107" lvl="0"><number>&lsqb;0107&rsqb;</number> The outputs of multiplexers <highlight><bold>42</bold></highlight>A and <highlight><bold>42</bold></highlight>B are connected respectively to the 0 inputs of multiplexers <highlight><bold>42</bold></highlight>E and <highlight><bold>42</bold></highlight>F, and are connected respectively to the 0 inputs of multiplexers <highlight><bold>42</bold></highlight>G and <highlight><bold>42</bold></highlight>H. The outputs of multiplexers <highlight><bold>42</bold></highlight>C and <highlight><bold>42</bold></highlight>D are connected respectively to the 1 inputs of multiplexers <highlight><bold>42</bold></highlight>G and <highlight><bold>42</bold></highlight>H, and are also connected respectively to the 1 inputs of multiplexers <highlight><bold>42</bold></highlight>E and <highlight><bold>42</bold></highlight>F. </paragraph>
+<paragraph id="P-0108" lvl="0"><number>&lsqb;0108&rsqb;</number> The general form of the array of multiplexers described is referred to herein as a butterfly network. </paragraph>
+<paragraph id="P-0109" lvl="0"><number>&lsqb;0109&rsqb;</number> On the second clock pulse (clock &num;<highlight><bold>2</bold></highlight>), the data is shifted to the right, as is shown in <cross-reference target="DRAWINGS">FIG. 8B</cross-reference>. Thus the first byte A<highlight><bold>1</bold></highlight> of data stream A(x) is shifted into the first multiplexer, and the second byte A<highlight><bold>2</bold></highlight> is stored by the first register <highlight><bold>41</bold></highlight>A. The first byte B<highlight><bold>1</bold></highlight> of data stream B(x) is shifted from the delay (register) <highlight><bold>45</bold></highlight>A into the input register <highlight><bold>41</bold></highlight>B of the butterfly network, and the second byte B<highlight><bold>2</bold></highlight> is stored in the delay (register) <highlight><bold>45</bold></highlight>A. Similarly the successive bytes of the data streams C(x) and D(x) are shifted to successive delay (registers) as shown. </paragraph>
+<paragraph id="P-0110" lvl="0"><number>&lsqb;0110&rsqb;</number> On the next clock pulse (clock &num;<highlight><bold>3</bold></highlight>), as shown in <cross-reference target="DRAWINGS">FIG. 8C</cross-reference> the byte A<highlight><bold>1</bold></highlight> passes from multiplexer <highlight><bold>42</bold></highlight>A to multiplexer <highlight><bold>42</bold></highlight>E (see the select signal table below), and the byte B<highlight><bold>1</bold></highlight> passes from the input register <highlight><bold>41</bold></highlight>B to multiplexer <highlight><bold>42</bold></highlight>A. Byte A<highlight><bold>2</bold></highlight> passes from input register <highlight><bold>41</bold></highlight>A to multiplexer <highlight><bold>42</bold></highlight>B. The delays incurred by data streams C(x) and D(x) cause those data streams not yet to enter the multiplexer array. </paragraph>
+<paragraph id="P-0111" lvl="0"><number>&lsqb;0111&rsqb;</number> The heavy lines in these figures represent the paths taken by valid data words within a given clock cycle; implicitly they represent the multiplexer select signals that must be used. </paragraph>
+<paragraph id="P-0112" lvl="0"><number>&lsqb;0112&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 8</cross-reference>D, at the next clock pulse (clock &num;<highlight><bold>4</bold></highlight>), the first byte A<highlight><bold>1</bold></highlight> of data stream A(x) has passed from multiplexer <highlight><bold>42</bold></highlight>E to a first delay (register) <highlight><bold>43</bold></highlight>A of the output delay network, while the second byte A<highlight><bold>2</bold></highlight> is still in the final multiplex stage, in multiplexer <highlight><bold>42</bold></highlight>F. The first byte B<highlight><bold>1</bold></highlight> of data stream B(x) follows byte A<highlight><bold>1</bold></highlight> by one clock pulse, on the same line. </paragraph>
+<paragraph id="P-0113" lvl="0"><number>&lsqb;0113&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 8</cross-reference>E, at the next clock pulse (clock &num;<highlight><bold>5</bold></highlight>) byte A<highlight><bold>1</bold></highlight> is in the second delay (register) of the output delay network <highlight><bold>43</bold></highlight>, and byte B<highlight><bold>1</bold></highlight> is in the first. Byte Cl is in the last multiplexer stage, in multiplexer <highlight><bold>42</bold></highlight>E, to follow the same delay path and bytes A<highlight><bold>1</bold></highlight> and B<highlight><bold>1</bold></highlight>. Byte A<highlight><bold>2</bold></highlight> is in the first delay (register) of the line that is adjacent to the one carrying byte A<highlight><bold>1</bold></highlight>. Bytes A<highlight><bold>3</bold></highlight> and B<highlight><bold>2</bold></highlight> are in the last multiplexer stage. </paragraph>
+<paragraph id="P-0114" lvl="0"><number>&lsqb;0114&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 8</cross-reference>F, at the next clock pulse (clock &num;<highlight><bold>6</bold></highlight>), all of the bytes of each word of serial data stream A(x) have been transposed to a separate line, and appear in parallel at the same time on output bus <highlight><bold>44</bold></highlight>. An examination of <cross-reference target="DRAWINGS">FIG. 8F</cross-reference> will also show that the bytes of serial data stream B(x) will follow by one clock pulse the parallel byte of data stream A(x). The parallel bytes of serial data stream C(x) and D(x) follow in succession, after which the process repeats for byte streams A(x), B(x), C(x) and D(x). </paragraph>
+<paragraph id="P-0115" lvl="0"><number>&lsqb;0115&rsqb;</number> The serial data streams appearing on separate lines have thus been transposed into interleaved parallel time-division-multiplexed bytes and placed on an output bus. </paragraph>
+<paragraph id="P-0116" lvl="0"><number>&lsqb;0116&rsqb;</number> With reference again to <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, if a multiplexer select of &lsquo;0&rsquo; causes it to select the horizontal input, and a select of &lsquo;1&rsquo; causes the diagonal or cross input to be selected, then the following table 5 gives the multiplexer select signals required for the multiplexer nodes M<highlight><bold>0</bold></highlight>-M<highlight><bold>7</bold></highlight>. Note that multiplexer nodes M<highlight><bold>0</bold></highlight>-M<highlight><bold>7</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 7</cross-reference> and referred to in the following table correspond to multiplexers <highlight><bold>42</bold></highlight>A-<highlight><bold>42</bold></highlight>H respectively.  
+<table-cwu id="TABLE-US-00005">
+<number>5</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="10">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="left"/>
+<colspec colname="2" colwidth="14PT" align="center"/>
+<colspec colname="3" colwidth="28PT" align="center"/>
+<colspec colname="4" colwidth="14PT" align="center"/>
+<colspec colname="5" colwidth="28PT" align="center"/>
+<colspec colname="6" colwidth="14PT" align="center"/>
+<colspec colname="7" colwidth="28PT" align="center"/>
+<colspec colname="8" colwidth="14PT" align="center"/>
+<colspec colname="9" colwidth="28PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="9" align="center">TABLE 5</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="9" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock</entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Cycle</entry>
+<entry>M0</entry>
+<entry>M1</entry>
+<entry>M2</entry>
+<entry>M3</entry>
+<entry>M4</entry>
+<entry>M5</entry>
+<entry>M6</entry>
+<entry>M7</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="9" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Clock &num;1</entry>
+<entry>0</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock &num;2</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>0</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock &num;3</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>&mdash;</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock &num;4</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock &num;5</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock &num;6</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>0</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock &num;7</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Clock &num;8</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="9" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0117" lvl="0"><number>&lsqb;0117&rsqb;</number> Following the table 5 above for control of the multiplexers, and the heavy lines on FIGS. <highlight><bold>8</bold></highlight>A-<highlight><bold>8</bold></highlight>F, it may be seen that the serial words in each input data stream are transposed to parallel bytes in an output data stream. As can be seen from the table, the multiplexer select signals are a simple and regular repeating pattern. The select signals for M<highlight><bold>0</bold></highlight>-M<highlight><bold>3</bold></highlight> (i.e. the first column of multiplexers) all toggle between 1 and 0 on every clock. The select signals (selects) for M<highlight><bold>4</bold></highlight>-M<highlight><bold>7</bold></highlight> toggle between 1 and 0 on every other clock. In general, for the i<highlight><superscript>th </superscript></highlight>stage of a pipelined butterfly network, (i&equals;0 for the first stage) the multiplexer selects will toggle after 2<highlight><superscript>i </superscript></highlight>clock cycles. In addition, the starting value for the sequence of toggles is offset by k modulo 2<highlight><superscript>(i&minus;</superscript></highlight>1) for the k<highlight><superscript>th </superscript></highlight>successive multiplexer in the i<highlight><superscript>th </superscript></highlight>stage of multiplexers, as can be seen from the table. The resulting control logic is thus exceedingly simple to implement, comprising a set of 2<highlight><superscript>(i&minus;</superscript></highlight>1) toggle flip-flops for the i<highlight><superscript>th </superscript></highlight>stage of multiplexers, with the toggle flip-flops being loaded with a constant pattern on reset and then always toggling on the appropriate clock cycle thereafter. </paragraph>
+<paragraph id="P-0118" lvl="0"><number>&lsqb;0118&rsqb;</number> A pipelined butterfly network may be built for any arbitrary number of input streams comprising N data units in total, where N must be a power of 2. To build such a network, there must be a total of (N&times;(N&minus;1)/2) register units in the input delay network, N&times;log<highlight><subscript>2</subscript></highlight>N multiplexer units, N&times;(log<highlight><subscript>2</subscript></highlight>N&plus;1) register units in the actual butterfly network, and (N&times;(N&minus;1)/2) additional register units in the output delay network. The total latency, in clock cycles, from the input of the first data unit on the first (topmost) stream to its emergence at the output is (log<highlight><subscript>2</subscript></highlight>N&plus;N). </paragraph>
+<paragraph id="P-0119" lvl="0"><number>&lsqb;0119&rsqb;</number> An example of an 8&times;8 pipelined butterfly network, capable of handling 8 streams of input data A-H and generating an 8-wide time-multiplexed sequence of output data <highlight><bold>0</bold></highlight>-<highlight><bold>7</bold></highlight>, is shown in <cross-reference target="DRAWINGS">FIG. 9</cross-reference>. The reference numerals and letters used are similar to those of FIGS. <highlight><bold>8</bold></highlight>A-<highlight><bold>8</bold></highlight>F. Operation is similar to that of FIGS. <highlight><bold>8</bold></highlight>A-<highlight><bold>8</bold></highlight>F, and the person skilled in the art should make reference to that description for an understanding of operation of the embodiment of <cross-reference target="DRAWINGS">FIG. 9</cross-reference>. </paragraph>
+<paragraph id="P-0120" lvl="0"><number>&lsqb;0120&rsqb;</number> The pipelined butterfly network has been described so far as handling data streams that are all of the same width, the width being equal to the smallest data unit (typically, this is 8-bits, although any arbitrary number of bits may be used without loss of generality). It is sometimes necessary to deal with data streams of different widths in the same apparatus (as, for example, when merging data streams from different physical layer devices having different speeds). It is possible to accomplish this with the use of the shuffle buffers previously described, along with special control of the multiplexer stages in the pipelined butterfly network. The present invention can, as a result, deal with data streams whose widths are related to each other in powers of 2, and are also less than or equal to the width of the output data bus, and wherein ths sum of the input data stream widths does not exceed the width of the output data bus. </paragraph>
+<paragraph id="P-0121" lvl="0"><number>&lsqb;0121&rsqb;</number> Two configuration parameters must be changed in order to deal with a data stream of width k units, where k is a power of 2. Firstly, the read ports of the shuffle buffers for all the byte lanes of the given data stream must all be configured to shuffle the data being read out, according to the method described earlier. </paragraph>
+<paragraph id="P-0122" lvl="0"><number>&lsqb;0122&rsqb;</number> Secondly, the first log<highlight><subscript>2</subscript></highlight>k stages of multiplexers of the pipelined butterfly network must not be allowed to toggle, but must be frozen with their select inputs configured in straight-through mode. This is depicted pictorially in <cross-reference target="DRAWINGS">FIG. 10</cross-reference>, which considers 5 input streams (4 of which are 8-bits wide and 1 of which is 32-bits wide), that must be merged on to a 64-bit output bus using 8 shuffle buffers and an 8&times;8 pipelined butterfly network. </paragraph>
+<paragraph id="P-0123" lvl="0"><number>&lsqb;0123&rsqb;</number> The permutation network is omitted in this drawing for simplicity, the data streams being assumed to be grouped and aligned on natural boundaries. The components of the 32-bit data stream are denoted as &lcub;A<highlight><bold>0</bold></highlight>, A<highlight><bold>1</bold></highlight>, A<highlight><bold>2</bold></highlight>, A<highlight><bold>3</bold></highlight>&rcub;, and the four 8-bit streams are B, C, D and E. </paragraph>
+<paragraph id="P-0124" lvl="0"><number>&lsqb;0124&rsqb;</number> As may be seen from <cross-reference target="DRAWINGS">FIG. 10</cross-reference>, the first four byte lanes A<highlight><bold>0</bold></highlight>, A<highlight><bold>1</bold></highlight>, A<highlight><bold>2</bold></highlight> and A<highlight><bold>3</bold></highlight> belong to one 32-bit stream and are hence shuffled, while the next four byte lanes B, C, D and E are assigned to four independent 8-bit streams and are output unshuffled from the shuffle buffers. The pipelined butterfly network is also differently configured from the previous embodiment; as denoted by the dashed lines, the first two stages (k&equals;4 units for the 32-bit stream, and log<highlight><subscript>2</subscript></highlight>k&equals;2)of multiplexers for the first four byte lanes are frozen in a straight-through configuration, and all the rest of the multiplexers operate otherwise normally as described earlier. </paragraph>
+<paragraph id="P-0125" lvl="0"><number>&lsqb;0125&rsqb;</number> The resulting apparatus produces a sequence of on the eight output byte lanes as shown in the wing table 6 (note that the clock cycles neglect the taken to accumulate 8 bytes into the shuffle buffers).  
+<table-cwu id="TABLE-US-00006">
+<number>6</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="9">
+<colspec colname="1" colwidth="21PT" align="center"/>
+<colspec colname="2" colwidth="21PT" align="center"/>
+<colspec colname="3" colwidth="28PT" align="center"/>
+<colspec colname="4" colwidth="21PT" align="center"/>
+<colspec colname="5" colwidth="28PT" align="center"/>
+<colspec colname="6" colwidth="21PT" align="center"/>
+<colspec colname="7" colwidth="28PT" align="center"/>
+<colspec colname="8" colwidth="21PT" align="center"/>
+<colspec colname="9" colwidth="28PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="9" align="center">TABLE 6</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="9" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Clock</entry>
+<entry>Lane</entry>
+<entry>Lane</entry>
+<entry>Lane</entry>
+<entry>Lane</entry>
+<entry>Lane</entry>
+<entry>Lane</entry>
+<entry>Lane</entry>
+<entry>Lane</entry>
+</row>
+<row>
+<entry>Cycle</entry>
+<entry>&num;0</entry>
+<entry>&num;1</entry>
+<entry>&num;2</entry>
+<entry>&num;3</entry>
+<entry>&num;4</entry>
+<entry>&num;5</entry>
+<entry>&num;6</entry>
+<entry>&num;7</entry>
+</row>
+<row><entry namest="1" nameend="9" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>&ensp;0</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry>12</entry>
+<entry>A00</entry>
+<entry>A10</entry>
+<entry>A20</entry>
+<entry>A30</entry>
+<entry>A01</entry>
+<entry>A11</entry>
+<entry>A21</entry>
+<entry>A31</entry>
+</row>
+<row>
+<entry>13</entry>
+<entry>A02</entry>
+<entry>A12</entry>
+<entry>A22</entry>
+<entry>A32</entry>
+<entry>A03</entry>
+<entry>A13</entry>
+<entry>A23</entry>
+<entry>A33</entry>
+</row>
+<row>
+<entry>14</entry>
+<entry>A04</entry>
+<entry>A14</entry>
+<entry>A24</entry>
+<entry>A34</entry>
+<entry>A05</entry>
+<entry>A15</entry>
+<entry>A25</entry>
+<entry>A35</entry>
+</row>
+<row>
+<entry>15</entry>
+<entry>A06</entry>
+<entry>A16</entry>
+<entry>A26</entry>
+<entry>A36</entry>
+<entry>A07</entry>
+<entry>A17</entry>
+<entry>A27</entry>
+<entry>A37</entry>
+</row>
+<row>
+<entry>16</entry>
+<entry>B0</entry>
+<entry>E1</entry>
+<entry>B2</entry>
+<entry>B3</entry>
+<entry>B4</entry>
+<entry>B5</entry>
+<entry>B6</entry>
+<entry>B7</entry>
+</row>
+<row>
+<entry>17</entry>
+<entry>C0</entry>
+<entry>C1</entry>
+<entry>C2</entry>
+<entry>C3</entry>
+<entry>C4</entry>
+<entry>C5</entry>
+<entry>C6</entry>
+<entry>C7</entry>
+</row>
+<row>
+<entry>18</entry>
+<entry>D0</entry>
+<entry>D1</entry>
+<entry>D2</entry>
+<entry>D3</entry>
+<entry>D4</entry>
+<entry>D5</entry>
+<entry>D6</entry>
+<entry>D7</entry>
+</row>
+<row>
+<entry>19</entry>
+<entry>E0</entry>
+<entry>E1</entry>
+<entry>E2</entry>
+<entry>E3</entry>
+<entry>E4</entry>
+<entry>E5</entry>
+<entry>E6</entry>
+<entry>E7</entry>
+</row>
+<row>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+<entry>.</entry>
+</row>
+<row><entry namest="1" nameend="9" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0126" lvl="0"><number>&lsqb;0126&rsqb;</number> In the above table 6, A<highlight><subscript>zy </subscript></highlight>denotes the y<highlight><superscript>th </superscript></highlight>byte input on byte lane x of the 32-bit data stream; B<highlight><subscript>y</subscript></highlight>, C<highlight><subscript>y</subscript></highlight>, D<highlight><subscript>y </subscript></highlight>and E<highlight><subscript>y </subscript></highlight>indicate the y<highlight><superscript>th </superscript></highlight>bytes of the 8-bit data steams, respectively. As can be seen, the output is extended to 64 bits, interleaved, aligned and time-multiplexed in the order of the byte lanes. Clearly the objectives of the invention have been achieved. </paragraph>
+<paragraph id="P-0127" lvl="0"><number>&lsqb;0127&rsqb;</number> A person understanding the above-described invention may now conceive of alternative designs, using the principles described herein. All such designs which fall within the scope of the claims appended hereto are considered to be part of the present invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A multi-data-stream merge network comprising a pipelined butterfly network for receiving parallel streams of data which are in interleaved order and which are located at specific spatial boundaries, and which includes means for concatenating data from the received streams of data into constant width interleaved words having width which is wider than any of the received streams of data, and means for merging the constant width words onto an output bus in a time-division multiplexed form so as to produce a constant-width interleaved output data stream, wherein the pipelined butterfly network is comprised of j*log<highlight><subscript>2</subscript></highlight>j successive stages of multiplexers and j*(log<highlight><subscript>2</subscript></highlight>j&plus;1) delay stages, in which j represents the number of parallel lines of byte lanes of input streams of data, the multiplexers being interconnected in a butterfly pattern, apparatus for applying select signals to the multiplexers which select signals toggle after 2<highlight><superscript>i </superscript></highlight>clock signals for the i<highlight><superscript>th </superscript></highlight>stage of multiplexers following a starting value for a sequence of select signals offset by k modulo2<highlight><superscript>(i&minus;</superscript></highlight>1) for each successive multiplexer in the i<highlight><superscript>th </superscript></highlight>stage of multiplexers. </claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising an input delay network containing P serial delay stages in which each respective successive parallel input data stream is delayed by said P serial delay stages, where P&equals;(M&minus;1), M being a whole number counting from 1 representing a count of each respective successive input data stream, said input delay network receiving the streams of data and passing each stream to an input of a corresponding multiplexer of a first stage of said multiplexers. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising an output network for providing an output data stream from a last stage of said multiplexers, the output network being comprised of an output delay network comprising a number of delay stages Q in each parallel stream carrying the output data stream wherein Q&equals;(R&minus;X), where R represents the total number of parallel output lines carrying the output data stream and X represents a whole number counting from 1 representing a count of each successive line forming the output bus carrying the output data stream. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising an output network for providing an output data stream from a last stage of said multiplexers, the output network being comprised of an output delay network comprising a number of delay stages Q in each parallel stream carrying the output data stream wherein Q&equals;(R&minus;X), where R represents the total number of parallel output lines carrying the output data stream and X represents a whole number counting from 1 representing a count of each successive line forming the output bus carrying the output data stream. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further comprising a plurality of shuffle buffers for receiving plural input data streams 
+<claim-text>(a) each data stream but one having a width which is the same as all other input data streams, and </claim-text>
+<claim-text>(b) at least one stream of data having different data width than other ones of the input streams of data and in which the data widths of the streams of data have a power of 2 relationship; </claim-text>
+<claim-text>the shuffle buffer having a structure for reordering the input streams of data into an interleaved order if not already in interleaved order and providing the interleaved order of data streams at its output. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further including a permutation network located upstream of the pipelined butterfly network, for receiving streams of data and for rearranging the spatial order of the streams of data if desirable or necessary and locating each stream on a specific spatial boundary, wherein the permutation network is configured to reorder positions of data streams so that byte lanes of respective streams which are a multiple of the narrowest of the data streams are respectively contiguous and are located on a specific spatial boundary. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein at least one of the input streams of data has a wider data width, K being the width of said wider data stream, than other ones of the input streams of data, and the sum of the input streams of data does not exceed the data width of the output bus, and wherein the first log<highlight><subscript>2</subscript></highlight>K stages of multiplexers of the pipelined butterfly network to which a data stream having the wider data width are applied are frozen so as not to toggle, with their select inputs set so as to render those stages of multiplexers into a straight-through data passage mode. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, in which all of the input data streams are of the same width, and further comprising buffers for at least one of 
+<claim-text>(a) accumulating input data until complete blocks of data are available within the buffers which are of a size equal to the width of the output bus of the pipelined butterfly network, and </claim-text>
+<claim-text>(b) synchronizing the input data streams; and for outputting the at least one of the synchronized input data streams and blocks of data for subsequent processing by the pipelined butterfly network. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further including a permutation network located upstream of the pipelined butterfly network, for receiving streams of data and for rearranging the spatial order of the streams of data if desirable or necessary and locating each stream on a specific spatial boundary. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising a plurality of shuffle buffers for receiving plural input data streams 
+<claim-text>(a) each data stream but one having a width which is the same as all other input data streams, and </claim-text>
+<claim-text>(b) at least one stream of data having different data width than other ones of the input streams of data and in which the data widths of the streams of data have a power of 2 relationship; </claim-text>
+<claim-text>the shuffle buffer having a structure for reordering the input streams of data into an interleaved order if not already in interleaved order and providing the interleaved order of data streams at its output. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein at least one of the input streams of data has a wider data width, K being the width of said wider data stream, than other ones of the input streams of data, and the sum of the input streams of data does not exceed the data width of the output bus, and wherein the first log<highlight><subscript>2</subscript></highlight>K stages of multiplexers of the pipelined butterfly network to which a data stream having the wider data width are applied are frozen so as not to toggle, with their select inputs set so as to render those stages of multiplexers into a straight-through data passage mode. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising an input delay network containing P serial delay stages in which each respective successive parallel input data stream is delayed by said P serial delay stages, where P&equals;(M&minus;1), M being a whole number counting from 1 representing a count of each respective successive input data stream, said input delay network receiving the streams of data and passing each stream to an input of a corresponding multiplexer of a first stage of said multiplexers. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising an output network for providing an output data stream from a last stage of said multiplexers, the output network being comprised of an output delay network comprising a number of delay stages Q in each parallel stream carrying the output data stream wherein Q&equals;(R&minus;X), where R represents the total number of parallel output lines carrying the output data stream and X represents a whole number counting from 1 representing a count of each successive line forming the output bus carrying the output data stream. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, further including a permutation network located upstream of the pipelined butterfly network, for receiving streams of data and for rearranging the spatial order of the streams of data if desirable or necessary and locating each stream on a specific spatial boundary, wherein the permutation network is configured to reorder positions of data streams so that byte lanes of respective streams which are a multiple of the narrowest of the data streams are contiguous and are located on a specific spatial boundary. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising a plurality of shuffle buffers for receiving plural input data streams 
+<claim-text>(a) each data stream but one having a width which is the same as all other input data streams, and </claim-text>
+<claim-text>(b) at least one stream of data having different data width than other ones of the input streams of data and in which the data widths of the streams of data have a power of 2 relationship; </claim-text>
+<claim-text>the shuffle buffer having a structure for reordering the input streams of data into an interleaved order if not already in interleaved order and providing the interleaved order of data streams at its output. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further including a permutation network located upstream of the pipelined butterfly network, for receiving streams of data and for rearranging the spatial order of the streams of data if desirable or necessary and locating each stream on a specific spatial boundary, wherein the permutation network is configured to reorder positions of data streams so that byte lanes of respective streams which are a multiple of a narrowest of the data streams are contiguous and are located on a specific spatial boundary. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A multi-data-stream merge network comprising: 
+<claim-text>(a) a plurality of shuffle buffers for receiving plural input data streams 
+<claim-text>(i) each data stream but one having a width which is the same as all other input data streams, and </claim-text>
+<claim-text>(ii) at least one stream of data having different data width than other ones of the input streams of data and in which the data widths of the streams of data have a power of 2 relationship; </claim-text>
+</claim-text>
+<claim-text>the shuffle buffer having a structure for reordering the input streams of data into an interleaved order if not already in interleaved order and providing the interleaved order of data streams at its output. </claim-text>
+<claim-text>(b) a permutation network for receiving the interleaved order of data streams and rearranging the spatial order of the data streams if desirable or necessary and locating each stream on a specific spatial boundary, and </claim-text>
+<claim-text>(c) a pipelined butterfly network for receiving the data streams from the permutation network and concatenating data from the received data streams into constant width interleaved words having width which is wider than any of the input streams of data, and merging the constant width words onto an output bus in a time-division-multiplexed manner. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A merging network for multiple data streams comprising a pipelined butterfly network, the pipelined butterfly network comprising: 
+<claim-text>(a) an input network for receiving a plurality of data streams of mutually constant widths, having logically related data streams carried on contiguous signal lines, </claim-text>
+<claim-text>(b) a butterfly network for rearranging the received data streams into a time-multiplexed constant-width output data stream, the output data stream having a width equal to or greater than the sum of the widths of the input data streams, and </claim-text>
+<claim-text>(c) an output network for providing the output data stream interleaved to an output bus. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A pipelined butterfly network as defined in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the input network is comprised of an input delay network having a number P of equal delay stages, where P&equals;(M&minus;1), M being a whole number counting from 1 representing a count of each successive input data stream. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A pipelined butterfly network as defined in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the output network is comprised of an output delay network having similar number of equal delay stages as the input delay network, each delay stage being equal in delay to a delay stage of the input network, the number of delay stages Q in each parallel line carrying the output data stream being Q&equals;(R&minus;X), where R represents the total number of parallel output lines carrying the output data stream and X represents a whole number counting from 1 representing a count of each successive output data stream. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A pipelined butterfly network as defined in <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein the butterfly network is non-blocking and is comprised of a plurality of stages of multiplexers and delay elements mutually interconnected and selected so as to provide to each parallel line containing said delay stages carrying the output data stream, an ordered and sequential stream of bytes from each successive word of all the input data streams, the sequence of bytes on successive ones of the parallel lines having successive bytes of a data word each delayed by a delay interval of one delay stage. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A pipelined butterfly network as defined in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> further including a plurality of input buffers each for receiving a corresponding ordered and sequential stream of bytes, and for providing said corresponding stream of bytes to inputs of the butterfly network in accordance with a predetermined control signal and with a delay of one of said delay stages, and a control circuit for applying control signals to said input buffers and to said multiplexers. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A pipelined butterfly network a defined in <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> including a clock input to each of the multiplexers, buffers and delay stages for receiving a clock signal for synchronization thereof. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A pipelined butterfly network as defined in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> comprising N&times;log<highlight><subscript>2</subscript></highlight>N multiplexers and N&times;(log<highlight><subscript>2</subscript></highlight>N&plus;1) delay elements, wherein N represents a total number of bytes in a data word at the output of the butterfly network. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A pipelined butterfly network as defined in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> in which the received data streams are comprised of one of (a) all of the same width, or (b) different widths wherein the different widths are related to each other by the power of 2; the sum of the widths of the data streams not exceeding the width of the output bus. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. A pipelined butterfly network a defined in <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> including means for providing control signals, comprised of a regular repeating pattern. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. A method of merging multiple input data streams into an output data stream having a word size that is equal to or larger than the sum of all of the input data streams, wherein the word size of the output data stream is a multiple of the smallest common factor of the word sizes of the input data streams, comprising: 
+<claim-text>(a) delaying each successive input data stream by a delay clock unit equal to (M&minus;1), M being a whole number representing a count of each successive input data stream counting from 1, </claim-text>
+<claim-text>(b) switching each successive byte of each delayed data stream to a corresponding successive internal output line and wherein each corresponding byte of all of the input data streams is in sequence on a corresponding internal data line, and </claim-text>
+<claim-text>(c) delaying data streams on each of the internal data lines by respective delay clock units so as to cause all of the sequential bytes of an input data word to appear at the same time in parallel on respective output lines of an output bus, and all of the corresponding bytes of all data words to appear respectively at the same time in parallel, in sequence, and intereleaved, on the output bus. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A method as defined in <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference> in which step (c) is comprised of delaying the data on each internal data line by a number of delay units equal to Q, wherein Q&equals;(R&minus;X), where R represents the total number of parallel output lines carrying the output data stream, and X represents a whole number counting from 1 representing a count of successive output data lines carrying the output data stream. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. A method of merging multiple input data streams into an output data stream having a word size that is equal to or larger than the sum of all of the input data streams, wherein the word size of the output data stream is a multiple of the smallest common factor of the word sizes of the input data streams, comprising: 
+<claim-text>(a) receiving a plurality of said input data streams having logically related data widths in an input network, </claim-text>
+<claim-text>(b) rearranging the received data streams into a time-multiplexed constant-width output data stream, the output data stream having a width equal to or greater than the sum of the widths of the input data streams, and </claim-text>
+<claim-text>(c) providing the output data stream interleaved to an output bus by means of an output network. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. A method of merging multiple data streams into an interleaved time-division-multiplexed output signal comprising: 
+<claim-text>(a) receiving plural input streams of data, wherein one of (i) each stream of data has a data width which is the same as all other input streams of data, or 
+<claim-text>(ii) at least one stream of data has different data width than other ones of the input streams of data and in which the data widths have a power of 2 relationship, </claim-text>
+</claim-text>
+<claim-text>(b) reordering the input streams of data into a interleaved order if not already in interleaved order and providing the interleaved order of data streams at its output, </claim-text>
+<claim-text>(c) rearranging the interleaved spatial order of the data streams if desirable or necessary and locating each stream on a specific spatial boundary, and </claim-text>
+<claim-text>(d) concatenating data from the interleaved spatially located data streams into constant width interleaved words having width which is wider than any of the input streams of data, and merging the constant width words onto an output bus in a time-division-multiplexed manner. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A method of merging multiple data streams into an interleaved time-division-multiplexed output signal comprising receiving streams of data which are in interleaved order and which are located at specific spatial boundaries, concatenating data from the received streams of data into constant width interleaved words having a width which is equal to or is wider than any of the received streams of data, and merging the constant width words onto an output bus in a time-division multiplexed form so as to produce a constant-width interleaved output data stream. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. A method as defined in <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference> comprising imposing different fixed numbers of clock cycle delays on various input streams, switching and sequencing the delayed input streams in successive stages to merge and extend data in the delayed input streams, and imposing different fixed numbers of clock cycle delays on the merged and extended data so as to align the merged and extended data into interleaved words of the constant width output data stream. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. A network for splitting a time-division multiplexed constant width interleaved data stream into multiple data streams including a pipelined butterfly network for receiving said interleaved data stream, means for deconcatenating data from the received data stream into separate data streams and serializing each of the separate data streams into serial data streams of words having widths which are narrower than the width of the interleaved data stream, the widths of the serial data streams having a power of 2 relationship to each other. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. A network as defined in <dependent-claim-reference depends_on="CLM-00033">claim 33</dependent-claim-reference>, including a shuffle buffer for receiving the plural streams of data and for reordering the plural data streams in accordance with output data bus requirements. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. A splitting network for converting an interleaved time-division multiplexed constant width data stream into multiple data streams comprising: 
+<claim-text>(a) an input network for receiving the interleaved time-division-multiplexed constant width parallel data stream, </claim-text>
+<claim-text>(b) a butterfly network for rearranging the received data stream into a plurality of data streams having logically related widths and carried on contiguous signal lines, the sum of the widths of the plurality of data streams being equal to or smaller than the width of the interleaved data stream, and </claim-text>
+<claim-text>(c) an output network for providing the plurality of data streams on plural output buses individually timed to output bus requirements. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. A method of converting an interleaved time-division multiplexed constant width data stream into multiple data streams comprising: 
+<claim-text>(a) receiving the interleaved time-division-multiplexed constant width parallel data stream, </claim-text>
+<claim-text>(b) rearranging the received data stream into a plurality of data streams having logically related widths and carried on contiguous signal lines, the sum of the widths of the plurality of data streams being equal to or smaller than the width of the interleaved data stream, and </claim-text>
+<claim-text>(c) providing the plurality of data streams on plural output buses individually timed to output bus requirements.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002474A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002474A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002474A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002474A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002474A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002474A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030002474A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030002474A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

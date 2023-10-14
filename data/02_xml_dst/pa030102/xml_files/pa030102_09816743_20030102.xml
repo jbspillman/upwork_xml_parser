@@ -1,0 +1,1523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004717A1-20030102-M00001.NB SYSTEM "US20030004717A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030004717A1-20030102-M00001.TIF SYSTEM "US20030004717A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-M00002.NB SYSTEM "US20030004717A1-20030102-M00002.NB" NDATA NB>
+<!ENTITY US20030004717A1-20030102-M00002.TIF SYSTEM "US20030004717A1-20030102-M00002.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-M00003.NB SYSTEM "US20030004717A1-20030102-M00003.NB" NDATA NB>
+<!ENTITY US20030004717A1-20030102-M00003.TIF SYSTEM "US20030004717A1-20030102-M00003.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-M00004.NB SYSTEM "US20030004717A1-20030102-M00004.NB" NDATA NB>
+<!ENTITY US20030004717A1-20030102-M00004.TIF SYSTEM "US20030004717A1-20030102-M00004.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-M00005.NB SYSTEM "US20030004717A1-20030102-M00005.NB" NDATA NB>
+<!ENTITY US20030004717A1-20030102-M00005.TIF SYSTEM "US20030004717A1-20030102-M00005.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-D00000.TIF SYSTEM "US20030004717A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-D00001.TIF SYSTEM "US20030004717A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-D00002.TIF SYSTEM "US20030004717A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-D00003.TIF SYSTEM "US20030004717A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-D00004.TIF SYSTEM "US20030004717A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-D00005.TIF SYSTEM "US20030004717A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004717A1-20030102-D00006.TIF SYSTEM "US20030004717A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004717</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09816743</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010322</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G10L015/08</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>704</class>
+<subclass>240000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Histogram grammar weighting and error corrective training of grammar weights</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Nikko</given-name>
+<family-name>Strom</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Mountain View</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Nicholas</given-name>
+<family-name>Kibre</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Mountain View</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>TELLME</name-1>
+<name-2>C/O BEVER, HOFFMAN &amp; HARMS, LLP</name-2>
+<address>
+<address-1>2099 GATEWAY PLACE, SUITE 320</address-1>
+<city>SAN JOSE</city>
+<state>CA</state>
+<postalcode>95110-1017</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A multi-level method for estimating and training weights associated with grammar options is presented. The implementation of the method implemented differs depending on the amount of utterance data available for each option to be tuned. A first implementation, modified maximum likelihood estimation (MLE), can be used to estimate weights for a grammar option when few utterances are available for the option. Option weights are then estimated using an obtainable statistic that creates a basis for the predictability model. A second implementation, error corrective training (ECT) , can be used to estimate option weight when a sufficiently large number of utterances are available. The ECT method minimizes the errors in the score of the correct interpretation of the utterance and the highest scoring incorrect interpretation in an utterance training set. The ECT method is iterated to converge on a solution for option weights. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to speech recognition, and specifically to methods for assigning and training grammar weights for a speech recognition system. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Discussion of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Automatic speech recognition (ASR) systems translate audio information into text information. Specifically, an utterance (i.e. audio information) made by a user is input to the ASR system. The ASR system interprets the utterance based on a score describing a phonetic similarity to the natural language options in a set of active grammars. An active grammar is an available set of natural language options (options) in a particular context. The different ways an option might be spoken are defined as option variants. For example, in the context of movies, an active grammar can represent the names of presently playing movies. Each option in the movie grammar is a tag corresponding to a movie name. For each option (e.g. the tag for the movie name &ldquo;Mission Impossible: 2&rdquo;), the grammar might include option variants for recognizing &ldquo;mission impossible&rdquo;, &ldquo;mission_impossible&rdquo; (run-on of the two words), and &ldquo;mission impossible two&rdquo;. These option variants represent the different ways a user might say the name of the movie &ldquo;Mission Impossible: 2&rdquo;. Thus, each of these option variants corresponds to a single natural language option, the tag corresponding to the movie &ldquo;Mission Impossible: 2&rdquo;. As a result, when an utterance is recognized as the option variant &ldquo;mission impossible&rdquo;, then the ASR system returns the option for &ldquo;Mission Impossible: 2&rdquo; as the natural language interpretation of the utterance. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The ASR system computes scores for the options of the active grammars for each utterance. The score of an option is based on two kinds of information: acoustic information and grammatical information. A probabilistic framework for the acoustic information defines the &ldquo;acoustic score&rdquo; as the likelihood that a particular option was spoken, given the acoustic properties of an utterance. The grammatical information biases some options in relation to others. In a probabilistic framework, the grammatical information is defined as a probability associated with each option. These probabilities are referred to herein as &ldquo;grammar weights&rdquo;, or simply &ldquo;weights&rdquo;. The score computed by the ASR system for an option, given an utterance, is a combination of the acoustic score and the grammar weight. In a probabilistic framework, the logarithm of both the grammar weight and the acoustic score are added. While scores discussed herein relate to a probabilistic framework with all scores defined in the logarithmic domain, the concepts described herein can be applied to other ways of merging the acoustic information with the grammatical information as well. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The ASR system chooses the active grammar option having the highest score as the natural language interpretation of the utterance (i.e. recognized result). Increasing the grammar weight of an option (and thus increasing the score of the option) therefore increases the chance of that option being chosen as the natural language interpretation of a given utterance by the ASR system. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In voice applications, an application author defines the active grammars for each portion of the application. An application author is a voice application programmer, and typically has no training as a speech scientist. Grammar weights of variants are defined by application authors in the course of the application programming process and are therefore alterable by the application author. However, because acoustic scores are modeled by the manufacturer of the speech recognizer (the recognition engine of the ASR system), the acoustic scores are typically fixed in a particular version of a speech recognizer. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The grammar weights of options in active grammars may be determined (either assigned or tuned) according to a specific method to maximize the abilities of the ASR system to correctly interpret utterances. It is often impractical to obtain enough utterance data to assign grammar weights directly from utterance frequency. Additionally, directly weighting from utterance frequency only indirectly minimizes the number of recognition results. One current method for determining grammar weights of options requires a highly trained speech scientist to review error and utterance frequency data for an ASR system and to alter grammar weights of options based on this review. Ideally, grammar weights of options are derived from large amounts of data to make them as accurate as possible. Moreover, even relatively simple or small grammars having few options typically have many variants of each option. Therefore, this review process is an enormous task for one person. To further complicate this process, there are a limited number of speech scientists in the industry, thereby significantly increasing the cost of the review. Finally, relying on a subjective, human review introduces the possibility of error, and at the very least, inconsistent analysis based on different interpretations of the data. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Therefore, a need arises for a method of, and a system for, efficiently determining the grammar weights of options in grammars for an ASR system. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In accordance with the present invention, a method for determining grammar weights associated with grammar natural language options (options) is presented. User utterances related to the grammar are used in this determination (either estimation or training). The portion of the method implemented differs depending on the number of utterances available for each grammar. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> first portion of the method, modified maximum likelihood estimation (MLE), can be used to estimate grammar weights of options when utterance data is sparse relative to the complexity of a grammar (i.e. when many grammar options have few or no utterances for which they are the recognized result). The recognized result is the option chosen by the ASR system as the natural language interpretation of the utterance. An attribute of the options (an easily obtainable statistic) is found to create a basis for a predictability model. This attribute should roughly correspond to the (expected) utterance frequency. Options are then separated into groups according to this attribute and an average group probability assigned based on the actual utterance frequency of the group. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In one embodiment, each option in a group is assigned the same initial MLE estimated weight based on the average probability of options in the group. In another embodiment, the initial MLE estimated weight of each option in the group is determined using a linear interpolation between the average probability of the group containing the option and the average probability of the next closest group of options. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Some of the options, called outliers, that are predicted according to this MLE method may have a minimum number of associated utterances and an actual utterance frequency greater than a few multiples of the initial MLE estimated weight. The utterance frequency of an option is the number of utterances that have a transcribed result matching that option divided by the total number of utterances in the utterance training set. A transcribed result is a human interpretation of the utterance. The utterance training set is the set of utterances used to assign or tune grammar weights. Grammar weights of these outliers are altered to replace the initial MLE estimated weight with a weight based on the actual utterance frequency. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A second portion of the method, error corrective training (ECT), can be used to tune grammar weights of options when a sufficiently large number of utterances are available. The ECT method minimizes the errors in an utterance training set. Errors are determined by comparing the score of the transcribed result to the score of the largest scoring option that is not the transcribed result (the best competitor). The weights of the transcribed result and the best competitor are altered based on this score comparison. Because the utterance training set is iterated through the ECT method to converge on a solution for grammar weights of options with each iteration adjusting weights of options to compensate for errors, the weights of the options are determined by minimizing the errors in the utterance training set.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a graph of utterance frequency versus population in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a graph of utterance frequency versus population in accordance with the embodiment of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a plot of a sigmoid function and the associated derivative in accordance with an embodiment of the present invention. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> contains FIGS. <highlight><bold>4</bold></highlight>A-<highlight><bold>4</bold></highlight>C, and is a flow diagram of a method of assigning and tuning grammar weights of options in accordance with one embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Similar elements in the above Figures are labeled similarly. </paragraph>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A method for determining grammar weights associated with natural language options (options) is presented. Voice applications using an automatic speech recognition (ASR) system to translate user utterances into text constrain the context of the ASR system to a limited number of options in one or more grammars. Increasing the grammar weight of an option increases the probability that the option will be chosen by the ASR system as a translation, or natural language interpretation, of a given utterance. Thus, the weights associated with options should be properly assigned to correctly balance across the active options the probability that a particular option will be recognized for a given utterance. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Grammar weights for options may be assigned based on an attribute or statistic associated with the options that is expected to be a reasonable predictor of utterance frequency. If a sufficient number of utterances are available for each option, grammar weights of options may also be tuned based on the recognition errors in the ASR system. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In an example using an utterance training set culled from a city/state grammar for the United States of America (wherein the grammar includes as options city and state pairs for most of the United States), the population of each city is one attribute that may be used to estimate the weight to be assigned that city/state pair (i.e. option). Population is deemed a reasonable predictor of utterance frequency because a more populous city is assumed to have more associated utterances in the training set than a less populous city. Other examples of statistics or attributes that could be used are the number of customers in a region (on the assumption that customers tend to ask for information about cities and states that they live in), the box office ticket sales of a movie (for a movie grammar), Neilson or similar ratings for television program (for a TV listing or similar application), number of cars sold (for a automobile make/model grammar), etc. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Modified maximum likelihood estimation (MLE) can be used to estimate grammar weights of options when few utterances are available for an option. Once the attribute of the options (an obtainable statistic) is chosen to create a basis for a predictability model, options (e.g. city/state pairs) are separated into groups according to this attribute and the initial MLE grammar weight of each option determined based on a probability estimate of the group. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Note that exact population figures need not be used even for the city/state example. For example, populations in the United States are heavily clustered in Metropolitan Statistical Areas (MSA), as defined by the United States census. For example, &ldquo;Yardley, Pa.&rdquo; is within the Philadelphia, MSA. Thus, although Yardley, Pa. itself has a small population (approx. 50,000 in 1990) it is part of one of the densest population regions in the United States (Philadelphia, Pa.). Accordingly, statistics other than actual population might be used, for example, each city/state pair might be assigned the population of the encompassing MSA, or have the associated grammar weight up weighted based on the encompassing MSA. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Specifically in the city/state pair example, the city/state pairs are separated into population groups (bins), for example, a first group of city/state pairs having population greater than 1,000,000, a second group of city/state pairs having population between 100,000 and 999,999, etc. Note that these bins are assigned according to the log of the population, so that each bin is separated by an order of magnitude. A probability is assigned to each group based on the number of utterances attributable to city/state pairs within that group. Thus, if four cities in the second group have 5,000 total associated utterances out of 50,000 utterances in the utterance training set, then the probability that an utterance will be located in the second group is 10%. This is called the utterance frequency of the group. The weight for each city/state pair is then estimated based on population and the utterance frequency of each group. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In one embodiment, each option in a group is assigned the same initial MLE weight based on the average probability of options in the group. Thus, four cities in a group with a 10% group probability will average to a 2.5% probability of an utterance being associated with one of those four cities. In other words, the average utterance frequency of a city within that group is 2.5%. In another embodiment, the initial MLE weight each option in a group is estimated according to a linear interpolation between the average probability of the option in the group containing the option and the average probability of options in the next closest group. For example, within one group, city/state pairs having a lower population will have a smaller initial MLE weight assigned than city/state pairs having a higher population. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Some city/state pairs may have an unexpected number of associated utterances. For example, the ASR system may be heavily advertised in those regions, thereby increasing the number of users interacting with the ASR system in the corresponding city/state pairs. As a result, the number of utterances in the training set associated with those cities may be increased. Options having an unexpected number of associated utterances, called outliers, may have at least a minimum number of associated utterances and an actual utterance frequency greater than a few multiples of the initial MLE weight. The utterance frequency of an option is the number of utterances having that option as a transcribed result divided by the total number of utterances in the utterance training set. Grammar weights of these outliers are altered to replace the initial MLE weight with the actual utterance frequency. For example, if the minimum number of associated utterances is 80 and the multiple of the initial MLE estimated weight is 3, then an option having at least 100 associated utterances and an actual utterance probability greater than three times the initial MLE weight can have the initial MLE weight replaced with the actual utterance frequency. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> This process of MLE may be automated. As a result, anyone capable of using the user interface of the present method (e.g. a web and/or command line front end and access to the grammar file and a set of corresponding transcribed utterances for the grammar) may effectively estimate grammar weights without the need for training as a speech scientist. In this way, the need for costly experts who may generate inconsistent results is reduced. Additionally, or alternatively, the approaches described herein can be used in conjunction with speech scientists to provide a starting point for further adjustment, as a comparison against which to measure the performance of the expert-created grammar, and/or in other fashions. For example, in one embodiment, these approaches are made available for free (or at low cost) to customers of a voice application provider while access to and time spent with a speech expert to tune a grammar requires separate (or more expensive) payments. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Error corrective training (ECT) can be used to tune grammar weights of options when a sufficiently large number of utterances are available. The &ldquo;training&rdquo; process is an iterative adjustment of grammar weights of options to achieve minimization of errors. For example, a large number of utterances may be associated with city/state pairs having large populations. In addition to MLE described above, city/state pairs having a large number of associated utterances may be alternately assigned weights (or the weights assigned according to modified MLE tuned) based on ECT. Options in the active grammar that are not to be tuned, either because of insufficient number of associated utterances or for other reasons, are said to be in the background during the tuning process. Thus, the options to be tuned are said to be in the foreground. Foreground options may be in one or several grammars and may encompass a single grammar. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The ECT method minimizes the errors occurring in an utterance training set. Utterances, which are previously recorded audio files, are applied to the ASR system one or more times. These utterances have been recorded during user interaction with the ASR system such as while using a voice application. In response, the ASR system generates an &ldquo;n-best&rdquo; list of possible translations of the utterance, wherein each option in the active grammars is ranked according to a score. The resulting scores are used to adjust the grammar weights through comparison with a transcribed human interpretation of the utterance, called the transcribed result. The process is iterated until the adjusted grammar (i.e. the grammar with the most recently changed weights) minimizes some condition (e.g. an error estimation function). For example, in one embodiment, the ASR system chooses the highest scoring option from the n-best list as the natural language interpretation (translation) of the utterance (i.e. the recognized result). </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Errors are determined by comparing the score of the transcribed result of the utterance to the highest scoring option that is not the transcribed result (the best competitor). Note that the best competitor may be either in the foreground or in the background. The foreground is the set of options being trained, whereas the background is the set of options active for the ASR system during the utterance that are not being trained. If no error has occurred, then the transcribed result should be the highest scoring option. However, if the best competitor has a higher score than the transcribed result, then the ASR system has erroneously translated the utterance. Out-of-grammar utterances require special attention. If the transcription of an utterance is not an option in any active grammar, then the correct action by the ASR system is to reject the utterance. If rejection is explicitly modeled, then this is treated as a special &ldquo;reject option&rdquo;. Thus, if the highest scoring option maps to the reject option for an out-of-grammar utterance, no error has occurred. If rejection is not explicitly modeled, out-of-grammar utterances always cause an error, and are therefore ignored for training purposes. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The weights of the transcribed result and the best competitor (if in the foreground) are altered for each utterance. The weight of the transcribed result is increased by a first amount to increase the likelihood that the ASR system chooses that option when translating the associated utterance. The weight of the best competitor is decreased by a second amount to decrease the likelihood that the ASR system chooses that option when translating the associated utterance. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Once each utterance has been applied a first time to the ASR system, the first iteration of ECT is complete. Each utterance in the utterance training set is then applied again to the ASR system to further correct errors which may have been introduced in the first iteration or which remain in spite of the first iteration of tuning option weights. Note that because the weights of the foreground options have changed, the scores in the n-best list generated by the ASR system have also changed. Thus, the result recognized by the ASR system may be different for a given utterance in the second iteration than in the first iteration. In this way, as ECT converges on a solution for grammar weights of options, the errors in the utterance training set are minimized. Modified MLE and ECT are described in more detail below. </paragraph>
+<paragraph id="P-0034" lvl="7"><number>&lsqb;0034&rsqb;</number> Modified Maximum Likelihood Estimation (MLE) </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Some grammars contain a large number of options. The utterances associated with these grammars or with a set of options in these grammars may be too sparse to directly assign weights to options from utterance frequency. Grammar options having any number of associated utterances may be assigned weights according to the modified MLE of the present invention. However, modified MLE is typically used to estimate the weights of options when few utterances are associated with the options and those options have an associated easily obtainable statistic that roughly corresponds to the utterance frequency. Note that some options, i.e. outliers, may be expected to have significantly higher frequency than predicted by this method. The weights of these outliers are adjusted to match their utterance frequency. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> For example, Table 1 shows a table of Cities A-N to be weighted according one embodiment of the present invention. Each of Cities A-N is an option in the city/state grammar of Table 1. Assume that all cities are in State Z, which is reflected in the utterance set. Thus, the utterances corresponding to City A will be of the form &ldquo;City A, Z&rdquo; (e.g. San Jose, Calif.).  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="7">
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="28PT" align="center"/>
+<colspec colname="3" colwidth="21PT" align="center"/>
+<colspec colname="4" colwidth="35PT" align="center"/>
+<colspec colname="5" colwidth="35PT" align="center"/>
+<colspec colname="6" colwidth="35PT" align="center"/>
+<colspec colname="7" colwidth="35PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="7" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Utterance</entry>
+<entry>Utterance</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Popula-</entry>
+<entry></entry>
+<entry>Number of</entry>
+<entry>Total Bin</entry>
+<entry>Likelihood</entry>
+<entry>Likelihood</entry>
+</row>
+<row>
+<entry>City</entry>
+<entry>tion</entry>
+<entry>Bin</entry>
+<entry>Utterances</entry>
+<entry>Utterances</entry>
+<entry>for Bin</entry>
+<entry>Per City</entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="7">
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="28PT" align="char" char="."/>
+<colspec colname="3" colwidth="21PT" align="center"/>
+<colspec colname="4" colwidth="35PT" align="char" char="."/>
+<colspec colname="5" colwidth="35PT" align="char" char="."/>
+<colspec colname="6" colwidth="35PT" align="center"/>
+<colspec colname="7" colwidth="35PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>City A</entry>
+<entry>900,000</entry>
+<entry>1</entry>
+<entry>18,000</entry>
+<entry>44,000</entry>
+<entry>88%</entry>
+<entry>29.33%</entry>
+</row>
+<row>
+<entry>City B</entry>
+<entry>700,000</entry>
+<entry>1</entry>
+<entry>16,000</entry>
+</row>
+<row>
+<entry>City C</entry>
+<entry>170,000</entry>
+<entry>1</entry>
+<entry>10,000</entry>
+</row>
+<row>
+<entry>City D</entry>
+<entry>70,000</entry>
+<entry>2</entry>
+<entry>1,750</entry>
+<entry>5,000</entry>
+<entry>10%</entry>
+<entry>&emsp;2.5%</entry>
+</row>
+<row>
+<entry>City E</entry>
+<entry>60,000</entry>
+<entry>2</entry>
+<entry>1,750</entry>
+</row>
+<row>
+<entry>City F</entry>
+<entry>60,000</entry>
+<entry>2</entry>
+<entry>1,000</entry>
+</row>
+<row>
+<entry>City G</entry>
+<entry>20,000</entry>
+<entry>2</entry>
+<entry>500</entry>
+</row>
+<row>
+<entry>City H</entry>
+<entry>8,000</entry>
+<entry>3</entry>
+<entry>125</entry>
+<entry>990</entry>
+<entry>&thinsp;&ensp;1.98%</entry>
+<entry>0.495%</entry>
+</row>
+<row>
+<entry>City I</entry>
+<entry>6,000</entry>
+<entry>3</entry>
+<entry>640</entry>
+</row>
+<row>
+<entry>City J</entry>
+<entry>4,000</entry>
+<entry>3</entry>
+<entry>125</entry>
+</row>
+<row>
+<entry>City K</entry>
+<entry>1,200</entry>
+<entry>3</entry>
+<entry>100</entry>
+</row>
+<row>
+<entry>City L</entry>
+<entry>500</entry>
+<entry>4</entry>
+<entry>2</entry>
+<entry>10</entry>
+<entry>&thinsp;&ensp;0.02%</entry>
+<entry>&ensp;0.01%</entry>
+</row>
+<row>
+<entry>City M</entry>
+<entry>300</entry>
+<entry>4</entry>
+<entry>8</entry>
+</row>
+<row>
+<entry>City N</entry>
+<entry>80</entry>
+<entry>5</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>&ensp;0%</entry>
+<entry>0%&emsp;&ensp;&thinsp;</entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The population of each city is an easily obtainable statistic that roughly corresponds with the utterance frequency. That is, a more populous city is more likely to have a larger number of corresponding utterances than a less populous city, as shown in the &ldquo;Population&rdquo; and &ldquo;Number of Utterances&rdquo; columns of Table 1. Additionally, cities having fewer associated utterances are typically cities with smaller populations, as shown in the &ldquo;Number of Utterances&rdquo; column in Table 1 for Cities L-N. Thus, modified MLE is used to determine weights for the cities in Table 1. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Cities are separated into groups (bins) according to population on a logarithmic scale. Thus, cities having population greater than or equal to 100,000 (Cities A-C) are grouped in to a first bin (Bin 1). Cities having a population greater than or equal to 10,000 but less than 100,000 (Cities D-G) are grouped into a second bin (Bin 2). In the same manner, Cities H-K are grouped into a third bin (Bin 3), Cities L and M are grouped into a fourth bin (Bin 4), and City N is grouped into a fifth bin (Bin 5). </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Each of Bins 1-5 is assigned a probability according to utterance frequency for that bin. The number of utterances for a bin (&ldquo;Total Bin Utterances&rdquo; column in Table 1) is determined by adding together the number of utterances for each city in the bin (&ldquo;Number of Utterances&rdquo; column in Table 1). For example, the number of utterances for Bin 1 is the sum of utterances corresponding to Cities A-C, or 18,000&plus;16,000&plus;10,000, which equals 44,000. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> To determine the utterance frequency for a bin (&ldquo;Utterance Likelihood for bin&rdquo; column in Table 1), the total number of utterances of cities in that bin (&ldquo;Total Bin Utterances&rdquo; column in Table 1) is divided by the total number of utterances (&ldquo;Number of Utterances&rdquo; column in Table 1 totaled). For example, utterance frequency for Bin 1 is 44,000 utterances divided by the total number of utterances (44,000&plus;5,000 &plus;990&plus;10 totals 50,000), which equals 88%. This number is shown in the &ldquo;Utterance Likelihood for bin&rdquo; column (see Table 1) associated with Bin 1. Thus, 88% of the utterances in the utterance training set are associated with cities in Bin 1. The average likelihood that an utterance corresponds to a particular city in a given bin is the utterance likelihood for the bin divided by the number of cities in the bin. For example, the average likelihood that an utterance corresponds to one of Cities A, B, or C is 88% divided by 3 cities, or 29.33%. This number is shown in the &ldquo;Utterance Likelihood per city&rdquo; column (see Table 1) associated with the Bin 1 cities. Note that this is different than the actual utterance frequency of each city. The actual utterance frequency of each city is the number of utterances corresponding to a particular city divided by the total number of utterances. For example, the actual utterance frequency of City A is 18,000 utterances divided by 50,000 total utterances, or 36%. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> In one embodiment of the present invention, the average likelihood that an utterance corresponds to a city in a bin is assigned as the weight of each city (option) in that bin. For example, Cities A-C are each assigned a weight of 0.2933 (29.33%). In another embodiment of the present invention, the weight assigned to each city is further estimated using the average likelihood per city of the bin containing the city and the average likelihood per city of the next closest bin. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a graph of utterance frequency versus log of population for the cities of Table 1 in accordance with one embodiment of the present invention. Bin 1, which includes cities with population greater than or equal to 100,000 (Cities A-C), has a height corresponding to the average utterance likelihood per city in Bin 1, which is equal to 29.33%. Similarly, the heights of Bins 2-5 similarly correspond to the associated numbers in the &ldquo;Utterance Likelihood Per City&rdquo; column (see Table 1). Because population has a base-10 logarithmic scale, the midpoint of each bin is the lower boundary of the bin multiplied by 10 to the 0.5 power, or 3.16228. Thus, for example, the midpoint of Bin 2 (10,000 (&equals;10<highlight><superscript>4</superscript></highlight>) through 100,000 (&equals;10<highlight><superscript>5</superscript></highlight>)) is a population of 31,623 (&equals;10<highlight><superscript>4.5</superscript></highlight>) . In one embodiment, each city/state pair in Table 1 has an initial MLE weight assigned based on the &ldquo;Utterance Likelihood Per City&rdquo; (see Table 1). </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Lines 1-3 connect the midpoint of each bin to the midpoint of the neighboring bins. Thus, Line 1 connects the midpoint of Bin 2 to the midpoint of Bin 1, continuing along the same slope past the midpoint of Bin 1, Line 2 connects the midpoint of Bin 3 to the midpoint of Bin 2, and Line 3 connects the midpoint of Bin 4 to the midpoint of Bin 3. Line 4 establishes a floor utterance percentage below which weights of options are uniformly assigned to some minimum weight, which is described in more detail below. In another embodiment of the present invention, each city/state pair in Table 1 has an initial MLE weight assigned based on a linear interpolation along one of Lines 1-4 as described below with respect to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a graph of utterance frequency versus population for the cities of Table 1 in accordance with the embodiment of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. Similar to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference> includes Bins 1-5. Each of Cities A-N within Bins 1-5 is represented as a plurality of Lines A-N, respectively, according to population. The height of each of Lines A-N corresponds to the actual utterance frequency of that city as calculated using the utterance training set. Note that Cities E and F, having the same population but different actual utterance frequencies, are represented by the same line in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Table 2 shows another table of Cities A-N to be weighted according this embodiment of the present invention. The actual utterance frequency of each city (i.e. the Number of Utterances divided by the total Number of Utterances) is displayed in the &ldquo;Actual Utterance Frequency&rdquo; column.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="7">
+<colspec colname="1" colwidth="35PT" align="left"/>
+<colspec colname="2" colwidth="28PT" align="center"/>
+<colspec colname="3" colwidth="21PT" align="center"/>
+<colspec colname="4" colwidth="35PT" align="center"/>
+<colspec colname="5" colwidth="35PT" align="center"/>
+<colspec colname="6" colwidth="28PT" align="center"/>
+<colspec colname="7" colwidth="35PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="7" align="center">TABLE 2</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Actual</entry>
+<entry>Initial</entry>
+<entry>Final</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Popula-</entry>
+<entry></entry>
+<entry>Number of</entry>
+<entry>Utterance</entry>
+<entry>MLE</entry>
+<entry>MLE</entry>
+</row>
+<row>
+<entry>City</entry>
+<entry>tion</entry>
+<entry>Bin</entry>
+<entry>Utterances</entry>
+<entry>Frequency</entry>
+<entry>Weight</entry>
+<entry>Weight</entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="7">
+<colspec colname="1" colwidth="35PT" align="left"/>
+<colspec colname="2" colwidth="28PT" align="char" char="."/>
+<colspec colname="3" colwidth="21PT" align="center"/>
+<colspec colname="4" colwidth="35PT" align="char" char="."/>
+<colspec colname="5" colwidth="35PT" align="center"/>
+<colspec colname="6" colwidth="28PT" align="center"/>
+<colspec colname="7" colwidth="35PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>City A</entry>
+<entry>900,000</entry>
+<entry>1</entry>
+<entry>18,000</entry>
+<entry>&ensp;&thinsp;36%</entry>
+<entry>.843627</entry>
+<entry>.843627</entry>
+</row>
+<row>
+<entry>City B</entry>
+<entry>700,000</entry>
+<entry>1</entry>
+<entry>16,000</entry>
+<entry>&ensp;&thinsp;32%</entry>
+<entry>.655086</entry>
+<entry>.655086</entry>
+</row>
+<row>
+<entry>City C</entry>
+<entry>170,000</entry>
+<entry>1</entry>
+<entry>10,000</entry>
+<entry>&ensp;&thinsp;20%</entry>
+<entry>.155450</entry>
+<entry>.155450</entry>
+</row>
+<row>
+<entry>City D</entry>
+<entry>70,000</entry>
+<entry>2</entry>
+<entry>1,750</entry>
+<entry>&ensp;3.5%</entry>
+<entry>.061179</entry>
+<entry>.061179</entry>
+</row>
+<row>
+<entry>City E</entry>
+<entry>60,000</entry>
+<entry>2</entry>
+<entry>1,750</entry>
+<entry>&ensp;3.5%</entry>
+<entry>.051751</entry>
+<entry>.051751</entry>
+</row>
+<row>
+<entry>City F</entry>
+<entry>60,000</entry>
+<entry>2</entry>
+<entry>1,000</entry>
+<entry>&emsp;&thinsp;2%</entry>
+<entry>.051751</entry>
+<entry>.051751</entry>
+</row>
+<row>
+<entry>City G</entry>
+<entry>20,000</entry>
+<entry>2</entry>
+<entry>500</entry>
+<entry>&emsp;&thinsp;1%</entry>
+<entry>.016812</entry>
+<entry>.016812</entry>
+</row>
+<row>
+<entry>City H</entry>
+<entry>8,000</entry>
+<entry>3</entry>
+<entry>100</entry>
+<entry>0.20%</entry>
+<entry>.008358</entry>
+<entry>.008358</entry>
+</row>
+<row>
+<entry>City I</entry>
+<entry>6,000</entry>
+<entry>3</entry>
+<entry>720</entry>
+<entry>1.44%</entry>
+<entry>.006949</entry>
+<entry>.014400</entry>
+</row>
+<row>
+<entry>City J</entry>
+<entry>4,000</entry>
+<entry>3</entry>
+<entry>100</entry>
+<entry>0.20%</entry>
+<entry>.005540</entry>
+<entry>.005540</entry>
+</row>
+<row>
+<entry>City K</entry>
+<entry>1,200</entry>
+<entry>3</entry>
+<entry>70</entry>
+<entry>0.14%</entry>
+<entry>.001607</entry>
+<entry>.001607</entry>
+</row>
+<row>
+<entry>City L</entry>
+<entry>500</entry>
+<entry>4</entry>
+<entry>2</entry>
+<entry>&ensp;0.004%</entry>
+<entry>.000414</entry>
+<entry>.000414</entry>
+</row>
+<row>
+<entry>City M</entry>
+<entry>300</entry>
+<entry>4</entry>
+<entry>8</entry>
+<entry>&ensp;0.016%</entry>
+<entry>.000100</entry>
+<entry>.000100</entry>
+</row>
+<row>
+<entry>City N</entry>
+<entry>80</entry>
+<entry>5</entry>
+<entry>0</entry>
+<entry>&emsp;&thinsp;0%</entry>
+<entry>.000100</entry>
+<entry>.000100</entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> In one embodiment, the initial MLE weight for each city is determined by interpolating the position of the population of that city along the line connecting the midpoint of the bin containing that city with the midpoint of the next closest bin. For example, referring to FIGS. <highlight><bold>1</bold></highlight> and <highlight><bold>2</bold></highlight>, City D is in Bin 2 and the next closest bin is Bin 1, wherein the midpoints of Bins 1 and 2 are connected by Line 1. Thus, the initial MLE weight is calculated by linearly interpolating between the midpoint of Bin 1 located at population 316,228 with probability 29.33% and the midpoint of Bin 2 located at population 31,623 with probability 2.5% along Line 1. A line of the form:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>y&equals;mx&plus;b</italic></highlight>&emsp;&emsp;(Equation 1)</in-line-formula></paragraph>
+<paragraph id="P-0047" lvl="7"><number>&lsqb;0047&rsqb;</number> has a slope equal to:  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mi>m</mi>
+        <mo>=</mo>
+        <mfrac>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <msub>
+                <mi>y</mi>
+                <mn>1</mn>
+              </msub>
+              <mo>-</mo>
+              <msub>
+                <mi>y</mi>
+                <mn>2</mn>
+              </msub>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <msub>
+                <mi>x</mi>
+                <mn>1</mn>
+              </msub>
+              <mo>-</mo>
+              <msub>
+                <mi>x</mi>
+                <mn>2</mn>
+              </msub>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+        </mfrac>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Equation</mi>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>2</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030004717A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="18.96615" file="US20030004717A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0048" lvl="7"><number>&lsqb;0048&rsqb;</number> and a y intercept equal to:  
+<math-cwu id="MATH-US-00002">
+<number>2</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mi>b</mi>
+        <mo>=</mo>
+        <mfrac>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <mrow>
+                <msub>
+                  <mi>y</mi>
+                  <mn>2</mn>
+                </msub>
+                <mo>&it;</mo>
+                <msub>
+                  <mi>x</mi>
+                  <mn>1</mn>
+                </msub>
+              </mrow>
+              <mo>-</mo>
+              <mrow>
+                <msub>
+                  <mi>y</mi>
+                  <mn>1</mn>
+                </msub>
+                <mo>&it;</mo>
+                <msub>
+                  <mi>x</mi>
+                  <mn>2</mn>
+                </msub>
+              </mrow>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <msub>
+                <mi>x</mi>
+                <mn>1</mn>
+              </msub>
+              <mo>-</mo>
+              <msub>
+                <mi>x</mi>
+                <mn>2</mn>
+              </msub>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+        </mfrac>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Equation</mi>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>3</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00002" file="US20030004717A1-20030102-M00002.NB"/>
+<image id="EMI-M00002" wi="216.027" he="18.96615" file="US20030004717A1-20030102-M00002.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> In Equations 1 and 2, x is population and y is utterance frequency. Thus, from Equation 2, Line 1 thus has a slope of ((29.33&minus;2.5)/(316,228&minus;31,623)) equals 9.4271&times;10<highlight><superscript>&minus;5</superscript></highlight>. From Equation 3, Line 1 has a y intercept of ((2.5*316,228&minus;29.33*31,623)/(316,228&minus;31,623)) equals &minus;4.8113&times;10<highlight><superscript>&minus;1</superscript></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The initial MLE weight for City D is determined by calculating the value of Line 1 at a population of 70,000. In other words, to interpolate the initial estimated weight of City D from Line 1, Equation 1 is solved using m&equals;9.4271&times;10<highlight><superscript>&minus;5</superscript></highlight>, x&equals;70,000, and b&equals;&minus;4.8113&times;10<highlight><superscript>&minus;1</superscript></highlight>. The resultant initial MLE estimated weight is ((9.4271&times;10<highlight><superscript>&minus;5</superscript></highlight>)*70,000)&minus;4.8113&times;10<highlight><superscript>&minus;1</superscript></highlight>) which is equal to 0.061179 (6.1179%). The initial MLE weights for Cities A-C and E-L are calculated similarly. In one embodiment, weights for Cities A and B are calculated using Line 1 because Line 1 connects Bin 1 (the bin containing Cities A and B) and Bin 2 (the next closest bin). In another embodiment, weights may be capped at the level predicted for the midpoint of the highest bin. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> A sufficiently small weight on an option effectively prevents that option from being chosen by an ASR system. For this reason, a &ldquo;floor&rdquo; is established beyond which weights of options will not be lowered. For this example, 0.01% (the utterance likelihood for each city in Bin 4) is chosen as the floor weight. As a result, all cities having population less than or equal to 316 will have initial MLE weights determined by the floor value rather than along a line between midpoints of bins. For example, City M has a population of 300. Because this is below the population corresponding to the floor weight, the initial MLE weight for City M is assigned as 0.000100 (0.01%). The initial MLE weights for Cities A-N are shown in Table 2. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Potential outliers in <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference> have heights above whichever of Lines 1-4 that they cross. As described above, outliers have some minimum number of associated utterances (e.g. 500) and an actual utterance probability greater than some number of multiples (e.g. a multiple of 2) of the initial MLE weight. Other embodiments may have other minimum numbers of associated utterances and other numbers of multiples. The initial MLE weight of outliers is modified to be the actual utterance probability. For example, City I has a height above Line 2, so it is investigated as a potential outlier. City I is an outlier because it has more than the minimum number of associated utterances (720&gt;500) and has an actual utterance frequency (1.44%) greater than twice the initial MLE weight (2*0.6949% is 1.39%). As a result, the initial MLE weight for city I is replaced with the actual utterance frequency of 0.014400 (1.44%) as the final MLE weight. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> While City M has a height above Line 4 (the Floor weight), and is therefore a potential outlier, City M is not an outlier because it has fewer than 500 associated utterances (8&lt;500). Thus, the initial MLE weight is not modified, and is therefore used as the final MLE weight. Because Cities A-H, J-L, and N are not outliers, they have initial MLE weights used as the final MLE weights. In one embodiment, option variants can be individually assigned a final MLE weight according to the actual utterance frequency. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Weighting of options according to MLE in accordance with the present invention produces overall improvement in performance as compared to a common system in which the weight of each option is defined directly by the associated statistic divided by the largest statistic associated with an option in the grammar. As a result, accuracy of the ASR system for recognizing an option is improved even when minimal utterance data is available for the option. Increasing the weights of outliers can dramatically improve recognition for options that are more frequently requested than expected from the initial MLE weight, improving performance precisely in those cases which are important to users. Additionally, because modified MLE can be automated, anyone capable of using a user interface of the present method may effectively estimate grammar weights without the need for training as a speech scientist. Further, because modified MLE allows the possibility of segmenting training data by context (such as user demographics, nature of the voice application utilizing the grammar, etc.) and then determining optimal weights for each context, which would be practically impossible using manual analysis. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> While modified MLE is typically used to estimate weights of options when few utterances are associated with the options and the options have an easily obtainable statistic that roughly corresponds with the utterance frequency, another method can be used when sufficient utterances are available for some or all of the options in a grammar. </paragraph>
+<paragraph id="P-0056" lvl="7"><number>&lsqb;0056&rsqb;</number> Error Corrective Training (ECT) </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Error Corrective Training (ECT) can be used to estimate weights of options when a sufficiently large number of utterances are available. ECT incrementally changes (i.e. &ldquo;trains&rdquo;) the weight assigned to options in the foreground by minimizing the recognition errors in an utterance training set. The foreground is the set of options being trained, whereas the background is the set of options active for the ASR system during the utterance that are not being trained. An ASR system is in error if the natural language interpretation generated by the ASR system (i.e. the recognized result) is different from the natural language interpretation of the orthographic transcription (i.e. the transcribed result). </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> An ASR system operates by receiving an audio file (an utterance) and selecting a natural language interpretation for that utterance by choosing an available option in the grammar having the highest score for that utterance. For an ASR system cast in a probabilistic framework, the score for each option is the sum of two numbers in the logarithmic probability domain. The two numbers correspond to the acoustic match (the acoustic score), and the grammar weight. The formulae in this document are based on a probabilistic framework and weights are in the logarithmic domain. The acoustic score for each option is computed by matching the phonetic models corresponding to the phonemes of the options in the active grammars with the acoustic features of an utterance. Because acoustic scores are modeled by the manufacturer of the speech recognizer, the acoustic scores are typically fixed in a particular version of a speech recognizer. However, the weight of an option is defined by an application programmer, and is therefore available for adjustment according to the present invention. As a result, the same utterance applied to an ASR system may result in a different recognized result for a grammar having a first set of weights of options and the same grammar having a second set of weights of options. Thus, minimizing the errors by ECT is accomplished by altering (tuning) the weights of options in the grammar to converge on a solution. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Each utterance is determined to be either correctly recognized or an error based on a comparison of the score of the transcribed result and the best score of another option in the active grammar (the &ldquo;best competitor&rdquo;). Specifically, the ASR system generates an &ldquo;n-best&rdquo; list in response to an utterance. This n-best list contains all options in the active grammars and their associated scores. The highest scoring option is chosen by the ASR system as the natural language interpretation of the utterance (the recognized result). If the recognized result by the ASR system matches the transcribed result, then the correct translation of the utterance had the highest score on the n-best list. However, if the translation of the utterance by the ASR system does not match the transcribed result, then an option other than the transcribed result had the highest score. Thus, subtracting the score of the highest scoring option other than the transcribed result from the score of the transcribed result yields a negative number for an error and a positive number when no error has occurred. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> For example, an utterance causes the ASR system to produce an n-best list including the following five options with associated scores (movies: 10, sports: 8, blackjack: 5, restaurants: 2, and taxi: 1). If the transcribed result of that utterance is &ldquo;movies&rdquo;, then the best competitor is &ldquo;sports&rdquo; with a score of 8. Because the score of &ldquo;movies&rdquo;, i.e. 10, less the score of &ldquo;sports&rdquo;, i.e. 8, is a positive number, no error has occurred. However, if the transcribed result of that utterance is &ldquo;taxi&rdquo;, then the best competitor is &ldquo;movies&rdquo; with a score of 10. Because the score of &ldquo;taxi&rdquo;, i.e. 1, less the score of &ldquo;movies&rdquo;, i.e. 10, is a negative number, an error has occurred. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> The weight of the transcribed result option is adjusted upwards (increased in weight) and the weight of the best competitor is adjusted downwards (decreased in weight) if the best competitor is in the foreground. As a result, the next time the speech recognizer receives that utterance file, the greater weight of the transcribed result makes it more likely to be chosen as the recognized result for that utterance. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> ECT is iterated a first time on all of the utterances in the training set using a first set of gains. That is, an error results in a transcribed result weight being adjusted upwards by a first upward delta weight and a best competitor weight potentially being adjusted downward by a first downward delta weight. ECT is then iterated a second time on all of the utterances in the training set using a second set of gains, wherein the second set of gains is smaller than the first set of gains. In this way, each iteration of ECT results uses a progressively smaller set of changes to the weights of the options. Thus, ECT converges on a set of weights of options for the foreground grammar options that minimizes the errors in the utterance training set. This process will be explained in more detail below. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The total error measure for an utterance training set is described by the following discrete equation:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>E&equals;&Sgr;w</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>type1</subscript></highlight><highlight><italic>&plus;w</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><italic>n</italic></highlight><highlight><subscript>type2</subscript></highlight>&plus; . . . &emsp;&emsp;(Equation 4)</in-line-formula></paragraph>
+<paragraph id="P-0064" lvl="7"><number>&lsqb;0064&rsqb;</number> where E is the error measure, w is the weight of the ith transcribed result option and n is the number of errors of the ith type. It is preferable to approximate Equation 4 with a continuous function so that the derivative may be set equal to zero as a minimization technique. Because the error measure of Equation 4 is a step function, it may be approximated by a sigmoid function. As a result, the error function is approximated by the following continuous equation:  
+<math-cwu id="MATH-US-00003">
+<number>3</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mover>
+          <mi>E</mi>
+          <mo>^</mo>
+        </mover>
+        <mo>=</mo>
+        <mrow>
+          <mrow>
+            <mo>&Sum;</mo>
+            <mrow>
+              <msub>
+                <mi>w</mi>
+                <mn>1</mn>
+              </msub>
+              <mo>&it;</mo>
+              <mrow>
+                <mi>&sigma;</mi>
+                <mo>&af;</mo>
+                <mrow>
+                  <mo>(</mo>
+                  <mfrac>
+                    <msub>
+                      <mi>error</mi>
+                      <mn>1</mn>
+                    </msub>
+                    <mi>scale</mi>
+                  </mfrac>
+                  <mo>)</mo>
+                </mrow>
+              </mrow>
+            </mrow>
+          </mrow>
+          <mo>+</mo>
+          <mrow>
+            <msub>
+              <mi>w</mi>
+              <mn>2</mn>
+            </msub>
+            <mo>&it;</mo>
+            <mrow>
+              <mi>&sigma;</mi>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <mfrac>
+                  <msub>
+                    <mi>error</mi>
+                    <mn>2</mn>
+                  </msub>
+                  <mi>scale</mi>
+                </mfrac>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+          </mrow>
+          <mo>+</mo>
+          <mi>&hellip;</mi>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Equation</mi>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>5</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00003" file="US20030004717A1-20030102-M00003.NB"/>
+<image id="EMI-M00003" wi="216.027" he="17.03835" file="US20030004717A1-20030102-M00003.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0065" lvl="7"><number>&lsqb;0065&rsqb;</number> where &Ecirc; is the estimated error measure, w is the weight of the ith transcribed result option, &sgr; is the sigmoid function, error is the score of the ith correct option (the transcribed result) less the score of the ith best competitor option, and scale is a parameter of the sigmoid function controlling the steepness of the transition from negative to positive on the x axis. Setting the derivative of the estimated error measure equal to zero and solving for error produces a minimum estimated error measure. As the ECT method approaches a solution, the scale of the sigmoid function decreases. That is, in converging on a solution, decreasing the scale of the sigmoid function causes the rate of change of the sigmoid function to increase near the origin, thereby approximating a step function. An implementation of this process is described in more detail below. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> A given utterance training set includes both utterances that are correctly recognized by the ASR system and erroneously recognized utterances (errors). Errors may be due to an out-of-grammar utterance by the speaker, a false recognition of the utterance by the speech recognizer, or if rejection is modeled, an erroneous rejection. The amount by which the weight of an option is adjusted (the gain) may differ according to the severity of the associated error. For example, characterizing an out-of-grammar utterance by the speaker to be a minor error may result in a small gain used for out-of-grammar errors. In contrast, characterizing a false recognition of the utterance by the ASR system to be severe may result in a larger gain used for false recognition errors. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Once the severity of the types of errors has been determined, an initial set of gains is defined for a first iteration of ECT. For example, a first set of gains may be defined as 0.3 for all errors. In one embodiment, the grammar weight of the transcribed result is increased by an amount equal to the gain multiplied by the derivative of the sigmoid function evaluated at the score of transcribed result less the score of best competitor quantity divided by the scale as shown in Equation 6.  
+<math-cwu id="MATH-US-00004">
+<number>4</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mi>newweight</mi>
+        <mo>=</mo>
+        <mrow>
+          <mi>oldweight</mi>
+          <mo>+</mo>
+          <mrow>
+            <mi>gain</mi>
+            <mo>&times;</mo>
+            <mrow>
+              <msup>
+                <mi>&sigma;</mi>
+                <mi>&prime;</mi>
+              </msup>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <mfrac>
+                  <mrow>
+                    <msub>
+                      <mi>score</mi>
+                      <mi>c</mi>
+                    </msub>
+                    <mo>-</mo>
+                    <msub>
+                      <mi>score</mi>
+                      <mi>b_c</mi>
+                    </msub>
+                  </mrow>
+                  <mi>scale</mi>
+                </mfrac>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Equation</mi>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>6</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00004" file="US20030004717A1-20030102-M00004.NB"/>
+<image id="EMI-M00004" wi="216.027" he="17.03835" file="US20030004717A1-20030102-M00004.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> The grammar weight of the best competitor is penalized in a similar fashion, as shown in Equation 7.  
+<math-cwu id="MATH-US-00005">
+<number>5</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mi>newweight</mi>
+        <mo>=</mo>
+        <mrow>
+          <mi>oldweight</mi>
+          <mo>-</mo>
+          <mrow>
+            <mi>gain</mi>
+            <mo>&times;</mo>
+            <mrow>
+              <msup>
+                <mi>&sigma;</mi>
+                <mi>&prime;</mi>
+              </msup>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <mfrac>
+                  <mrow>
+                    <msub>
+                      <mi>score</mi>
+                      <mi>c</mi>
+                    </msub>
+                    <mo>-</mo>
+                    <msub>
+                      <mi>score</mi>
+                      <mi>b_c</mi>
+                    </msub>
+                  </mrow>
+                  <mi>scale</mi>
+                </mfrac>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Equation</mi>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>7</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00005" file="US20030004717A1-20030102-M00005.NB"/>
+<image id="EMI-M00005" wi="216.027" he="17.03835" file="US20030004717A1-20030102-M00005.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0069" lvl="7"><number>&lsqb;0069&rsqb;</number> wherein score<highlight><subscript>c </subscript></highlight>is the score of the transcribed result and score<highlight><subscript>b</subscript></highlight><highlight><subscript><highlight><subscript>&mdash;</subscript></highlight></subscript></highlight><highlight><subscript>c </subscript></highlight>is the score of the best competitor. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a plot of a sigmoid function and the associated derivative according to an embodiment of the present invention. Line <highlight><bold>301</bold></highlight> is the graph of a sigmoid function. Note that sigmoid function line <highlight><bold>301</bold></highlight> has a small value at large negative numbers and gradually approaches a value of 1 at large positive numbers. As the scale described above decreases, the steepness of sigmoid function line <highlight><bold>301</bold></highlight> increases, thereby more closely approximating a step function. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> Line <highlight><bold>302</bold></highlight> is a graph of a sigmoid derivative. Note that sigmoid derivative has a small value at large negative and positive numbers and a local maximum at the origin. Because Equations 6 and 7 modify the gain by the sigmoid derivative, small differences between the recognized result and the best competitor (i.e. near the center of the sigmoid derivative) are more greatly modified than large differences (i.e. near the edges of the sigmoid derivative). For example, an error of &minus;0.5 will result in a greater up-weighting of the transcribed result than an error of &minus;5, because the value of sigmoid derivative line <highlight><bold>302</bold></highlight> evaluated at &minus;0.5 is much greater than the value of sigmoid derivative line <highlight><bold>302</bold></highlight> evaluated at &minus;5. As a result, errors which may be corrected (i.e. small errors that may be corrected by re-weighting) and correctly recognized results that are close in score to the best competitor result in larger changes in weights than errors which are unlikely to be corrected (i.e. large errors) or large differences between the correctly recognized results and the best competitors. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> A first iteration of ECT applies each utterance in the utterance training set to the ASR system. For each utterance, the ASR system returns an n-best list of options and associated scores. The score of the option corresponding to the transcribed result is chosen as score<highlight><bold>1</bold></highlight><highlight><subscript>c</subscript></highlight>. The highest scoring incorrect option is chosen as the best competitor with the associated score1<highlight><subscript>b</subscript></highlight><highlight><subscript><highlight><subscript>&mdash;</subscript></highlight></subscript></highlight><highlight><subscript>c </subscript></highlight>score. If score1<highlight><subscript>b</subscript></highlight><highlight><subscript><highlight><subscript>&mdash;</subscript></highlight></subscript></highlight><highlight><subscript>c </subscript></highlight>is less than score1<highlight><subscript>c</subscript></highlight>, then there is no error. However, if score1<highlight><subscript>c </subscript></highlight>is less than score1<highlight><subscript>b</subscript></highlight><highlight><subscript><highlight><subscript>&mdash;</subscript></highlight></subscript></highlight><highlight><subscript>c</subscript></highlight>, then there is an error. If in the foreground, weights of the transcribed result and of the best competitor are adjusted by the first iteration gain formula. For example, the weight of the transcribed result may be increased by 0.3 to 1.3 and the weight of the best competitor may be decreased by 0.3 to 0.7. This process continues for each utterance in the utterance training set. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> A second iteration of ECT applies each utterance in the utterance training set to the ASR system. However, the second iteration of ECT differs from the first iteration in the weights of the foreground options (adjusted in the first iteration), the magnitude of the gains (the second set of gains is less than the first set of gains), and the magnitude of the scale (which is less than the scale in the first iteration). For each utterance, the ASR system returns an n-best list of options and associated scores. Note that these scores will be different than the scores returned in the first iteration because the weights of the options in the foreground grammar have been altered. The score of the option corresponding to the transcribed result is chosen as score2<highlight><subscript>c</subscript></highlight>. The highest scoring incorrect option is chosen as the best competitor with a score2<highlight><subscript>b</subscript></highlight><highlight><subscript><highlight><subscript>&mdash;</subscript></highlight></subscript></highlight><highlight><subscript>c </subscript></highlight>associated score. If score2<highlight><subscript>b</subscript></highlight><highlight><subscript><highlight><subscript>&mdash;</subscript></highlight></subscript></highlight><highlight><subscript>c </subscript></highlight>is less than score2<highlight><subscript>c</subscript></highlight>, then there is no error. However, if score2<highlight><subscript>c </subscript></highlight>is less than score2<highlight><subscript>b</subscript></highlight><highlight><subscript><highlight><subscript>&mdash;</subscript></highlight></subscript></highlight><highlight><subscript>c</subscript></highlight>, then there is an error. If the foreground, weights of the transcribed result and of the best competitor are adjusted by the second iteration gain formula. For example, the weight of the transcribed result may be increased by 0.15 and the weight of the best competitor may be decreased by 0.15. This process continues for each utterance in the utterance training set. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> Iterations of ECT continue until converging on a solution. Once the solution is obtained, the weights of the options of the foreground grammar are assigned according to this solution. In one embodiment, option variants are also tuned as described above when sufficient utterance data is present. For option variants having insufficient utterance data, the associated options are tuned. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> Tuning grammar weights by ECT beneficially tunes weights of options using a large utterance training set without requiring a speech scientist. Note that it is doubtful that even a trained speech scientist could accurately consider all the interrelatedness of a large foreground grammar when attempting to tune. Additionally, automating the tuning process eliminates the dependence on the limited number of speech scientists available. As a result, an application author using a particular grammar need not know anything about the tuning process to use the automated method. An application author may merely access a tool according to the present invention to provide correctly tuned grammar weights for use. Further, by automating the ECT process, it is possible to train different weights for different conditions, for example, time of day or phone call origination, for applications with time sensitive and location sensitive data, respectively. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, consisting of FIGS. <highlight><bold>4</bold></highlight>A-<highlight><bold>4</bold></highlight>C, is a flow diagram of the estimation and tuning process according to one embodiment of the present invention. The method begins in <cross-reference target="DRAWINGS">FIG. 4A</cross-reference> at step <highlight><bold>401</bold></highlight> with a choice in step <highlight><bold>402</bold></highlight> based on the number of utterance available for each option to be tuned. Note that the MLE branch of step <highlight><bold>403</bold></highlight> can be taken even when there are large numbers of utterances for each option. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> As described above, MLE first assigns a statistic indicative of option weight in step <highlight><bold>404</bold></highlight>, divides the options into groups based on this statistic in step <highlight><bold>405</bold></highlight>, determines the average utterance frequency of each group in step <highlight><bold>406</bold></highlight>, and assigns an initial MLE option weight to each option in step <highlight><bold>407</bold></highlight>. While the method of <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows option weights assigned according to a linear interpolation of group average utterance frequency, other embodiments may assign option weights according to other methods. Step <highlight><bold>408</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4A</cross-reference>) and step <highlight><bold>409</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4B</cross-reference>) show the connection point of the MLE branch between these two Figures. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> Once the initial option weights have been assigned in step <highlight><bold>407</bold></highlight>, each option is checked for outlier status in steps <highlight><bold>410</bold></highlight> and below. Thus, for each option (step <highlight><bold>410</bold></highlight>), if the minimum number of utterances for that option is more than some parameter Min_Utt_Number (step <highlight><bold>411</bold></highlight>) and the initial MLE weight assigned to that option is greater than some multiple (e.g. 2.5) of the actual utterance frequency for that option (step <highlight><bold>412</bold></highlight>), then the option is an outlier and the initial MLE weight will be replaced with the actual utterance frequency (step <highlight><bold>413</bold></highlight>). If too few utterances are associated with the option (step <highlight><bold>411</bold></highlight>) or the utterance frequency is less than a multiple of the initial MLE weight, then the initial MLE weight assigned to the option is made final. Therefore, once one of steps <highlight><bold>413</bold></highlight>-<highlight><bold>415</bold></highlight> has been reached for each option, then MLE weights have been assigned and the method is complete. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> As described above, ECT first assigns a gain and scale for the first iteration in step <highlight><bold>421</bold></highlight>. Once a gain and scale have been set, each utterance is applied to the ASR system and an n-best list obtained in step <highlight><bold>423</bold></highlight>. From the n-best list and the transcribed result of the utterance, scores are used to determine if an error occurred in the ASR system in steps <highlight><bold>424</bold></highlight> and <highlight><bold>432</bold></highlight>. If the transcribed result is in the foreground, then the weight of the transcribed result is increased by a first amount in step <highlight><bold>438</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4C</cross-reference>). Different embodiments use different methods for increasing the weight in step <highlight><bold>438</bold></highlight>, as described above. Step <highlight><bold>433</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4A</cross-reference>) and step <highlight><bold>434</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4C</cross-reference>) show a connection point of ECT branch between <cross-reference target="DRAWINGS">FIGS. 4A and 4C</cross-reference>. Note that if the transcribed result is not in the foreground, then the weight is not adjusted. Step <highlight><bold>426</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4A</cross-reference>) and step <highlight><bold>427</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4C</cross-reference>) show a connection point of ECT branch between <cross-reference target="DRAWINGS">FIGS. 4A and 4C</cross-reference>. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> If the best competitor is in the foreground (step <highlight><bold>428</bold></highlight>), the associated weight is decreased by a second amount in step <highlight><bold>439</bold></highlight>. Otherwise, the incorrectly recognized result is in the background, and thus is not tuned. The next utterance in the training set is examined in step <highlight><bold>429</bold></highlight>. If more utterances are present, step <highlight><bold>435</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4C</cross-reference>) and step <highlight><bold>436</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 4A</cross-reference>) provide the connection point between <cross-reference target="DRAWINGS">FIGS. 4A and 4C</cross-reference> of ECT for iteration through steps <highlight><bold>422</bold></highlight>-<highlight><bold>428</bold></highlight>, <highlight><bold>433</bold></highlight>, <highlight><bold>434</bold></highlight>, <highlight><bold>438</bold></highlight>, and <highlight><bold>439</bold></highlight>. Similarly, if no more utterances are present but the errors in the utterance training set are not yet minimized (step <highlight><bold>430</bold></highlight>), then the gain and scale are decreased in step <highlight><bold>437</bold></highlight> and steps <highlight><bold>435</bold></highlight> and <highlight><bold>436</bold></highlight> provide the connection point between <cross-reference target="DRAWINGS">FIGS. 4A and 4C</cross-reference> for passing through the utterance training set again. Lastly, if the errors are minimized in step <highlight><bold>430</bold></highlight>, then the weights of the foreground options are set and the method completed in step <highlight><bold>431</bold></highlight>. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> Some speech recognizers do not provide acoustic scoring information for competing options. When acoustic scores are unavailable, they may be determined by the following method. First, the active grammar is flattened. For example, Table 3 is an example of an active grammar.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="126PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 3</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>Grammar Specification</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Option</entry>
+<entry>(Nuance&thinsp;(&trade;) GSL Format</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>sports</entry>
+<entry>(&quest;TELLME &lsqb;sports&rsqb;)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>taxi</entry>
+<entry>(&quest;TELLME &lsqb;taxi (taxicab)&rsqb;)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>movies</entry>
+<entry>(&quest;TELLME &lsqb;movies (movie)&rsqb;)</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> This active grammar has three natural language options&mdash;sports, taxi, and movies. For each option, there are different option variants defined. The &ldquo;&quest;&rdquo; before the word &ldquo;TELLME&rdquo; indicates that a permutation of the sub-grammar &ldquo;TELLME&rdquo; which may or may not precede any of the following phonemes. The TELLME sub-grammar includes uttering two words &ldquo;tell me&rdquo; (where distinct words are indicated by the space between the two words) as well as slurring together two words as &ldquo;tell_me&rdquo; (where the slurring is indicated by the underscore), and &ldquo;tellme&rdquo; (where the phrase is spoken as a single word). Specifically, the option &ldquo;sports&rdquo; will be chosen when the ASR system determines that an utterance is one of the following option variants: &ldquo;sports&rdquo;, &ldquo;tellme sports&rdquo;, &ldquo;tell me sports&rdquo;, or &ldquo;tell_me sports&rdquo;. However, &ldquo;sport&rdquo; will not cause the ASR system to choose the &ldquo;sports&rdquo; option (unless the ASR falsely accepts an utterance of &ldquo;sport&rdquo; as one of the valid grammar options) because &ldquo;sport&rdquo; is not in the list of option variants for the option &ldquo;sport&rdquo;. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> A grammar specification is flattened to the individual grammar options (i.e. forcing grammars) by explicitly expanding all option variants for an option, listing each grammar option separately. Table 4 is a flattened active grammar according to the embodiment of Table 3.  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 4</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Flattened Grammar Options</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="70PT" align="left"/>
+<colspec colname="3" colwidth="70PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>sports option</entry>
+<entry>taxi option</entry>
+<entry>movies option</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>sports</entry>
+<entry>taxi</entry>
+<entry>movies</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tellme sports</entry>
+<entry>tellme taxi</entry>
+<entry>tellme movies</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell me sports</entry>
+<entry>tell me taxi</entry>
+<entry>tell me movies</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell_me sports</entry>
+<entry>tell_me taxi</entry>
+<entry>tell_me movies</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>taxicab</entry>
+<entry>Movie</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>tellme taxicab</entry>
+<entry>tellme movie</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>tell me taxicab</entry>
+<entry>tell me movie</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>tell_me taxicab</entry>
+<entry>tell_me movie</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0084" lvl="7"><number>&lsqb;0084&rsqb;</number> Note that each option has all possible option variants enumerated. The flattened grammars of Table 4 are shown separated into separate grammars (option-grammars), each option-grammar containing the option variants for one option. </paragraph>
+<paragraph id="P-0085" lvl="0"><number>&lsqb;0085&rsqb;</number> The weights of all option variants for each option-grammar are set to 1 to make each option variant distinct to the ASR system based only on the acoustic score. Each option-grammar is then separately run through the ASR system against the utterances. Thus, the ASR system is forced to compute the recognition score for each option. This list of scores is called an exhaustive n-best list for the active grammars. This exhaustive n-best list may be used to approximate the untunable portion of the ASR system score. </paragraph>
+<paragraph id="P-0086" lvl="0"><number>&lsqb;0086&rsqb;</number> Tables 5 and 6 are flattened option-grammars for the sports and taxi options, respectively, of Table 4.  
+<table-cwu id="TABLE-US-00005">
+<number>5</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="49PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="center"/>
+<colspec colname="3" colwidth="21PT" align="center"/>
+<colspec colname="4" colwidth="63PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center">TABLE 5</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>sports</entry>
+<entry>Utt1</entry>
+<entry>Utt2</entry>
+<entry>Utt3</entry>
+</row>
+<row>
+<entry></entry>
+<entry>option variants</entry>
+<entry>score</entry>
+<entry>score</entry>
+<entry>score</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="49PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="char" char="."/>
+<colspec colname="3" colwidth="21PT" align="char" char="."/>
+<colspec colname="4" colwidth="63PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>sports</entry>
+<entry>5</entry>
+<entry>3</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tellme sports</entry>
+<entry>10</entry>
+<entry>2</entry>
+<entry>5</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell me sports</entry>
+<entry>7</entry>
+<entry>6</entry>
+<entry>8</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell_me sports</entry>
+<entry>4</entry>
+<entry>6</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry></entry>
+<entry>sports</entry>
+<entry>8</entry>
+<entry>5</entry>
+<entry>5</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number>  
+<table-cwu id="TABLE-US-00006">
+<number>6</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="center"/>
+<colspec colname="3" colwidth="21PT" align="center"/>
+<colspec colname="4" colwidth="63PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center">TABLE 6</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>taxi</entry>
+<entry>Utt1</entry>
+<entry>Utt2</entry>
+<entry>Utt3</entry>
+</row>
+<row>
+<entry></entry>
+<entry>option variants</entry>
+<entry>score</entry>
+<entry>score</entry>
+<entry>score</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>taxi</entry>
+<entry>4</entry>
+<entry>2</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tellme taxi</entry>
+<entry>5</entry>
+<entry>1</entry>
+<entry>5</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell me taxi</entry>
+<entry>2</entry>
+<entry>2</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell_me taxi</entry>
+<entry>3</entry>
+<entry>3</entry>
+<entry>6</entry>
+</row>
+<row>
+<entry></entry>
+<entry>taxicab</entry>
+<entry>3</entry>
+<entry>3</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tellme taxicab</entry>
+<entry>1</entry>
+<entry>2</entry>
+<entry>5</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell me taxicab</entry>
+<entry>2</entry>
+<entry>2</entry>
+<entry>5</entry>
+</row>
+<row>
+<entry></entry>
+<entry>tell_me taxicab</entry>
+<entry>9</entry>
+<entry>2</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0088" lvl="7"><number>&lsqb;0088&rsqb;</number> Tables 5 and 6 show the results of an ASR system for each option variant within grammar options &ldquo;sports&rdquo; and &ldquo;taxi&rdquo;, respectively, for each of three utterances. For example, applying a first utterance, Utt<highlight><bold>1</bold></highlight>, to the speech recognizer results in the scores in the Utt<highlight><bold>1</bold></highlight> column of Table 5. Each option variant receives a score. Because the weights of each option variant are set to 1 (or set to equal amounts), the score shown in the Utt<highlight><bold>1</bold></highlight> column corresponds to the acoustic score, and in the case of the Nuance&trade; Recognizer is equivalent to the log of the acoustic score. The option variant having the highest score is stored as the acoustic score for the associated option with respect to utterance Utt<highlight><bold>1</bold></highlight>. For example, because the highest score for the &ldquo;sports&rdquo; option is 10, which is associated with the &ldquo;tellme sports&rdquo; option variant, the score 10 is saved and associated with the sports option for the remainder of this tuning iteration. Thus, when the ECT method uses a score for the transcribed result and the best competitor, that score may be determined from the weights of the options and the scores associated with the natural language interpretation and the best competitor. </paragraph>
+<paragraph id="P-0089" lvl="0"><number>&lsqb;0089&rsqb;</number> Note that if a first option variant is uttered (e.g. &ldquo;tellme movies&rdquo;) but the speech recognizer recognizes a second option variant (e.g. &ldquo;movies&rdquo;), but both option variants are associated with the same option, an error has not occurred for purposes of the ECT process. In one embodiment, weights can be trained for different option variants of the same grammar option by updating only a weight for the option variant of the recognized grammar option (as opposed to updating the weight of the grammar option as a whole) as well as updating the weight of the transcribed result. This embodiment is most effective in conjunction with large utterance training sets. In a variation of this embodiment, a separate weight can be trained for alternative pronunciations of each option variant. </paragraph>
+<paragraph id="P-0090" lvl="0"><number>&lsqb;0090&rsqb;</number> The first utterance is applied to the ASR system and associated scores are accessed. The score of the option that matches the human transcribed utterance (correct score) and the highest scoring incorrect option (best competitor score) are noted. For example, if Utterance<highlight><bold>1</bold></highlight> is transcribed as &ldquo;sports&rdquo;, then the correct score is 10 (associated with the option variant &ldquo;tellme sports&rdquo; in Table 5) and the best competitor score is 9 associated with the &ldquo;taxi&rdquo; option (from the &ldquo;tell_me taxicab&rdquo; option variant in Table 6), thereby indicating that the highest scoring option, &ldquo;sports&rdquo;, was correctly chosen by the ASR system. However, if Utterance<highlight><bold>1</bold></highlight> is transcribed as &ldquo;taxi&rdquo;, then the correct score is 9 and the best competitor score is 10 associated with the &ldquo;sports&rdquo; option (&ldquo;tellme sports&rdquo; option variant in Table 5), thereby indicating that the highest scoring option, &ldquo;sports&rdquo;, was incorrectly chosen by the ASR system. </paragraph>
+<paragraph id="P-0091" lvl="7"><number>&lsqb;0091&rsqb;</number> Additional Embodiments </paragraph>
+<paragraph id="P-0092" lvl="0"><number>&lsqb;0092&rsqb;</number> In one embodiment, a Zero-Footprint Remotely hosted development environment, see, e.g., U.S. patent application Ser. No. 09/592,241-5696, entitled &ldquo;Method and Apparatus for Zero-Footprint Application Development&rdquo;, having inventors Jeff C. Kunins, et. al., and filed Jun. 13, 2000, is extended to allow developers (e.g. application authors) to make use of the MLE and ECT approaches for the training of grammars. </paragraph>
+<paragraph id="P-0093" lvl="0"><number>&lsqb;0093&rsqb;</number> Application of the two approaches requires slightly different tools. The ECT approach requires a significant number of utterances. In contrast, the MLE approach focuses on identifying a statistic to assist in setting weights. If statistics are to be presented for MLE training, they can be presented in an XML (or other standard) format that associates the relevant statistic with the grammar option. Using hypertext transfer protocol (HTTP) form submission (or other forms of data transfer) the remote development environment could accept the statistics and perform MLE training of a grammar. </paragraph>
+<paragraph id="P-0094" lvl="0"><number>&lsqb;0094&rsqb;</number> As a starting point, in one embodiment, developers are provided access to utterances from presently operational instances of their applications. This is preferably done by allowing them access to a web-based transcription tool, see, e.g., U.S. patent application Ser. No. 09/747,026, entitled &ldquo;Transcription and Reporting System&rdquo;, having inventors Barry M. Arons, et. al., and filed Dec. 20, 2000. Alternatively, the developer may request (and pay for) transcription of a number of utterances through the web based development interface. </paragraph>
+<paragraph id="P-0095" lvl="0"><number>&lsqb;0095&rsqb;</number> In one embodiment, after a sufficient number of transcribed utterances (as estimated by the total number of utterances and the size of the grammar) have been accumulated, the developer is alerted (e.g. email, icon in development interface, phone call notification, etc.) that a particular grammar is ready for automatic tuning. </paragraph>
+<paragraph id="P-0096" lvl="0"><number>&lsqb;0096&rsqb;</number> In one embodiment, the ECT approach is attempted automatically after such an alert (as described above). In other embodiments, the developer must explicitly request ECT (and pay if required) through the development interface. In one embodiment, developers are charged differing fees depending on whether a speech specialist reviews the results of the ECT approach. </paragraph>
+<paragraph id="P-0097" lvl="0"><number>&lsqb;0097&rsqb;</number> In another embodiment, grammars can be tuned at no charge; however, to view (and further tune) the grammar weights, a fee must be paid. In another embodiment, prior to grammar tuning, the developer must agree that tuned grammars can only be used in conjunction with a system licensed for ECT. This may be an important contractual obligation to protect the competitive advantages offered by an ECT trained-grammar to voice application environments that do not provide similar features. </paragraph>
+<paragraph id="P-0098" lvl="0"><number>&lsqb;0098&rsqb;</number> In yet another embodiment, the training methods are exposed for purchase as part of a customer extranet (or other customer access network.) This configuration is similar to the developer configuration, except it is more focused on the &ldquo;lay&rdquo; purchaser of voice applications. In this configuration, the extranet which is providing usage statistics and billing for a hosted voice application may also provide some error and accuracy information (e.g. from transcription of a meaningful amount of utterance data for a particular application or suite of applications). </paragraph>
+<paragraph id="P-0099" lvl="0"><number>&lsqb;0099&rsqb;</number> This transcription data may have been produced at no direct charge to the application &ldquo;owner&rdquo; (e.g. the person who is paying to host the application), or it may have been a paid transcription effort. In either case, for grammars that are underperforming as shown in the extranet web pages, one or more &ldquo;buy it&rdquo; links may be present to allow the application owner to purchase grammar training such as ECT or more complete packages. </paragraph>
+<paragraph id="P-0100" lvl="0"><number>&lsqb;0100&rsqb;</number> Other web enabled features may include grammar performance visualization tools (either extranet or developer focused) that compare the performance of re-running an existing batch of utterances through the speech recognizer with a re-weighted grammar. In one embodiment, the visualization is a graph comparing performance of the old and new grammars with different rejection thresholds. This graph can help customers appreciate the value of their purchase (e.g. of the tuning process) since they can see that the tuned grammar (hopefully) has a better performance than the old (untuned) grammar. </paragraph>
+<paragraph id="P-0101" lvl="0"><number>&lsqb;0101&rsqb;</number> Further, for developers the graphs may help in setting the reject (or confirmation) threshold in their application program code. Those thresholds are another factor that, for example in VoiceXML, are settable on a per-field (e.g. voice input basis) to control how &ldquo;certain&rdquo; the ASR must be of the top choice in order to select it. For example if the threshold is 80, but the highest option is only 70 a &lt;nomatch/&gt; would result. Thus, the graphs offer another opportunity to tune speech recognition performance at the application level. </paragraph>
+<paragraph id="P-0102" lvl="7"><number>&lsqb;0102&rsqb;</number> Conclusion </paragraph>
+<paragraph id="P-0103" lvl="0"><number>&lsqb;0103&rsqb;</number> The embodiments described above are illustrative only and not limiting. For example, other methods to calculate the change in weights may be used for the ECT method. Additionally, other methods, such as normalization of the statistic for modified MLE, may be included in the present method. Other embodiments and modifications to the system and method of the present invention will be apparent to those skilled in the art. Therefore, the present invention is limited only by the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of determining weight for a grammar option in a speech recognition grammar, the method comprising: 
+<claim-text>associating a statistic with each grammar option that approximates a first probability of uttering that grammar option; </claim-text>
+<claim-text>dividing the grammar options into groups based on the statistic; </claim-text>
+<claim-text>determining for each group a second probability of uttering any grammar option within that group; and </claim-text>
+<claim-text>determining an average probability of uttering one grammar option in each group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising estimating the weight of each grammar option in a group based on an interpolation between the second probability of a group including the grammar option and the second probability of a next closest group. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising replacing the estimated weight for a first grammar option with an actual probability based on a number of utterances associated with the first grammar option divided by a total number of utterances in an utterance training set of grammar options. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the estimated weight is found to be significantly lower than the actual frequency of the grammar option. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein dividing the grammar options into groups is based on a normalized value of the statistic. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method of determining weight for an option variant of a grammar option in a speech recognition grammar, the method comprising: 
+<claim-text>associating a statistic with each option variant that approximates a first probability of uttering that option variant; </claim-text>
+<claim-text>dividing the option variants into groups based on the statistic; </claim-text>
+<claim-text>determining for each group a second probability of uttering any option variant within that group; and </claim-text>
+<claim-text>determining an average probability of uttering one option variant in each group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising estimating the weight of each option variant in a group based on an interpolation between the second probability of a group including the option variant and the second probability of a next closest group. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising replacing the estimated weight for a first option variant with an actual probability based on a number of utterances associated with the first option variant divided by a total number of utterances in an utterance training set of option variant. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the estimated weight is found to be significantly lower than the actual frequency of the option variant. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein dividing the option variants into groups is based on a normalized value of the statistic. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method of determining weight for a grammar option in a speech recognition grammar, the method comprising: 
+<claim-text>determining a correct score and a best competitor score for each utterance in an utterance training set; </claim-text>
+<claim-text>comparing the correct score to the best competitor score for each utterance; and </claim-text>
+<claim-text>increasing the weight of a first grammar option associated with the correct score by a first amount. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the method is iterated to converge on a solution for the weight of grammar option in the speech recognition grammar. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising decreasing a weight of a second grammar option associated with the best competitor score by a second amount. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the first amount and the second amount decrease in successive iterations. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the second amount is based on a derivative of a sigmoid function. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the first amount is based on a derivative of a sigmoid function. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method of determining an acoustic score of grammar options in a speech recognition grammar used by an automatic speech recognition (ASR) system, comprising: 
+<claim-text>applying the speech recognition grammar to the ASR system to obtain an n-best list containing a score of each grammar option variant associated with each grammar option; and </claim-text>
+<claim-text>subtracting a grammar weight from the score of each grammar option variant to get the acoustic score of the grammar option variant. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the speech recognition grammar applied to the ASR system is a forcing grammar comprising a set of grammar option variants for each grammar option whereby each option variant associated with each grammar option is explicitly specified. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A software program for determining weight for a grammar option in a speech recognition grammar, the program comprising: 
+<claim-text>means for associating a statistic with each grammar option that approximates a first probability of uttering that grammar option; </claim-text>
+<claim-text>means for dividing the grammar options into groups based on the statistic; </claim-text>
+<claim-text>means for determining for each group a second probability of uttering any grammar option within that group; and </claim-text>
+<claim-text>means for determining an average probability of uttering one grammar option in each group. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A software program for determining weight for a grammar option in a speech recognition grammar, the program comprising: 
+<claim-text>means for determining a correct score and a best competitor score for each utterance in an utterance training set; </claim-text>
+<claim-text>means for comparing the correct score to the best competitor score for each utterance; and </claim-text>
+<claim-text>means for increasing the weight of a first grammar option associated with the correct score by a first amount. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A software program for determining an acoustic score of grammar options in an automatic speech recognition (ASR) grammar, comprising: 
+<claim-text>means for flattening the grammar options in the grammar whereby each option variant associated with each grammar option is explicitly specified; </claim-text>
+<claim-text>means for separating each option variant associated with a particular grammar option into a forcing grammar associated with that particular grammar option; </claim-text>
+<claim-text>means for applying each forcing grammar to an ASR system to obtain an n-best list for that forcing grammar; and </claim-text>
+<claim-text>means for storing the highest score from the n-best as the acoustic score of the particular grammar option. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A method of determining weight for an option variant of a grammar option in a speech recognition grammar, the method comprising: 
+<claim-text>determining a correct score and a best competitor score for each utterance in an utterance training set; </claim-text>
+<claim-text>comparing the correct score to the best competitor score for each utterance; and </claim-text>
+<claim-text>increasing the weight of a first option variant for a grammar option associated with the correct score by a first amount. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the method is iterated to converge on a solution for the weight of the option variant of the grammar option. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further comprising decreasing a weight of a grammar option associated with the best competitor score by a second amount. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the first amount and the second amount decrease in successive iterations. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the second amount is based on a derivative of a sigmoid function. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the first amount is based on a derivative of a sigmoid function. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further comprising decreasing a weight of a second option variant of a grammar option associated with the best competitor score by a second amount. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein the first amount and the second amount decrease in successive iterations. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein the second amount is based on a derivative of a sigmoid function. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein the first amount is based on a derivative of a sigmoid function. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. A method of determining weight for an alternative pronunciation of an option variant of a grammar option for a speech recognition grammar, the method comprising: 
+<claim-text>determining a correct score and a best competitor score for each utterance in an utterance training set; </claim-text>
+<claim-text>comparing the correct score to the best competitor score for each utterance; and </claim-text>
+<claim-text>increasing the weight of a first alternative pronunciation of an option variant associated with the correct score by a first amount. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the method is iterated to converge on a solution for the weight of the alternative pronunciation of the option variant. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, further comprising decreasing a weight of an alternative pronunciation of a grammar option associated with the best competitor score by a second amount. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference>, wherein the first amount and the second amount decrease in successive iterations. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, further comprising decreasing a weight of a second option variant of a grammar option associated with the best competitor score by a second amount. </claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. A method of supporting development of a phone application grammar for a zero-footprint remotely hosted development environment having a network interface, the method comprising: 
+<claim-text>receiving over the network interface from a remote computer the phone application grammar; </claim-text>
+<claim-text>executing a tuning algorithm on the phone application grammar resulting in a tuned phone application grammar, wherein the tuning algorithm executes without input from a speech specialist; and </claim-text>
+<claim-text>presenting the tuned phone application grammar to the remote computer over the network interface. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the tuning algorithm is a modified maximum likelihood estimation algorithm. </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the tuning algorithm is an error corrective training algorithm. </claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the phone application grammar includes pronunciation variants of grammar options. </claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. A method of supporting development of a phone application grammar for a zero-footprint extranet hosted application having a network interface, the method comprising: 
+<claim-text>receiving over the network interface from a remote computer the phone application grammar; </claim-text>
+<claim-text>executing a tuning algorithm on the phone application grammar resulting in a tuned phone application grammar, wherein the tuning algorithm executes without input from a speech specialist; and </claim-text>
+<claim-text>presenting the tuned phone application grammar to the remote computer over the network interface. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00044">claim 41</dependent-claim-reference>, wherein the tuning algorithm is a modified maximum likelihood estimation (MLE) algorithm. </claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00044">claim 41</dependent-claim-reference>, wherein the tuning algorithm is an error corrective training (ECT) algorithm. </claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00044">claim 41</dependent-claim-reference>, wherein the phone application grammar includes pronunciation variants of grammar options.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4A</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004717A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004717A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004717A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004717A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004717A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004717A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004717A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

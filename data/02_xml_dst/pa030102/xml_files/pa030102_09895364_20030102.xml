@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005417A1-20030102-D00000.TIF SYSTEM "US20030005417A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005417A1-20030102-D00001.TIF SYSTEM "US20030005417A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005417A1-20030102-D00002.TIF SYSTEM "US20030005417A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005417A1-20030102-D00003.TIF SYSTEM "US20030005417A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005417A1-20030102-D00004.TIF SYSTEM "US20030005417A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005417A1-20030102-D00005.TIF SYSTEM "US20030005417A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005417A1-20030102-D00006.TIF SYSTEM "US20030005417A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005417</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895364</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/44</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>717</class>
+<subclass>135000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>717</class>
+<subclass>134000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Debugger for a hardware-implemented operating system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>James</given-name>
+<middle-name>J.</middle-name>
+<family-name>Gard</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Mark</given-name>
+<middle-name>W.</middle-name>
+<family-name>Jensen</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Stephen</given-name>
+<family-name>Olsen</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Fremont</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Mark</given-name>
+<family-name>Saunders</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Marina Portnova</name-1>
+<name-2>BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP</name-2>
+<address>
+<address-1>Seventh Floor</address-1>
+<address-2>12400 Wilshire Boulevard</address-2>
+<city>Los Angeles</city>
+<state>CA</state>
+<postalcode>90025-1026</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">In one embodiment, a debugger for a hardware-implemented operating system that supports one or more processors includes a host debug and a user interface. The host debug is operable to connect to a kernel processing unit of the hardware-implemented operating system via a test interface such as a Joint Test Access Group (JTAG) interface, to request information concerning internal objects of the kernel processing unit during the operation of the processors, and to receive the requested information without disturbing the operation of the processors. The user interface is then used to present the requested information to the user. In one embodiment, the debugger further includes a target resident debug server that is scheduled by the kernel processing unit to execute debugging commands issued by the host debug (e.g., a command to collect information resident in the processor&apos;s data space, a command to set a breakpoint, a command to respond to a breakpoint, etc.). The target resident debug server executes the debugging commands without unreasonable interference with the operation of the processors. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to operating systems and more specifically to debugging a hardware-implemented operating system. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Debugging tools for software-implemented real time operating systems are well known in the art. One existing debugging tool includes a host debug and a target debug (also referred to as a monitor) that communicate to each other via a network bridge (e.g., a serial bridge, an Ethernet bridge, a shared memory bridge, etc.). In particular, the target debugger receives debugging commands from the host debugger, obtains data requested by the host debugger and sends this data back to the host debugger. The data requested by the host debugger may include status information about a currently running process, information about processes awaiting their turn in a queue, a snapshot of the operating system at the time the command was executed, or any other related information. Typically, in order to extract the requested information, the current operation of the processor has to be stopped. In addition to such intrusiveness, this debugging technique is cumbersome to use because it requires the existence of a network bridge and a target debugging application written for a specific operating system. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Another known debugging technique uses IEEE 1149.1 interface (also known as Joint Test Access Group (JTAG) interface) to enable a host debugger application to interact with a processor and a software-implemented operating system. JTAG is a standard specifying how to control and monitor pins of compliant devices on a printed circuit board. JTAG allows the vendors of debugging tools to provide such testing functionality as external access to memory and registers of the processor, connected to a JTAG port, and the ability to stop and start the code execution. Using JTAG, the host debugger application is provided with information on various components of the computer system (e.g., processor registers, an address bus, a data bus, memory caches, etc.) with no need to have a target-resident debugger application or a network bridge. However, current JTAG-based debugging tools cannot extract the information requested by the host debugger application without interrupting the operation of the processor. In addition, existing JTAG-based debugging techniques do not support hardware-implemented real time operating systems. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Therefore, what is required is a tool to debug a hardware-implemented operating system without disturbing the operation of a processor. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In one embodiment, a debugger for a hardware-implemented operating system that supports one or more processors includes a host debugger and a user interface. The host debugger is operable to connect to a kernel processing unit of the hardware-implemented operating system via a test interface such as a Joint Test Access Group (JTAG) interface, to request information concerning internal objects of the kernel processing unit during the operation of the processors, and to receive the requested information without disturbing the operation of the processors. The user interface is then used to present the requested information to the user. In one embodiment, the debugger further includes a target resident debug server that is scheduled by the kernel processing unit to execute debugging commands issued by the host debugger (e.g., a command to collect information resident in the processor&apos;s data space, a command to set a breakpoint, a command to respond to a breakpoint, etc.). The target resident debug server executes the debugging commands without unreasonable interference with the operation of the processors. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Other features of the present invention will be apparent from the accompanying drawings and from the detailed description which follows. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The present invention is illustrated by way of example, and not by way of limitation in the figures of the accompanying drawings in which like reference numerals refer to similar elements. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a system in which the present invention may operate; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of an exemplary hardware-implemented operating system; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of an exemplary kernel processing unit; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow diagram of a method for debugging a hardware-implemented operating system, according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates exemplary registers of a kernel processing unit; and </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flow diagram of a method for debugging components located outside of a kernel processing unit, according to one embodiment of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A method and system for debugging a hardware-implemented operating system are described. In the following detailed description of the present invention, numerous specific details are set forth in order to provide a thorough understanding of the present invention. However, it will be apparent to one skilled in the art that the present invention may be practiced without these specific details. In some instances, well-known structures and devices are shown in block diagram form, rather than in detail, in order to avoid obscuring the present invention. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Some portions of the detailed descriptions that follow are presented in terms of algorithms and symbolic representations of operations on data bits within a computer memory. These algorithmic descriptions and representations are the means used by those skilled in the data processing arts to most effectively convey the substance of their work to others skilled in the art. An algorithm is here, and generally, conceived to be a self-consistent sequence of steps leading to a desired result. The steps are those requiring physical manipulations of physical quantities. Usually, though not necessarily, these quantities take the form of electrical or magnetic signals capable of being stored, transferred, combined, compared, and otherwise manipulated. It has proven convenient at times, principally for reasons of common usage, to refer to these signals as bits, values, elements, symbols, characters, terms, numbers, or the like. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> It should be borne in mind, however, that all of these and similar terms are to be associated with the appropriate physical quantities and are merely convenient labels applied to these quantities. Unless specifically stated otherwise as apparent from the following discussion, it is appreciated that throughout the description, discussions utilizing terms such as &ldquo;processing&rdquo; or &ldquo;computing&rdquo; or &ldquo;calculating&rdquo; or &ldquo;determining&rdquo; or &ldquo;displaying&rdquo; or the like, refer to the action and processes of a computer system, or similar electronic computing device, that manipulates and transforms data represented as physical (electronic) quantities within the computer system&apos;s registers and memories into other data similarly represented as physical quantities within the computer system memories or registers or other such information storage, transmission or display devices. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The present invention also relates to apparatus for performing the operations herein. This apparatus may be specially constructed for the required purposes, or it may comprise a general purpose computer selectively activated or reconfigured by a computer program stored in the computer. Such a computer program may be stored in a computer readable storage medium, such as, but is not limited to, any type of disk including floppy disks, optical disks, CD-ROMs, and magnetic-optical disks, read-only memories (ROMs), random access memories (RAMs), EPROMs, EEPROMs, magnetic or optical cards, or any type of media suitable for storing electronic instructions, and each coupled to a computer system bus. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The algorithms and displays presented herein are not inherently related to any particular computer or other apparatus. Various general purpose systems may be used with programs in accordance with the teachings herein, or it may prove convenient to construct more specialized apparatus to perform the required method steps. The required structure for a variety of these systems will appear from the description below. In addition, the present invention is not described with reference to any particular programming language. It will be appreciated that a variety of programming languages may be used to implement the teachings of the invention as described herein. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a system <highlight><bold>100</bold></highlight> in which a debugger of the present invention may operate. System <highlight><bold>100</bold></highlight> includes a host computer <highlight><bold>102</bold></highlight> and a target computer <highlight><bold>104</bold></highlight>. The host computer <highlight><bold>102</bold></highlight> and the target computer <highlight><bold>104</bold></highlight> can be any type of computing devices such as, for example, desktop computers, workstations, laptops, mainframe computers, etc. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The target computer <highlight><bold>104</bold></highlight> is comprised of a system bus or other communications means <highlight><bold>136</bold></highlight> for communicating information and processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight> coupled with bus <highlight><bold>136</bold></highlight> for processing information. Each of the processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight> may be any type of processing means such as a microprocessor, digital signal processor, microcontroller, or the like. The target computer <highlight><bold>104</bold></highlight> further comprises a random access memory (RAM) or other dynamic storage device <highlight><bold>134</bold></highlight> (commonly referred to as main memory), coupled to system bus <highlight><bold>136</bold></highlight>, for storing information and instructions to be executed by processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight>, including instructions for performing the execution of the various method embodiments of the present invention such as methods <highlight><bold>400</bold></highlight> and <highlight><bold>600</bold></highlight> described below in conjunction with <cross-reference target="DRAWINGS">FIGS. 4 and 6</cross-reference>. Main memory <highlight><bold>134</bold></highlight> also may be used for storing temporary variables or other intermediate information during execution of instructions by processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight>. The target computer <highlight><bold>104</bold></highlight> also comprises a read only memory (ROM) and/or other static storage device <highlight><bold>138</bold></highlight>, coupled to system bus <highlight><bold>136</bold></highlight>, for storing static information and instructions for processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight>. Further, the target computer <highlight><bold>104</bold></highlight> comprises a kernel processing unit (KPU) <highlight><bold>132</bold></highlight> coupled to the system bus <highlight><bold>136</bold></highlight> for supporting processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight>. The KPU <highlight><bold>132</bold></highlight> is a core portion of an operating system (OS) that is implemented in hardware. The hardware-implemented OS also includes a set of software elements that is contained in memory <highlight><bold>134</bold></highlight>. The hardware-implemented OS may be a real time operating system (RTOS) or a non-real time operating system. One embodiment of a hardware-implemented OS will be described in greater detail below in conjunction with <cross-reference target="DRAWINGS">FIGS. 2 and 3</cross-reference>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The target computer <highlight><bold>104</bold></highlight> may be coupled to various optional devices not shown on <cross-reference target="DRAWINGS">FIG. 1, e</cross-reference>.g., a data storage device such as a magnetic disk or optical disk and its corresponding drive for storing information and instructions, a display device for displaying information to a computer user, an alphanumeric input device for communicating information and/or command selections to processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight>, a communication device for accessing remote computers or servers, etc. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The host computer <highlight><bold>102</bold></highlight> comprises a processor <highlight><bold>150</bold></highlight> and memory <highlight><bold>114</bold></highlight>. Processor <highlight><bold>150</bold></highlight> can be any type of processor capable of executing software, such as a microprocessor, digital signal processor, microcontroller, or the like. Memory <highlight><bold>114</bold></highlight> can be a hard disk, a floppy disk, random access memory (RAM), read only memory (ROM), flash memory, or any other type of machine medium readable by processor <highlight><bold>150</bold></highlight>. Memory <highlight><bold>114</bold></highlight> can store instructions for performing the execution of the various method embodiments of the present invention such as methods <highlight><bold>400</bold></highlight> and <highlight><bold>600</bold></highlight> described below in conjunction with <cross-reference target="DRAWINGS">FIGS. 4 and 6</cross-reference>. In addition, the host computer <highlight><bold>102</bold></highlight> may include various other components including any of the components described above in conjunction with the target computer <highlight><bold>104</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In one embodiment, the host computer <highlight><bold>102</bold></highlight> comprises a host debug <highlight><bold>152</bold></highlight> and a user interface <highlight><bold>112</bold></highlight>. The host debug <highlight><bold>152</bold></highlight> can communicate with the KPU <highlight><bold>132</bold></highlight> and/or processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight> via a JTAG interface <highlight><bold>120</bold></highlight>. In one embodiment, a single JTAG interface <highlight><bold>120</bold></highlight> connects to processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight> and the KPU <highlight><bold>132</bold></highlight> to enable the host debug <highlight><bold>152</bold></highlight> to interact with processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight> and the KPU <highlight><bold>132</bold></highlight>. Alternatively, two separate JTAG interfaces <highlight><bold>120</bold></highlight> are used to connect the host debug <highlight><bold>152</bold></highlight> to the processor <highlight><bold>130</bold></highlight> or <highlight><bold>140</bold></highlight> and to the KPU <highlight><bold>132</bold></highlight>. In either embodiment, the host debug <highlight><bold>152</bold></highlight> is able to identify the processing units connected to one or more JTAG interfaces and select a particular processing unit for debugging. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In one embodiment, the host debug <highlight><bold>152</bold></highlight> connects to the KPU <highlight><bold>132</bold></highlight> via the JTAG interface <highlight><bold>120</bold></highlight>, requests information concerning one or more internal elements of the KPU <highlight><bold>132</bold></highlight> during the operation of processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight> and receives the requested information from the KPU <highlight><bold>132</bold></highlight> without disturbing the operation of the processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight>. The user interface <highlight><bold>112</bold></highlight> is then used to present the requested information to the user. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In one embodiment, the requested information includes the state of each internal object of the KPU <highlight><bold>132</bold></highlight>. The internal objects of the KPU <highlight><bold>132</bold></highlight> may include mail boxes, queues, virtual timers, event flag groups, task control blocks, and/or various other components and internal data structures. For example, if the host debug <highlight><bold>152</bold></highlight> issues a command requiring to take a snapshot of the operating system, the JTAG interface <highlight><bold>120</bold></highlight> scans the internal objects of the KPU <highlight><bold>132</bold></highlight> and obtains the status of every internal object. Because the kernel&apos;s objects are built in hardware, the JTAG interface <highlight><bold>120</bold></highlight> can extract the above information without interrupting the operation of the processors <highlight><bold>130</bold></highlight> and <highlight><bold>140</bold></highlight>, unlike the prior art JTAG-based debugging tools which could not obtain the debugging information without stopping the machine, i.e., the processor would have to stop a currently running task in order to execute a system call requesting to extract information concerning the elements of the software-implemented operating system. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In one embodiment, the snapshot data is placed in a set of registers that is contained in the KPU <highlight><bold>132</bold></highlight>. A task is then placed in a queue to transfer this snapshot data to the host debug <highlight><bold>152</bold></highlight>. A set of exemplary registers of the KPU <highlight><bold>132</bold></highlight> that store data concerning the KPU&apos;s internal objects will be described in more detail below in conjunction with <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In one embodiment, the debugger of the present invention also includes a target-resident debug server which communicates with the host debug <highlight><bold>152</bold></highlight> via the JTAG interface. In one embodiment, the target resident debug server is scheduled by the KPU <highlight><bold>132</bold></highlight> to perform debugging commands issued by the host debug <highlight><bold>152</bold></highlight>. For instance, the host debug <highlight><bold>152</bold></highlight> may send a command requesting to set a breakpoint for a certain task. The debug server will then be scheduled to run to execute this command, thereby allowing the setting of a breakpoint without stopping the machine, i.e., enabling a &ldquo;runmode&rdquo; debug. Subsequently, when the breakpoint is encountered, the debug server may notify the host debug <highlight><bold>152</bold></highlight> and may execute any other commands issued by the host debug <highlight><bold>152</bold></highlight>. For example, the debug server may collect information resident in the data space of processor <highlight><bold>130</bold></highlight> or <highlight><bold>140</bold></highlight>. Such information may concern the context of a specific thread, register set of a specific thread, or any other relevant information. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> In one embodiment, the host debug <highlight><bold>152</bold></highlight> needs information about an RTOS object that is not located in the KPU <highlight><bold>132</bold></highlight>, i.e., a software-implemented component of the operating system. The KPU <highlight><bold>132</bold></highlight> does not contain the requested information itself but it is aware where in memory the requested information is located. In this embodiment, two JTAG interfaces are used to access the requested information: the KPU&apos;s JTAG interface is used to find out where in memory the requested information is located, and the CPU&apos;s JTAG interface is used to retrieve the requested information from this memory location. One embodiment of a method for debugging objects located outside of the KPU will be described in more detail below in conjunction with <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of an exemplary hardware-implemented RTOS <highlight><bold>200</bold></highlight>. RTOS <highlight><bold>200</bold></highlight> includes a KPU <highlight><bold>202</bold></highlight> which represents a hardware-implemented core portion of RTOS <highlight><bold>200</bold></highlight> and a set of software-implemented components <highlight><bold>204</bold></highlight>-<highlight><bold>210</bold></highlight>. The implementation of kernel objects in hardware addresses several performance problems suffered by a conventional software-implemented RTOS. Some advantages of a hardware-implemented RTOS over a software-implemented RTOS include improved performance of system calls, reduced latency during task rescheduling, elimination of timer intrusion, simplified board support packages, reduced size of a kernel footprint, etc. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> KPU <highlight><bold>202</bold></highlight> will now be briefly described with reference to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. As shown on <cross-reference target="DRAWINGS">FIG. 3, a</cross-reference> central component of KPU <highlight><bold>202</bold></highlight> is a task manager <highlight><bold>310</bold></highlight> that is responsible for scheduling and managing of multiple tasks in the system. A task is an independent sequential flow of control. In a real time system, tasks execute in an asynchronous fashion and in real time. Several tasks can operate autonomously from the same piece of code, or tasks can be located in separate code modules. The task manager <highlight><bold>310</bold></highlight> is responsible for scheduling the tasks and transitioning the tasks from one state to another. The task manager <highlight><bold>310</bold></highlight> is coupled to a set of task control blocks (TCBs). Each TCB maintains a set of pointers to a stack containing status information for a corresponding active task that is not in control of the processor. The tasks are scheduled based on each task&apos;s identification number, a priority level assigned to each task during configuration, and the order in which tasks are made ready among equal-priority tasks. The tasks may transition between several states. These states include an executing state, a ready for execution state and a suspended state. The suspended state may be further divided into three categories: suspended, pending and delayed. Tasks move from state to state when certain events occur. These events may be triggered by a system call, a command or a time-out. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> KPU <highlight><bold>202</bold></highlight> also includes several intertask communication and synchronization mechanisms: a set of mailboxes <highlight><bold>308</bold></highlight>, a set of event flags <highlight><bold>306</bold></highlight> and a set of queues <highlight><bold>304</bold></highlight>. These mechanisms allow a task to exchange data with other tasks and synchronize with other tasks. The above mechanisms also enable tasks to mutually exclude each other so that each task is guaranteed exclusive control of a protected resource. Specifically, a task can post a message to a mailbox <highlight><bold>308</bold></highlight> to exchange data with another task or to synchronize with another task. In addition, mailboxes <highlight><bold>308</bold></highlight> may be used to perform mutual exclusion of a protected resource. For instance, a task may lock the resource by initializing a mailbox <highlight><bold>308</bold></highlight> to any key value. Any task that needs to use that resource pends at the mailbox <highlight><bold>308</bold></highlight> for the key. As each task finishes with the resource, it posts the key back to the mailbox to enable the next task. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Queues <highlight><bold>304</bold></highlight> may be used by tasks to pass messages and to mutually exclude resources of the same type. Event flags <highlight><bold>306</bold></highlight> may be used by tasks to signal the occurrence of events to other tasks. Mailboxes <highlight><bold>308</bold></highlight>, queues <highlight><bold>304</bold></highlight> and event flags <highlight><bold>306</bold></highlight> pass the data they store to the task manager <highlight><bold>310</bold></highlight> to enable proper scheduling and task transitions between the states. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Command logic <highlight><bold>312</bold></highlight> receives various commands (e.g., commands requesting to post data to mailboxes <highlight><bold>308</bold></highlight>, queues <highlight><bold>304</bold></highlight> and event flags <highlight><bold>306</bold></highlight>) and passes associated instructions and data to various objects of the KPU <highlight><bold>202</bold></highlight> using an internal address bus <highlight><bold>318</bold></highlight> and an internal data bus <highlight><bold>320</bold></highlight>. Virtual timers <highlight><bold>302</bold></highlight> generate time ticks and pass the time ticks to the task manager <highlight><bold>310</bold></highlight> for task scheduling. Clock logic <highlight><bold>316</bold></highlight> provides a real-time clock for all objects of RTOS <highlight><bold>200</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> It should be noted that other components of RTOS <highlight><bold>200</bold></highlight> may be a part of the KPU <highlight><bold>202</bold></highlight>, or alternatively, some of the components shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> may be implemented in software and as such will not be included in the KPU <highlight><bold>202</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Returning to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, exemplary software components of RTOS <highlight><bold>200</bold></highlight> include a context switch <highlight><bold>204</bold></highlight>, an application program interface (API) <highlight><bold>206</bold></highlight>, a memory management module <highlight><bold>208</bold></highlight>, and external TCBs <highlight><bold>210</bold></highlight>. Context switch <highlight><bold>204</bold></highlight> includes information on the sequence of events that takes place when control of the processor is transferred from the running task to another ready task. Memory management module <highlight><bold>208</bold></highlight> is responsible for allocating memory to tasks and interrupt service requests. External TCBs <highlight><bold>210</bold></highlight> are associated with internal TCBs <highlight><bold>314</bold></highlight> and contain context specific information such as stack location information, stack size, information concerning a pointer to the saved register context, and any task global information. Although <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows four software-implemented operating system components, more or less of such components may be contained in RTOS <highlight><bold>200</bold></highlight> with a hardware implemented task manager. It should be further noted that RTOS <highlight><bold>200</bold></highlight> represents only an example of a hardware-implemented operating system and should not be interpreted to limit the scope of the present invention. Instead, the debugging technique of the present invention can be used for any known in the art operating system that is partially or entirely implemented in hardware. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow diagram of a method <highlight><bold>400</bold></highlight> for debugging a hardware-implemented operating system, according to one embodiment of the present invention. Method <highlight><bold>400</bold></highlight> begins with connecting a host debug to a KPU using a test interface such as a JTAG interface (processing block <highlight><bold>404</bold></highlight>). As described above, a KPU represents a hardware-implemented core portion of an operating system. The operating system may be a real time operating system or non-real time operating system. In one embodiment, the host computer identifies two or more processing units (i.e., one or more processors and the KPU) and selects the KPU from these processing units for debugging. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Next, at processing block <highlight><bold>406</bold></highlight>, information concerning one or more elements of the KPU is requested during the operation of the processor(s). In one embodiment, these objects include mail boxes, event flag groups, queues, task control blocks and other internal objects of the KPU. The requested information may include a state of each of these objects, data stored in any of these objects, or any other similar information. Further, at processing block <highlight><bold>408</bold></highlight>, the requested information is received by the host debug without disturbing the operation of the processor(s). </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In one embodiment, a debug server may run on the target computer as one of multiple tasks managed by the KPU. In particular, when the host debug issues a command, a debug server is scheduled to run on the target computer to execute the command. For example, the debug server may be scheduled to execute a command of the host debug to set a breakpoint for one or more tasks or to respond to a breakpoint that was set previously. In another example, the debug server may be scheduled by the KPU to collect information resident in the CPU&apos;s data space, e.g., information concerning the context of a specific thread or the register set of a specific thread. Accordingly, the debugging is performed in a non-intrusive manner, without stopping the operation of the processor. In one embodiment, the KPU contains a debug interface associated with each processor supported by the KPU. The debug interface includes a set of registers for storing data obtained by the debug server when executing the commands issued by the host debug. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates a set of exemplary registers of a KPU <highlight><bold>502</bold></highlight>, according to one embodiment of the present invention. The KPU <highlight><bold>502</bold></highlight> includes a processor interface <highlight><bold>506</bold></highlight> for a first processor supported by the KPU <highlight><bold>502</bold></highlight> and a processor interface <highlight><bold>508</bold></highlight> for a second processor supported by the KPU <highlight><bold>502</bold></highlight>. A JTAG interface <highlight><bold>504</bold></highlight> (e.g., a JTAG port) is connected to the KPU <highlight><bold>502</bold></highlight> and is used to access processor interfaces <highlight><bold>506</bold></highlight> and <highlight><bold>508</bold></highlight>. Each processor interface contains a set of registers <highlight><bold>514</bold></highlight>-<highlight><bold>526</bold></highlight> or <highlight><bold>534</bold></highlight>-<highlight><bold>546</bold></highlight> to store information concerning the elements of the KPU <highlight><bold>502</bold></highlight>. For instance, if a currently running task executes a command to post a message to a mail box, the set of registers <highlight><bold>514</bold></highlight>-<highlight><bold>526</bold></highlight> will store the information pertaining to this task. That is, a status register <highlight><bold>516</bold></highlight> will store a status of the KPU <highlight><bold>502</bold></highlight>. For instance, the status may indicate that the KPU <highlight><bold>502</bold></highlight> is ready to receive a new command or that the data requested previously is now available. A command register <highlight><bold>518</bold></highlight> will store the content of the post command or an identifier of this command, a parameter register <highlight><bold>520</bold></highlight> will store an identifier of the mail box to which the message is required to be posted, and a parameter register <highlight><bold>520</bold></highlight> will store the content of the message that is required to be posted to the mail box. Control registers <highlight><bold>514</bold></highlight> and <highlight><bold>534</bold></highlight> are used to control the operation of the KPU <highlight><bold>502</bold></highlight>. In one embodiment, control registers <highlight><bold>514</bold></highlight> and <highlight><bold>534</bold></highlight> issue specific attributes of the KPU <highlight><bold>502</bold></highlight> that are used by the system to set up the KPU <highlight><bold>502</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> When the host debug requests information concerning any specific state in the KPU <highlight><bold>502</bold></highlight> (e.g., information identifying a currently running task), this information is extracted from the KPU&apos;s internal structures and then passed to the host debug via the JTAG <highlight><bold>504</bold></highlight>, without stopping the operation of the processor. In addition, the host debug may request information on a state change inside the KPU <highlight><bold>502</bold></highlight>. Changes in the KPU&apos;s state may result from commands requesting to delay a task, pend on a mailbox, post to a queue, etc. In one embodiment, occurrences of such events are captured using the KPU&apos;s internal debug command and then passed to the host debug via the JTAG <highlight><bold>504</bold></highlight>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> In one embodiment, the KPU <highlight><bold>502</bold></highlight> also includes debug interfaces <highlight><bold>510</bold></highlight> and <highlight><bold>512</bold></highlight> associated with corresponding processors. The debug interfaces <highlight><bold>510</bold></highlight> and <highlight><bold>512</bold></highlight> include registers <highlight><bold>552</bold></highlight>-<highlight><bold>556</bold></highlight> and <highlight><bold>562</bold></highlight>-<highlight><bold>566</bold></highlight> that are used by a debug server when it is run by a corresponding processor. For example, registers <highlight><bold>552</bold></highlight>-<highlight><bold>556</bold></highlight> and <highlight><bold>562</bold></highlight>-<highlight><bold>566</bold></highlight> may store information identifying a breakpoint that needs to be set by the debug server or a TCB that needs to be retrieved by the debug server for the host debug. Registers <highlight><bold>552</bold></highlight>-<highlight><bold>556</bold></highlight> and <highlight><bold>562</bold></highlight>-<highlight><bold>566</bold></highlight> may also store information concerning the execution of the host debug command by the debug server (e.g., the information specifying that the debug server has completed the command successfully). </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> As described above, the debug server resides on the target computer and is scheduled by the KPU <highlight><bold>502</bold></highlight> to execute debugging commands such as commands to collect information resident in the processor&apos;s data space, commands to set breakpoints, commands to respond to breakpoints, etc. In addition, the debug server may need to capture a stack trace and traverse task TCBs to find the context and the stack base. Then, using the stack information, the debug server may pass any relevant information from the stack to the KPU <highlight><bold>502</bold></highlight> which will send it to the host debug via JTAG <highlight><bold>504</bold></highlight>. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> In contrast to conventional JTAG-based debugging tools that cannot extract information without interrupting the operation of the processor, the debug server of the present invention runs as a task, allowing the system to service interrupt service routines (ISRs). As a result, the intrusion on the CPU that is caused by the debug server is minimal. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> In one embodiment, a host debug requests information concerning an element located outside of a KPU. For instance, the host debug may need information on the content of a register set for a certain task. As described above, this information is contained in one of the external TCBs of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. Accordingly, the KPU cannot provide this information to the host debug. Instead, the host debug needs to request this information from the processor. <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flow diagram of a method <highlight><bold>600</bold></highlight> for debugging components located outside of the KPU, according to one embodiment of the present invention. These components may include software-implemented elements of the operating system or other elements and data structures located in the main memory. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, method <highlight><bold>600</bold></highlight> begins with designating an element located outside of the KPU for debugging (processing block <highlight><bold>604</bold></highlight>). For example, the external element may be an external TCB <highlight><bold>210</bold></highlight> of a particular task. At processing block <highlight><bold>606</bold></highlight>, a request is sent to the KPU to specify where in memory the information concerning this external element is located. In the example above, the host debug may need to know the content of the register set of a specific task. Then, the request will ask for the location of this information in memory. As described above, the communication between the KPU and the host debug is enabled using a JTAG interface (e.g., a JTAG port) of the KPU. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> At processing block <highlight><bold>608</bold></highlight>, data specifying the memory location of the required information is received from the KPU. Further, at processing block <highlight><bold>610</bold></highlight>, a command to extract the required information from the specified memory location is sent to the processor. The communication between the host debug and the processor is enabled using a JTAG interface of the processor. Accordingly, the JTAG interface of the KPU and the JTAG interface of the processor are both used for debugging an element located outside the KPU. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The above combined method of collecting information on software-implemented components of the operating system that are located in memory allows a direct transfer of data from the KPU to memory without the processor&apos;s involvement, thereby eliminating a need for a direct memory access (DMA) controller. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> A method and system for debugging a hardware-implemented operating system have been described. The specific arrangements and methods described here are illustrative of the principles of this invention. Numerous modifications in form and detail may be made by those skilled in the art without departing from the true spirit and scope of the invention. Although this invention has been shown in relation to a particular embodiment, it should not be considered so limited. Rather it is limited only by the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for debugging comprising: 
+<claim-text>connecting to a kernel processing unit of a hardware-implemented operating system using a test interface, the hardware-implemented operating system supporting at least one processor; </claim-text>
+<claim-text>requesting information concerning one or more objects of the kernel processing unit during an operation of the at least one processor; and </claim-text>
+<claim-text>receiving the information concerning the one or more objects of the kernel processing unit without disturbing the operation of the at least one processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the test interface is a Joint Test Access Group (JTAG) interface. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising displaying the information concerning the one or more objects of the kernel processing unit to the user. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the information concerning the one or more objects includes a state of each of the one or more objects. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the one or more objects include any one of a mail box, an event flag group, a queue, a virtual timer, an internal task control block, a clock logic, and an internal data structure of the kernel processing unit. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>sending a debugging command to a debug server, the debug server being one of a plurality of tasks managed by the operating system; and </claim-text>
+<claim-text>the debug server executing the debugging command without unreasonable interference with the operation of the at least one processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the debugging command requires the debug server to set a breakpoint for one or more tasks. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the debugging command requires the debug server to monitor a particular task. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising: 
+<claim-text>the debug server storing data requested by the debugging command in one or more registers of a debug interface within the kernel processing unit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>designating one or more elements located outside of the kernel processing unit for debugging; </claim-text>
+<claim-text>requesting data specifying memory location of information concerning the one or more elements from the kernel processing unit; and </claim-text>
+<claim-text>sending a command to retrieve the information concerning the one or more elements from the specified memory location to the processor via a second test interface. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A system comprising: 
+<claim-text>a target computer including at least one processor and a kernel processing unit of a hardware-implemented operating system supporting the at least one processor; </claim-text>
+<claim-text>a host computer including a host debug; and </claim-text>
+<claim-text>a test interface to connect the host debug to the kernel processing unit, the host debug is to request information concerning one or more objects of the kernel processing unit during an operation of the at least one processor and to receive the requested information without disturbing the operation of the at least one processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the test interface is a Joint Test Access Group (JTAG) interface. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the host computer further comprises a display device to display the requested information to the user. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the kernel processing unit comprises a plurality of registers to store the information concerning the one or more objects of the hardware-implemented operating system. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the one or more objects include any one of a mail box, an event flag group, a queue, a virtual timer, an internal task control block, a clock logic, and an internal data structure of the kernel processing unit. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the target computer further comprises a debug server to run at a scheduled time, to receive a debugging command from a host debug and to execute the debugging command without unreasonable interference with the operation of the at least one processor. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the debugging command requires the debug server to set a breakpoint for one or more tasks. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the debugging command requires the debug server to monitor a particular task. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the kernel processing unit further comprises one or more debug interfaces associated with the at least one processor, each of the one or more debug interfaces comprising a set of registers to store data requested in the debugging command. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> further comprising: 
+<claim-text>a second test interface to connect the host debug to the processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference> wherein the host debug is to designate one or more elements located outside of the kernel processing unit for debugging, to request data specifying memory location of the information concerning the one or more elements from the kernel processing unit, and to send a command to retrieve the information concerning the one or more elements from the specified memory location to the processor via the second test interface. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A debugger for a hardware-implemented operating system supporting at least one processor, the debugger comprising: 
+<claim-text>a host debug to connect to a kernel processing unit of the hardware-implemented operating system using a test interface, to request information concerning one or more objects of the kernel processing unit during an operation of the at least one processor, and to receive the information concerning the one or more objects of the kernel processing unit without disturbing the operation of the at least one processor; and </claim-text>
+<claim-text>a user interface to present the information concerning the one or more objects of the kernel processing unit to the user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein the test interface is a Joint Test Access Group (JTAG) interface. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein the information concerning the one or more objects includes a state of each of the one or more objects. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein the one or more objects include any one of a mail box, an event flag group, a queue, a virtual timer, an internal task control block, a clock logic, and an internal data structure of the kernel processing unit. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> further comprising: 
+<claim-text>a target debug server to run at a scheduled time, to receive a debugging command from a host debug, and to execute the debugging command without unreasonable interference with the operation of the at least one processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein the debugging command requires the target debug server to set a breakpoint for one or more tasks. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein the debugging command requires the target debug server to monitor a particular task. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein the target debug server is to store data requested by the debugging command in one or more registers of a debug interface within the kernel processing unit. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The debugger of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein the host debug is to receive data specifying memory location of information concerning one or more elements located outside of the kernel processing unit from the kernel processing unit, and to send a command to retrieve the information concerning the one or more elements from the specified memory location to the processor via a second test interface. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A computer readable medium that provides instructions, which when executed on a processor, cause said processor to perform operations comprising: 
+<claim-text>connecting to a kernel processing unit of a hardware-implemented operating system using a test interface, the hardware-implemented operating system supporting at least one processor; </claim-text>
+<claim-text>requesting information concerning one or more objects of the kernel processing unit during an operation of the at least one processor; and </claim-text>
+<claim-text>receiving the information concerning the one or more objects of the kernel processing unit without disturbing the operation of the at least one processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. An integrated circuit having circuitry that implements a hardware-implemented operating system debugged by the method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. A file stored on electronic media having data that defines a hardware-implemented operating system debugged by the method of <dependent-claim-reference depends_on="CLM-00011">claim 1.</dependent-claim-reference></claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005417A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005417A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005417A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005417A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005417A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005417A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005417A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

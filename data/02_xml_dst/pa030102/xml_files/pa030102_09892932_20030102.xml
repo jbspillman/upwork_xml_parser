@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002496A1-20030102-D00000.TIF SYSTEM "US20030002496A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002496A1-20030102-D00001.TIF SYSTEM "US20030002496A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002496A1-20030102-D00002.TIF SYSTEM "US20030002496A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002496A1-20030102-D00003.TIF SYSTEM "US20030002496A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002496A1-20030102-D00004.TIF SYSTEM "US20030002496A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002496A1-20030102-D00005.TIF SYSTEM "US20030002496A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030002496A1-20030102-D00006.TIF SYSTEM "US20030002496A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030002496A1-20030102-D00007.TIF SYSTEM "US20030002496A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002496</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892932</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L012/28</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>370</class>
+<subclass>389000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>401000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Method enabling network address translation of incoming session initiation protocol connections based on dynamic host configuration protocol address assignments</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Niels</given-name>
+<family-name>Beier</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Copenhagen</city>
+<country-code>DK</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>PILLSBURY WINTHROP, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 10500</address-1>
+<city>MCLEAN</city>
+<state>VA</state>
+<postalcode>22102</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system for using Dynamic Host Configuration Protocol (DHCP) address assignments to determine a local destination address of a received packet in a Network Address Translation (NAT) environment. The system includes a DHCP server to assign local IP addresses to devices on a network. The system has a NAT device to execute network address translation, and a packet device to receive packets. The system further includes an addressing device to determine the local destination address of a packet received by the packet device. The addressing device uses an association table created from symbolic names of the devices on the network and the local IP addresses associated with the devices. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates to the field of network address assigning, and, more specifically, to a system, method, and apparatus for enabling Network Address Translation (NAT) of incoming Session Initiation Protocol (SIP) connections based on Dynamic Host Configuration Protocol (DHCP) address assignments. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Background of the Invention </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Local area networks (LANs) have been used with network devices such as personal computers. A LAN typically has a set number of unique Internet Protocol (IP) addresses for all of the devices on the LAN. More specifically, multiple computers on the LAN may be represented by the same IP address and use the same router(s). In such embodiments, there may be 10 computers, for example, assigned to one router, where the router has its own unique IP address. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In such a LAN, Network Address Translation (NAT) allows a single device, such as a router, to act as an agent between the Internet, or &ldquo;public network&rdquo;, and a local, or &ldquo;private&rdquo;, network. This means that only a single, unique IP address is required to represent an entire group of computers. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In such an embodiment, a major problem with using NAT is to locate the correct device on the internal network when a packet from the Internet arrives at the router, because all packets received from the Internet are addressed to the router and not to the devices behind the router. Configuring static mappings in the router can, in some cases, solve the problem. For example, the router may be configured to send all World Wide Web (WEB) traffic to a specific PC behind a router, and send all File Transfer Protocol (FTP) traffic to a different specified PC behind the router. However, the problem with this type of static mapping is that it requires specific configuration of the router, which may be expensive for an ISP shipping thousands of routers. Moreover, it is problematic if several PCs are performing the same service (FTP, WEB, etc.). </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> When a connection is initiated from a device on the internal network to an external device, the access device can always establish the NAT mapping without the use of any additional information. However, when using NAT, connections may only be made from inside a local network to a location outside of the network. A device outside the network cannot connect to a device on the local network without the router being specifically configured to do so. Therefore, the prior art suffers from a serious inefficiency in that a connection cannot be initiated with a device on a LAN by a device outside the LAN without specific configuration of the router at the LAN.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a general overview of a system according to an embodiment of the invention; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a basic DHCP packet according to an embodiment of the invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an additional option field portion of a DHCP packet according to an embodiment of the invention; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a process by which a device is assigned a local IP address according to an embodiment of the invention; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates an association table according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a process by which a packet is sent from a local device to a destination address on the Internet according to an embodiment of the present invention; and </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates a process by which packets are received and routed to the destination device on a local network.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> An embodiment of the present invention includes a device that simultaneously acts as a Dynamic Host Configuration Protocol (DHCP) server and a Network Translation Address (NAT) apparatus. The device may be used within an access router connected to the Internet. Such a device routes incoming packets to devices on a network based upon symbolic names acquired by a DHCP program running on the DHCP server. The device allows an incoming Session Initiation Protocol (SIP) Internet Protocol (IP) call originating from the Internet to be routed to the correct device on the Local Area Network (LAN) segment that uses a private IP address. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> DHCP is a software program that automatically assigns IP addresses to client stations logging onto an IP network. It eliminates the need to manually assign permanent IP addresses. DHCP software typically runs on servers and is also found in network devices such as Integrated Services Digital Network (ISDN) routers and modem routers that allow multiple users access to the Internet. NAT is an Internet Engineering Task Force (IETF) standard that allows an organization to present itself to the Internet with one address. NAT converts the address of each LAN node into one IP address for the Internet and vice versa. It also serves as a firewall by keeping individual IP addresses hidden from the outside world. SIP is a protocol that provides IP telephony services, such as realtime, interactive voice and videoconferencing over LANs and the Internet. It allows any combination of voice, video and data to be transported. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a general overview of the system according to an embodiment of the invention. In an embodiment of the invention, a number of devices are coupled to an access router <highlight><bold>115</bold></highlight> capable of transmitting and receiving data via the Internet. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates an embodiment where a first computer <highlight><bold>100</bold></highlight>, a second computer <highlight><bold>105</bold></highlight>, and a SIP IP telephone <highlight><bold>110</bold></highlight> all reside on a LAN connected to the router <highlight><bold>115</bold></highlight>. The first computer <highlight><bold>100</bold></highlight> has a host name, or symbolic name, &ldquo;Victor.&rdquo; The second computer <highlight><bold>105</bold></highlight> has a symbolic name &ldquo;Hugo.&rdquo; The SIP IP telephone <highlight><bold>110</bold></highlight> has the symbolic name &ldquo;Yrsa.&rdquo;</paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The first computer <highlight><bold>100</bold></highlight>, the second computer <highlight><bold>105</bold></highlight>, and the SIP IP telephone <highlight><bold>110</bold></highlight> are all connected to the access router <highlight><bold>115</bold></highlight>, which serves as the pathway for communication between them and destinations on the Internet <highlight><bold>120</bold></highlight>. For the first computer <highlight><bold>100</bold></highlight> to send data to a destination address on the Internet, the first computer <highlight><bold>100</bold></highlight> must send a packet to the router <highlight><bold>115</bold></highlight>, which then sends the packet to the destination address on the Internet <highlight><bold>120</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In order for a device on the LAN to receive packets of data from a site on the Internet, the router <highlight><bold>115</bold></highlight> must be configured to route certain packets to a particular device. In other words, the router <highlight><bold>115</bold></highlight> must extrapolate, from a received packet, the destination address of the packet. To determine which packets must be routed to which devices on the LAN, the router <highlight><bold>115</bold></highlight> typically has to have prior knowledge about each of the devices. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> To receive and transmit packets over the LAN, or to an Internet site outside of the LAN, a device must have an IP address. As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the first computer <highlight><bold>100</bold></highlight> has the &ldquo;private&rdquo; IP address 10.0.1.1., the second computer <highlight><bold>105</bold></highlight> has the private IP address 10.0.1.2, and the SIP IP telephone <highlight><bold>110</bold></highlight> has the private IP address 10.0.1.3. A private IP address is an IP address that is not known or directly accessible by a device outside the LAN. In this example, the access router <highlight><bold>115</bold></highlight> has the &ldquo;public&rdquo; IP address 89.20.171.92. A public IP address is accessible by a device inside or outside the LAN. Whenever a packet is sent to the LAN from a destination on the Internet <highlight><bold>120</bold></highlight>, the packet is sent to the router&apos;s <highlight><bold>115</bold></highlight> public IP address. Once received, the router <highlight><bold>115</bold></highlight> may then transmit the packet to the local IP address of one of the devices on the LAN. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In an embodiment of the invention, a variable number of devices may be hooked up to a router <highlight><bold>115</bold></highlight> over the LAN. For a device to transmit and receive data from outside the network, the device may be assigned a local IP address. A router <highlight><bold>115</bold></highlight> may be utilized to assign IP addresses to devices on the LAN. To assign a device a local IP address, the device may send an IP address request to the router <highlight><bold>115</bold></highlight>, which then assigns a local IP address to the device. Each time a device is powered down, and then powered back up, it may be assigned an IP address that need not necessarily be identical to the IP address assigned to the device before being powered down. DHCP is a program, executable by a router <highlight><bold>115</bold></highlight>, that may be used to assign a local IP address to a device on the LAN. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a basic DHCP packet <highlight><bold>200</bold></highlight> according to an embodiment of the invention. When a device on the network sends an IP address assignment request to the router <highlight><bold>115</bold></highlight>, the request is in the form of a DHCP packet <highlight><bold>200</bold></highlight>. The packet contains various fields of information, such as operation (op) code <highlight><bold>205</bold></highlight>. Op code <highlight><bold>205</bold></highlight> is used to signify whether the packet is a request for an IP address or an assignment of an IP address. If an IP address request is sent, the op code <highlight><bold>205</bold></highlight> for the DHCP packet is set to &ldquo;1&rdquo;. A DHCP server, which may be located at the router <highlight><bold>115</bold></highlight>, responds to the request by sending a DHCP packet with op code <highlight><bold>205</bold></highlight> set to &ldquo;2&rdquo;. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In the DHCP response, the IP address assigned to client is stored in the &ldquo;yiaddr&rdquo; field <highlight><bold>210</bold></highlight>. Although a basic DHCP packet <highlight><bold>200</bold></highlight> does not contain the client name, most clients include an optional field in the &ldquo;options&rdquo; field <highlight><bold>220</bold></highlight> of the DHCP request packet <highlight><bold>200</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an additional host option field <highlight><bold>300</bold></highlight> portion of a DHCP packet according to an embodiment of the invention. The host option field <highlight><bold>300</bold></highlight> is utilized to store the symbolic name of a device requesting an IP address. The host option field <highlight><bold>300</bold></highlight> is located in the options field <highlight><bold>220</bold></highlight> of the DHCP request packet <highlight><bold>200</bold></highlight>. The host option field <highlight><bold>300</bold></highlight> is comprised of a plurality of bytes. The first byte <highlight><bold>305</bold></highlight> represents the DHCP option code for the option field. A DHCP option code of &ldquo;12&rdquo; represents the host name option. The second byte <highlight><bold>310</bold></highlight> represents the length of the host name. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows the bytes in which a host name having four characters may be stored. The first byte <highlight><bold>315</bold></highlight>, the second byte <highlight><bold>320</bold></highlight>, the third byte <highlight><bold>325</bold></highlight>, and the fourth byte <highlight><bold>330</bold></highlight> may be stored in consecutive bytes in the host option field <highlight><bold>300</bold></highlight>. In the event that the symbolic name &ldquo;Victor&rdquo; were to be stored in the host option field <highlight><bold>300</bold></highlight>, the second byte would be set to &ldquo;6&rdquo;, the length of the host name. There would then be &ldquo;6&rdquo; bytes in which one of the letters of the name would be stored, respectively. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In an embodiment of the invention, the router <highlight><bold>115</bold></highlight> does not have any information concerning the name of any devices on the LAN before those devices send an IP address request. When the router <highlight><bold>115</bold></highlight> receives an IP address request in the form of a DHCP packet, the router <highlight><bold>115</bold></highlight> takes the symbolic name of the device from the host option field <highlight><bold>300</bold></highlight>, assigns the IP address, and maintains a table in which the assigned IP address is associated with the symbolic name of the device. For example, if the DHCP server assigns the local IP address 10.0.1.1 to the device having the symbolic name &ldquo;Victor&rdquo;, the table will associate the name &ldquo;Victor&rdquo; with the local IP address 10.0.1.1. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a process by which a device is assigned a local IP address according to an embodiment of the invention. First, the device is booted <highlight><bold>400</bold></highlight>. Next, the device sends <highlight><bold>405</bold></highlight> an IP request to the DHCP server. The DHCP server is typically located at the router <highlight><bold>115</bold></highlight>. The device need not have knowledge of the location of the DHCP server when booted. In an embodiment of the present invention, a device may be booted, and then may send a DHCP packet <highlight><bold>200</bold></highlight> requesting an assignment of an IP address to all devices on the LAN. The device having the DHCP server will receive a DHCP packet <highlight><bold>200</bold></highlight>, assign an IP address to the device, and send a DHCP response packet to the device. The DHCP response packet contains the local IP address assigned to the device. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Next, at step <highlight><bold>410</bold></highlight>, the DHCP server receives the IP request. The DHCP server then assigns <highlight><bold>415</bold></highlight> a local IP address to the device, and stores the symbolic name of the device in memory. The symbolic name of the device is associated <highlight><bold>420</bold></highlight> with the assigned IP address and is then stored in memory. Finally, a DHCP response packet having the assigned IP address is sent <highlight><bold>425</bold></highlight> to device. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> An embodiment of the present invention uses a table of symbolic names and assigned local IP addresses to route incoming packets to devices on the LAN. Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the first computer <highlight><bold>100</bold></highlight> has a symbolic name Victor. When the first computer <highlight><bold>100</bold></highlight> initially boots, it sends a DHCP IP address request packet to the DHCP server at the router <highlight><bold>115</bold></highlight>. The router <highlight><bold>115</bold></highlight> then assigns the first computer <highlight><bold>100</bold></highlight> a local IP address. In this case, the local IP address is &ldquo;10.0.1.1&rdquo;. If a packet is received, from outside the LAN, by the router <highlight><bold>115</bold></highlight> and is addressed to &ldquo;Victor&rdquo; at the public IP address &ldquo;89.20.171.92&rdquo;, the router <highlight><bold>115</bold></highlight> uses the association table to determine which device on the LAN has the symbolic name &ldquo;Victor.&rdquo; In such an instance, the packet would be received by the router <highlight><bold>115</bold></highlight> and sent to the first computer <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates an association table <highlight><bold>500</bold></highlight> according to an embodiment of the present invention. After all of the devices on the LAN illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> have been assigned local IP addresses, the association table <highlight><bold>500</bold></highlight> for the LAN is complete. The association table <highlight><bold>500</bold></highlight> has a &ldquo;Host Name&rdquo; column <highlight><bold>505</bold></highlight> and an &ldquo;Assigned IP address&rdquo; column <highlight><bold>510</bold></highlight>. For the LAN illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the host names are &ldquo;Victor&rdquo;, &ldquo;Hugo&rdquo;, and &ldquo;Yrsa&rdquo;, and the assigned IP addresses are &ldquo;10.0.1.1&rdquo;, &ldquo;10.0.1.2&rdquo;, and &ldquo;10.0.1.3&rdquo;, respectively. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> When a packet is sent from a device on the LAN to the router <highlight><bold>115</bold></highlight>, and then to a destination on the Internet, the device sends a packet with the device&apos;s local IP address and port number. The IP address is utilized to identify the device, and the port number indicates the service on the device. For example, if the IP address &ldquo;100.100.100.100&rdquo; is an HTTP server, its port number is &ldquo;80&rdquo;, the industry standard port number for HTTP. If it is a Telnet server, its port number is &ldquo;23&rdquo;, the industry standard port number for Telnet. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> An embodiment of the present invention may use NAT to present the entire LAN, and all devices located thereon, as having only the public IP address of the router <highlight><bold>115</bold></highlight>. In the example illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the public IP address of the LAN is &ldquo;89.20.171.92&rdquo;, the IP address of the router <highlight><bold>115</bold></highlight>. All packets received by the network, but meant for any of the devices on the LAN, are addressed to the public IP address of the router <highlight><bold>115</bold></highlight>. Therefore, the router <highlight><bold>115</bold></highlight> is configured to route packets to particular devices on the LAN. If the second computer <highlight><bold>105</bold></highlight>, with the symbolic name &ldquo;Hugo&rdquo;, initiates a connection to an IP address on the Internet, such as &ldquo;95.10.1.5&rdquo;, the router <highlight><bold>115</bold></highlight> creates a NAT session entry for second computer <highlight><bold>105</bold></highlight>. The entry contains an instruction that traffic from 95.10.1.5 sent to public IP address 89.20.171.92 should be forwarded to 10.0.1.2. Also, packets sent from 10.0.1.2 are altered to contain the public IP address 89.20.171.92 as the source IP address. So when a packet from the address 95.10.1.5 arrives from the Internet, the router <highlight><bold>115</bold></highlight> uses the stored NAT entry and forwards the packet to 10.0.1.2. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> When a packet is sent from a device on the network to a device on the Internet outside the network, the packet contains a source IP address and port number, and a destination IP address and port number. If the first computer <highlight><bold>100</bold></highlight>, &ldquo;Victor&rdquo;, sends a packet destined for a HTTP server at the IP address &ldquo;100.100.100.100&rdquo;, the packet would contain the source IP address &ldquo;10.0.1.1&rdquo; and a source port number. The source port number is chosen by the first computer <highlight><bold>100</bold></highlight>. For example, the first computer may assign the port number &ldquo;1050&rdquo; as the source port. The destination IP address is &ldquo;100.100.100.100&rdquo; and the destination port number is &ldquo;80&rdquo;. When the router <highlight><bold>115</bold></highlight> receives the packet, it first verifies that no other devices on the LAN are already using the source port &ldquo;1050&rdquo;. If any other devices are using that port number, the router assigns a new source port number to the packet. Also, the router <highlight><bold>115</bold></highlight> changes the source IP address from 10.0.0.1 to the public IP address of the router, &ldquo;89.20.171.92&rdquo;. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a process by which a packet is sent from a local device to a destination address on the Internet according to an embodiment of the present invention. First, the local device sends <highlight><bold>600</bold></highlight> a packet to the router <highlight><bold>115</bold></highlight>. The packet contains a source local IP address and port number, and a destination IP address and port number. Next, the router <highlight><bold>115</bold></highlight> translates <highlight><bold>605</bold></highlight> the local IP address to the public IP address. More specifically, the router <highlight><bold>115</bold></highlight> removes the local IP address from the packet and inserts the public IP address. In the embodiment illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the public IP address &ldquo;89.20.171.92&rdquo; would be inserted into the packet. The router <highlight><bold>115</bold></highlight> then changes <highlight><bold>610</bold></highlight> the source port number in the packet if another local device is already using the same source port number. Finally, the router <highlight><bold>115</bold></highlight> sends <highlight><bold>615</bold></highlight> the packet to the destination IP address over the Internet. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> When a connection is not initiated by a device on the LAN, the router <highlight><bold>115</bold></highlight> is configured to send a received packet to the correct device on the LAN. In an embodiment of the present invention, the system uses the association table <highlight><bold>500</bold></highlight> to determine which local device to route an incoming packet. For example, an incoming packet may have the symbolic name of the destination device stored in the packet payload of the incoming packet. The system can then extract the symbolic name from the packet, determine the local IP address from the association table <highlight><bold>500</bold></highlight>, and route the packet to the correct local device. For example, in the embodiment shown in <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> packet sent the public IP address &ldquo;89.20.171.92&rdquo; addressed to the symbolic name &ldquo;yrsa&commat;89.20.171.92&rdquo; would be routed to the local IP address &ldquo;10.0.1.3&rdquo;, which corresponds to the symbolic name &ldquo;Yrsa&rdquo;. An SIP IP telephone connection can therefore be initiated by a device outside the LAN by addressing a packet to the public IP address of the router <highlight><bold>115</bold></highlight>, and including the symbolic name &ldquo;yrsa&commat;89.20.171.92&rdquo; in the packet payload. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates a process by which packets are received and routed to the destination device on a local network. First, the router <highlight><bold>155</bold></highlight> receives <highlight><bold>700</bold></highlight> a packet from a remote location on the Internet. Next, the router <highlight><bold>115</bold></highlight> searches <highlight><bold>705</bold></highlight> in the packet payload for a symbolic name address. The router <highlight><bold>115</bold></highlight> utilizes the association table <highlight><bold>500</bold></highlight> to match <highlight><bold>710</bold></highlight> the symbolic name with an associated local IP address, if there is one. Finally, the router <highlight><bold>115</bold></highlight> sends <highlight><bold>715</bold></highlight> the packet to the local device having the located symbolic name. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> While the description above refers to particular embodiments of the present invention, it will be understood that many modifications may be made without departing from the spirit thereof. The accompanying claims are intended to cover such modifications as would fall within the true scope and spirit of the present invention. The presently disclosed embodiments are therefore to be considered in all respects as illustrative and not restrictive, the scope of the invention being indicated by the appended claims, rather than the foregoing description, and all changes which come within the meaning and range of equivalency of the claims are therefore intended to be embraced therein. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">In the claims: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for using Dynamic Host Configuration Protocol (DHCP) address assignments to determine a local destination address of a received packet in a Network Address Translation (NAT) environment, the system comprising: 
+<claim-text>a DHCP server to assign local Internet Protocol (IP) addresses to devices on a network; </claim-text>
+<claim-text>a NAT device to execute network address translation; </claim-text>
+<claim-text>a packet device to receive packets; and </claim-text>
+<claim-text>an addressing device to determine the local destination address of the packets received by the packet device, wherein the addressing device uses an association table created from symbolic names of the devices on the network and the local IP addresses associated with the devices. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the packet device is a router. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the DHCP server is located at the router. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the NAT device is located at the router. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the addressing device determines a symbolic name of a destination address of a device from the packet, utilizes the association table to determine the destination address of the packet, and causes the packet to be sent to the destination address. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method of using Dynamic Host Configuration Protocol (DHCP) address assignments to determine a local destination address of a received packet in a Network Address Translation (NAT) environment, the method comprising: 
+<claim-text>assigning local Internet Protocol (IP) addresses to devices on a network; </claim-text>
+<claim-text>executing network address translation; </claim-text>
+<claim-text>receiving packets from a remote network; </claim-text>
+<claim-text>using an association table created from symbolic names of the devices on the network and the local IP addresses associated with the devices; and </claim-text>
+<claim-text>determining the local destination address of the packets received by the packet device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein a router receives the packets. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the router includes a DHCP server. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the router includes a NAT device. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further including determining a symbolic name of a destination address of a device from the packet, utilizing the association table to determine the destination address of the packet, and causing the packet to be sent to the destination address. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the remote network is an Internet. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. An apparatus for using Dynamic Host Configuration Protocol (DHCP) address assignments to determine a local destination address of a received packet in a Network Address Translation (NAT) environment, the apparatus comprising: 
+<claim-text>a name acquisition device to determine symbolic names of devices on a network; </claim-text>
+<claim-text>an address acquisition device to determine local Internet Protocol (IP) addresses of the devices on the network; and </claim-text>
+<claim-text>a data transfer device to transfer data with a packet receiving device; and </claim-text>
+<claim-text>an addressing device to determine the local destination address of the packet received by the packet device, wherein the addressing device uses an association table created from the symbolic names of the devices on the network and the local IP addresses associated with the devices. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the packet receiving device is a router. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein a DHCP server is located at the router. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein a NAT device is located at the router. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the addressing device determines a symbolic name of a destination address of a device from the packet, utilizes the association table to determine the destination address of the packet, and causes the packet to be sent to the destination address. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A system for initiating an Internet Protocol (IP) telephony session over a network, comprising: 
+<claim-text>an IP telephony device; </claim-text>
+<claim-text>a packet device to receive packets; </claim-text>
+<claim-text>a DHCP server to assign local IP addresses to devices on the network; </claim-text>
+<claim-text>a NAT device to execute network address translation; </claim-text>
+<claim-text>an association device to create an association table from symbolic names of the devices on the network and the local IP addresses associated with the devices; and </claim-text>
+<claim-text>an addressing device to determine, based upon the association table, a local destination address of each of the packets received by the packet device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the packet device is a router. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the DHCP server is located at the router. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the NAT device is located at the router. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. An addressing device to use Dynamic Host Configuration Protocol (DHCP) address assignments to determine a local destination address of a received packet in a Network Address Translation Environment, comprising: 
+<claim-text>a computer-readable medium; and </claim-text>
+<claim-text>a computer-readable program code, stored on the computer-readable medium, having instructions to </claim-text>
+<claim-text>assign local Internet Protocol (IP) addresses to devices on a network, </claim-text>
+<claim-text>execute network address translation, </claim-text>
+<claim-text>receive remote packets from a remote network, </claim-text>
+<claim-text>utilize an association table created from symbolic names of the devices on the network and the local IP addresses associated with the devices, and </claim-text>
+<claim-text>determine the local destination address of the packets received by the packet device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The addressing device of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein a router receives the packets. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The addressing device of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the router includes a DHCP server. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The addressing device of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the router includes a NAT device. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The addressing device of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the computer-readable program code further includes instructions to determine a symbolic name of a destination address of a device from the packet, utilizing the association table to determine the destination address of the packet, and causing the packet to be sent to the destination address. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The addressing device of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the remote network is an Internet.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002496A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002496A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002496A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002496A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002496A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002496A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030002496A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030002496A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

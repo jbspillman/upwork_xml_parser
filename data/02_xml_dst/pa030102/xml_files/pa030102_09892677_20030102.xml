@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004955A1-20030102-D00000.TIF SYSTEM "US20030004955A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004955A1-20030102-D00001.TIF SYSTEM "US20030004955A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004955A1-20030102-D00002.TIF SYSTEM "US20030004955A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004955A1-20030102-D00003.TIF SYSTEM "US20030004955A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004955A1-20030102-D00004.TIF SYSTEM "US20030004955A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004955A1-20030102-D00005.TIF SYSTEM "US20030004955A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004955</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892677</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>100000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for translating synchronization information between two networks based on different synchronization protocols</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Kent</given-name>
+<middle-name>D.</middle-name>
+<family-name>Cedola</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Bellevue</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Stephen</given-name>
+<middle-name>D.</middle-name>
+<family-name>Flanagin</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sammamish</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Microsoft Corporation</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>MERCHANT &amp; GOULD</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 2903</address-1>
+<city>MINNEAPOLIS</city>
+<state>MN</state>
+<postalcode>55402-0903</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method is described for translating events originally identified as &ldquo;change&rdquo; events in one replication protocol to &ldquo;add&rdquo; events in another replication protocol where appropriate. More particularly, a WebDAV-based system interacts with a non-WebDAV based system. On a first replication transaction between the two systems, a sync state table is created on an intermediate server or a server that facilitates communication between the two systems. The sync state table is linked to the non-WebDAV system for future replication transactions. The sync state table maintains a list of objects that have been sent to the non-WebDAV system in past replication transactions. Thereafter, for each replication transaction, a manifest of changes since the last replication transaction is transmitted from the WebDAV system to the intermediate server. The manifest includes information in accordance with the WebDAV protocol, i.e. without notice of &ldquo;add&rdquo; events. For each &ldquo;change&rdquo; event in the manifest, the object reported as changed is compared to the list of objects in the sync state table from the previous transaction. If the object does not exist in the table then the intermediate server changes the object&apos;s type from a &ldquo;change&rdquo; event to an &ldquo;add&rdquo; event and the object is added to the sync state table. When the manifest has been fully processed, the sync state table is persisted for future use. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">TECHNICAL FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to mobile communications, and, more specifically, to systems for synchronizing data between mobile and conventional computing systems. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> With the growing use of mobile electronics devices, many systems are being developed to support replicating information contained on an information server, such as an e-mail server or the like, with those mobile devices. In response to a search command, some replication protocols provide that data that has changed state since the previous replication are identified by &ldquo;change&rdquo; and &ldquo;delete&rdquo; tags, as appropriate. If the data has been deleted since the previous replication, that data is identified with a &ldquo;delete&rdquo; tag. For data that has either been added or modified since the previous replication, that data is identified with a &ldquo;change&rdquo; tag. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> It is important to note that some replication protocols do not provide for an &ldquo;add&rdquo; event to indicate that a new object was added. One example of such a protocol is Exchange WebDAV-based replication. However, systems based on other synchronization protocols do support notifications for &ldquo;add&rdquo; events in addition to &ldquo;change&rdquo; and &ldquo;delete&rdquo; events. Such a system will not understand a message which indicates that a &ldquo;change&rdquo; should be made to an object that did not already exist. Thus, receiving such a command would result in undesirable behavior in a system that does not understand the &ldquo;add&rdquo; event. It would be advantageous to take advantage of &ldquo;add&rdquo; notifications even when replicating (also known as &ldquo;synchronizing&rdquo;) with systems that do not provided add event notification, such as the DAV protocol. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Briefly described, the present invention implements a mechanism to compute whether an event identified as a &ldquo;change&rdquo; event by a synchronization protocol that does not provide &ldquo;add&rdquo; event notification is actually an &ldquo;add&rdquo; event for the purpose of a protocol that implements an &ldquo;add&rdquo; event as different from a &ldquo;change&rdquo; event. For example, two systems may interact, one that communicates using a protocol that does not use &ldquo;adds&rdquo; (the &ldquo;Server&rdquo;) and another that communicates using a protocol with &ldquo;add&rdquo; event support (the &ldquo;client system&rdquo;). On a first replication transaction between the two systems, a sync state table is created on an intermediate server or a server that facilitates communication between the information system and the client system. Although described in the context of a separate Server and intermediate server, it will be appreciated that a single computing system may be used to implement the same functionality </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The sync state table is linked to the client system for future replication transactions. The sync state table maintains a list of objects that have been sent to the client system in past replication transactions. Thereafter, each time the client system performs a replication transaction with the Server, a manifest of changes since the last replication transaction is transmitted from the Server to the intermediate server. The manifest includes information about the changes or deletions, but without notice of &ldquo;add&rdquo; events. For each &ldquo;change&rdquo; event in the manifest, the object reported as changed is compared to the list of objects in the sync state table from the previous transaction. If the object does not exist in the table then the intermediate server changes the object&apos;s notification from a &ldquo;change&rdquo; tag to an &ldquo;add&rdquo; tag and the object is added to the sync state table. When the manifest has been fully processed, the sync state table is persisted for future use. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The present invention provides a system, which allows the maintenance of knowledge of objects, which reside on the client system. That information may then be used to determine whether an event identified as a &ldquo;change&rdquo; event is actually an &ldquo;add&rdquo; event. Advantageously, the intermediate server may translate the information from the manifest to a format that takes advantage of the additional add event notification capability. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a functional block diagram illustrating functional components of a conventional computing device that may be adapted to implement one embodiment of the present invention. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a functional block diagram illustrating functional components of a mobile computing device that may be adapted to implement one embodiment of the present invention. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram generally illustrating one system, implementing the present invention, for maintaining synchronization between a fixed data store and a mobile device. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a functional block diagram generally illustrating the salient portions of a sample manifest used in conjunction with the present invention. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a functional block diagram generally illustrating the salient portions of a sample sync state table used in conjunction with the present invention. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a functional block diagram generally illustrating the salient portions of a sample new manifest created from the manifest illustrated in <cross-reference target="DRAWINGS">FIG. 5</cross-reference> and the sync state table illustrated in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, in accordance with the present invention. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a logical flow diagram generally illustrating a method for translating synchronization information between a mobile device and a server in accordance with the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The present invention may be implemented in one or more components operating within a distributed or wireless computing network. Those components may include software programs or applications operating on computing systems of various configurations. Two general types of computing systems are being used to implement the embodiments of the invention described here. Those two general types are illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> and <cross-reference target="DRAWINGS">FIG. 2</cross-reference> and described below, followed by a detailed discussion of one illustrative implementation of the invention, illustrated in FIGS. <highlight><bold>3</bold></highlight>-<highlight><bold>6</bold></highlight>, based on these two types of computer systems. </paragraph>
+<paragraph id="P-0015" lvl="7"><number>&lsqb;0015&rsqb;</number> Illustrative Operating Environment </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> With reference to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, one exemplary system for implementing the invention includes a computing device, such as computing device <highlight><bold>100</bold></highlight>. In a very basic configuration, computing device <highlight><bold>100</bold></highlight> typically includes at least one processing unit <highlight><bold>102</bold></highlight> and system memory <highlight><bold>104</bold></highlight>. Depending on the exact configuration and type of computing device, system memory <highlight><bold>104</bold></highlight> may be volatile (such as RAM), non-volatile (such as ROM, flash memory, etc.) or some combination of the two. System memory <highlight><bold>104</bold></highlight> typically includes an operating system <highlight><bold>105</bold></highlight>, one or more program modules <highlight><bold>106</bold></highlight>, and may include program data <highlight><bold>107</bold></highlight>. This basic configuration is illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> by those components within dashed line <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Computing device <highlight><bold>100</bold></highlight> may have additional features or functionality. For example, computing device <highlight><bold>100</bold></highlight> may also include additional data storage devices (removable and/or non-removable) such as, for example, magnetic disks, optical disks, or tape. Such additional storage is illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> by removable storage <highlight><bold>109</bold></highlight> and non-removable storage <highlight><bold>110</bold></highlight>. Computer storage media may include volatile and nonvolatile, removable and non-removable media implemented in any method or technology for storage of information, such as computer readable instructions, data structures, program modules, or other data. System memory <highlight><bold>104</bold></highlight>, removable storage <highlight><bold>109</bold></highlight> and non-removable storage <highlight><bold>110</bold></highlight> are all examples of computer storage media. Computer storage media includes, but is not limited to, RAM, ROM, EEPROM, flash memory or other memory technology, CD-ROM, digital versatile disks (DVD) or other optical storage, magnetic cassettes, magnetic tape, magnetic disk storage or other magnetic storage devices, or any other medium which can be used to store the desired information and which can accessed by computing device <highlight><bold>100</bold></highlight>. Any such computer storage media may be part of device <highlight><bold>100</bold></highlight>. Computing device <highlight><bold>100</bold></highlight> may also have input device(s) <highlight><bold>112</bold></highlight> such as keyboard, mouse, pen, voice input device, touch input device, etc. Output device(s) <highlight><bold>114</bold></highlight> such as a display, speakers, printer, etc. may also be included. These devices are well know in the art and need not be discussed at length here. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Computing device <highlight><bold>100</bold></highlight> may also contain communication connections <highlight><bold>116</bold></highlight> that allow the device to communicate with other computing devices <highlight><bold>118</bold></highlight>, such as over a network. Communications connections <highlight><bold>116</bold></highlight> is one example of communication media. Communication media may typically be embodied by computer readable instructions, data structures, program modules, or other data in a modulated data signal, such as a carrier wave or other transport mechanism, and includes any information delivery media. The term &ldquo;modulated data signal&rdquo; means a signal that has one or more of its characteristics set or changed in such a manner as to encode information in the signal. By way of example, and not limitation, communication media includes wired media such as a wired network or direct-wired connection, and wireless media such as acoustic, RF, infrared and other wireless media. The term computer readable media as used herein includes both storage media and communication media. </paragraph>
+<paragraph id="P-0019" lvl="7"><number>&lsqb;0019&rsqb;</number> Mobile Computing Device </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a functional block diagram illustrating functional components of a mobile computing device <highlight><bold>200</bold></highlight>. The mobile computing device <highlight><bold>200</bold></highlight> has a processor <highlight><bold>260</bold></highlight>, a memory <highlight><bold>262</bold></highlight>, a display <highlight><bold>228</bold></highlight>, and a keypad <highlight><bold>232</bold></highlight>. The memory <highlight><bold>262</bold></highlight> generally includes both volatile memory (e.g., RAM) and non-volatile memory (e.g., ROM, Flash Memory, or the like). The mobile computing device <highlight><bold>200</bold></highlight> includes an operating system <highlight><bold>264</bold></highlight>, such as the Windows CE operating system from Microsoft Corporation or other operating system, which is resident in the memory <highlight><bold>262</bold></highlight> and executes on the processor <highlight><bold>260</bold></highlight>. The keypad <highlight><bold>232</bold></highlight> may be a push button numeric dialing pad (such as on a typical telephone), a multi-key keyboard (such as a conventional keyboard). The display <highlight><bold>228</bold></highlight> may be a liquid crystal display, or any other type of display commonly used in mobile computing devices. The display <highlight><bold>228</bold></highlight> may be touch sensitive, and would then also act as an input device. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> One or more application programs <highlight><bold>266</bold></highlight> are loaded into memory <highlight><bold>262</bold></highlight> and run on the operating system <highlight><bold>264</bold></highlight>. Examples of application programs include phone dialer programs, email programs, scheduling programs, PIM (personal information management) programs, word processing programs, spreadsheet programs, Internet browser programs, and so forth. The mobile computing device <highlight><bold>200</bold></highlight> also includes non-volatile storage <highlight><bold>268</bold></highlight> within the memory <highlight><bold>262</bold></highlight>. The non-volatile storage <highlight><bold>268</bold></highlight> may be used to store persistent information which should not be lost if the mobile computing device <highlight><bold>200</bold></highlight> is powered down. The applications <highlight><bold>266</bold></highlight> may use and store information in the storage <highlight><bold>268</bold></highlight>, such as e-mail or other messages used by an e-mail application, contact information used by a PIM, appointment information used by a scheduling program, documents used by a word processing application, and the like. A synchronization application also resides on the mobile device and is programmed to interact with a corresponding synchronization application resident on a host computer to keep the information stored in the storage <highlight><bold>268</bold></highlight> synchronized with corresponding information stored at the host computer. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> has a power supply <highlight><bold>270</bold></highlight>, which may be implemented as one or more batteries. The power supply <highlight><bold>270</bold></highlight> might further include an external power source, such as an AC adapter or a powered docking cradle, that supplements or recharges the batteries. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> is also shown with two types of external notification mechanisms: an LED <highlight><bold>240</bold></highlight> and an audio interface <highlight><bold>274</bold></highlight>. These devices may be directly coupled to the power supply <highlight><bold>270</bold></highlight> so that when activated, they remain on for a duration dictated by the notification mechanism even though the processor <highlight><bold>260</bold></highlight> and other components might shut down to conserve battery power. The LED <highlight><bold>240</bold></highlight> may be programmed to remain on indefinitely until the user takes action to indicate the powered-on status of the device. The audio interface <highlight><bold>274</bold></highlight> is used to provide audible signals to and receive audible signals from the user. For example, the audio interface <highlight><bold>274</bold></highlight> may be coupled to a speaker for providing audible output and to a microphone for receiving audible input, such as to facilitate a telephone conversation. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> also includes a radio interface layer <highlight><bold>272</bold></highlight> that performs the function of transmitting and receiving radio frequency communications. The radio interface layer <highlight><bold>272</bold></highlight> facilitates wireless connectivity between the mobile computing device <highlight><bold>200</bold></highlight> and the outside world, via a communications carrier or service provider. Transmissions to and from the radio interface layer <highlight><bold>272</bold></highlight> are conducted under control of the operating system <highlight><bold>264</bold></highlight>. In other words, communications received by the radio interface layer <highlight><bold>272</bold></highlight> may be disseminated to application programs <highlight><bold>266</bold></highlight> via the operating system <highlight><bold>264</bold></highlight>, and vice versa. </paragraph>
+<paragraph id="P-0025" lvl="7"><number>&lsqb;0025&rsqb;</number> Illustrative Synchronization System </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram generally illustrating one system, implementing the present invention, for maintaining synchronization between a fixed data store, such as an information server <highlight><bold>310</bold></highlight>, and a mobile device <highlight><bold>320</bold></highlight>. In this implementation, the information server <highlight><bold>310</bold></highlight> is a computing device such as the one described above in conjunction with <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and the mobile device is a mobile computing device such as the one described above in conjunction with <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The information server <highlight><bold>310</bold></highlight> includes a data store <highlight><bold>311</bold></highlight> on which resides information that is used by a user of the mobile device <highlight><bold>320</bold></highlight>. For example, the information server <highlight><bold>310</bold></highlight> could be an e-mail server that houses e-mail messages, contact information, appointment information, and the like for the user. Another copy of the information also resides on the mobile device <highlight><bold>320</bold></highlight> within a mobile data store <highlight><bold>321</bold></highlight>. The set of similar information that resides in a specific folder on both the information server <highlight><bold>310</bold></highlight> and the mobile device <highlight><bold>320</bold></highlight> is referred to as a &ldquo;collection.&rdquo; By storing the collection on both the information server <highlight><bold>310</bold></highlight> and the mobile device <highlight><bold>320</bold></highlight>, the user always has access to the collection, such as via a conventional computing system connected to the information server <highlight><bold>310</bold></highlight> or directly through the mobile device <highlight><bold>320</bold></highlight>. However, to ensure that changes to the collection that occur on the mobile device <highlight><bold>320</bold></highlight> are reflected in the information server <highlight><bold>310</bold></highlight> and vice versa, the two computing systems are synchronized. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Synchronization between the two devices may be performed via a synchronization server <highlight><bold>330</bold></highlight> that is in communication with both the information server <highlight><bold>310</bold></highlight> and the mobile device <highlight><bold>320</bold></highlight>. It will be appreciated that the synchronization server <highlight><bold>330</bold></highlight> may be collocated with the information server <highlight><bold>310</bold></highlight>, such as within a corporation or other business enterprises. Alternatively, the synchronization server <highlight><bold>330</bold></highlight> may be part of a mobile communications service provider that is in wireless communication with the mobile device <highlight><bold>320</bold></highlight> and in communication with the information server <highlight><bold>310</bold></highlight>. In still another alternative, the synchronization server <highlight><bold>330</bold></highlight> may be part of the mobile device itself. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> The synchronization server <highlight><bold>330</bold></highlight> is coupled to the information server <highlight><bold>310</bold></highlight> over a local or wide area network in the conventional manner. The information server <highlight><bold>310</bold></highlight> provides synchronization (or replication) capability using a protocol that does not make use of &ldquo;add&rdquo; event notification, such as the Document Authoring and Versioning (DAV) standard protocol (sometimes referred to as WebDAV). Although reference is made to the use of the DAV or WebDAV protocol, that is only one example of a protocol that does not include &ldquo;add&rdquo; event notification, and the present invention is equally applicable to any similar protocol. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> In accordance with that protocol, other applications may interact with the data store <highlight><bold>311</bold></highlight> to view, modify, and retrieve items within the collection. As is well known in the art, a synchronization operation basically occurs as follows. A client, such as the synchronization server <highlight><bold>330</bold></highlight>, issues to the information server <highlight><bold>310</bold></highlight> a sync command (e.g., a PROPFIND or SEARCH command). The sync command includes a notification of the items within the collection that the client already has and their state so that the information server <highlight><bold>310</bold></highlight> does not retransmit the same information. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The information server <highlight><bold>310</bold></highlight> responds to the sync command by identifying any items in the collection on the data store <highlight><bold>311</bold></highlight> that the client does not already have the current version of together with additional information about how that information is different (i.e., how the information should be modified to reflect the current version). The client then uploads to the information server <highlight><bold>310</bold></highlight> any items that the client knows has changed since the last synchronization, and downloads any new items from the data store <highlight><bold>311</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> More specifically, the information server <highlight><bold>310</bold></highlight> responds to the sync command by returning a &ldquo;manifest&rdquo; <highlight><bold>312</bold></highlight> that includes a list of changes in the collection on the data store <highlight><bold>311</bold></highlight>. The manifest <highlight><bold>312</bold></highlight> may also include information identifying the changes to make to the collection on the mobile device <highlight><bold>320</bold></highlight> to synchronize the information. One example of the structure of a manifest is illustrated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> and described below. One important feature of the manifest <highlight><bold>312</bold></highlight> is that, in accordance with the particular protocol being used between the information server <highlight><bold>310</bold></highlight> and the synchronization server <highlight><bold>330</bold></highlight>, only &ldquo;change&rdquo; and &ldquo;delete&rdquo; related instructions are provided. In other words, if an item has been added to the collection on the information server <highlight><bold>310</bold></highlight>, a &ldquo;change&rdquo; instruction would be included in the manifest <highlight><bold>312</bold></highlight> identifying the new item. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> In contrast, the synchronization protocol used between the mobile device <highlight><bold>320</bold></highlight> and the synchronization server <highlight><bold>330</bold></highlight> makes use of an &ldquo;add&rdquo; instruction, and if issued a &ldquo;change&rdquo; instruction for an item, which does not yet exist on the mobile device <highlight><bold>320</bold></highlight>, the synchronization transaction may fail, at least for the specific item. For this reason, the synchronization server <highlight><bold>330</bold></highlight> of this implementation employs mechanisms for determining when a &ldquo;change&rdquo; instruction is in fact an &ldquo;add&rdquo; instruction, and for replacing those &ldquo;change&rdquo; instructions with the appropriate &ldquo;add&rdquo; instructions. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The synchronization server <highlight><bold>330</bold></highlight> maintains, among other things, a sync state table <highlight><bold>331</bold></highlight>. Information about the current version of the items in the collection on the mobile device <highlight><bold>320</bold></highlight> is stored in the sync state table <highlight><bold>331</bold></highlight>. The stored information may be as simple as only a unique identifier for each item in the collection on the mobile device <highlight><bold>320</bold></highlight> (e.g., a replication unique identifier or &ldquo;Repl-UID&rdquo;). The sync state table <highlight><bold>331</bold></highlight> is associated with the mobile device such that each synchronization transaction causes the synchronization server <highlight><bold>330</bold></highlight> to update the sync state table <highlight><bold>331</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The sync state table <highlight><bold>331</bold></highlight> identifies which items already exist in the collection on the mobile device <highlight><bold>320</bold></highlight>. Thus, when the manifest <highlight><bold>312</bold></highlight> comes in, the information in the manifest <highlight><bold>312</bold></highlight> is compared to the sync state table <highlight><bold>331</bold></highlight> to identify any items which are marked &ldquo;change&rdquo; in the manifest <highlight><bold>312</bold></highlight> but which do not yet exist on the mobile device <highlight><bold>320</bold></highlight>. Put another way, the synchronization manager <highlight><bold>330</bold></highlight> determines whether any items marked with a &ldquo;change&rdquo; instruction in the manifest <highlight><bold>312</bold></highlight> are identified in the sync state table <highlight><bold>331</bold></highlight>. If not, then the instruction marked as &ldquo;change&rdquo; in the manifest is in actuality an instruction to add the item. Thus, the synchronization server <highlight><bold>330</bold></highlight> can change those instructions to the proper &ldquo;add&rdquo; instruction, and create a new manifest <highlight><bold>322</bold></highlight>. The new manifest <highlight><bold>322</bold></highlight> includes the substantive information from the manifest <highlight><bold>312</bold></highlight>, except that &ldquo;change&rdquo; instructions that are actually &ldquo;adds&rdquo; are replace with the appropriate instructions. The new manifest <highlight><bold>322</bold></highlight> is then transmitted to the mobile device <highlight><bold>320</bold></highlight> to continue the synchronization transaction. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a functional block diagram generally illustrating the salient portions of a sample manifest <highlight><bold>312</bold></highlight> used in conjunction with the present invention. In the sample manifest <highlight><bold>312</bold></highlight>, each row is associated with a particular item or message, such as a single e-mail message or contact. Each entry includes three columns of information: an action column <highlight><bold>401</bold></highlight>, an ID column <highlight><bold>403</bold></highlight>, and an object data column <highlight><bold>405</bold></highlight>. The ID column <highlight><bold>403</bold></highlight> identifies the particular item to which the record in the manifest <highlight><bold>312</bold></highlight> pertains. For example, an item in the collection could be an e-mail message identified by the Repl-UID &ldquo;XXXX123.&rdquo; The action column <highlight><bold>401</bold></highlight> identifies the particular action to perform on the property. The object data column <highlight><bold>405</bold></highlight> includes the particular properties of the corresponding item. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a functional block diagram generally illustrating the salient portions of a sample sync state table <highlight><bold>331</bold></highlight> used in conjunction with the present invention. It includes at least one column, an ID column <highlight><bold>503</bold></highlight>, that contains unique identifiers associated with each item in the collection stored on the mobile device <highlight><bold>320</bold></highlight>. The sync state table <highlight><bold>331</bold></highlight> may be created by the synchronization server <highlight><bold>330</bold></highlight> during a first synchronization transaction of the mobile device <highlight><bold>320</bold></highlight>, or, alternatively, may be provided by the mobile device <highlight><bold>320</bold></highlight> to the synchronization server <highlight><bold>330</bold></highlight> at any other time. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a functional block diagram generally illustrating the salient portions of a sample new manifest <highlight><bold>322</bold></highlight> used in conjunction with the present invention. The new manifest <highlight><bold>322</bold></highlight> closely resembles the manifest <highlight><bold>312</bold></highlight> and includes the same columns, action column <highlight><bold>601</bold></highlight>, ID column <highlight><bold>603</bold></highlight>, and object data column <highlight><bold>605</bold></highlight>. However, because the new manifest <highlight><bold>322</bold></highlight> is compatible with a different type of synchronization protocol, it may include &ldquo;add&rdquo; instructions <highlight><bold>611</bold></highlight> in the action column <highlight><bold>601</bold></highlight>, unlike the manifest <highlight><bold>312</bold></highlight>. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> It should be noted that although the conceptual image of the new manifest <highlight><bold>322</bold></highlight> closely resembles the conceptual image of the manifest <highlight><bold>312</bold></highlight>, those skilled in the art will appreciate that the programmatic differences may be extensive. For instance, one manifest may be in an eXtensible Markup Language (XML) format having a first schema, and the new manifest may be in an XML format having a completely different schema, although the information contained is similar. </paragraph>
+<paragraph id="P-0040" lvl="7"><number>&lsqb;0040&rsqb;</number> Illustrative Synchronization Method </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a logical flow diagram generally illustrating a method <highlight><bold>700</bold></highlight> for translating synchronization information between a mobile device and a server in accordance with the present invention. The method <highlight><bold>700</bold></highlight> begins with the initiation of a synchronization transaction. At decision block <highlight><bold>701</bold></highlight>, the method determines whether the current synchronization transaction (also called a &ldquo;replication&rdquo;) is the first synchronization of the mobile device <highlight><bold>320</bold></highlight> with the information server <highlight><bold>310</bold></highlight>. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> If the current synchronization transaction is the first one, at block <highlight><bold>703</bold></highlight>, the synchronization server <highlight><bold>330</bold></highlight> creates a new, empty sync state table, such as the one described above in conjunction with <cross-reference target="DRAWINGS">FIG. 5</cross-reference> and links the new sync state table with the mobile device <highlight><bold>320</bold></highlight>. The synchronization server <highlight><bold>330</bold></highlight> may initially populate the sync state table with any objects identified by the mobile device <highlight><bold>320</bold></highlight> during the current synchronization transaction. If the current synchronization transaction is not the first, at block <highlight><bold>705</bold></highlight>, the synchronization server loads a previously-stored sync state table associated with the collection on the mobile device <highlight><bold>320</bold></highlight>. The sync state table maintains a list of objects that have been sent to the mobile device <highlight><bold>320</bold></highlight> in past synchronization transactions. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> With the sync state table loaded or created, at block <highlight><bold>707</bold></highlight>, the synchronization server <highlight><bold>330</bold></highlight> performs a replication search to create a manifest of change and delete events. As described above, the sync server <highlight><bold>330</bold></highlight> issues a sync command to the information server <highlight><bold>310</bold></highlight>, which returns the manifest identifying each item that has changed since the last replication. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> At block <highlight><bold>709</bold></highlight>, the method <highlight><bold>700</bold></highlight> enters an iterative loop <highlight><bold>710</bold></highlight> including decision block <highlight><bold>711</bold></highlight>, decision block <highlight><bold>713</bold></highlight>, and block <highlight><bold>715</bold></highlight>. The loop <highlight><bold>710</bold></highlight> is repeated for each item in the manifest received at block <highlight><bold>707</bold></highlight>. The loop <highlight><bold>710</bold></highlight> determines whether each item is identified as a &ldquo;change&rdquo; (at decision block <highlight><bold>711</bold></highlight>), and if not, proceeds to the next item in the manifest. However, for each &ldquo;change&rdquo; item in the manifest, a determination is made (at decision block <highlight><bold>713</bold></highlight>) whether the item marked as &ldquo;change&rdquo; exists within the sync state table. If so, then the loop proceeds to the next item in the manifest. But if the item marked as &ldquo;change&rdquo; does not exist in the sync state table, then its action type is changed from &ldquo;change&rdquo; to &ldquo;add&rdquo; (at block <highlight><bold>715</bold></highlight>) and the item is added to the sync state table. At decision block <highlight><bold>717</bold></highlight>, a determination is made whether there are more items to process, and if so, the loop continues. Otherwise, the process ends. After all entries in the manifest have been processed, the sync state table is persisted for use in the future. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The above specification, examples and data provide a complete description of the manufacture and use of the composition of the invention. Since many embodiments of the invention can be made without departing from the spirit and scope of the invention, the invention resides in the claims hereinafter appended. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for replicating information, comprising: 
+<claim-text>receiving a manifest of modifications to a data store; </claim-text>
+<claim-text>comparing the manifest of modifications to a list of objects within a mobile data store; and </claim-text>
+<claim-text>if a particular modification identified in the manifest relates to an object not on the list of objects within the mobile data store, altering the manifest to reflect that the particular modification is associated with an add event for the object not on the list of objects. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising passing the altered manifest including the add event to a mobile device on which resides the mobile data store. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the altered manifest includes modifications that describe add events, change events, and delete events. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the add events, change events, and delete events describe actions to be performed on objects that reside in the mobile data store. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the manifest, prior to being altered, does not contain a modification that describes an add event, and wherein the altered manifest contains at least one modification that describes an add event. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the manifest is created in accordance with a Document Authoring and Versioning (DAV) protocol. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the altered manifest is no longer consistent with the DAV protocol. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the manifest is created in response to a request to synchronize the data store and the mobile data store. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the request to synchronize comprises a search request for objects on the data store that have changed since a prior synchronization transaction between the data store and the mobile data store. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The computer-implemented method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the request to synchronize comprises a search request for objects on the data store that have been deleted since a prior synchronization transaction between the data store and the mobile data store. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A computer-readable medium having computer-executable instructions for synchronizing data between a first data store and a second data store, comprising: 
+<claim-text>issuing a sync request to the first data store, the first data store containing a collection of data objects; </claim-text>
+<claim-text>receiving from the first data store a manifest that includes records describing objects that have changed state on the first data store since a prior synchronization transaction between the first data store and the second data store, each record identifying an action associated with the corresponding object, the action being either a change event or a delete event; </claim-text>
+<claim-text>comparing the manifest to a sync state table identifying objects that exist on the second data store; and </claim-text>
+<claim-text>if a record in the manifest corresponds to an object that is not in the sync state table, altering the action associated with the corresponding object to an add event. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising including in the sync state table the object that was not in the sync state table. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising passing the manifest with the altered record to the second data store. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, further comprising passing the object that was not in the sync state table to the second data store. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the first data store and the second data store each contain copies of the collection of data objects. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the data objects comprise e-mail messages. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the data objects comprise contact information objects. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A computer-readable medium having computer-executable instructions for synchronizing data between a first data store and a second data store, comprising: 
+<claim-text>receiving from the second data store a request to synchronize data objects on the second data store with data objects on the first data store; </claim-text>
+<claim-text>determining whether a sync state table exists associated with the second data store, the sync state table identifying the data objects on the second data store; </claim-text>
+<claim-text>if the sync state table does not exist, creating the sync state table to identify the data objects on the second data store; </claim-text>
+<claim-text>issuing a search request to the first data store; </claim-text>
+<claim-text>in response to the search request, receiving a manifest of data objects on the first data store; and </claim-text>
+<claim-text>including in the sync state table any objects identified in the manifest with an action other than a delete action. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, further comprising for any object identified in the manifest but which was not identified in the sync state table, associating an add event in the manifest with those objects. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, further comprising passing the manifest including the associated add events to the second data store.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004955A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004955A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004955A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004955A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004955A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004955A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

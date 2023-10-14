@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005212A1-20030102-D00000.TIF SYSTEM "US20030005212A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005212A1-20030102-D00001.TIF SYSTEM "US20030005212A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005212A1-20030102-D00002.TIF SYSTEM "US20030005212A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005212A1-20030102-D00003.TIF SYSTEM "US20030005212A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005212A1-20030102-D00004.TIF SYSTEM "US20030005212A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005212A1-20030102-D00005.TIF SYSTEM "US20030005212A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005212A1-20030102-D00006.TIF SYSTEM "US20030005212A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030005212A1-20030102-D00007.TIF SYSTEM "US20030005212A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005212</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896780</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>103000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and apparatus for dynamically modifying a stored program</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>J.</given-name>
+<middle-name>David</middle-name>
+<family-name>Cocca</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Chapel Hill</city>
+<state>NC</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Michael G. Savage</name-1>
+<name-2>BURNS, DOANE, SWECKER &amp; MATHIS, L.L.P.</name-2>
+<address>
+<address-1>P.O. Box 1404</address-1>
+<city>Alexandria</city>
+<state>VA</state>
+<postalcode>22313-1404</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Method and apparatus for dynamically modifying a stored program are presented. Correction code is stored in at least one of a plurality of correction blocks included in an electrically erasable programmable memory. A program having instructions stored in the memory is then executed. An address match routine is invoked to execute at least a portion of the correction code in place of at least one of the instructions during the executing of the program. The executing of the program continues after the at least a portion of the correction code is executed. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This invention relates to a method and apparatus for dynamically modifying a stored program. In particular, this invention relates to a method and apparatus for dynamically modifying a program stored in electrically erasable programmable memory using a micro-controller unit (MCU) having address match interrupt capability. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Read-Only Memory (ROM) is a mature, high-density, nonvolatile, reliable, and low-cost memory technology widely used in the 1980s in the PC industry and in other embedded applications to store computer operating instructions or programs. Initial ROM programming involves a complex, time-consuming, mask development process that produces a static memory storage device, the contents of which cannot be altered once the ROM is manufactured. Should an error, or inefficiency be discovered in the instructions programmed into the ROM, a new modified ROM must be manufactured to effect an instruction change. The costs of manufacturing a modified ROM to implement an instruction change, as well as the delay associated with producing such a modified ROM, raised the need for an improved method of modifying the instructions programmed into ROMs. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> To address this need, Mitsubishi developed a single-chip microcomputer in which instructions or other like programs are set in a mask ROM, the microcomputer having the capability to avoid errors in the set instructions or programs without replacing the ROM. The operation of the single-chip microcomputer is described in U.S. Pat. No. 5,051,897 to Yamaguchi et al. (&ldquo;Yamaguchi&rdquo;), assigned to the same assignee as this patent application, and entitled &ldquo;Single-Chip Microcomputer with Memory Patching Capability&rdquo;, the written description of which is incorporated by reference. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Yamaguchi describes a microcomputer having an address match interrupt capability. First, a leading address of an instruction set or a program stored in a ROM requiring correction is written into a programmable ROM (PROM). This leading address is then loaded into a register, the contents of which are compared with the output of a programmable address counter using a coincidence circuit. When the register contents and programmable address counter output match, an interrupt signal is generated by the coincidence circuit and forwarded to a central processing unit (CPU). The CPU then instructs an I/O device to begin loading correction instructions from an external source into the PROM. The correction instructions are stored at an address location within the PROM transmitted with the interrupt signal. Thereafter, the CPU processes corrected instructions from the PROM until a correction instruction is received directing the CPU to return to processing instructions from the ROM. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The end result is a ROM-based microcomputer system where instructions programmed into the ROM can be easily modified (or replaced) without the need for manufacturing a completely new ROM device. At the time of its inception, Yamaguchi&apos;s system offered significant cost and design advantages over previous ROM-based systems, and remains an important development in microcomputer architecture today. Still, recent advances in memory technology have presented opportunities for the development of advanced address match interrupt microcomputer functionality and designs. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Once such electrically erasable programmable memory technology particularly suited for use in address match interrupt microcomputer architectures is the high-performance, read-write memory solution known as flash memory. Introduced in the late 1980s, flash memory offers a high-density, truly nonvolatile, and flexible alternative to ROM devices. Unlike ROM devices, flash memory is electrically erasable &ldquo;in system&rdquo;, offering both developers and users of flash memory based MCUs the flexibility of re-writing the code (or firmware) often preprogrammed into the device. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Not unsurprisingly, however, the erasure and reprogramming of flash memory does not come without a price. Rewriting all of the memory locations in a typically-sized flash memory device requires a significant amount of time and energy. For example, it may take up to fifteen minutes to rewrite an entire 256K flash memory at a data rate of 2400 baud. Requiring this amount of time to reprogram the flash memory can be problematic, especially when performing field updates to the firmware installed in today&apos;s portable, limited battery-powered, microprocessor-based devices. Because these portable devices must be powered on during the reprogramming process, reducing the amount of time required to effect a programming correction will reduce the amount of battery loss. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The reprogramming process is particularly wasteful when an entire flash memory is reprogrammed to correct for only a limited number of instructions of an already stored program. Reprogramming an entire flash memory is also much more likely to result in the occurrence of programming errors than merely updating a limited set of instructions. This is particularly true when transferring large numbers of instructions over certain transmission media, such as over the PSTN (i.e., phone lines), or by radio-frequency (RF) transmission. Moreover, sending only a limited set of instructions would allow low-cost transfer technologies, e.g., low-speed modem technology, to be used to effect program corrections, without having large reprogramming times. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Therefore, there exists a need for a electrically erasable programmable memory based MCU having address match interrupt capability to reduce the amount of time, energy and errors in reprogramming the software stored in the erasable memory. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> It is therefore an object of the present invention to provide methods and apparatus for programming and executing correction software or code in electrically erasable programmable memory based MCUs. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> In accordance with one aspect of the invention, the foregoing and other objects are achieved in a method for dynamically modifying a stored program, the method including the steps of storing correction code in at least one of a plurality of correction blocks included in an electrically erasable programmable memory; executing a program having instructions stored in the memory; invoking an address match routine to execute at least a portion of the correction code in place of at least one of the instructions during the executing of the program; and continuing executing the program after the at least a portion of the correction code executes. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> According to another aspect of the invention the invoking of an address match routine occurs when a program counter associated with the executing of the program matches at least one of a plurality of address match registers. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> According to yet another aspect of the invention, the method includes the steps of determining for each of the correction blocks whether correction code stored in the blocks is to be executed during the executing of the program; retrieving a first address from the correction code stored in a respective correction block when it is determined that correction code stored in the respective correction block is to be executed during program execution; and storing the retrieved first address in one of the plurality of address match registers. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> According to yet another aspect of the invention, the step of determining for each of the correction blocks whether correction code stored in a respective correction block is to be executed during program execution includes the steps of retrieving a first data value from each of the correction blocks having stored correction code; comparing the retrieved first data value from each of the correction blocks having stored correction code to a predetermined value; and determining that the correction code stored in each of the correction blocks is to be executed during program execution when the corresponding first data value equals the predetermined value, otherwise determining that the correction code stored in each of the correction blocks is not to be executed during program execution. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> According to yet another aspect of the invention, the step of determining for each of the correction blocks whether correction code stored in the blocks is to be executed during the executing of the program occurs in response to a completion of the storing of correction code in at least one of a plurality of correction blocks. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> According to yet another aspect of the invention, the method includes the steps of saving a plurality of registers and the program counter upon the invoking of the address match routine to preserve a post address match program status; retrieving a second data value from each of the correction blocks having stored correction code; comparing the retrieved second data value from each of the correction blocks having stored correction code to a post address match value of the program counter; and identifying the correction block corresponding to the invoking of the address match routine as the correction block having the second data value equal to the post address match value of the program counter. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> According to yet another aspect of the invention, the method includes the step of branching to an error processing routine when no retrieved second data value is equal to the post address match value of the program counter. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> According to yet another aspect of the invention, the second data value is equal to the value stored in the address match register corresponding to the invoking of the address match routine plus an offset value. The offset value may depend upon a next program instruction to be executed at the time of the invoking of the address match routine. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> According to yet another aspect of the invention, the step of continuing executing the program after the at least a portion of the correction code executes includes the steps of retrieving a third address from the correction code identifying a return address within the program; restoring the plurality of registers saved upon the invoking of the address match routine to reinstate a post address match program status; branching the executing of the program to the third address; and executing the program having instructions stored in the memory beginning at the third address. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> According to yet another aspect of the invention, the invoking of the address match routine is carried out by an address match interrupt service routine having a corresponding address match interrupt entry in a vector table stored in the memory. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> According to yet another aspect of the invention, to execute at least a portion of the correction code, the address match routine includes the steps of retrieving a second address from the correction code identifying a starting address within the at least a portion of correction code; branching the executing of the program to the second address; and executing the at least a portion of the correction code beginning at the second address. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> According to yet another aspect of the invention, instructions for continuing executing the program after the at least a portion of the correction code executes are included in the correction code. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> According to yet another aspect of the invention, the step of storing correction code in at least one of a plurality of correction blocks includes the steps of selecting at least one of the plurality of correction blocks for storing the correction code; erasing the selected at least one memory correction block; and transferring the correction code from an external source to the selected at least one of the plurality of correction blocks. The correction code may be transferred from the external source by at least one of a wired and a wireless connection. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> According to yet another aspect of the invention, the step of storing correction code in at least one of a plurality of correction blocks occurs in response to at least one of a detection that an external source is coupled to the memory and an invocation of a periodically scheduled maintenance routine. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> According to yet another aspect of the invention, an electrically erasable programmable memory based memory map structure supporting an address match interrupt scheme, includes a plurality of correction blocks for storing correction code; a random access memory (RAM) area including a program stack for temporarily storing program information; a main program area for storing at least one executable program; an initialization area for storing code to enable an address match interrupt for at least one of the correction blocks; a special function register (SFR) area including a plurality of address interrupt registers; a vector table for triggering the address match interrupt when a program counter associated with the at least one executable program matches a register value stored in one of the plurality of address interrupt registers; and an interrupt service routine (ISR) area including an address match ISR. The address match ISR identifies which one of the plurality of correction blocks corresponds to the triggering of the address match interrupt to execute at least a portion of the correction code in place of at least one instruction of the at least one executable program during program execution. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> According to yet another aspect of the invention, each of the correction blocks include a first data value for determining whether correction code stored in the correction block is to be executed during program execution; a second data value for identifying which one of the plurality of correction blocks corresponds to the triggering of the address match interrupt; a first address identifying a location of the portion of the executable program replaced by the at least a portion of the correction code; a second address identifying a starting address of the at least a portion of the correction code to be executed in place of the least a portion of the executable program; and a third address identifying a return address within the executable program where program execution is continued after execution of the at a portion of the correction is completed.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The objects and advantages of the invention will be understood by reading the following detailed description in conjunction with the drawings in which: </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a typical memory map for a flash memory MCU; </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a block diagram of the flash memory portion of the memory map comprising a flash memory correction block, and depicts a manner in which the correction block may be programmed according to one aspect of the invention; </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart depicting a manner in which the correction block may be programmed according to one aspect of the invention; and </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow chart depicting a manner in which address match interrupts are generated and enabled; </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart depicting a manner in which programs stored in the flash memory are executed using address match interrupt capability in the MCU; </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flow chart depicting a manner in which an address match interrupt subroutine is executed according to one aspect of the invention; and </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> depicts a more detailed view of the memory map of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and an expanded view of a correction block.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The various features of the invention will now be described with respect to the figures, in which like parts are identified with the same reference characters. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> While the following exemplary embodiments describe the programming and use of correction software or code in flash memory MCUs, it will be understood that the invention may be practiced using any suitable electrically erasable programmable memory technology. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Correction software or code is programmed into a correction block of a flash memory. The correction code includes a starting address (address match correction start address) and an ending address (correction return address) of a portion of a software program stored in the flash memory that is to be corrected. Address match interrupt registers are set based on the address match correction start address. The program executes normally until a program counter matches an address match interrupt register entry. When an address match occurs, an interrupt is generated, and an address match interrupt service routine (ISR) is executed. The ISR stores register values to the program stack and sets a return from interrupt address equal to the correction return address. The correction code is then executed. Once completed, a return from interrupt command sets the program counter to the correction return address and normal program execution continues until another address match interrupt occurs. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The various aspects of the invention will now be further described in connection with a number of exemplary embodiments. Referring first to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, this is a block diagram of a typical memory map for a flash memory MCU. The memory map includes a flash memory portion <highlight><bold>101</bold></highlight>, comprising several flash memory blocks <highlight><bold>103</bold></highlight>. Unlike other types of electrically alterable memory such as static random access memory (SRAM), dynamic RAM (DRAM), or electrically erasable PROM (EEPROM), flash memory is not byte erasable. Instead, flash memory is typically organized into units of blocks that can be electrically erased. The flash memory is typically writeable by units of words or pages. Blocks typically comprise 4, 8, 16, 32, or 64K bytes of addressable memory. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In addition to the flash memory portion <highlight><bold>101</bold></highlight>, the memory map shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> also includes a RAM portion <highlight><bold>105</bold></highlight>, which may comprise DRAM and/or SRAM. Also included in the memory map is a special function register (SFR) <highlight><bold>107</bold></highlight> used for storing status control information, and data used by peripherals (e.g., timers, A/D converters) connected to the MCU. The SFR <highlight><bold>107</bold></highlight> is also used to store the address match correction start addresses for the various address match interrupts. The memory map further includes a vector table <highlight><bold>109</bold></highlight>, used to select the address match ISR whenever an address match occurs. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Because flash memory is organized into units of blocks, it is most practical to store the correction code that is programmed into the MCU into blocks as well. One or more consecutive or non-consecutive memory blocks may be used to store each portion of correction software. The correction block(s) are preferably set up to use the smallest addressable block size available, e.g., 4K block(s), but any block size may be used. Depending on the interrupt capabilities of the MCU, several portions of correction software, or &ldquo;patches&rdquo;, may be stored in the system&apos;s flash memory. This capability enables the system to correct for several relatively small (in terms of the number of commands needed to correct an error) program errors, without the need to reprogram the entire flash memory with an updated software program. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a block diagram of the flash memory portion <highlight><bold>101</bold></highlight> of the memory map shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and depicts a manner in which the correction block may be programmed according to one aspect of the invention. The flash memory <highlight><bold>101</bold></highlight> comprises one or more blocks <highlight><bold>203</bold></highlight> where the correction code is stored, several blocks where the program (or programs) to be corrected <highlight><bold>205</bold></highlight> is stored, and blocks of memory where flash memory correction initialization commands <highlight><bold>207</bold></highlight> and CPU rewrite code <highlight><bold>209</bold></highlight> are stored. As stated above, the correction code <highlight><bold>203</bold></highlight> may stored in several blocks, and the flash memory may be used to store several different patches for one or more programs <highlight><bold>205</bold></highlight> stored in the memory. The flash correction initialization code <highlight><bold>207</bold></highlight> may be used to store commands that are common to the execution of all patches stored in the memory. For example, the code may comprise commands to determine if correction code has been stored in a designated correction code block. The initialization code <highlight><bold>207</bold></highlight> may also comprise commands to set the address match interrupt registers, and to enable the interrupts. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> also depicts a RAM <highlight><bold>211</bold></highlight> used to temporarily store programs executing on the MCU, and a Universal Asynchronous Receiver Transmitter (UART) connection <highlight><bold>213</bold></highlight>, which may be used to transfer information to and from the flash memory <highlight><bold>201</bold></highlight>. The UART connection <highlight><bold>213</bold></highlight> may use, e.g., an industry standard RS-<highlight><bold>232</bold></highlight> type wired connection, a wireless connection, a modem interface, or any other like interface to communicate with an external code source (not shown). The CPU rewrite code <highlight><bold>209</bold></highlight>, UART connection <highlight><bold>213</bold></highlight>, and RAM <highlight><bold>211</bold></highlight> are used by the MCU to program (or reprogram) the correction block(s) <highlight><bold>203</bold></highlight> using information from the external code source. This process is best described in conjunction with <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart depicting a manner in which the correction block may be programmed according to one aspect of the invention. The process starts at block <highlight><bold>301</bold></highlight>. A rewrite of the correction block(s) <highlight><bold>203</bold></highlight> is first initiated by the MCU at step <highlight><bold>303</bold></highlight>. This initialization may occur, e.g., as a result of a detection by the MCU that an external code source is connected to the UART connection <highlight><bold>213</bold></highlight>, or as a result of a specific command communicated directly to the MCU. Alternatively, initialization may occur as a result of scheduled maintenance routines executing in the MCU, where the MCU periodically accesses, e.g., via a modem connection, a central repository where error correction code may be stored. If new correction code is detected in the repository, the MCU will initialize the CPU rewrite process. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Once initialization occurs, the MCU copies the CPU rewrite program or code <highlight><bold>209</bold></highlight> to the RAM <highlight><bold>211</bold></highlight>. This rewrite code <highlight><bold>209</bold></highlight> allows the MCU to manage the programming and reprogramming of code into the correction block(s) <highlight><bold>203</bold></highlight> of the flash memory <highlight><bold>201</bold></highlight>. The rewrite program may be designed specifically to download correction code from a particular type of remote access system. Once loaded into the RAM <highlight><bold>211</bold></highlight>, the rewrite program <highlight><bold>209</bold></highlight> is then executed at step <highlight><bold>307</bold></highlight>. A determination is made at step <highlight><bold>309</bold></highlight> as to which correction block(s) <highlight><bold>203</bold></highlight> are to be used to store the correction code. If multiple correction blocks <highlight><bold>203</bold></highlight> are available in the flash memory <highlight><bold>201</bold></highlight> for storing the correction code, the CPU rewrite program <highlight><bold>209</bold></highlight> enables the MCU to determine which block or blocks of flash memory are to be used to store the downloaded code. The selected correction block(s) is/are then erased at step <highlight><bold>311</bold></highlight>. After erasure, transfer of the correction code is initiated from the external source (not shown) by way of the UART connection <highlight><bold>213</bold></highlight> into the flash memory <highlight><bold>201</bold></highlight> at step <highlight><bold>313</bold></highlight>. When the transfer is complete, the CPU rewrite program <highlight><bold>209</bold></highlight> initiates a jump to an address match interrupt subroutine or a reset (a lesser reset than a full reset of the MCU) of the MCU at step <highlight><bold>315</bold></highlight>. The rewrite code <highlight><bold>209</bold></highlight> may then be purged from the RAM <highlight><bold>211</bold></highlight>. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The address match interrupt subroutine or reset begins the process of generating and enabling address match interrupts for each of the correction code blocks that have been downloaded into the flash memory <highlight><bold>201</bold></highlight>. The interrupts are the mechanism by which the correction code modules, stored in the correction block(s) <highlight><bold>203</bold></highlight> of the flash memory <highlight><bold>201</bold></highlight>, are executed during program operation instead of the program instructions <highlight><bold>205</bold></highlight> that are to be replaced. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> depicts an exemplary manner in which address match interrupts are generated and enabled by the MCU. The process begins at step <highlight><bold>401</bold></highlight> with a triggering of the address match interrupt subroutine or reset of the flash memory based MCU. Next, a determination is made as to which correction block(s) <highlight><bold>203</bold></highlight> have either new or modified correction code stored in them. According to an exemplary embodiment, an address match decision data value may be stored at the beginning of each of the correction blocks allocated in the flash memory to indicate whether or not a particular correction block contains a correction block to be patched into the main program. If, for example, the address match decision data value for a given correction block is set, then an address match interrupt register will be set up for that particular correction block. Each of the available correction blocks are checked in this manner whenever an address match interrupt reset occurs. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> Continuing at step <highlight><bold>403</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, if it is determined that either new or modified correction code has been downloaded to the various correction blocks <highlight><bold>203</bold></highlight> of the flash memory <highlight><bold>201</bold></highlight>, then corresponding address match interrupt registers are updated for each of the identified new or modified patches at step <highlight><bold>405</bold></highlight>. These interrupt registers are updated with a address match correction start address that is stored in the correction block(s) <highlight><bold>203</bold></highlight> along with the remaining downloaded correction code. The address match correction start address represents an address in the software program <highlight><bold>205</bold></highlight> that is to be patched where instructions are to be executed from the correction block(s) rather than from the software program <highlight><bold>205</bold></highlight> itself. After the interrupt registers are updated, the address match interrupts are then enabled at step <highlight><bold>407</bold></highlight>, and the process ends at step <highlight><bold>409</bold></highlight>. Once the interrupts are enabled, the MCU will be able to branch to and execute the correction code instructions whenever the program counter matches a address match correction start address stored in one of the interrupt registers. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> Execution of a program in the MCU with address match interrupt capability enabled is depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. Program execution from main memory begins at step <highlight><bold>501</bold></highlight> of the flow diagram and continues until an address match interrupt is triggered at step <highlight><bold>503</bold></highlight>. The triggering of an address match interrupt occurs whenever the current program counter matches one of the various address match correction start address entries stored in the address match interrupt registers. If an address match interrupt is not triggered at step <highlight><bold>503</bold></highlight>, then normal program operation continues at step <highlight><bold>501</bold></highlight>. If an address match interrupt is triggered at step <highlight><bold>503</bold></highlight>, however, an address match ISR is then executed at step <highlight><bold>505</bold></highlight>. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> provides an exemplary flow chart diagraming the steps performed by the address match ISR. The address match ISR is invoked at step <highlight><bold>601</bold></highlight> using a corresponding address match entry in the vector table <highlight><bold>109</bold></highlight>. Following the triggering of the address match interrupt, all CPU registers holding the post-interrupt status (e.g. the program counter) are saved, e.g., to the program stack or perhaps to RAM, at step <highlight><bold>603</bold></highlight>. Next, the post-interrupt program counter value is retrieved at step <highlight><bold>605</bold></highlight>. This program counter value is then compared with an interrupt start address decision data value stored in each of the enabled correction blocks <highlight><bold>203</bold></highlight> at step <highlight><bold>607</bold></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The value of the interrupt start address decision data stored in each of the correction blocks is equal to the address stored in the corresponding address match interrupt register, plus an offset value. The value of the offset depends on the next instruction to be executed at the time the address match occurs. For example, certain instructions may require offsets of &ldquo;&plus;2&rdquo; , whereas other instructions may require only an offset of &ldquo;&plus;1&rdquo;. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Returning to step <highlight><bold>607</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, when one of the interrupt start address decision data values matches the post-interrupt value of the program counter retrieved from the stack, this correction block having the matching decision data value is identified as the correction block that triggered the address match interrupt. A correction start address is then read from the matching correction block, and the address match ISR uses this start address to branch the program execution to the beginning of the correction code block at step <highlight><bold>609</bold></highlight>. If at step <highlight><bold>607</bold></highlight>, however, none of the interrupt start address decision data values stored in each of the correction blocks matches the post-interrupt value of the program counter retrieved from the stack, then the address match ISR jumps to an error processing routine at step <highlight><bold>611</bold></highlight>. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Having described the operation of the address match ISR, attention is directed back to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, where execution of the correction program is shown at step <highlight><bold>507</bold></highlight>. After the correction code has been executed, the return from interrupt destination address saved to the stack by the address match ISR at step <highlight><bold>603</bold></highlight>, is overwritten with the correction return address stored in the corresponding correction block at step <highlight><bold>509</bold></highlight>. The overwriting of the return destination address may be performed by either the address match ISR or by the code stored in the correction block itself. Performing this function in the correction block code reduces processing time by avoiding unnecessary module switching. Next, the registers saved by the ISR at step <highlight><bold>603</bold></highlight> are restored at step <highlight><bold>511</bold></highlight>. A return from interrupt command is then generated at step <highlight><bold>513</bold></highlight>. The MCU uses the return from interrupt destination address (i.e., the correction return address), stored to the stack at step <highlight><bold>509</bold></highlight>, to return program execution to the appropriate location within the main software program <highlight><bold>205</bold></highlight>. Normal execution of the software program <highlight><bold>205</bold></highlight> continues from this point, or until another address match interrupt is detected at step <highlight><bold>503</bold></highlight>, wherein the steps of executing the appropriate correction code instructions are repeated. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> To better describe the various data and addresses that may be included in a correction block, a more detailed description of the memory map shown in <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference>, including an exemplary correction block structure, is presented in <cross-reference target="DRAWINGS">FIG. 7</cross-reference>. The correction block <highlight><bold>203</bold></highlight> shown in this figure includes a correction program <highlight><bold>711</bold></highlight> used by the address match interrupt routine to replace a portion <highlight><bold>713</bold></highlight> of a main program <highlight><bold>205</bold></highlight>. Also included in the block is an address match decision data value <highlight><bold>701</bold></highlight>, that may be used by the address match initialization code <highlight><bold>207</bold></highlight> at step <highlight><bold>403</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 4</cross-reference> to determine if correction code is stored in the correction block <highlight><bold>203</bold></highlight>. The correction block further includes the interrupt start address decision data value <highlight><bold>703</bold></highlight> that may be used by the address match ISR <highlight><bold>715</bold></highlight> at step <highlight><bold>607</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 6</cross-reference> to determine which correction block address match correction start address triggered an address match interrupt. Recall that this decision data value <highlight><bold>703</bold></highlight> is compared with the value of the program counter stored to the stack when an interrupt is triggered. The decision data value <highlight><bold>703</bold></highlight> is typically equal to an address match correction start address <highlight><bold>705</bold></highlight>, plus one or two program counts, depending on the next instruction to be executed at the time an interrupt is triggered. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> The address match correction start address <highlight><bold>705</bold></highlight> represents the address at which instructions in the main program <highlight><bold>205</bold></highlight> are to be replaced with instructions stored in the correction program <highlight><bold>711</bold></highlight>. The address match correction start address <highlight><bold>705</bold></highlight> is stored in an address match interrupt register during address match initialization at step <highlight><bold>405</bold></highlight> of the process shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Also included in the correction block <highlight><bold>203</bold></highlight> is a correction start address <highlight><bold>707</bold></highlight> and a correction start address <highlight><bold>709</bold></highlight>. The correction start address <highlight><bold>709</bold></highlight> is used by the address match ISR <highlight><bold>715</bold></highlight> to branch to the appropriate place in the correction program as depicted in step <highlight><bold>609</bold></highlight> of the process shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. The correction return address <highlight><bold>707</bold></highlight>, is used to overwrite the return from interrupt destination address as described in conjunction with step <highlight><bold>509</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. The return from interrupt destination address is used to return program operation to the main program at the correction return address <highlight><bold>707</bold></highlight>, thereby effecting a patch of the portion <highlight><bold>713</bold></highlight> of the main program by the address match interrupt routine. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> The various aspects of the invention have been described in connection with a number of exemplary embodiments. To facilitate an understanding of the invention, many aspects of the invention were described in terms of sequences of actions to be performed by elements of a microprocessor based system. It will be recognized that in each of the embodiments, the various actions could be performed by specialized circuits (e.g., discrete logic gates interconnected to perform a specialized function), by program instructions being executed by one or more processors, or by a combination of both. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Moreover, the invention can additionally be considered to be embodied entirely within any form of computer readable storage medium having stored therein an appropriate set of computer instructions that would cause a processor to carry out the techniques described herein. Thus, the various aspects of the invention may be embodied in many different forms, and all such forms are contemplated to be within the scope of the invention. For each of the various aspects of the invention, any such form of embodiment may be referred to herein as &ldquo;logic configured to&rdquo; perform a described action, or alternatively as &ldquo;logic that&rdquo; performs a described action. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> It will be readily apparent to those skilled in the art that it is possible to embody the invention in specific forms other than those of the exemplary embodiments described above. This may be done without departing from the essence of the invention. The exemplary embodiments are merely illustrative and should not be considered restrictive in any way. The scope of the invention is given by the appended claims, rather than the preceding description, and all variations and equivalents which fall within the range of the claims are intended to be embraced therein. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for dynamically modifying a stored program, the method comprising the steps of: 
+<claim-text>storing correction code in at least one of a plurality of correction blocks included in an electrically erasable programmable memory; </claim-text>
+<claim-text>executing a program having instructions stored in the memory; </claim-text>
+<claim-text>invoking an address match routine to execute at least a portion of the correction code in place of at least one of the instructions during the executing of the program; and </claim-text>
+<claim-text>continuing executing the program after the at least a portion of the correction code executes. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of invoking an address match routine occurs when a program counter associated with the executing of the program matches at least one of a plurality of address match registers. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising the steps of: 
+<claim-text>determining for each of the correction blocks whether correction code stored in the blocks is to be executed during the executing of the program; </claim-text>
+<claim-text>retrieving a first address from the correction code stored in a respective correction block when it is determined that correction code stored in the respective correction block is to be executed during program execution; and </claim-text>
+<claim-text>storing the retrieved first address in one of the plurality of address match registers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the step of determining for each of the correction blocks whether correction code stored in a respective correction block is to be executed during program execution comprises the steps of: 
+<claim-text>retrieving a first data value from each of the correction blocks having stored correction code; </claim-text>
+<claim-text>comparing the retrieved first data value from each of the correction blocks having stored correction code to a predetermined value; and </claim-text>
+<claim-text>determining that the correction code stored in each of the correction blocks is to be executed during program execution when the corresponding first data value equals the predetermined value, otherwise determining that the correction code stored in each of the correction blocks is not to be executed during program execution. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the step of determining for each of the correction blocks whether correction code stored in the blocks is to be executed during the executing of the program occurs in response to a completion of the storing of correction code in at least one of a plurality of correction blocks. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising the steps of: 
+<claim-text>saving a plurality of registers and the program counter upon the invoking of the address match routine to preserve a post address match program status; </claim-text>
+<claim-text>retrieving a second data value from each of the correction blocks having stored correction code; </claim-text>
+<claim-text>comparing the retrieved second data value from each of the correction blocks having stored correction code to a post address match value of the program counter; and </claim-text>
+<claim-text>identifying the correction block corresponding to the invoking of the address match routine as the correction block having the second data value equal to the post address match value of the program counter. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising the step of: 
+<claim-text>branching to an error processing routine when no retrieved second data value is equal to the post address match value of the program counter. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the second data value is equal to the value stored in the address match register corresponding to the invoking of the address match routine plus an offset value. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the offset value is dependent upon a next program instruction to be executed at the time of the invoking of the address match routine. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the step of continuing executing the program after the at least a portion of the correction code executes comprises the steps of: 
+<claim-text>retrieving a third address from the correction code identifying a return address within the program; </claim-text>
+<claim-text>restoring the plurality of registers saved upon the invoking of the address match routine to reinstate a post address match program status; </claim-text>
+<claim-text>branching the executing of the program to the third address; and </claim-text>
+<claim-text>executing the program having instructions stored in the memory beginning at the third address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the invoking of the address match routine is carried out by an address match interrupt service routine having a corresponding address match interrupt entry in a vector table stored in the memory. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein to execute at least a portion of the correction code, the address match routine comprises the steps of: 
+<claim-text>retrieving a second address from the correction code identifying a starting address within the at least a portion of correction code; </claim-text>
+<claim-text>branching the executing of the program to the second address; and </claim-text>
+<claim-text>executing the at least a portion of the correction code beginning at the second address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein instructions for continuing executing the program after the at least a portion of the correction code executes are included in the correction code. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of storing correction code in at least one of a plurality of correction blocks comprises the steps of: 
+<claim-text>selecting at least one of the plurality of correction blocks for storing the correction code; </claim-text>
+<claim-text>erasing the selected at least one memory correction block; and </claim-text>
+<claim-text>transferring the correction code from an external source to the selected at least one of the plurality of correction blocks. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the correction code is transferred from the external source by at least one of a wired and a wireless connection. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of storing correction code in at least one of a plurality of correction blocks occurs in response to at least one of a detection that an external source is coupled to the memory and an invocation of a periodically scheduled maintenance routine. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A micro-controller capable of dynamically modifying a stored program, the micro-controller comprising: 
+<claim-text>electrically erasable programmable memory; </claim-text>
+<claim-text>logic that stores correction code in at least one of a plurality of correction blocks included in the memory; </claim-text>
+<claim-text>logic that executes a program having instructions stored in the memory; </claim-text>
+<claim-text>logic that invokes an address match routine to execute at least a portion of the correction code in place of at least one of the instructions during the executing of the program; and </claim-text>
+<claim-text>logic that continues executing the program after the at least a portion of the correction code executes. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the logic that invokes an address match routine is responsive to a matching of a program counter associated with the executing of the program and at least one of a plurality of address match registers. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, further comprising: 
+<claim-text>logic that determines for each of the correction blocks whether correction code stored in the blocks is to be executed during the executing of the program; </claim-text>
+<claim-text>logic that retrieves a first address from the correction code stored in a respective correction block when it is determined that correction code stored in the respective correction block is to be executed during program execution; and </claim-text>
+<claim-text>logic that stores the retrieved first address in one of the plurality of address match registers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the logic that determines for each of the correction blocks whether correction code stored in a respective correction block is to be executed during program execution comprises: 
+<claim-text>logic that retrieves a first data value from each of the correction blocks having stored correction code; </claim-text>
+<claim-text>logic that compares the retrieved first data value from each of the correction blocks having stored correction code to a predetermined value; and </claim-text>
+<claim-text>logic that determines that the correction code stored in each of the correction blocks is to be executed during program execution when the corresponding first data value equals the predetermined value, otherwise determining that the correction code stored in each of the correction blocks is not to be executed during program execution. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the logic that determines for each of the correction blocks whether correction code stored in the blocks is to be executed during the executing of the program is responsive to a completion of the storing of correction code in at least one of a plurality of correction blocks. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, further comprising: 
+<claim-text>logic that saves a plurality of registers and the program counter upon the invoking of the address match routine to preserve a post address match program status; </claim-text>
+<claim-text>logic that retrieves a second data value from each of the correction blocks having stored correction code; </claim-text>
+<claim-text>logic that compares the retrieved second data value from each of the correction blocks having stored correction code to a post address match value of the program counter; and </claim-text>
+<claim-text>logic that identifies the correction block corresponding to the invoking of the address match routine as the correction block having the second data value equal to the post address match value of the program counter. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further comprising: 
+<claim-text>logic that branches to an error processing routine when no retrieved second data value is equal to the post address match value of the program counter. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the second data value is equal to the value stored in the address match register corresponding to the invoking of the address match routine plus an offset value. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the offset value is dependent upon a next program instruction to be executed at the time of the invoking of the address match routine. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the logic that continues executing the program after the at least a portion of the correction code executes comprises: 
+<claim-text>logic that retrieves a third address from the correction code identifying a return address within the program; </claim-text>
+<claim-text>logic that restores the plurality of registers saved upon the invoking of the address match routine to reinstate a post address match program status; </claim-text>
+<claim-text>logic that branches the executing of the program to the third address; and </claim-text>
+<claim-text>logic that executes the program having instructions stored in the memory beginning at the third address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the logic that invokes the address match routine is responsive to an address match interrupt service routine having a corresponding address match interrupt entry in a vector table stored in the memory. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, further comprising: 
+<claim-text>logic that retrieves a second address from the correction code identifying a starting address within the at least a portion of correction code; </claim-text>
+<claim-text>logic that branches the executing of the program to the second address; and </claim-text>
+<claim-text>logic that executes the at least a portion of the correction code beginning at the second address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein instructions for continuing executing the program after the at least a portion of the correction code executes are included in the correction code. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the logic that stores correction code in at least one of a plurality of correction blocks comprises: 
+<claim-text>logic that selects at least one of the plurality of correction blocks for storing the correction code; </claim-text>
+<claim-text>logic that erases the selected at least one memory correction block; and </claim-text>
+<claim-text>logic that transfers the correction code from an external source to the selected at least one of the plurality of correction blocks. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00033">claim 30</dependent-claim-reference>, wherein the correction code is transferred from the external source by at least one of a wired and a wireless connection. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the logic that stores correction code in at least one of a plurality of correction blocks is responsive to at least one of a detection that an external source is coupled to the memory and an invocation of a periodically scheduled maintenance routine. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The micro-controller of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the electrically erasable programmable memory is included on at least one of a same electronic chip as the remaining logic comprising the micro-controller and a different electronic chip as the remaining logic comprising the micro-controller. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. An electrically erasable programmable memory based memory map structure supporting an address match interrupt scheme, the memory comprising: 
+<claim-text>a plurality of correction blocks for storing correction code; </claim-text>
+<claim-text>a random access memory (RAM) area including a program stack for temporarily storing program information; </claim-text>
+<claim-text>a main program area for storing at least one executable program; </claim-text>
+<claim-text>an initialization area for storing code to enable an address match interrupt for at least one of the correction blocks; </claim-text>
+<claim-text>a special function register (SFR) area including a plurality of address interrupt registers; </claim-text>
+<claim-text>a vector table for triggering the address match interrupt when a program counter associated with the at least one executable program matches a register value stored in one of the plurality of address interrupt registers; and </claim-text>
+<claim-text>an interrupt service routine (ISR) area including an address match ISR; </claim-text>
+<claim-text>wherein the address match ISR identifies which one of the plurality of correction blocks corresponds to the triggering of the address match interrupt to execute at least a portion of the correction code in place of at least one instruction of the at least one executable program during program execution. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The structure of <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference>, wherein each of the correction blocks comprise: 
+<claim-text>a first data value for determining whether correction code stored in the correction block is to be executed during program execution; </claim-text>
+<claim-text>a second data value for identifying which one of the plurality of correction blocks corresponds to the triggering of the address match interrupt; </claim-text>
+<claim-text>a first address identifying a location of the portion of the executable program replaced by the at least a portion of the correction code; </claim-text>
+<claim-text>a second address identifying a starting address of the at least a portion of the correction code to be executed in place of the least a portion of the executable program; and </claim-text>
+<claim-text>a third address identifying a return address within the executable program where program execution is continued after execution of the at a portion of the correction is completed.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005212A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005212A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005212A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005212A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005212A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005212A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005212A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030005212A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

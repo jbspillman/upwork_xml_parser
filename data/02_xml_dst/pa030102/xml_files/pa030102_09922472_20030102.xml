@@ -1,0 +1,1066 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004640A1-20030102-M00001.NB SYSTEM "US20030004640A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030004640A1-20030102-M00001.TIF SYSTEM "US20030004640A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-M00002.NB SYSTEM "US20030004640A1-20030102-M00002.NB" NDATA NB>
+<!ENTITY US20030004640A1-20030102-M00002.TIF SYSTEM "US20030004640A1-20030102-M00002.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-M00003.NB SYSTEM "US20030004640A1-20030102-M00003.NB" NDATA NB>
+<!ENTITY US20030004640A1-20030102-M00003.TIF SYSTEM "US20030004640A1-20030102-M00003.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-D00000.TIF SYSTEM "US20030004640A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-D00001.TIF SYSTEM "US20030004640A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-D00002.TIF SYSTEM "US20030004640A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-D00003.TIF SYSTEM "US20030004640A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-D00004.TIF SYSTEM "US20030004640A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004640A1-20030102-D00005.TIF SYSTEM "US20030004640A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004640</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09922472</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010803</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G01C021/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>701</class>
+<subclass>213000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>342</class>
+<subclass>357060</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>METHOD AND APPARATUS FOR PROVIDING ACCURATE POSITION ESTIMATES IN INSTANCES OF SEVERE DILUTION OF PRECISION</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60300960</doc-number>
+<document-date>20010625</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Alkinoos</given-name>
+<middle-name>H.</middle-name>
+<family-name>Vayanos</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Diego</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>QUALCOMM Incorporated</name-1>
+<name-2>Attn: Patent Department</name-2>
+<address>
+<address-1>5775 Morehouse Drive</address-1>
+<city>San Diego</city>
+<state>CA</state>
+<postalcode>92121-1714</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Techniques for providing an improved position estimate for a device in instances of relatively large dilution of precision. In a method, position estimates for a number of transmitters (e.g., GPS satellites and/or base stations) and a set of initial measurements (e.g., pseudo-ranges) are initially received. An Update Vector for a current device position estimate is computed. Non-convergence of the current device position estimate toward a target position estimate is detected and, if true, the Update Vector is adjusted (e.g., reduced in magnitude by a scaling factor) to increase the likelihood of convergence to the target position estimate. The current device position estimate is then updated based on the (possibly adjusted) Update Vector. Non-convergence may be detected based on the number of iterations performed without reaching the target position estimate and/or phase reversal in two consecutive Update Vectors. The scaling factor may be increased with each detected event indicative of non-convergence. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">RELATED APPLICATIONS </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application claims priority to U.S. Provisional Application No. 60/300,960, filed Jun. 25, 2001.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> 1. Field </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The present invention relates generally to position determination, and more specifically to a method and apparatus for improving estimating the location of a device under unfavorable dilution of precision (DOP) conditions. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> 2. Background </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> A common means by which to locate a device is to determine the amount of time required for signals transmitted from multiple sources at known locations to reach the device. One system that provides signals from a plurality of transmitters of known locations is the well-known Global Positioning Satellite (GPS) system. Satellites in the GPS system are placed in precise orbits according to a GPS master plan. The position of the GPS satellites can be identified by different sets of information transmitted by the satellites themselves. Another system that provides signals from transmitters (i.e., base stations) of known earth-bound locations is a wireless (cellular) communication system. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Signals from satellites and/or base stations may be used to determine the location of a device. By receiving and processing the signals transmitted from these transmitters, the amount of time required for the signals to travel from the transmitters to the device may be measured and used to compute the distances (or ranges) between the transmitters and the device. The signals themselves may further include information indicative of the locations of the transmitters. By accurately measuring the distances from three or more transmitters at known locations, the device can &ldquo;trilaterate&rdquo; its position. For example, when range measurements are available, a measurement surface may be determined for each transmitter, with the surface originating at the transmitter&apos;s location and having a curvature determined by the range from the transmitter to the device. The intersection of three or more such measurement surfaces would then be the estimated position of the device. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The ranges to the transmitters and their locations are conventionally provided to an algorithm that operates on the data to provide a position estimate for the device. This algorithm is typically a least mean square (LMS) algorithm that performs a number of iterations to arrive at a final solution for the device&apos;s position estimate. If provided with &ldquo;good&rdquo; range and transmitter location data, the LMS solution asymptotically converges toward a target &ldquo;optimal&rdquo; solution with each iteration, and the LMS algorithm may be terminated when the LMS solution is within a particular tolerance of the target solution. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In certain circumstances, the LMS algorithm does not converge toward the target solution. These circumstances typically arise due to a large &ldquo;dilution of precision&rdquo; (DOP) around the device location, which may result from having inaccurate range data and/or poor geometry for the transmitter and device locations. As an example, if the transmitters are located in close proximity relative to the distance to the device, then the measurement surfaces for these transmitters may intersect at a small angle (i.e., the surfaces are close to parallel as oppose to being more slanted toward perpendicular). In this case, a small error in the range measurements would result in a large error in the point of intersection, and thus a corresponding large error in the estimated location of the device. In one especially case of very large DOP, the measurement surfaces do not intersect, which then results in bad geometry and large errors at the optimal position estimate for the device. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The likelihood of obtaining bad geometry increases when earth-bound measurements are used (exclusively or in conjunction with satellite measurements) to estimate the position of the device. Earth-bound measurements may be made from signals transmitted from base stations of a wireless communication system and received at the device or signals received at the base stations from the device. The distances from the device to the base stations are shorter than those to the satellites, and the curvature of the earth-bound measurement surfaces is larger, which then increases the likelihood that the measurement surfaces do not intersect. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Conventionally, solutions obtained in cases of bad geometry are discarded. This may be due to a combination of non-convergence by the LMS algorithm and/or reduced likelihood of obtaining the desired accuracy in the LMS solutions. However, in many instances, such as 911 emergency services, these solutions are beneficial and should be reported if they can be obtained. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> There is therefore a need in the art for techniques to provide position estimate with improved likelihood of having the desired accuracy in cases of large DOP. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Aspects of the invention provide techniques to derive an improved position estimate for a receiver device (i.e., a &ldquo;Device Position Estimate&rdquo;) in cases of large &ldquo;dilution of precision&rdquo; (DOP). The Device Position Estimate, &ldquo;Actual Measurement Vectors&rdquo; and &ldquo;Transmitter Position Estimates&rdquo; are provided to an iterative algorithm (e.g., an LMS algorithm) that is initially operated in a normal manner. In cases of large DOP, the solutions from the algorithm may not converge toward a target solution, but may instead oscillate (i.e., overshoot) around the target solution. A method and apparatus is disclosed herein to determine when convergence is unlikely and to adjust the algorithm to increase the likelihood of convergence. Accordingly, the disclosed method and apparatus frequently increases the accuracy of the final solutions calculated in cases of large DOP. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> A determination that the LMS algorithm is unlikely to converge may be made based on: (1) the number of iterations performed without determining that the algorithm has converged to a final solution (hereafter referred to as the &ldquo;target solution&rdquo;), (2) phase reversal in an &ldquo;Update Vector&rdquo; used to update the Device Position Estimate, or (3) a combination of these parameters. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> One embodiment of the disclosed method determines the Transmitter Position Estimates for a number of transmitters (e.g., GPS satellites and/or base stations) determines an &ldquo;Actual Measurement Vector&rdquo; by making measurements, and calculates a &ldquo;Calculated Measurement Vector&rdquo; related to the distance between a current device and each transmitter (e.g., the pseudo-ranges to the transmitters that would result from the transmission of signals between the current device and each transmitter). In addition, a &ldquo;Residual Measurement Error Vector&rdquo; is calculated. The Residual Measurement Error Vector represents the difference between the Actual Measurement Vector and the Calculated Measurement Vector. An Update Vector for a current Device Position Estimate is then computed based on the Residual Measurement Error Vector, the Transmitter Position Estimates, and a previous Device Position Estimate. A determination is made as to whether convergence of the Device Position Estimate toward a target solution is likely. If convergence is not likely, then the Update Vector is adjusted to increase the likelihood of convergence toward the target solution. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The target solution is defined as that solution that results in the minimum value for a metric calculated as a function of the errors that are included in the Residual Measurement Error Vector. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The criteria are normally dependent on the particular algorithm being used to determine the Device Position Estimate. The current Device Position Estimate is updated based on the Update Vector. It should be noted that in one embodiment of the disclosed method and apparatus, the Update Vector is adjusted prior to being used to update the Device Position Estimate. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The Update Vector may be adjusted by: (1) reducing the magnitude of the Update Vector based on a scaling factor, and/or (2) limiting the magnitude of the Update Vector based on the magnitude of a Residual Measurement Error Vector as computed when a determination has been made that convergence is unlikely. The scaling factor may be increased (e.g., doubled) with each detected event indicative of non-convergence (possibly except for the first event).</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The features, nature, and advantages of the disclosed method and apparatus will become more apparent from the detailed description set forth below when taken in conjunction with the drawings in which like reference characters identify correspondingly throughout and wherein: </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a simplified illustration of a system capable of implementing various aspects of the disclosed method and apparatus; </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a simplified block diagram of a receiver device in accordance with one embodiment of the disclosed method and apparatus; </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow diagram illustrating a process to estimate the location of the receiver device, in accordance with one embodiment of the disclosed method and apparatus; </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4A</cross-reference> is a flow diagram illustrating a process performed to estimate the location of the receiver device using an LMS algorithm, in accordance with one embodiment of the disclosed method and apparatus; and </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4B</cross-reference> is a flow diagram of a process to detect non-convergence and adjust parameters of the LMS algorithm, in accordance with one embodiment of the disclosed method and apparatus.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a simplified illustration of a system capable of implementing various aspects of the disclosed method and apparatus. A receiver device <highlight><bold>110</bold></highlight> to be located receives signals transmitted from a plurality of transmitters <highlight><bold>130</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>130</bold></highlight><highlight><italic>z</italic></highlight>. Transmitters <highlight><bold>130</bold></highlight> may be any type of transmitter having locations that are known or that can be ascertained. In one embodiment, transmitters <highlight><bold>130</bold></highlight> include satellites of a Global Positioning Satellite (GPS) system, such as transmitters <highlight><bold>130</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>130</bold></highlight><highlight><italic>d </italic></highlight>in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. Transmitters <highlight><bold>130</bold></highlight> may additionally or exclusively include terrestrial ground-based transmitters, such as transmitters <highlight><bold>130</bold></highlight><highlight><italic>y </italic></highlight>and <highlight><bold>130</bold></highlight><highlight><italic>z</italic></highlight>, which may be base stations of a wireless communication system. Receiver device <highlight><bold>110</bold></highlight> may thus receive signals from any combination of satellites and/or ground-base transmitters. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In general, receiver device <highlight><bold>110</bold></highlight> may be any device capable of determining the arrival times of received signals with respect to a reference time. In one embodiment, receiver device <highlight><bold>110</bold></highlight> is a cellular telephone capable of receiving signals from the plurality of transmitters <highlight><bold>130</bold></highlight>. In other embodiments, receiver device <highlight><bold>110</bold></highlight> may be a computer terminal having a wireless modem, a stand-alone GPS receiver, a receiver capable of receiving signals from ground-based transmitters, or any other type of receiver. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The position of receiver device <highlight><bold>110</bold></highlight> may be estimated based on signals received at the device (e.g., such as those transmitted by GPS satellites and/or base stations) and the locations of the transmitters from which the received signals originated. The position of the receiver device may also be estimated based, in part, on a signal transmitted by the device and received at one or more base stations. Thus, any combination of measurements for signals received at or transmitted by the receiver device may be used to estimate the location of the device. For clarity, various aspects and embodiments of the disclosed method and apparatus are described for cases in which the signals are transmitted by the transmitters (e.g., satellites and/or base stations) and received at the receiver device. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Estimates of the position of receiver device <highlight><bold>110</bold></highlight> (hereafter referred to as &ldquo;Device Position Estimates&rdquo;) may be derived by the receiver device itself, a Position Determining Equipment (PDE) in the wireless communication system, a base station, or some other entity. The entity performing the position estimate is provided with a set of measurements (hereafter referred to as an &ldquo;Actual Measurement Vector&rdquo;) and the locations of the transmitters (hereafter referred to as &ldquo;Transmitter Position Estimates&rdquo;) or the means to determine these locations. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The Transmitter Position Estimates for GPS satellites may be ascertained by processing the signals transmitted by the satellites. Each satellite transmits &ldquo;Almanac&rdquo; information, which includes information regarding the coarse location of all satellites in the &ldquo;constellation&rdquo;. Each satellite further transmits &ldquo;Ephemeris&rdquo; information, which includes a higher accuracy version of its own orbit, as tracked and reported by tracking stations on earth. The Transmitter Position Estimates for the base stations may be made known to the entity performing the position estimate for the receiver device. For example, the receiver device may include a database of the Transmitter Position Estimates for the base stations. Alternatively, these Transmitter Position Estimates may be provided by the PDE, or the PDE may calculate the Device Position Estimate and may have the Transmitter Position Estimates for the base stations. The Transmitter Position Estimates for the base stations may also be transmitted via messages. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Transmitters <highlight><bold>130</bold></highlight> can be used as reference points to determine the Device Position Estimate. By accurately measuring the distances to three transmitters <highlight><bold>130</bold></highlight> at known locations, the Device Position Estimate can be determined by &ldquo;trilateration&rdquo;. The distance to each transmitter can be determined by measuring the time required for a signal to travel from the transmitter to the receiver device. If the time the signal is transmitted from the transmitter is known (e.g., stamped into the signal), then the travel time of the signal can be determined by observing the time the signal is received by the receiver device <highlight><bold>110</bold></highlight> based on the internal clock of the receiver device <highlight><bold>110</bold></highlight>. Typically however, the exact amount of time between transmission and reception cannot be exactly determined because of offsets in the clocks at the transmitter <highlight><bold>130</bold></highlight> and the receiver device <highlight><bold>110</bold></highlight>. Thus, a &ldquo;pseudo-range&rdquo; is typically computed based on the difference between a reference time and the time that the signal is received. The reference time may be any time, as long as the reference time is common to all pseudo-range measurements being made or the pseudo-range measurements can be adjusted to compensate for differences in the reference times used. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Various algorithms can be used to determine the Device Position Estimate based on knowledge of the Transmitter Position Estimates and the Actual Measurement Vector. One such algorithm is a least mean square (LMS) algorithm that performs a number of iterations to arrive at an accurate Device Position Estimate. Each iteration should result in a more accurate Device Position Estimate. However, if the algorithm is not converging, this will not be the case. If provided with accurate range and Transmitter Position Estimates and assuming a relatively small &ldquo;dilution of precision&rdquo; (DOP), the LMS algorithm asymptotically converges toward a target solution. However, assuming a large DOP around the target solution, the LMS algorithm may not converge if executed in the normal manner, resulting in an inaccurate solution. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The disclosed method and apparatus determines a Device Position Estimate in cases of large DOP. To determine the Device Position Estimate, an &ldquo;Actual Measurement Vector&rdquo; (e.g., a set of measurements, such as measured pseudo-ranges) and Transmitter Position Estimates are provided to an (e.g., LMS) algorithm that initially operates in a normal manner. In cases of large DOP, the solutions from the algorithm may not converge toward a target solution, but may instead overshoot the target solution, causing the algorithm to &ldquo;oscillate&rdquo;. The presently disclosed method and apparatus detects cases in which convergence is unlikely and adjusts the operation of the algorithm to increase the likelihood of convergence toward the target solution. This results in a greater likelihood of convergence in cases of large DOP, and therefore a more accurate solution. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a simplified block diagram of receiver device <highlight><bold>110</bold></highlight> in accordance with one embodiment of the disclosed method and apparatus. Receiver device <highlight><bold>110</bold></highlight> may be a component of a terminal in a wireless communication system, such as: (1) a cellular telephone, (2) a computer with a wireless modem, (3) a personal digital assistant, or (4) any other such portable device with a communication capability. Alternatively, receiver device <highlight><bold>110</bold></highlight> may be a stand-alone position determining unit, such as a stand-alone GPS receiver, which has no communication capability, or a limited communication capability that is only available to assist the position location function of the device. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Receiver device <highlight><bold>110</bold></highlight> may be designed with the capability to process signals from satellites (such as GPS satellites or other position location satellites), terrestrial ground-base transmitters (e.g., base stations, Loran stations, etc.), or both. In the embodiment shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, receiver device <highlight><bold>110</bold></highlight> includes an antenna <highlight><bold>210</bold></highlight>, a terrestrial receiver unit <highlight><bold>212</bold></highlight><highlight><italic>a</italic></highlight>, a GPS receiver unit <highlight><bold>212</bold></highlight><highlight><italic>b</italic></highlight>, a processing unit <highlight><bold>216</bold></highlight>, a memory unit <highlight><bold>218</bold></highlight>, and a controller <highlight><bold>220</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Antenna <highlight><bold>210</bold></highlight> receives signals from transmitters <highlight><bold>130</bold></highlight> and couples the received signals to terrestrial and GPS receiver units <highlight><bold>212</bold></highlight><highlight><italic>a </italic></highlight>and <highlight><bold>212</bold></highlight><highlight><italic>b</italic></highlight>. Terrestrial receiver unit <highlight><bold>212</bold></highlight><highlight><italic>a </italic></highlight>includes front-end circuitry (e.g., radio frequency (RF) processing circuitry and/or other receiving circuitry) that processes signals transmitted from base stations to derive information used for position determination. Similarly, GPS receiver unit <highlight><bold>212</bold></highlight><highlight><italic>b </italic></highlight>includes front-end circuitry that processes signals transmitted from GPS satellites to derive information used for position determination. Such information from receiver units <highlight><bold>212</bold></highlight><highlight><italic>a </italic></highlight>and <highlight><bold>212</bold></highlight><highlight><italic>b </italic></highlight>may include timing information, the identities and locations of the transmitters whose signals are received, and possibly other information. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The information from receiver units <highlight><bold>212</bold></highlight> is provided to processing unit <highlight><bold>216</bold></highlight>. Processing unit <highlight><bold>216</bold></highlight> may initially determine an initial Device Position Estimate and receive from the GPS receiver unit <highlight><bold>212</bold></highlight><highlight><italic>b </italic></highlight>an Actual Measurement Vector. Processing unit <highlight><bold>216</bold></highlight> then executes the LMS algorithm, which operates on the computed results to arrive at a final Device Position Estimate. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Memory unit <highlight><bold>218</bold></highlight> stores various data required for determining position. For example, memory unit <highlight><bold>218</bold></highlight> may store Almanac and/or Ephemeris information that indicates where each of a number of GPS satellites is located in the sky at any given time. Both the Almanac and Ephemeris are valid for a limited amount of time. The Almanac information is considered to be accurate to approximately 3 kilometers for approximately one week from the time the Almanac is transmitted. The Ephemeris provides information regarding the satellite orbit with an accuracy of approximately 1 meter for approximately 2 hours. The error in both the Almanac and Ephemeris grows as the information ages. The satellite locations may be derived from the Almanac and Ephemeris or from other information obtained by GPS receiver unit <highlight><bold>212</bold></highlight><highlight><italic>b </italic></highlight>from signals transmitted from the satellites or by terrestrial receiver unit <highlight><bold>212</bold></highlight><highlight><italic>a </italic></highlight>from signals transmitted via the wireless link. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Controller <highlight><bold>220</bold></highlight> may receive signaling and/or intermediate results from processing unit <highlight><bold>216</bold></highlight> and may direct the operation of the processing unit. For example, controller <highlight><bold>220</bold></highlight> may select the particular types of signals to be processed (e.g., satellite, terrestrial, or both), the particular algorithm to be used (if more than one is available), the parameter values to be used for the selected algorithm, and so on, as described in further detail below. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Although not shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, receiver device <highlight><bold>110</bold></highlight> may communicate with a PDE, which may assist in determining the position estimate for the device. The PDE may perform the computations to derive the receiver device position estimate, or may provide certain information used to determine the position estimate (e.g., the location of the GPS satellites and/or base stations). </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> An iterative algorithm may be used to determine the Device Position Estimate based on (1) Transmitter Position Estimates (e.g., information regarding the locations of GPS satellites and/or base stations) and (2) an Actual Measurement Vector (e.g., a set of pseudo-range measurements to the transmitters). For GPS satellites, the transmitter locations may be ascertained based on current Almanac and/or Ephemeris information. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> For clarity, the LMS iterative algorithm is specifically described below. However, other iterative algorithms may also be used to determine the Device Position Estimate in accordance with the disclosed method and apparatus. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Each Transmitter Position Estimate is an estimate of the location of one transmitter. The Transmitter Position Estimate, {overscore (s)}<highlight><subscript>i</subscript></highlight>, for the i-th transmitter is expressed as: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>{overscore (s)}</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>&equals;&lsqb;x</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>y</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>z</italic></highlight><highlight><subscript>i</subscript></highlight>&rsqb; and <highlight><italic>b</italic></highlight><highlight><subscript>i </subscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0042" lvl="7"><number>&lsqb;0042&rsqb;</number> where the b<highlight><subscript>i </subscript></highlight>is the clock bias expressed in the same dimension as x, y, and z and further includes the effects of the reference time. The Transmitter Position Estimates, {overscore (s)}<highlight><subscript>i </subscript></highlight>for i&equals;1, 2, . . . , n, are ascertained once prior to executing the LMS algorithm and are thereafter used by the algorithm to calculate the Device Position Estimate. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> The LMS algorithm may be performed to determine a set of Device Position Estimates resulting in a final Device Position Estimate as follows. For the k-th iteration (where k&equals;1 for the first iteration of the algorithm), the Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, is expressed as: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>{overscore (u)}</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&equals;&lsqb;x</italic></highlight><highlight><subscript>u,k</subscript></highlight><highlight><italic>y</italic></highlight><highlight><subscript>u,k</subscript></highlight><highlight><italic>z</italic></highlight><highlight><subscript>u,k</subscript></highlight><highlight><italic>b</italic></highlight><highlight><subscript>u,k</subscript></highlight>&rsqb;</in-line-formula></paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Prior to the first iteration, an initial Device Position Estimate, {overscore (u)}<highlight><subscript>0</subscript></highlight>, is assumed for the receiver device. The value of the initial Device Position Estimate may be selected arbitrarily or based upon current or past knowledge about the position of the receiver device. In one embodiment, the initial Device Position Estimate, {overscore (u)}<highlight><subscript>0</subscript></highlight>, may be: (1) the last Device Position Estimate (if one is available), (2) the center of the earth, (3) the center of the cell of which the receiver device is receiving the signal, or (4) any other location that provides an initial value to the LMS algorithm. The more accurate the initial Device Position Estimate, the faster the algorithm will convergence toward the target solution. A set of values make up a column vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>, (hereafter referred to as the &ldquo;Calculated Measurement Vector&rdquo;). Each value of the Calculated Measurement Vector is a computed measurement associated with one of the transmitters used for position determination. The values of the Calculated Measurement Vector are calculated from: (1) the Transmitter Position Estimates, {overscore (s)}<highlight><subscript>i</subscript></highlight>, (2) the Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, resulting from the k-th iteration of the iterative algorithm. Accordingly, it will be understood that there will be one Calculated Measurement Vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>, associated with each iteration of the iterative algorithm. It should be further understood that these &ldquo;measurements&rdquo; are not made, but are calculated for each iteration based on the values of {overscore (s)}<highlight><subscript>i </subscript></highlight>and {overscore (u)}<highlight><subscript>k</subscript></highlight>. In contrast, as will be more fully disclosed below, an Actual Measurement Vector, {overscore (&rgr;)}<highlight><subscript>a</subscript></highlight>, is derived from actually measuring the received signals. The elements of the Calculated Measurement Vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>, may be any type of measurement that is a function of the location of the receiver device and the clock bias associated with the transmitters. For example, the elements of the Calculated Measurement Vector may relate to ranges, pseudo-ranges as determined at the receiver device (i.e., r&minus;b, where r is the range and b is the clock bias), reverse pseudo-ranges as determined at the base stations based on signals transmitted from the receiver device (i.e., r&plus;b), range differences as determined based on &ldquo;time difference of arrival&rdquo; (TDOA), or a combination thereof. Furthermore, the elements of the Calculated Measurement Vector may be computed by any one of a number of known algorithms. In one embodiment, the elements of the Calculated Measurement Vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>, are pseudo-ranges. One way to compute the elements of the Calculated Measurement Vector is: </paragraph>
+<paragraph lvl="0"><in-line-formula>&rgr;<highlight><subscript>k,i</subscript></highlight>&equals;{square root}{square root over ((<highlight><italic>x</italic></highlight><highlight><subscript>u,k</subscript></highlight><highlight><italic>&minus;x</italic></highlight><highlight><subscript>i</subscript></highlight>)<highlight><superscript>2</superscript></highlight>&plus;(<highlight><italic>y</italic></highlight><highlight><subscript>u,k</subscript></highlight><highlight><italic>&minus;y</italic></highlight><highlight><subscript>i</subscript></highlight>)<highlight><superscript>2</superscript></highlight>&plus;(<highlight><italic>z</italic></highlight><highlight><subscript>u,k</subscript></highlight><highlight><italic>&minus;z</italic></highlight><highlight><subscript>i</subscript></highlight>)<highlight><superscript>2</superscript></highlight>)}&minus;(<highlight><italic>b</italic></highlight><highlight><subscript>u,k</subscript></highlight><highlight><italic>&minus;b</italic></highlight><highlight><subscript>i</subscript></highlight>)&emsp;&emsp;Eq (1) </in-line-formula></paragraph>
+<paragraph id="P-0045" lvl="7"><number>&lsqb;0045&rsqb;</number> where each element, &rgr;<highlight><subscript>k,i</subscript></highlight>, of the Calculated Measurement Vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>, is the pseudo-range between the Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, for the k-th iteration and the Transmitter Position Estimate, {overscore (s)}<highlight><subscript>i</subscript></highlight>, for the i-th transmitter. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> A geometry matrix H for the Transmitter Position Estimates, {overscore (s)}<highlight><subscript>i</subscript></highlight>, and the Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, is defined as:  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <msub>
+          <mi>H</mi>
+          <mi>k</mi>
+        </msub>
+        <mo>=</mo>
+        <mrow>
+          <mrow>
+            <mo>[</mo>
+            <mstyle>
+              <mtext>&emsp;</mtext>
+            </mstyle>
+            <mo>&it;</mo>
+            <mtable>
+              <mtr>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>x</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>x</mi>
+                        <mn>1</mn>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mn>1</mn>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>y</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>y</mi>
+                        <mn>1</mn>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mn>1</mn>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>z</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>z</mi>
+                        <mn>1</mn>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mn>1</mn>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mrow>
+                    <mo>-</mo>
+                    <mn>1</mn>
+                  </mrow>
+                </mtd>
+              </mtr>
+              <mtr>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>x</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>x</mi>
+                        <mn>2</mn>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mn>2</mn>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>y</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>y</mi>
+                        <mn>2</mn>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mn>2</mn>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>z</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>z</mi>
+                        <mn>2</mn>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mn>2</mn>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mrow>
+                    <mo>-</mo>
+                    <mn>1</mn>
+                  </mrow>
+                </mtd>
+              </mtr>
+              <mtr>
+                <mtd>
+                  <mi>&vellip;</mi>
+                </mtd>
+                <mtd>
+                  <mi>&vellip;</mi>
+                </mtd>
+                <mtd>
+                  <mi>&vellip;</mi>
+                </mtd>
+                <mtd>
+                  <mi>&vellip;</mi>
+                </mtd>
+              </mtr>
+              <mtr>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>x</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>x</mi>
+                        <mi>n</mi>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>n</mi>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>y</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>y</mi>
+                        <mi>n</mi>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>n</mi>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mfrac>
+                    <mrow>
+                      <msub>
+                        <mi>z</mi>
+                        <mrow>
+                          <mi>u</mi>
+                          <mo>,</mo>
+                          <mi>k</mi>
+                        </mrow>
+                      </msub>
+                      <mo>-</mo>
+                      <msub>
+                        <mi>z</mi>
+                        <mi>n</mi>
+                      </msub>
+                    </mrow>
+                    <mrow>
+                      <mo>&LeftBracketingBar;</mo>
+                      <mrow>
+                        <msub>
+                          <mover>
+                            <mi>u</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>k</mi>
+                        </msub>
+                        <mo>-</mo>
+                        <msub>
+                          <mover>
+                            <mi>s</mi>
+                            <mi>_</mi>
+                          </mover>
+                          <mi>n</mi>
+                        </msub>
+                      </mrow>
+                      <mo>&RightBracketingBar;</mo>
+                    </mrow>
+                  </mfrac>
+                </mtd>
+                <mtd>
+                  <mrow>
+                    <mo>-</mo>
+                    <mn>1</mn>
+                  </mrow>
+                </mtd>
+              </mtr>
+            </mtable>
+            <mo>&it;</mo>
+            <mstyle>
+              <mtext>&emsp;</mtext>
+            </mstyle>
+            <mo>]</mo>
+          </mrow>
+          <mo>.</mo>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mi>Eq</mi>
+        <mo>&it;</mo>
+        <mstyle>
+          <mtext>&emsp;</mtext>
+        </mstyle>
+        <mo>&it;</mo>
+        <mrow>
+          <mo>(</mo>
+          <mn>2</mn>
+          <mo>)</mo>
+        </mrow>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030004640A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="67.9266" file="US20030004640A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> A covariance matrix R of the measurements is defined as: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>R&equals;E&lcub;{overscore (&rgr;)}</italic></highlight><highlight><subscript>a</subscript></highlight>&middot;{overscore (&rgr;)}<highlight><subscript>a</subscript></highlight><highlight><superscript>T</superscript></highlight><highlight><italic>&rcub;&minus;E&lcub;{overscore (&rgr;)}</italic></highlight><highlight><subscript>a</subscript></highlight><highlight><italic>&rcub;&middot;E&lcub;{overscore (&rgr;)}</italic></highlight><highlight><subscript>a</subscript></highlight><highlight><superscript>T</superscript></highlight>&rcub;&emsp;&emsp;Eq (3) </in-line-formula></paragraph>
+<paragraph id="P-0048" lvl="7"><number>&lsqb;0048&rsqb;</number> where: </paragraph>
+<paragraph lvl="0"><in-line-formula>{overscore (&rgr;)}<highlight><subscript>a</subscript></highlight>&equals;&lsqb;&rgr;<highlight><subscript>a,1</subscript></highlight>&rgr;<highlight><subscript>a,2 </subscript></highlight>. . . &rgr;<highlight><subscript>a,n</subscript></highlight>&rsqb;<highlight><superscript>T </superscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0049" lvl="7"><number>&lsqb;0049&rsqb;</number> where {overscore (&rgr;)}<highlight><subscript>a </subscript></highlight>is the Actual Measurement Vector and &rgr;<highlight><subscript>a,n </subscript></highlight>is the measurement element (e.g., pseudo-range measurement) attained from the signal received from the n-th transmitter. E is the statistical expectation. The superscript T denotes the complex conjugate transpose. The covariance matrix R is typically estimated based on the particular design of the receiver device and the system (e.g., the signal bandwidth or the received signal power). </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> &ldquo;Residual Measurement Error Vector&rdquo;, {overscore (e)}<highlight><subscript>k</subscript></highlight>, is then defined as: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>{overscore (e)}</italic></highlight><highlight><subscript>k</subscript></highlight>&equals;{overscore (&rgr;)}<highlight><subscript>a</subscript></highlight>{overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>&emsp;&emsp;Eq (4) </in-line-formula></paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> As shown in equation (4), the Residual Measurement Error Vector, {overscore (e)}<highlight><subscript>k</subscript></highlight>, is equal to the difference between the Actual Measurement Vector, {overscore (&rgr;)}<highlight><subscript>a</subscript></highlight>, and the Calculated Measurement Vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>. It should be noted that one Residual Measurement Error Vector is calculated for each iteration of the algorithm. The Residual Measurement Error Vector, {overscore (e)}<highlight><subscript>k</subscript></highlight>, is calculated from the Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, determined on the k-th iteration. The next Residual Measurement Error Vector, {overscore (e)}<highlight><subscript>k&plus;1</subscript></highlight>, is then newly calculated for the next iteration from the Device Position Estimate, {overscore (u)}<highlight><subscript>k&plus;1</subscript></highlight>. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> An Update Vector, &Dgr;{overscore (u)}<highlight><subscript>k</subscript></highlight>, is computed for each iteration based on the geometry matrix H, the covariance matrix R, and the Residual Measurement Error Vector, {overscore (e)}<highlight><subscript>k</subscript></highlight>, for that iteration. The Update Vector is defined as: </paragraph>
+<paragraph lvl="0"><in-line-formula>&Dgr;<highlight><italic>{overscore (u)}</italic></highlight><highlight><subscript>k</subscript></highlight>&equals;(<highlight><italic>H</italic></highlight><highlight><superscript>T</superscript></highlight><highlight><italic>&middot;R</italic></highlight><highlight><superscript>&minus;1</superscript></highlight><highlight><italic>&middot;H</italic></highlight>)<highlight><superscript>&minus;1</superscript></highlight><highlight><italic>&middot;H</italic></highlight><highlight><superscript>T</superscript></highlight><highlight><italic>&middot;R</italic></highlight><highlight><superscript>&minus;1</superscript></highlight><highlight><italic>&middot;{overscore (e)}</italic></highlight><highlight><subscript>k</subscript></highlight>&emsp;&emsp;Eq (5) </in-line-formula></paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> This Update Vector represents an estimated error between the current Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, and an optimal position estimate. Thus, an updated Device Position Estimate is expressed as: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>{overscore (u)}</italic></highlight><highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&equals;{overscore (u)}</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;&Dgr;{overscore (u)}</italic></highlight><highlight><subscript>k</subscript></highlight>&emsp;&emsp;Eq (6) </in-line-formula></paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Equations (1) through (6) comprise the computations for one iteration of the LMS algorithm. A number of iterations may be performed to derive a more accurate Device Position Estimate. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> In cases of small DOP, if the Transmitter Position Estimates, {overscore (s)}<highlight><subscript>i</subscript></highlight>, and the Calculated Measurement Vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>, are valid and accurate, then the LMS algorithm will most likely converge after a relatively small number of iterations. Accordingly, the Device Position Estimates provided by the LMS algorithm, {overscore (u)}<highlight><subscript>k</subscript></highlight>, asymptotically approach the target solution. The target solution is defined as that solution that results in the minimum value for a metric calculated for the target solution. The metric is a function of the errors that are included in the Residual Measurement Error Vector. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> However, in cases of large DOP around the target solution, the Update Vector, &Dgr;{overscore (u)}<highlight><subscript>k</subscript></highlight>, tends to become disproportionately large compared to the Residual Measurement Error Vector. This then leads to repeated overshoots and oscillation around the target solution. Therefore, the algorithm may not converge on the target solution. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> The disclosed method and apparatus (1) determines when the algorithm is unlikely to convergence (e.g., due to oscillation of the LMS solutions around the target solution) and (2) adjusts the algorithm to increase the likelihood of convergence. It should be noted that in normal circumstances in a position determination system, the algorithm typically will convergence to the target solution after a predetermined number of iterations. This number is normally small (e.g., three). However, the typical number of iterations may be greater if the accuracy of the initial Device Position Estimate is poor. If the algorithm requires more iterations than what is typical, then there is less likelihood of convergence and greater likelihood of oscillation around the target solution. Such oscillation can be identified by an inversion in the direction of two consecutive Update Vectors (i.e., 180&deg; change in phase of the Update Vector). Whether the LMS algorithm is likely to converge can be determined by (1) the number of iterations performed without reaching the target solution and (2) changes in the phase of the Update Vector. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> To increase the likelihood of convergence, certain parameters of the LMS algorithm can be adjusted. In accordance with one embodiment of the disclosed method and apparatus, the magnitude of the Update Vector is reduced to (1) avoid significant overshoots and (2) adjust the rate at which the position estimate is updated, both of which help to ensure convergence. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow diagram illustrating a process <highlight><bold>300</bold></highlight> for determining the Device Position Estimate in accordance with one embodiment of the disclosed method and apparatus. The information required to determine the Device Position Estimate is initially received, at step <highlight><bold>312</bold></highlight>. This information typically includes the Transmitter Position Estimates and information used to determine the calculated Measurement Vector (e.g., pseudo-range measurements). An iterative algorithm (e.g., an LMS algorithm) is then executed to determine the Device Position Estimate based on the received information, at step <highlight><bold>314</bold></highlight>. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> At step <highlight><bold>318</bold></highlight>, a determination is made as to whether convergence is likely. In accordance with one embodiment, a determination that convergence is likely is based on one or more of the following tests. If convergence is unlikely, then one or more parameters of the algorithm may be adjusted to improve the likelihood of convergence, at step <highlight><bold>320</bold></highlight>, as described below. The process then proceeds to step <highlight><bold>322</bold></highlight>. Otherwise, if convergence is likely, as determined in step <highlight><bold>318</bold></highlight>, the process simply proceeds to step <highlight><bold>322</bold></highlight>. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> At step <highlight><bold>322</bold></highlight>, a determination is made as to whether or not the process should be terminated. In accordance with one embodiment of the presently disclosed method and apparatus, once the algorithm is terminated, a final Device Position Estimate is determined. The algorithm may be terminated for any one of a number of reasons, such as the maximum number of iterations have been performed, the algorithm has sufficiently converged, etc. In one such embodiment, a final Device Position Estimate is determined if the magnitude of the Update Vector is smaller than a predetermined threshold, indicating that the algorithm has sufficiently converged. If the algorithm has not terminated, then the process of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> continues at step <highlight><bold>314</bold></highlight>. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> The process shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is applicable for any iterative algorithm that may be used to determine position. Steps <highlight><bold>314</bold></highlight> through <highlight><bold>322</bold></highlight> may be viewed as comprising one iteration of the iterative algorithm, and any number of iterations may be performed until sufficiently accurate Device Position Estimate is reached. A further discussion of how the likelihood of convergence is determined and the parameters are adjusted is provided below. For the sake of clarity, the disclosed method and apparatus is described below using an LMS algorithm as one example. However, it will be understood by those skilled in the art that other iterative algorithms could be used to calculate an estimate of the location of a receiver device. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4A</cross-reference> is a flow diagram illustrating a process <highlight><bold>400</bold></highlight> performed to determine the Device Position Estimate using the LMS algorithm in accordance with one embodiment of the disclosed method and apparatus. The information required to determine the Device Position Estimate is first received at step <highlight><bold>412</bold></highlight>. This information typically includes: (1) the Transmitter Position Estimates, {overscore (s)}<highlight><subscript>t</subscript></highlight>, (2) the initial Device Position Estimate, {overscore (u)}<highlight><subscript>0</subscript></highlight>; and (3) the Actual Measurement Vector, {overscore (<highlight><bold>92</bold></highlight> )}<highlight><subscript>a</subscript></highlight>. Variables used for the LMS algorithm are then initialized, at step <highlight><bold>414</bold></highlight>. This may entail setting certain variables to their initial values as follows : k&equals;1, g&equals;1, and UV_modify&equals;False, where k is the iteration index, g is a scaling factor used to adjust the magnitude of the Update Vector, &Dgr;{overscore (u)}<highlight><subscript>k</subscript></highlight>, and UV_modify indicates whether or not to adjust the Update Vector. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> Execution of the LMS algorithm then commences. In the embodiment shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>A, the elements of the Actual Measurement Vector represent pseudo-range measurements. An initial Device Position Estimate is made. A Calculated Measurement Vector is then determined from the initial Device Position Estimate. The Calculated Measurement Vector, {overscore (&rgr;)}<highlight><subscript>k</subscript></highlight>, is computed as shown in equation (1), at step <highlight><bold>416</bold></highlight>. Next, the geometry matrix H is updated based on the current Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, and the Transmitter Position Estimate, {overscore (s)}<highlight><subscript>i</subscript></highlight>, as shown in equation (2), at step <highlight><bold>418</bold></highlight>. The measurement covariance matrix R is also derived, at step <highlight><bold>418</bold></highlight>. The Residual Measurement Error Vector, {overscore (e)}<highlight><subscript>k</subscript></highlight>, is then computed based on the Actual Measurement Vector and the Calculated Measurement Vector as shown in equation (4), at step <highlight><bold>420</bold></highlight>. The Update Vector, &Dgr;{overscore (u)}<highlight><subscript>k</subscript></highlight>, is next computed based on the matrices H and R and the Residual Measurement Error Vector, {overscore (e)}<highlight><subscript>k</subscript></highlight>, as shown in equation (5), at step <highlight><bold>422</bold></highlight>. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> At step <highlight><bold>426</bold></highlight>, a determination is made as to whether the LMS algorithm is likely to converge. If not, then one or more parameters of the LMS algorithm and/or the Update Vector, &Dgr;{overscore (u)}<highlight><subscript>k</subscript></highlight>, may be adjusted (e.g., reduced in magnitude) to increase the likelihood of convergence by the algorithm. Parameters used to adjust the Update Vector may also be updated in step <highlight><bold>426</bold></highlight>. Methods for determining whether the algorithm is likely to convergence and adjusting the parameters of the LMS algorithm, including the Update Vector, are described below in <cross-reference target="DRAWINGS">FIG. 4B</cross-reference>. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> At step <highlight><bold>428</bold></highlight>, the new Device Position Estimate, {overscore (u)}<highlight><subscript>k&plus;1</subscript></highlight>, for the receiver device is computed based on the current Device Position Estimate, {overscore (u)}<highlight><subscript>k</subscript></highlight>, and the Update Vector, &Dgr;{overscore (u)}<highlight><subscript>k</subscript></highlight>, as shown in equation (6). </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> A determination is then made as to whether or not the LMS algorithm should be terminated, at step <highlight><bold>430</bold></highlight>. Termination of the algorithm may be triggered based on one or more criteria, such as: (1) the magnitude of the Update Vector, (2) the number of iterations already performed, or a combination thereof. In one embodiment, the algorithm is terminated if the magnitude of the Update Vector is smaller than a particular update threshold (i.e., &verbar;&Dgr;{overscore (u)}<highlight><subscript>k</subscript></highlight>&verbar;&lt;&Dgr;{overscore (u)}<highlight><subscript>k&mdash;</subscript></highlight>threshold) or if the number of iterations already performed exceeds a particular maximum number of iterations (e.g., k&gt;50). If either of these criteria are satisfied, the current Device Position Estimate is considered to be sufficiently accurate, at step <highlight><bold>434</bold></highlight>, and the process terminates. The Device Position Estimate will in fact be accurate if the algorithm has converged. However the Device Position Estimate will not be as accurate as desired if the algorithm has not converged, but rather was terminated due to some other criterion (e.g., the number of iterations exceed the maximum number of iterations). If a termination criterion has not been satisfied, the iteration index k is incremented by one, at step <highlight><bold>432</bold></highlight>, and the process returns to step <highlight><bold>416</bold></highlight> to perform another iteration. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> Steps <highlight><bold>416</bold></highlight> through <highlight><bold>428</bold></highlight> comprise one iteration of the LMS algorithm. Any number of iterations may be executed until the termination criterion or criteria are met. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4B</cross-reference> is a flow diagram of a process to determine whether convergence is likely. Also shown is a process for adjusting parameters of the LMS algorithm in accordance with one embodiment of the disclosed method and apparatus. This process may be used for step <highlight><bold>426</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 4A</cross-reference>. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> In one embodiment, a determination that convergence of the LMS algorithm is unlikely is in part based on the number of iterations performed without achieving convergence. Convergence is determined by attaining a sufficiently small norm of the Update Vector. As noted above, in normal circumstances in a wireless-assisted GPS position determination system, convergence typically occurs within a small number of iterations. Thus, a determination is made whether the number of iterations performed by the LMS algorithm for this collection of input data exceeds a particular threshold &ldquo;k_threshold&rdquo; (i.e., whether k&gt;k_threshold), at step <highlight><bold>448</bold></highlight>. The value of k_threshold is typically selected based on the number of iterations expected to be performed to converge for a typical application (which may be dependent on the accuracy of the initial device position estimate). Alternatively, any value may also be selected that can provide good performance. As a specific example, k threshold may be set to three. If the number of iterations already performed is greater than k_threshold, the likelihood that convergence by the algorithm will occur is assumed to be low and the process proceeds to step <highlight><bold>450</bold></highlight> where another test for convergence is performed. Otherwise, if the number of iterations k is less than or equal to k_threshold, a determination is made that the algorithm may yet converge. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> In another embodiment, a determination that the LMS algorithm is unlikely to convergence is made by examining the Update Vectors. Convergence is determined to be unlikely when the Device Position Estimates repeatedly overshoot the desired Device Position Estimate. Overshooting by the LMS algorithm causes the set of Device Position Estimates resulting from each iteration to &ldquo;oscillate&rdquo; around the desired Device Position Estimate. This oscillation can typically be seen by changes in the direction of the Update Vector essentially along the line that is coincident with the direction of the largest DOP. When such phase reversals occur, the phase difference &agr; between two consecutive Update Vectors is close to 180&deg;. This results in the cosine of the phase difference &agr; being close to minus one. In one embodiment, reversal in the direction of the Update Vector is detected if the cosine of &agr; is less than a particular negative cos_threshold. As a specific example, cos_threshold may be selected as &minus;0.95. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> As part of step <highlight><bold>450</bold></highlight>, the cosine of the phase difference &agr; of two consecutive Update Vectors is computed. This cosine is computed by performing a dot product of the two most recent Update Vectors, which can be expressed as:  
+<math-cwu id="MATH-US-00002">
+<number>2</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mrow>
+          <mrow>
+            <mi>cos</mi>
+            <mo>&af;</mo>
+            <mrow>
+              <mo>(</mo>
+              <msub>
+                <mi>&alpha;</mi>
+                <mi>k</mi>
+              </msub>
+              <mo>)</mo>
+            </mrow>
+          </mrow>
+          <mo>=</mo>
+          <mfrac>
+            <mrow>
+              <mrow>
+                <mo>&lt;</mo>
+                <mrow>
+                  <mi>&Delta;</mi>
+                  <mo>&it;</mo>
+                  <mstyle>
+                    <mtext>&emsp;</mtext>
+                  </mstyle>
+                  <mo>&it;</mo>
+                  <msub>
+                    <mover>
+                      <mi>u</mi>
+                      <mo>~</mo>
+                    </mover>
+                    <mi>k</mi>
+                  </msub>
+                </mrow>
+              </mrow>
+              <mo>,</mo>
+              <mrow>
+                <mrow>
+                  <mi>&Delta;</mi>
+                  <mo>&it;</mo>
+                  <mstyle>
+                    <mtext>&emsp;</mtext>
+                  </mstyle>
+                  <mo>&it;</mo>
+                  <msub>
+                    <mover>
+                      <mi>u</mi>
+                      <mo>~</mo>
+                    </mover>
+                    <mrow>
+                      <mi>k</mi>
+                      <mo>-</mo>
+                      <mn>1</mn>
+                    </mrow>
+                  </msub>
+                </mrow>
+                <mo>&gt;</mo>
+              </mrow>
+            </mrow>
+            <mrow>
+              <mrow>
+                <mo>&LeftBracketingBar;</mo>
+                <mrow>
+                  <mi>&Delta;</mi>
+                  <mo>&it;</mo>
+                  <mstyle>
+                    <mtext>&emsp;</mtext>
+                  </mstyle>
+                  <mo>&it;</mo>
+                  <msub>
+                    <mover>
+                      <mi>u</mi>
+                      <mo>~</mo>
+                    </mover>
+                    <mi>k</mi>
+                  </msub>
+                </mrow>
+                <mo>&RightBracketingBar;</mo>
+              </mrow>
+              <mo>&CenterDot;</mo>
+              <mrow>
+                <mo>&LeftBracketingBar;</mo>
+                <mrow>
+                  <mi>&Delta;</mi>
+                  <mo>&it;</mo>
+                  <mstyle>
+                    <mtext>&emsp;</mtext>
+                  </mstyle>
+                  <mo>&it;</mo>
+                  <msub>
+                    <mover>
+                      <mi>u</mi>
+                      <mo>~</mo>
+                    </mover>
+                    <mrow>
+                      <mi>k</mi>
+                      <mo>-</mo>
+                      <mn>1</mn>
+                    </mrow>
+                  </msub>
+                </mrow>
+                <mo>&RightBracketingBar;</mo>
+              </mrow>
+            </mrow>
+          </mfrac>
+        </mrow>
+        <mo>,</mo>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mi>Eq</mi>
+        <mo>&it;</mo>
+        <mstyle>
+          <mtext>&emsp;</mtext>
+        </mstyle>
+        <mo>&it;</mo>
+        <mrow>
+          <mo>(</mo>
+          <mn>7</mn>
+          <mo>)</mo>
+        </mrow>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00002" file="US20030004640A1-20030102-M00002.NB"/>
+<image id="EMI-M00002" wi="216.027" he="19.93005" file="US20030004640A1-20030102-M00002.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0073" lvl="2"><number>&lsqb;0073&rsqb;</number> where &Dgr;&utilde;<highlight><subscript>k </subscript></highlight>represents the first three components of the Update Vector &Dgr;{overscore (u)}<highlight><subscript>k </subscript></highlight>(i.e., &Dgr;&utilde;<highlight><subscript>k</subscript></highlight>&equals;&lsqb;&Dgr;x<highlight><subscript>u,k</subscript></highlight>&Dgr;y<highlight><subscript>u,k</subscript></highlight>&Dgr;z<highlight><subscript>u,k</subscript></highlight>&rsqb;) and &lt;&Dgr;&utilde;<highlight><subscript>k</subscript></highlight>, &Dgr;&utilde;<highlight><subscript>k&minus;1</subscript></highlight>&gt; denotes a dot product of the first three components of the two Update Vectors, which can be expressed as: </paragraph>
+<paragraph lvl="0"><in-line-formula>&lt;&Dgr;<highlight><italic>&utilde;</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>,&Dgr;&utilde;</italic></highlight><highlight><subscript>k&minus;1</subscript></highlight>&gt;&equals;(&Dgr;<highlight><italic>x</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>&middot;&Dgr;x</italic></highlight><highlight><subscript>i&minus;1</subscript></highlight>)&plus;(&Dgr;<highlight><italic>y</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>&middot;&Dgr;y</italic></highlight><highlight><subscript>i&minus;1</subscript></highlight>)&plus;(&Dgr;<highlight><italic>z</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>&middot;&Dgr;z</italic></highlight><highlight><subscript>i&minus;1</subscript></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> A determination is then made as to whether the cosine of the phase difference is less than the cos_threshold, (i.e., cos(&agr;<highlight><subscript>k</subscript></highlight>)&lt;cos_threshold), at step <highlight><bold>452</bold></highlight>. If the answer is yes, then a phase reversal has been detected. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> In one embodiment, the first time a phase reversal in the Update Vector is detected after the number of iterations exceeds k_threshold, a variable UV_modify is set to True. Each subsequent time the phase reversal is detected, the factor g is multiplied by a positive factor greater than unity (e.g., two). This larger value for the factor g is then used to effectively divide the magnitude of the Update Vector by a corresponding amount. The adjusted Update Vector may be smaller than optimal, and under normal operating conditions this smaller Update Vector would lead to a slower convergence rate. However, for unstable scenarios, the smaller Update Vector ensures that, given a sufficient number of iterations, the LMS algorithm has a greater likelihood of convergence. It should be noted that many other methods could be implemented for reducing the size of the Update Vector in response to such phase reversals. In one example of such an alternative, the number of phase reversals does not correspond to the amount the Update Vector is reduced. Rather the Update Vector is reduced by a predetermined amount each time a reduction is made. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> In one embodiment, the norm of the Update Vector is set to the norm of the Residual Measurement Error Vector at the time a phase reversal is detected. This is achieved by setting a variable d to the magnitude of the Residual Measurement Error Vector (i.e., d&equals;&verbar;{overscore (e)}<highlight><subscript>k</subscript></highlight>&verbar;) each time the phase reversal is detected. This variable d is thereafter used to determine the magnitude of the Update Vector, as described below. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> For the embodiments described above, a parameter of the LMS algorithm (e.g., the Update Vector) may be continually (i.e., &ldquo;adaptively&rdquo;) adjusted based on the monitored performance of the algorithm. In one such embodiment, such an &ldquo;adaptive&rdquo; adjustment is achieved based on the values of the variable d and the factor g. Thus, in such an embodiment, once the variable UV_modify has been set to True and regardless of whether or not a phase reversal has been detected, the Update Vector is adjusted by the variable d and factor g, as described below. These actions are performed by the following steps. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> If a phase reversal of the Update Vector was detected at step <highlight><bold>452</bold></highlight>, a determination is made whether the variable UV_modify has been set to True, at step <highlight><bold>454</bold></highlight>. If the answer is no, indicating that this is the first phase reversal detected, then the variable UV_modify is set to True, at step <highlight><bold>456</bold></highlight>. Otherwise, if UV modify has already been set to True by a previously detected phase reversal, then the factor g is increased (e.g., doubled), at step <highlight><bold>458</bold></highlight>. In either case, the variable d is set to the magnitude of the Residual Measurement Error Vector, at step <highlight><bold>460</bold></highlight>. The Update Vector is then adjusted based on the variable d and factor g, at step <highlight><bold>462</bold></highlight>. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> In one embodiment, the Update Vector is adjusted as follows:  
+<math-cwu id="MATH-US-00003">
+<number>3</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mrow>
+          <mi>&Delta;</mi>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <msub>
+            <mover>
+              <mi>u</mi>
+              <mi>_</mi>
+            </mover>
+            <mi>k</mi>
+          </msub>
+        </mrow>
+        <mo>=</mo>
+        <mrow>
+          <mfrac>
+            <mrow>
+              <mi>&Delta;</mi>
+              <mo>&it;</mo>
+              <mstyle>
+                <mtext>&emsp;</mtext>
+              </mstyle>
+              <mo>&it;</mo>
+              <mrow>
+                <msub>
+                  <mover>
+                    <mi>u</mi>
+                    <mi>_</mi>
+                  </mover>
+                  <mi>k</mi>
+                </msub>
+                <mo>&CenterDot;</mo>
+                <mi>d</mi>
+              </mrow>
+            </mrow>
+            <mrow>
+              <mrow>
+                <mo>&LeftBracketingBar;</mo>
+                <mrow>
+                  <mi>&Delta;</mi>
+                  <mo>&it;</mo>
+                  <mstyle>
+                    <mtext>&emsp;</mtext>
+                  </mstyle>
+                  <mo>&it;</mo>
+                  <msub>
+                    <mover>
+                      <mi>u</mi>
+                      <mi>_</mi>
+                    </mover>
+                    <mi>k</mi>
+                  </msub>
+                </mrow>
+                <mo>&RightBracketingBar;</mo>
+              </mrow>
+              <mo>&CenterDot;</mo>
+              <mi>g</mi>
+            </mrow>
+          </mfrac>
+          <mo>.</mo>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mi>Eq</mi>
+        <mo>&it;</mo>
+        <mstyle>
+          <mtext>&emsp;</mtext>
+        </mstyle>
+        <mo>&it;</mo>
+        <mrow>
+          <mo>(</mo>
+          <mn>8</mn>
+          <mo>)</mo>
+        </mrow>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00003" file="US20030004640A1-20030102-M00003.NB"/>
+<image id="EMI-M00003" wi="216.027" he="19.93005" file="US20030004640A1-20030102-M00003.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> As shown in equation (8), the adjusted Update Vector retains the phase of the original Update Vector, but its norm is set to the magnitude of the Residual Measurement Error Vector at the time the last phase reversal was detected (as captured by the variable d) and further reduced by the factor g. The adjusting ensures that the magnitude of the Update Vector is smaller each time the phase reversal is detected, since the amount of overshoot is less each time. In this manner, the step size can be made dependent on the monitored performance of the LMS algorithm. Moreover, by increasing (e.g., doubling) the factor g each time a phase reversal is detected, the size of the Update Vector is correspondingly reduced. After adjusting the Update Vector at step <highlight><bold>462</bold></highlight>, the process terminates. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> If a phase reversal of the Update Vector was not detected at step <highlight><bold>452</bold></highlight>, a determination is made at to whether the variable UV_modify has been set to True, at step <highlight><bold>464</bold></highlight>. If the answer is no, indicating that the LMS may be taking longer to converge, but no oscillation in the Update Vector has been detected, then the process terminates. Otherwise, if UV-modify has already been set to True by a previous detected phase reversal, then the Update Vector is adjusted based on the current values for the variable d and factor g, at step <highlight><bold>462</bold></highlight>. In the embodiment shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>B, the Update Vector is adjusted by the variable d and factor g for each iteration, once UV-modify has been set to True, regardless of whether or not phase reversal of the Update Vector has been detected. </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> For clarity, <cross-reference target="DRAWINGS">FIGS. 4A and 4B</cross-reference> illustrate examples of the disclosed method for performing the LMS algorithm. However, these examples may also be applied to other algorithms used to determine the Device Position Estimate. For clarity, <cross-reference target="DRAWINGS">FIGS. 4A and 4B</cross-reference> also describe a specific implementation for determining that convergence is unlikely based on the number of iterations and the Update Vectors. Also described is an example of one method by which the LMS algorithm can be adjusted to improve the likelihood of convergence. It should be noted that these methods are merely presented as examples of ways to determine whether convergence is likely and to adjust the parameters of the LMS algorithm. Other methods are clearly possible and would be understood by those skilled in the art from the examples provided herein. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the elements of receiver device <highlight><bold>110</bold></highlight> (e.g., processing unit <highlight><bold>216</bold></highlight> and controller <highlight><bold>220</bold></highlight>) may be implemented as a digital signal processor (DSP), an application specific integrated circuit (ASIC), a processor, a microprocessor, a controller, a microcontroller, a field programmable gate array (FPGA), a programmable logic device, other electronic unit, or any combination thereof designed to perform the functions described herein. Certain aspects of the disclosed method and apparatus may be implemented in hardware, software, or a combination of both. For example, the processing to determine the Device Position Estimate (e.g., the LMS algorithm) may be performed based on program codes stored within memory unit <highlight><bold>218</bold></highlight> and executed by a processor (processing unit <highlight><bold>216</bold></highlight> or controller <highlight><bold>220</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). Alternatively, such processing may be performed by dedicated hardware or some combination of hardware and software. </paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number> The previous description of the disclosed embodiments is provided to enable any person skilled in the art to make or use the presently disclosed method and apparatus. Various modifications to these embodiments will be readily apparent to those skilled in the art, and the generic principles defined herein may be applied to other embodiments without departing from the spirit or scope of the invention. Thus, the present invention is not intended to be limited to the embodiments shown herein but is to be accorded the widest scope consistent with the principles and novel features disclosed herein.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for determining an accurate device position estimate, comprising: 
+<claim-text>executing an iterative algorithm to provide a device position estimate; </claim-text>
+<claim-text>determining whether convergence of the iterative algorithm is likely; and </claim-text>
+<claim-text>if convergence of the iterative algorithm is unlikely, adjusting at least one parameter of the iterative algorithm to increase the likelihood of convergence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the iterative algorithm is based on an initial device position estimate, transmitter position estimates for a plurality of transmitters, and an actual measurement vector. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein convergence is determined to be unlikely if a particular number of iterations is performed without achieving convergence. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising: 
+<claim-text>calculating an update vector for a current device position estimate based on a Residual Measurement Error Vector, the Transmitter Position Estimates, and the most recent Device Position Estimate calculated by the iterative algorithm; </claim-text>
+<claim-text>calculating the norm of the update vector; and </claim-text>
+<claim-text>wherein convergence is determined to be unlikely based on the value of the norm of the update vector. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the metric is a function of the errors that are included in the Residual Measurement Error Vector. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the function is linear. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the function is quadratic. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the iterative algorithm is a least mean square (LMS) algorithm. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method for determining a device position estimate, comprising: 
+<claim-text>determining transmitter position estimates for a plurality of transmitters and measuring an actual measurement vector for the transmitters; </claim-text>
+<claim-text>determining an initial device position estimate; </claim-text>
+<claim-text>determining a calculated measurement vector based on the transmitter position estimates and the initial device position estimate; </claim-text>
+<claim-text>revising the device position estimate based on the difference between the calculated measurement vector, and the actual measurement vector; </claim-text>
+<claim-text>determining that convergence of the current device position estimate toward a final device position estimate is unlikely; and </claim-text>
+<claim-text>if convergence is determined to be unlikely, adjusting the manner in which the revised device position estimate is determined to increase the likelihood of convergence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the revised device position estimate is calculated using a least mean square (LMS) algorithm. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the difference between the calculated measurement vector, and the actual measurement vector is a residual measurement vector, and the manner for determining the revised device position estimate is adjusted by scaling a value derived from the residual measurement error vector. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the value derived from the residual measurement error vector is an update vector. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, further comprising: 
+<claim-text>determining a geometry matrix based on the current device position estimate and the transmitter position estimate; and </claim-text>
+<claim-text>determining a measurement covariance matrix, and </claim-text>
+<claim-text>wherein the adjustment is further based on the geometry matrix and the measurement covariance matrix. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, further comprising: 
+<claim-text>repeating the steps of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> iteratively until either the iterative algorithm converges to a final device position estimate, or a determination is made that convergence is unlikely. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the step of adjusting the device position estimate includes: 
+<claim-text>determining a scaling factor which effects the amount of the adjustment to the device position estimate. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the scaling factor is increased with each iteration during which convergence is determined to be unlikely. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the convergence is determined to be unlikely based on phase reversals in the update vector. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the scaling factor is not increased in response to the first predetermined number of iterations resulting in a determination that convergence is unlikely. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further including: 
+<claim-text>limiting the magnitude of the update vector based on the magnitude of a residual measurement error vector as computed when a determination has been made that convergence is unlikely. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein non-convergence is detected based in part on the number of iterations performed without reaching the target position estimate. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein non-convergence is further detected based on the update vector. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein non-convergence is detected if the number of iterations exceeds a first threshold and a phase difference between two consecutive updates for two iterations is less than a second threshold. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the phase difference between two consecutive updates is derived by performing a dot product on the two consecutive updates. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, further comprising: 
+<claim-text>providing the current device position estimate as a final position estimate for the device if one or more criteria for termination are met. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the one or more criteria for termination are met if the number of iterations exceeds a first threshold. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the one or more criteria for termination are met if magnitude of the update is within a second threshold. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the actual measurement vector corresponds to pseudo-ranges indicative of distances between the device and the transmitters. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the transmitters are satellites in a Global Positioning Satellite (GPS) system. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the transmitters include base stations in a wireless communication system. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the wireless communication system is a CDMA system. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A computer program product for determining the location of a device, comprising: 
+<claim-text>code for receiving position estimates for a plurality of transmitters and initial measurements for the transmitters; </claim-text>
+<claim-text>code for computing an update for a current device position estimate based on the Transmitter Position Estimates, the current device position estimate, and the initial measurements, wherein the current device position estimate is initially set to an initial estimate for the location of the device; </claim-text>
+<claim-text>code for detecting non-convergence of the current device position estimate toward a target position estimate; </claim-text>
+<claim-text>code for, if non-convergence is detected, adjusting the update to increase likelihood of convergence to the target position estimate; </claim-text>
+<claim-text>code for updating the current device position estimate based on the update; and </claim-text>
+<claim-text>a data storage medium configured to store the codes. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. A receiver device comprising: 
+<claim-text>at least one receiver unit configured to receive and process a plurality of signals from a plurality of transmitters to derive initial measurements for the transmitters; and </claim-text>
+<claim-text>a processor coupled to the at least one receiver unit and configured to 
+<claim-text>receive the initial measurements and position estimates for the transmitters, </claim-text>
+<claim-text>compute an update for a current device position estimate based on the transmitters position estimates, the current device position estimate, and the initial measurements, wherein the current device position estimate is initially set to an initial estimate for the location of the device, </claim-text>
+<claim-text>detect non-convergence of the current device position estimate toward a target position estimate, </claim-text>
+<claim-text>if non-convergence is detected, adjust the update to increase likelihood of convergence to the target position estimate, </claim-text>
+<claim-text>update the current device position estimate based on the update, and </claim-text>
+<claim-text>repeat the compute, detect, adjust, and update for a plurality of iterations </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The receiver device of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the processor is further configured to 
+<claim-text>scale the update by a scaling factor to reduce magnitude of the update, </claim-text>
+<claim-text>wherein the scaling factor is increased based on detected events indicative of non-convergence.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004640A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004640A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004640A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004640A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004640A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004640A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

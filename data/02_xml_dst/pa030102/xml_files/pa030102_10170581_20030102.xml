@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002418A1-20030102-D00000.TIF SYSTEM "US20030002418A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002418A1-20030102-D00001.TIF SYSTEM "US20030002418A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002418A1-20030102-D00002.TIF SYSTEM "US20030002418A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002418</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10170581</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020614</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>2001-200972</doc-number>
+</priority-application-number>
+<filing-date>20010702</filing-date>
+<country-code>JP</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G11B007/005</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>369</class>
+<subclass>059220</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Signal processor</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Hiroki</given-name>
+<family-name>Mouri</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Osaka</city>
+<country-code>JP</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Kouichi</given-name>
+<family-name>Nagano</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Osaka</city>
+<country-code>JP</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Akira</given-name>
+<family-name>Yamamoto</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Osaka</city>
+<country-code>JP</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Matsushita Electric Industrial Co., Ltd.</organization-name>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Jack Q. Lever, Jr.</name-1>
+<name-2>McDERMOTT, WILL &amp; EMERY</name-2>
+<address>
+<address-1>600 Thirteenth Street, N.W.</address-1>
+<city>Washington</city>
+<state>DC</state>
+<postalcode>20005-3096</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A waveform equalizer, which has a partial response characteristic represented in the form of PR (a, b, c, b, a) which is a quaternary transfer function characteristic, is made up an analog filter, an ADC (analog/digital converter), and an FIR filter, for providing matching with the frequency characteristic of a read back waveform read from a recording medium. Such signal processor characteristic approximation to the regenerative signal characteristic makes it possible to easily achieve equalization without particularly emphasizing the regenerative signal, thereby achieving a reduced circuit scale. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to a signal processor suitable for the processing of a read back waveform read from a recording medium such as for example an optical disc and a magnetic disc. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Removable, high-density optical discs such as CD-R/W (Compact Disc Re-Writable) and DVD (Digital Versatile Disc) have been utilized extensively in recent years, and their recording density has become higher and higher from year to year. On the other hand, in the field of magnetic disc technology, perpendicular magnetic recording has lately attracted attention, and it has been reported that an areal recording density as high as 100 Gbit/(inch)<highlight><superscript>2 </superscript></highlight>is realized (NIKKEI ELECTRONICS, Sep. 25, 2000, No. 779, pp. 204-211). </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> With a view to regenerating information high-density recorded on a recording medium without error, to date various signal processing methods have been examined. Such methods include PRML (Partial Response Maximum Likelihood), DFE (Decision Feedback Equalizer), TCPR (Trellis Coding Partial Response) and so forth, and for example these methods have been employed in signal processing LSIs for hard disk apparatus. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> PRML employs a partial response (PR) method and the Viterbi decoding technique which is a maximum likelihood (ML) decoding technique. The partial response method is a signal processing method capable of performing data regeneration by positively making utilization of inter symbol interferences, i.e. interference between adjacent data or interference between read back waveforms. On the other hand, the Viterbi decoding technique, which is also called a maximum likelihood data series estimation method, is a method capable of regenerating a most reliable data series in time series by making use of previous data. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Conventionally, signal processors having a partial response characteristic which is represented in the form of PR (a, b, b, a) which is a tertiary transfer function characteristic, have been used. More specifically, PR (3, 4, 4, 3)-characteristic signal processors have been used in the past. However, this PR (3, 4, 4, 3) characteristic cannot be said to provide matching with the frequency characteristic of a read back waveform read from a recording medium. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Accordingly, an object of the present invention is to improve the performance of a signal processor for use in information readout from a recording medium. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In order to achieve the object, the present invention provides a signal processor having a partial response characteristic which is represented in the form of PR (a, b, c, b, a) which is a quaternary transfer function characteristic, for providing matching with the frequency characteristic of a read back waveform read from a recording medium. Such signal processor characteristic approximation to the regenerative signal characteristic makes it possible to achieve equalization without particularly emphasizing the regenerative signal, thereby providing a signal processor of reduced circuit scale.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram showing a data flow in an optical disc record regenerating apparatus employing a signal processor as an embodiment of the present invention. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a frequency characteristic diagram contrasting the conventional PR (3, 4, 4, 3) characteristic and the present invention&apos;s PR (2, 3, 2, 3, 2) characteristic with the optical disc&apos;s regenerative signal characteristic. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a frequency characteristic diagram contrasting the conventional PR (3, 4, 4, 3) characteristic and the present invention&apos;s PR characteristics, namely (2, 3, 4, 3, 2), (3, 4, 5, 4, 3), (1, 2, 3, 2, 1), and (1, 1, 2, 1, 1), with the optical disc&apos;s regenerative signal characteristic.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Referring first to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, there is shown a data flow in an optical disc record regenerating apparatus employing a signal processor according to an embodiment of the present invention. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows: an encoder <highlight><bold>10</bold></highlight> as a record modulator; an optical disc <highlight><bold>20</bold></highlight> as a recording medium; a waveform equalizer <highlight><bold>30</bold></highlight> having a PR (a, b, c, b, a) characteristic which is a quaternary transfer function characteristic; a Viterbi decoder <highlight><bold>40</bold></highlight> as a maximum likelihood decoder; and a decoder <highlight><bold>50</bold></highlight> as a record demodulator. The waveform equalizer <highlight><bold>30</bold></highlight> comprises an analog filter <highlight><bold>31</bold></highlight>, an ADC (analog/digital converter) <highlight><bold>32</bold></highlight>, and an FIR filter <highlight><bold>33</bold></highlight>. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> As seen in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, an analog regenerative signal read from the optical disc <highlight><bold>20</bold></highlight> is fed to the analog filter <highlight><bold>31</bold></highlight> where noise content of the regenerative signal added during regeneration processing is removed. And, the analog signal with noise-removed waveforms is converted by the ADC <highlight><bold>32</bold></highlight> into a digital signal. The digital signal thus converted is subjected to a waveform equalizing process based on the adaptive equalization function in the FIR filter <highlight><bold>33</bold></highlight>, and error correcting is carried out in the Viterbi decoder <highlight><bold>40</bold></highlight>. The data, which has undergone such error correction, is fed to the decoder <highlight><bold>50</bold></highlight> and is output as user data. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> contrasts the conventional PR (<highlight><bold>3</bold></highlight>, <highlight><bold>4</bold></highlight>, <highlight><bold>4</bold></highlight>, <highlight><bold>3</bold></highlight>) characteristic and the present invention&apos;s PR (<highlight><bold>2</bold></highlight>, <highlight><bold>3</bold></highlight>, <highlight><bold>2</bold></highlight>, <highlight><bold>3</bold></highlight>, <highlight><bold>2</bold></highlight>) characteristic with the optical disc&apos;s regenerative signal characteristic. Here, the relationship between the parameters a, b, and c is: a&equals;c&lt;b, and the PR (a, b, c, b, a) characteristic is represented in the form of PR (2, 3, 2, 3, 2). <cross-reference target="DRAWINGS">FIG. 2</cross-reference> clearly shows that, in terms of frequency characteristic matching property, the PR (2, 3, 2, 3, 2) characteristic is closer to the regenerative signal characteristic in comparison with the PR (3, 4, 4, 3) characteristic. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> contrasts the conventional PR (3, 4, 4, 3) characteristic, and the present invention&apos;s PR characteristics, namely (2, 3, 4, 3, 2), (3, 4, 5, 4, 3), (1, 2, 3, 2, 1), and (1, 1, 2, 1, 1), with the optical disc&apos;s regenerative signal characteristic. Here, the relationship between the parameters a, b, and c is: a&lE;b&lt;c, and the PR (a, b, c, b, a) is represented in the form of any one of the PR (2, 3, 4, 3, 2), (3, 4, 5, 4, 3), (1, 2, 3, 2, 1), and (1, 1, 2, 1, 1) characteristics. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> clearly shows that, in terms of frequency characteristic matching property, any of the PR (2, 3, 4, 3, 2), (3, 4, 5, 4, 3), (1, 2, 3, 2, 1), and (1, 1, 2, 1, 1) characteristics is closer to the regenerative signal characteristic in comparison with the PR (3, 4, 4, 3) characteristic. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A signal processor having a partial response characteristic represented in the form of PR (a, b, c, b, a) which is a quaternary transfer function characteristic, for providing matching with the frequency characteristic of a read back waveform read from a recording medium. </claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The signal processor of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said parameters a, b, and c are in such relationship that a&equals;c&lt;b. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The signal processor of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said (a, b, c, b, a) is (2, 3, 2, 3, 2). </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The signal processor of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said parameters a, b, and c are in such relationship that a&lE;b&lt;c. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The signal processor of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said (a, b, c, b, a) is either one of (2, 3, 4, 3, 2), (3, 4, 5, 4, 3), (1, 2, 3, 2, 1), and (1, 1, 2, 1, 1).</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002418A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002418A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002418A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

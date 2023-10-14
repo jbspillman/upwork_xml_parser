@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005342A1-20030102-D00000.TIF SYSTEM "US20030005342A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00001.TIF SYSTEM "US20030005342A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00002.TIF SYSTEM "US20030005342A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00003.TIF SYSTEM "US20030005342A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00004.TIF SYSTEM "US20030005342A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00005.TIF SYSTEM "US20030005342A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00006.TIF SYSTEM "US20030005342A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00007.TIF SYSTEM "US20030005342A1-20030102-D00007.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00008.TIF SYSTEM "US20030005342A1-20030102-D00008.TIF" NDATA TIF>
+<!ENTITY US20030005342A1-20030102-D00009.TIF SYSTEM "US20030005342A1-20030102-D00009.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005342</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892679</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F001/12</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>713</class>
+<subclass>400000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and system for using a sync key</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Edward</given-name>
+<middle-name>Eric</middle-name>
+<family-name>Thomas</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Redmond</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Stephen</given-name>
+<middle-name>D.</middle-name>
+<family-name>Flanagin</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sammamish</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Microsoft Corporation</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Merchant &amp; Gould P.C.</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. Box 2903</address-1>
+<city>Minneapolis</city>
+<state>MN</state>
+<postalcode>55402-0903</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and system for synchronization of data stores is described. A synchronization initiator sends a sync key to a synchronization partner requesting to synchronize to some checkpoint. An integer is used as the sync key. When the sent sync key is zero the synchronization partner performs an initial synchronization. When the sent sync key is a value other than zero, the synchronization partner attempts to synchronize to the desired state. The value of the sync key is incremented only upon successful synchronization. A sync server can also include a sync key with change update notifications sent to a sync client, which the client can use to determine if the update notification is a valid update from the current sync state or is a delayed and obsolete update that should be discarded. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to computer software, and more particularly to synchronization of data. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Computing devices may store data in more than one place. When the same or related information is stored in two places, it is possible for the data to change in one location (store) and not in another. Synchronization methods have been developed to propagate the changes between the different stores, so that the information in the different stores correlate to each other. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> In one method, during synchronization, changes to the data in the different stores are collected, compared, and reconciled. The synchronization process itself involves making changes (&ldquo;sync changes&rdquo;) to the data stores in order to &ldquo;update&rdquo; or propagate the changes made in other stores. All of the required changes to synchronize the stores may not be completed during each synchronization attempt. For example, a connection between stores may be broken during the process causing the synchronization attempt to be incomplete. One store, however, may indicate that synchronization has completed successfully when in fact the synchronization was unsuccessful. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In another method, changes are sent incrementally between the stores using notifications as the changes occur. Some implementations utilize both of these methods together. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The present invention is directed at providing a system and method for synchronizing data stores. On each synchronization update, the syncing entities attempt to update each other up to the state at the time of the sync request is processed. This time or state is referred to as the synchronization checkpoint (&ldquo;sync checkpoint&rdquo;). According to one aspect of the invention, each of these checkpoints is given a unique synchronization key (&ldquo;sync key&rdquo;) to represent the checkpoint state. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> According to one aspect of the invention, a sync initiator sends the sync key that it received in response to the last successful synchronization to the synchronization partner. If the receiving partner receives a valid sync key from the sender then the receiver responds to the client&apos;s request. Otherwise, the receiver responds to the sender as appropriate. For example, the receiver could reply to the sender indicating that the sync key is not valid. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> According to another aspect of the invention, the sync key is an integer that begins at zero and is incremented with each sync attempt that is successfully completed. The synchronization initiator (the sender of the synchronization request) determines the value of its sync key, which is based on its last synchronization attempt. The sync key is incremented only upon the successful receipt and processing of the last sync response. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> According to yet another aspect of the present invention, a sync initiator can sync to a new checkpoint, resync from the last checkpoint, or initiate a completely new sync from scratch. For example, if N is the sync key value from the last successful sync, the sync initiator may send a sync key value of Nto indicate that it received the sync response for the last sync and wishes to sync from that checkpoint to the current state. If the sync initiator sends a request with sync key&equals;N-1, the sync partner determines that the sync initiator did not receive a response to its last sync request or otherwise wishes to resync again from the last successfully processed sync state.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a functional block diagram of one computing device adapted to implement one embodiment of the invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a mobile computing device that may be used in one exemplary embodiment of the present invention; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram of one exemplary synchronization system as implemented using the computer device shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> and the mobile computing device shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a table illustrating exemplary synchronization steps; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is an overview flowchart illustrating synchronization; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> shows a logical flow for preparing a synchronization request according to one embodiment of the invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates a logical flow for processing a received sync key; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> illustrates a logical flow for when a synchronization key relating to the client is not located; and </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 9</cross-reference> illustrates a logical flow for performing a synchronization based on the sync keys.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The present invention is directed at providing a method and system for synchronizing data. Briefly described, a synchronization key indicating a synchronization checkpoint is sent by a synchronization initiator to a synchronization partner. If the synchronization key received by the synchronization partner is valid, the partner returns synchronization data to the initiator to synchronize the stores between the initiator and partner. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, an exemplary system for implementing the invention includes a computing device, such as computing device <highlight><bold>100</bold></highlight>. In a basic configuration, computing device <highlight><bold>100</bold></highlight> typically includes at least one processing unit <highlight><bold>102</bold></highlight> and system memory <highlight><bold>104</bold></highlight>. Depending on the exact configuration and type of computing device, system memory <highlight><bold>104</bold></highlight> may be volatile (such as RAM), non-volatile (such as ROM, flash memory, and the like) or some combination of the two. System memory <highlight><bold>104</bold></highlight> typically includes an operating system <highlight><bold>105</bold></highlight>, one or more program modules <highlight><bold>106</bold></highlight>, and may include program data <highlight><bold>107</bold></highlight>. This basic configuration is illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> by those components within dashed line <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Computing device <highlight><bold>100</bold></highlight> may also have additional features or functionality. For example, computing device <highlight><bold>100</bold></highlight> may also include additional data storage devices (removable and/or non-removable) such as, for example, magnetic disks, optical disks, or tape. Such additional storage is illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> by removable storage <highlight><bold>109</bold></highlight> and non-removable storage <highlight><bold>110</bold></highlight>. Computer storage media may include volatile and non-volatile, removable and non-removable media implemented in any method or technology for storage of information, such as computer readable instructions, data structures, program modules or other data. System memory <highlight><bold>104</bold></highlight>, removable storage <highlight><bold>109</bold></highlight> and non-removable storage <highlight><bold>110</bold></highlight> are all examples of computer storage media. Computer storage media includes, but is not limited to, RAM, ROM, EEPROM, flash memory or other memory technology, CD-ROM, digital versatile disks (DVD) or other optical storage, magnetic cassettes, magnetic tape, magnetic disk storage or other magnetic storage devices, or any other medium which can be used to store the desired information and which can be accessed by computing device <highlight><bold>100</bold></highlight>. Any such computer storage media may be part of device <highlight><bold>100</bold></highlight>. Computing device <highlight><bold>100</bold></highlight> may also have input device(s) <highlight><bold>112</bold></highlight> such as keyboard, mouse, pen, voice input device, touch input device, etc. Output device(s) <highlight><bold>114</bold></highlight> such as a display, speakers, printer, etc. may also be included. All these devices are known in the art and need not be discussed at length here. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Computing device <highlight><bold>100</bold></highlight> also contains communications connection(s) <highlight><bold>116</bold></highlight> that allow the device to communicate with other computing devices <highlight><bold>118</bold></highlight>, such as over a network. Communications connection(s) <highlight><bold>116</bold></highlight> is an example of communication media. Communication media typically embodies computer readable instructions, data structures, program modules or other data in a modulated data signal such as a carrier wave or other transport mechanism and includes any information delivery media. The term &ldquo;modulated data signal&rdquo; means a signal that has one or more of its characteristics set or changed in such a manner as to encode information in the signal. By way of example, and not limitation, communication media includes wired media such as a wired network or direct-wired connection, and wireless media such as acoustic, RF, infrared and other wireless media. The term computer readable media as used herein includes both storage media and communication media. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a mobile computing device that may be used in one exemplary embodiment of the present invention. With reference to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, one exemplary system for implementing the invention includes a mobile computing device, such as mobile computing device <highlight><bold>200</bold></highlight>. The mobile computing device <highlight><bold>200</bold></highlight> has a processor <highlight><bold>260</bold></highlight>, a memory <highlight><bold>262</bold></highlight>, a display <highlight><bold>228</bold></highlight>, and a keypad <highlight><bold>232</bold></highlight>. The memory <highlight><bold>262</bold></highlight> generally includes both volatile memory (e.g., RAM) and non-volatile memory (e.g., ROM, Flash Memory, or the like). The mobile computing device <highlight><bold>200</bold></highlight> includes an operating system <highlight><bold>264</bold></highlight>, such as the Windows CE operating system from Microsoft Corporation or other operating system, which is resident in the memory <highlight><bold>262</bold></highlight> and executes on the processor <highlight><bold>260</bold></highlight>. The keypad <highlight><bold>232</bold></highlight> may be a push button numeric dialing pad (such as on a typical telephone), a multi-key keyboard (such as a conventional keyboard). The display <highlight><bold>228</bold></highlight> may be a liquid crystal display, or any other type of display commonly used in mobile computing devices. The display <highlight><bold>228</bold></highlight> may be touch sensitive, and would then also act as an input device. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> One or more application programs <highlight><bold>266</bold></highlight> are loaded into memory <highlight><bold>262</bold></highlight> and run on the operating system <highlight><bold>264</bold></highlight>. Examples of application programs include phone dialer programs, email programs, scheduling programs, PIM (personal information management) programs, word processing programs, spreadsheet programs, Internet browser programs, and so forth. The mobile computing device <highlight><bold>200</bold></highlight> also includes non-volatile storage <highlight><bold>268</bold></highlight> within the memory <highlight><bold>262</bold></highlight>. The non-volatile storage <highlight><bold>268</bold></highlight> may be used to store persistent information which should not be lost if the mobile computing device <highlight><bold>200</bold></highlight> is powered down. The applications <highlight><bold>266</bold></highlight> may use and store information in the storage <highlight><bold>268</bold></highlight>, such as e-mail or other messages used by an e-mail application, contact information used by a PIM, appointment information used by a scheduling program, documents used by a word processing application, and the like. A synchronization application also resides on the mobile computing device <highlight><bold>200</bold></highlight> and is programmed to interact with a corresponding synchronization application resident on a host or server computer to keep the information stored in the storage <highlight><bold>268</bold></highlight> synchronized with corresponding information stored at the host computer. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> has a power supply <highlight><bold>270</bold></highlight>, which may be implemented as one or more batteries. The power supply <highlight><bold>270</bold></highlight> might further include an external power source, such as an AC adapter or a powered docking cradle that supplements or recharges the batteries. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> is shown with two types of external notification mechanisms: an LED <highlight><bold>240</bold></highlight> and an audio interface <highlight><bold>274</bold></highlight>. These devices may be directly coupled to the power supply <highlight><bold>270</bold></highlight> so that when activated, they remain on for a duration dictated by the notification mechanism even though the processor <highlight><bold>260</bold></highlight> and other components might shut down to conserve battery power. The LED <highlight><bold>240</bold></highlight> may be programmed to remain on indefinitely until the user takes action to indicate the powered-on status of the device. The audio interface <highlight><bold>274</bold></highlight> is used to provide audible signals to and receive audible signals from the user. For example, the audio interface <highlight><bold>274</bold></highlight> may be coupled to a speaker for providing audible output and to a microphone for receiving audible input, such as to facilitate a telephone conversation. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> also includes a radio interface layer <highlight><bold>272</bold></highlight> that performs the function of transmitting and receiving communications, such as radio frequency communications. The radio interface layer <highlight><bold>272</bold></highlight> facilitates wireless connectivity between the mobile computing device <highlight><bold>200</bold></highlight> and the outside world, via a communications carrier or service provider. Transmissions to and from the radio interface layer <highlight><bold>272</bold></highlight> are conducted under control of the operating system <highlight><bold>264</bold></highlight>. In other words, communications received by the radio interface layer <highlight><bold>272</bold></highlight> may be disseminated to application programs <highlight><bold>266</bold></highlight> via the operating system <highlight><bold>264</bold></highlight>, and vice versa. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram generally illustrating one embodiment for a synchronization system <highlight><bold>300</bold></highlight> for synchronization between a fixed computing device, such as an information server <highlight><bold>310</bold></highlight> and a mobile device <highlight><bold>320</bold></highlight>, in accordance with the present invention. In this implementation, the information server <highlight><bold>310</bold></highlight> is a computing device such as the one described above in conjunction with <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and the mobile device <highlight><bold>320</bold></highlight> is a mobile computing device such as the one described above in conjunction with <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. A synchronization application <highlight><bold>342</bold></highlight> performs the synchronization process between the information server <highlight><bold>310</bold></highlight> and the mobile device <highlight><bold>320</bold></highlight>. In the embodiment illustrated, the synchronization application <highlight><bold>342</bold></highlight> is resident on a synchronization server <highlight><bold>340</bold></highlight>, which is a computing device as described above in conjunction with <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. Typically, a firewall (not shown) is located between the synchronization server <highlight><bold>340</bold></highlight> and the information server <highlight><bold>310</bold></highlight> to protect data that is accessible to the information server <highlight><bold>310</bold></highlight>. In another embodiment, the synchronization application <highlight><bold>342</bold></highlight> may reside on information server <highlight><bold>310</bold></highlight>. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The mobile device <highlight><bold>320</bold></highlight> maintains mobile data <highlight><bold>322</bold></highlight> locally in its storage <highlight><bold>268</bold></highlight> (shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). As mentioned earlier, the mobile data <highlight><bold>322</bold></highlight> may include e-mail or other messages used by an e-mail application, contact information used by a PIM, appointment information used by a scheduling program, and the like. The mobile device <highlight><bold>320</bold></highlight> may change the mobile data <highlight><bold>322</bold></highlight> at anytime. Once the mobile data <highlight><bold>322</bold></highlight> is changed, server data <highlight><bold>312</bold></highlight> accessible by the information server <highlight><bold>310</bold></highlight> will not have correlating information until a successful synchronization occurs. Similarly, the information server <highlight><bold>310</bold></highlight> may change the server data <highlight><bold>312</bold></highlight>, such as through any number of networked personal computers (not shown) connected to the information server <highlight><bold>310</bold></highlight>. Again, once the server data <highlight><bold>312</bold></highlight> is changed, the mobile data <highlight><bold>322</bold></highlight> and server data <highlight><bold>312</bold></highlight> no longer correlate (i.e., data is not synchronized). In order for the mobile data <highlight><bold>322</bold></highlight> and the server data <highlight><bold>312</bold></highlight> to correlate (i.e., synchronized), the mobile device <highlight><bold>320</bold></highlight> initiates a synchronization session. The synchronization application <highlight><bold>342</bold></highlight> saves information regarding the synchronization sessions in a synchronization state table <highlight><bold>344</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Briefly, in the synchronization session, synchronization data is transmitted between the mobile device <highlight><bold>320</bold></highlight> and the information server <highlight><bold>310</bold></highlight> using wireless technology. The synchronization data includes manifests <highlight><bold>324</bold></highlight> sent by the mobile device <highlight><bold>320</bold></highlight> and incremental updates <highlight><bold>326</bold></highlight> sent by synchronization application <highlight><bold>342</bold></highlight> to the mobile device. The incremental updates specify changes to the server data <highlight><bold>312</bold></highlight> since the last successful synchronization. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is illustrates exemplary synchronization steps. At step <highlight><bold>1</bold></highlight>, a synchronization initiator, such as a client, prepares an initial sync key and sends the sync key to a synchronization partner, such as a synchronization server. The server processes the received sync key at step <highlight><bold>2</bold></highlight>. At step <highlight><bold>3</bold></highlight>, the server returns the synchronization data to the client at step <highlight><bold>3</bold></highlight> at which point the client receives the synchronization data. After a successful synchronization, the client updates the synchronization key to reflect the successful synchronization. At some point in time after an initial synchronization, the client typically sends a synchronization request to the server to sync to a new sync checkpoint. In other words, the client requests to receive all data not synchronized since the last successful synchronization between the client and server. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Steps <highlight><bold>4</bold></highlight>-<highlight><bold>8</bold></highlight> illustrate two different synchronization attempts. At step <highlight><bold>4</bold></highlight> the client sends the last successful sync key indicating to the server to send changes in the data since the last successful synchronization. The server receives the request (step <highlight><bold>4</bold></highlight>), processes the request (step <highlight><bold>5</bold></highlight>) and returns the changed data to the client. In this particular example, the client receives all updates that have occurred after the initial synchronization between the client and server. The client receives the data and updates its data store. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Similarly, at step <highlight><bold>7</bold></highlight> the client requests to synchronize to include updates since the last successful synchronization. In this particular example, the last successful synchronization was requested at step <highlight><bold>4</bold></highlight>. At step <highlight><bold>8</bold></highlight> the server processes the synchronization request from the client. In this particular example, the server sends the updates to the client, but all of the data does not reach the client. The server believes the client has been synchronized and updates its synchronization key, resulting in the client and server having the same valued synchronization key. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Steps <highlight><bold>9</bold></highlight> and <highlight><bold>10</bold></highlight> illustrate a client requesting to synchronize to a checkpoint that the server believes that the client has already been synchronized. At step <highlight><bold>9</bold></highlight>, the client requests a synchronization from the same state as requested at step <highlight><bold>7</bold></highlight>. The server receives the request (step <highlight><bold>9</bold></highlight>) and recognizes that the last synchronization request was not successful for the client. The server, therefore, returns the updated entries to the client from the time of the sync checkpoint corresponding the synchronization key sent by the client. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is an overview flowchart illustrating synchronization. At a start block, a synchronization process is initiated. The synchronization can be initiated by any of the synchronization partners. According to one embodiment of the present invention, a client desires to synchronize with a server. At a block <highlight><bold>510</bold></highlight>, the client, or synchronization initiator, prepares for synchronization with the synchronization partner (&ldquo;server&rdquo;). (See <cross-reference target="DRAWINGS">FIG. 6</cross-reference> and related discussion). Successful synchronization brings the state of the data stores on the client and server to the same state at a specific synchronization checkpoint. Moving to a block <highlight><bold>520</bold></highlight>, the synchronization is performed. Generally, the server sends data to the client containing all updates from the requested synchronization state to the current state of the server. The data may be sent to the client using many different methods, as is well known to those of ordinary skill in the art. At a decision block <highlight><bold>530</bold></highlight>, a determination is made as to whether the synchronization is successful. A successful synchronization for a client means that the synchronization data received by the client was processed appropriately. A successful synchronization for a server means that the server believes that all of the synchronization data has been sent to the client. If the sync is not successful, the logical flow ends. If the sync is successful, the logical flow moves to a block <highlight><bold>540</bold></highlight> at which point the sync key stored on the client and server is updated to reflect the successful synchronization. The logical flow then ends. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> shows a logical flow for preparing for synchronization according to one embodiment of the invention. Starting at a block <highlight><bold>610</bold></highlight>, a client prepares a synchronization manifest. According to one embodiment of the invention, a synchronization manifest includes identifying information about the client and a synchronization key. The synchronization key includes information indicating what checkpoint the client desires to synchronize from with the server. The synchronization key can be thought of as a synchronization attempt identifier. According to one embodiment of the invention, the sync key is an integer that starts at a value of minus one, and is incremented with each synchronization that is successful. Many other types of sync keys can be used. For example, the sync key could be a bit(s), float, character, and the like. Moving to a block <highlight><bold>620</bold></highlight>, the client, or synchronization initiator, sends the manifest including the sync key to a synchronization partner, or server. The synchronization server receives the sync key and sends the client the requested synchronization data or an error message depending on the manifest and sync key received from the client (block <highlight><bold>630</bold></highlight>) (See <cross-reference target="DRAWINGS">FIG. 7</cross-reference> and related discussion). Flowing to a block <highlight><bold>640</bold></highlight>, the client receives the data and processes the data. The logical flow then ends. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates a logical flow for processing a received sync key from a synchronization partner. Starting at a block <highlight><bold>710</bold></highlight>, a synchronization server determines the last synchronization key associated with the client requesting synchronization. According to one embodiment of the present invention, the synchronization server searches for the synchronization key associated with the requesting synchronization client. Decision block <highlight><bold>720</bold></highlight> determines if the synchronization key for the client is located. If a synchronization key is not located for the client, the client is synchronized with no memory of a prior synchronization (block <highlight><bold>730</bold></highlight>) (See <cross-reference target="DRAWINGS">FIG. 8</cross-reference> and related discussion). If a synchronization key relating to the client is located, then the logical flow moves to a block <highlight><bold>740</bold></highlight>, at which point the server compares the located synchronization key to the synchronization key sent by the client (See <cross-reference target="DRAWINGS">FIG. 9</cross-reference> and related discussion) and responds appropriately. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> illustrates a logical flow for when a synchronization key relating to the client is not located. Starting at a decision block <highlight><bold>810</bold></highlight>, a determination is made as to whether this is the first, or initial, synchronization between the client and server. According to one embodiment of the invention, an initial synchronization is indicated by a sent sync key value of zero. If this is an initial synchronization, the logical flow moves to a block <highlight><bold>820</bold></highlight> at which point an initial synchronization is performed. An initial synchronization updates the client with all of the initial information stored on the server for the client. In other words, a synchronization is performed from scratch. If this is not an initial synchronization, the logical flow moves to a block <highlight><bold>830</bold></highlight> at which point an error message is returned. An error message indicates that a synchronization key should exist on the server, but that some error has caused the synchronization information to be lost for the client. The logical flow then ends. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 9</cross-reference> illustrates a logical flow for synchronization when a synchronization key related to the client is located. Starting with a start block and moving to a decision block <highlight><bold>910</bold></highlight>, a determination is made as to whether a re-synchronization is requested. According to one embodiment of the invention, a re-sync is requested if the value of the sync key is zero. If the client is requesting a re-synchronization, the logical flow moves to a block <highlight><bold>915</bold></highlight>. At a block <highlight><bold>915</bold></highlight>, synchronization from an initial condition is performed. A re-synchronize request may occur in many different situations. For example, if the memory of the client was erased, or the client device was replaced with another similar device, such as when a device is upgraded. According to one embodiment of the invention, the client and server perform a re-synchronization as if the request was an initial synchronization request. The logical flow then ends. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> When a re-synchronization is not requested, the logical flow moves to a decision block <highlight><bold>920</bold></highlight>. At a decision block <highlight><bold>920</bold></highlight>, a determination is made as to whether this is the next expected synchronization request. For example, an expected synchronization request occurs when the server receives a synchronization key indicating that the last synchronization was successfully performed. According to one particular embodiment of the invention, the expected synchronization key has a value of the server&apos;s synchronization key. For example, if the server&apos;s sync key has a value of 2, then the received value of the sent sync key would be 2. According to another embodiment, the expected synchronization key has a value of the server&apos;s synchronization key for the client plus one. For example, if the server&apos;s sync key has a value of 2, then the received value of the sent sync key would be 3. If this is the next synchronization request, the logical flow moves to a block <highlight><bold>925</bold></highlight>, at which point the next synchronization is performed. The server returns data from the point of the last synchronization checkpoint to the current checkpoint. The logical flow then ends. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> If the request is not for the next synchronization, the logical flow moves to a decision block <highlight><bold>930</bold></highlight>. Decision block <highlight><bold>930</bold></highlight> determines whether the last synchronization was successful. If the synchronization was not successful, the logical flow moves to a block <highlight><bold>935</bold></highlight>. According to one embodiment of the present invention, the received sync key value would be less than the server&apos;s sync key. In this situation, the server believes that a successful synchronization occurred for the last synchronization request from the client, but the client did not successfully synchronize to the last checkpoint. This situation can occur under many different scenarios. For example, data sent by the server may never have reached the client, or the client may not have properly processed the data. At a block <highlight><bold>935</bold></highlight> the client is synchronized to the current state of the server including the information on the server from the checkpoint of the last successful synchronization as indicated by the client. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> If the last successful synchronization was successful, the logical flow moves to a decision block <highlight><bold>940</bold></highlight> that determines whether the sent synchronization key is out-of-date. According to one embodiment of the present invention, if the synchronization key is more than one requested synchronization state from the server&apos;s located synchronization key the synchronization key is out-of-date. For example, if the sent sync key has a value of 1, and the server has a sync key for the client having a value of 5 then the sync key is out-of-date. Similarly, if the received sync key has a value of 4, and the server has a sync key value of 2, the sync key is out-of-date. If the synchronization key is out-of-date, the logical flow moves to a block <highlight><bold>945</bold></highlight>. According to one embodiment of the present invention, an error is returned to the client indicating that an improper synchronization key was received (block <highlight><bold>945</bold></highlight>). According to another embodiment of the present invention, the server returns synchronization data from the synchronization checkpoint as indicated by the sent sync key. For example, suppose that five synchronizations have successfully occurred between the client and server. Under this example, the server may store all synchronization checkpoints and synchronize from any of the five checkpoints. If the client requests to synchronize with the server from state three, the server will send the data to the client checkpoint three to the current state to the client. Otherwise, the logical flow ends. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The above specification, examples and data provide a complete description of the manufacture and use of the composition of the invention. Since many embodiments of the invention can be made without departing from the spirit and scope of the invention, the invention resides in the claims hereinafter appended. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for synchronization, comprising: 
+<claim-text>(a) a synchronization initiator sending a sync key to a synchronization partner; </claim-text>
+<claim-text>(b) determining a desired synchronization state to synchronize from based on the sent sync key; and </claim-text>
+<claim-text>(c) the partner determining if the sent sync key is valid, and if the sync key is valid: 
+<claim-text>(i) attempting to synchronize with the initiator from the desired synchronization state to a current state; and </claim-text>
+<claim-text>(ii) determining if the attempted synchronization was successful. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein determining the desired synchronization state to synchronize from based on the sent sync key, further comprises: 
+<claim-text>(a) determining a value of the sent sync key; and </claim-text>
+<claim-text>(b) setting the desired synchronization state based on the value of the sent sync key. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein determining if the sent sync key is valid further comprises determining if a partner sync key exists related to the sent sync key; and if so: 
+<claim-text>(a) determining a previously stored value of the partner sync key; and </claim-text>
+<claim-text>(b) comparing the value of the partner sync key to the value of the sent sync key. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein setting the desired synchronization state based on the value of the sent sync key, further comprises: 
+<claim-text>(a) determining if the desired synchronization state is an initial synchronization state based on the value of the sent sync key; and </claim-text>
+<claim-text>(b) determining if the desired synchronization state is another valid synchronization state based on the value of the sent sync key. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein determining if the attempted synchronization was successful, further comprises: 
+<claim-text>(a) the synchronization initiator determining if the synchronization was successful, and if so: 
+<claim-text>updating the sync key on the initiator; and </claim-text>
+</claim-text>
+<claim-text>(b) the synchronization partner determining if the synchronization was successful, and if so: 
+<claim-text>updating the partner sync key. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein determining if the desired synchronization state is another valid synchronization state based on the value of the sent sync key, further comprises, determining if the value of the sent sync key corresponds to a stored synchronization checkpoint. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the sent sync key is an integer and the partner sync key is an integer. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A computer-readable medium having computer-executable instructions for synchronization, comprising: 
+<claim-text>(a) a client sending a sync key to a server; </claim-text>
+<claim-text>(b) determining a desired synchronization state from the sent sync key; and </claim-text>
+<claim-text>(c) attempting to synchronize with the client to the desired synchronization state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising: 
+<claim-text>(a) determining if the attempted synchronization was successful; and </claim-text>
+<claim-text>(b) updating the value of the sent sync key if the synchronization was successful. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein determining the desired synchronization state from the sent sync key, further comprises: 
+<claim-text>(a) determining a value of the sent sync key; </claim-text>
+<claim-text>(b) locating a server sync key having a value; </claim-text>
+<claim-text>(c) comparing the value of the sent sync key to the value of the server sync key; and </claim-text>
+<claim-text>(d) setting the desired synchronization state based on the comparison. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein setting the desired synchronization state based on comparison, further comprises: 
+<claim-text>(a) setting the desired synchronization state to an initial synchronization when the value of the sent sync key is zero; or </claim-text>
+<claim-text>(b) setting the desired synchronization state to a stored synchronization state of the server when the comparison determines that the value of the sent key relates to a stored synchronization state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein determining if the attempted synchronization was successful, further comprises: 
+<claim-text>(a) the client determining if the synchronization was successful, and if so: 
+<claim-text>updating the value of the sent sync key; and </claim-text>
+</claim-text>
+<claim-text>(b) the server determining if the synchronization was successful, and if so: 
+<claim-text>updating the value of the server sync key. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein updating the value of the sent sync key and updating the value of the server sync key, further comprises incrementing the value of the sync key stored on the client and the server sync key. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A system for synchronizing data, comprising: 
+<claim-text>(a) a processor and a computer-readable medium; </claim-text>
+<claim-text>(b) an operating environment stored on the computer-readable medium and executing on the processor; </claim-text>
+<claim-text>(c) a communication connection device operating under the control of the operating environment; and </claim-text>
+<claim-text>(d) a synchronization device operating under the control of the operating environment and operative to perform actions, including: 
+<claim-text>(i) receiving or sending a sync key to a synchronization partner; </claim-text>
+<claim-text>(ii) determining a desired synchronization state from the sync key; </claim-text>
+<claim-text>(iii) synchronizing with the client from the desired synchronization state to a current state; and </claim-text>
+<claim-text>(iv) determining if the synchronization was successful. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising updating the sync key if the synchronization was successful. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein determining the desired synchronization state from the sync key, further comprises: 
+<claim-text>(a) determining a value of the sync key; </claim-text>
+<claim-text>(b) setting the desired synchronization state based on the value of the sync key. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein determining if the attempted synchronization was successful, further comprises determining if the synchronized data was processed, and if so updating the value of the sent sync key.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>5</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005342A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005342A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005342A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005342A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005342A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005342A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005342A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030005342A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00008">
+<image id="EMI-D00008" file="US20030005342A1-20030102-D00008.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00009">
+<image id="EMI-D00009" file="US20030005342A1-20030102-D00009.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

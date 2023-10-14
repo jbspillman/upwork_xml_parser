@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002508A1-20030102-D00000.TIF SYSTEM "US20030002508A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002508A1-20030102-D00001.TIF SYSTEM "US20030002508A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002508A1-20030102-D00002.TIF SYSTEM "US20030002508A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002508A1-20030102-D00003.TIF SYSTEM "US20030002508A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002508A1-20030102-D00004.TIF SYSTEM "US20030002508A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002508</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892968</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L012/28</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>370</class>
+<subclass>395520</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and apparatus for an improved bulk read socket call</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Herman</given-name>
+<middle-name>Dietrich</middle-name>
+<family-name>Dierks</family-name>
+<name-suffix>JR.</name-suffix>
+</name>
+<residence>
+<residence-us>
+<city>Round Rock</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Vinit</given-name>
+<family-name>Jain</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Agustin</given-name>
+<family-name>Mena</family-name>
+<name-suffix>III</name-suffix>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Venkat</given-name>
+<family-name>Venkatsubra</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Duke W. Yee</name-1>
+<name-2>Carstens, Yee &amp; Cahoon, LLP</name-2>
+<address>
+<address-1>P.O. Box 802334</address-1>
+<city>Dallas</city>
+<state>TX</state>
+<postalcode>75380</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">An apparatus and method for an improved bulk read socket call are provided. With the apparatus and method, a new field, so_rcvlen, is added to the socket structure that identifies the bulk read size requested by the user. The kernel of the prior art recv( ) function is also modified so that it sets the so_rcvlen to the size requested by the user prior to the recv( ) function going to sleep and waiting for the full data size requested by the user. A new flag, SP_MSGWAITALL, is also provided in the socket structure. In the TCP input processing, when data is received for a particular socket, the current setting of the SP_MSGWAITALL is checked. If the SP_MSGWAITALL flag is set, it is determined whether the amount of data stored in the socket receive buffer is less than the value of so rcvlen. If not, the TCP input processing does not wake up the recv( ) thread. However, for every alternate segment, the TCP input processing sends back an acknowledgment (ACK). In the TCP output processing, when the SP_MSGWAITALL flag is set and the amount of data in the socket receive buffer is less than so_rcvlen, the full window is advertised. Once the TCP input processing determines that there is at least an amount of data in the socket receive buffer equal to the value of so_rcvlen, the TCP input processing will wake up the recv( ) thread and the SP_MSGWAITALL flag is reset. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Technical Field </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention is directed to a method and apparatus for an improved bulk read socket call. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The Internet has become a significant communication media in the modern world and is enabling the world to migrate to one global data communications system. The Internet uses the Transmission Control Protocol/Internet Protocol (TCP/IP) suite of protocols to provide a common communications mechanism for computers, and other data transmission devices, to communicate with one another. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Communication with applications running on a server is typically performed using ports and addresses assigned to the application and the server apparatus. A port may be a physical port or a logical port. A physical port is a pathway into and out of a computer or a network device such as a switch or router. For example, the serial and parallel ports on a personal computer are external sockets for plugging in communications lines, modems and printers. Every network adapter has a port (Ethernet, Token Ring, etc.) for connection to the local area network (LAN). Any device that transmits and receives data implies an available port to connect to each line. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> A logical port is a number assigned to an application running on the server by which the application can be identified. While a server may have a single physical port, the server may make use of a plurality of logical ports. The combination of a logical port identifier and the address of the server apparatus is referred to as a socket. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The address of the server is a network address that identifies the server in the network and how to route data to a particular physical port of the server through the network. The address may take the form of a Uniform Resource Locator (URL), or in the case of the Internet, an Internet Protocol (IP) address such as 205.15.01.01, or the like. The address is included in headers of data packets transmitted by a device. The data packets are routed through the network from device to device by reading the header of the data packet and determining how to route the data packet to its intended destination based on the address. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Once the data packet arrives at the intended destination server apparatus, the server determines the destination application based on the logical port identifier included in the header information of the data packet. A data packet may be directed to a particular logical port by including the logical port identifier in its header information. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> An application on a server &ldquo;listens&rdquo; to a logical port by retrieving data having a logical port identifier that identifies the logical port associated with that application. The application will take the data directed to its logical port and place it in a queue for the application. In this way, data may be routed through a network to a server apparatus and provided to a particular application on the server apparatus for processing. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The TCP/IP protocol provides various socket functions that may be used in the handling of data as the data is transported to and from an application through the socket. One such function that is typically used by FTP file and print services is the recv(int sock, (void *) buffer, int flags) read function. This read function further has a known feature MSG_WAITALL that allows an application to read a large amount of data at one time as a bulk read instead of reading a large amount of data doing multiple calls of the recv( ) function. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> For example, assume that a user wishes to read data in bulk units of 60,000 bytes. Using the MSG_WAITALL bulk read feature of the recv( ) function, each time data is stored in the receive socket buffer, the recv( ) bulk read function is awakened. The recv( ) examines the receive socket buffer to determine if 60,000 bytes are in the receive socket buffer. If not, the recv( ) goes back to sleep and waits until another amount of data is stored in the receive socket buffer when it will again be awakened. If there is 60,000 bytes in the receive socket buffer, this amount of data is read from the receive socket buffer and provided to the calling application. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> With this bulk read function, a single call to the recv( ) function is made rather than multiple calls and thus, the overhead associated with the extra system call execution is avoided. However, this feature, when used with TCP sessions has many limitations. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> First, even though the recv( ) function waits for the full amount of data the user has requested, the TCP wakes up the blocked thread, i.e. the thread from the calling application that calls recv( ), each time a data segment arrives. The thread wakes up and checks if the full data has arrived. If not, it goes back to sleep again. For a 64 Kb recv( ) function call, for example, receiving 1460 byte Maximum Segment Size (MSS) TCP segments, this would result in approximately 43 unnecessary wakeups of the thread and the associated overhead. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Second, when MSG_WAITALL is used, TCP acknowledgments are delayed up to 200 milliseconds. The reason for this is that acknowledgments are triggered by the application reading at least 2 MSS worth of data from the receive socket buffer. However, when the MSG_WAITALL feature is used, since the data remains in the receive socket buffer until the user requested amount of data is gathered in the buffer, acknowledgments will not be sent until the delayed acknowledgment timer expires. The delayed acknowledgment timer is a timer that delays the sending of an acknowledgment of receipt of data up to 200 milliseconds in anticipation of sending the acknowledgment with data that needs to be sent in the reverse direction. Delaying the acknowledgments so much causes a number of problems. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> For example, the TCP&apos;s congestion control and avoidance schemes, such as slow start and the like, depend heavily on incoming acknowledgments. Slow start, for example, is the phase of data transmission in which the sending computing device sends data slowly and increases the data flow on the arrival of each acknowledgment from the receiving computing device. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Thus, for example, if the acknowledgments are delayed, during the slow start phase, the congestion window will open up very slowly, i.e. the data flow will increase very slowly. The congestion window is a measurement of the amount of data that a sender may send to a receiving computing device and avoid causing congestion in the data network. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In addition, the fast recovery mechanism after detecting packet loss recovers solely depending on the arrival of acknowledgments. For example, assume that a receiver is waiting for 32 Kb of data on a recv( ) function call with MSG_WAITALL set and a sender&apos;s congestion window is currently 22 segments, i.e. TCP packets, of 1460 bytes. If a data packet gets dropped, the fast retransmit algorithm retransmits the dropped segment after receiving three duplicate acknowledgments but also halves the congestion window to 11 segments to thereby slow down the data traffic in the network. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Assuming, for example, a single packet drop, the receiver would acknowledge all 22 segments on receiving the dropped segment and the recv( ) function should complete. However, for the next &ldquo;send&rdquo;, the sender is allowed to send only 11 segments whereas the receiver is waiting for the full 32 Kb. There will now be a pause until the 200 millisecond delayed acknowledgment timer expires. Then the TCP would acknowledge the 11 segments. Now the sender can send the next 11 segments. On receiving the next 11 segments, the recv( ) function would also complete. However, since the sender is now in a fast recover phase, the congestion window opens up by only {fraction (1/11)}th of the segment size per acknowledgment. Therefore, for the next recv( ) call, the same 200 millisecond delay occurs. This continues until the congestion window grows back to 22 segments. The above example considers only one segment loss for this duration. The situation is considerably worse when multiple packet drops occur. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Third, when the MSG_WAITALL flag is used, since the receiver&apos;s advertised window, i.e. the size of the receivers TCP buffer, keeps reducing until the recv( ) function gets the full data requested by the user, a situation may occur where the sender hits the persist timer delays (minimum of 5 seconds in most implementations). The persist timer delays are the delays perceived by the sending computing system due to probing of the receiving computing system to determine when the receiving computing system TCP buffer is no longer full. This is caused due to the fact that TCP is byte oriented and not message oriented. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A 32 Kb message written by the sender gets packetized and depacketized by TCP in a manner determined by TCP. When the receiver side window reduces to a value less than the MSS used by the connection, the sender defers sending this small amount of data (if it has enough data queued in its send buffer) until the receiver opens up its window because the sender thinks the receiver is busy and is slow to read the data. This may not be the case, however, because the receiver might actually be waiting on the recv( ) function for just this small piece of data to make the 32 Kb that the user has requested. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Thus, it would be beneficial to have a method and apparatus for an improved bulk read socket call that avoids the drawbacks of the prior art outlined above. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The present invention provides an apparatus and method for an improved bulk read socket call are provided. With the apparatus and method of the present invention, a new field, so_rcvlen, is added to the socket structure that identifies the bulk read size requested by the user. The kernel of the prior art recv( ) function is also modified so that it sets the so_rcvlen to the size requested by the user prior to the recv( ) function going to sleep and waiting for the full data size requested by the user. In addition, a new flag, SP_MSGWAITALL, is also provided in the socket structure. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In the TCP input processing of the present invention, when data is received for a particular socket, the current setting of the SP_MSGWAITALL is checked. If the SP_MSGWAITALL flag is set, it is determined whether the amount of data stored in the socket receive buffer is less than the value of so rcvlen. If not, the TCP input processing does not wake up the recv( ) thread. However, for every alternate segment, the TCP input processing sends back an acknowledgment (ACK). </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In the TCP output processing of the present invention, when the SP_MSGWAITALL flag is set and the amount of data in the socket receive buffer is less than so_rcvlen, the full window is advertised. Once the TCP input processing determines that there is at least an amount of data in the socket receive buffer equal to the value of so_rcvlen, the TCP input processing will wake up the recv( ) thread and the SP_MSGWAITALL flag is reset. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The novel features believed characteristic of the invention are set forth in the appended claims. The invention itself, however, as well as a preferred mode of use, further objectives and advantages thereof, will best be understood by reference to the following detailed description of an illustrative embodiment when read in conjunction with the accompanying drawings, wherein: </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts a pictorial representation of a network of data processing systems in which the present invention may be implemented; </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of a data processing system that may be implemented as a server in accordance with a preferred embodiment of the present invention; </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram illustrating a data processing system in which the present invention may be implemented; and </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart outlining an exemplary operation of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> With reference now to the figures, <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts a pictorial representation of a network of data processing systems in which the present invention may be implemented. Network data processing system <highlight><bold>100</bold></highlight> is a network of computers in which the present invention may be implemented. Network data processing system <highlight><bold>100</bold></highlight> contains a network <highlight><bold>102</bold></highlight>, which is the medium used to provide communications links between various devices and computers connected together within network data processing system <highlight><bold>100</bold></highlight>. Network <highlight><bold>102</bold></highlight> may include connections, such as wire, wireless communication links, or fiber optic cables. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In the depicted example, a server <highlight><bold>104</bold></highlight> is connected to network <highlight><bold>102</bold></highlight> along with storage unit <highlight><bold>106</bold></highlight>. In addition, clients <highlight><bold>108</bold></highlight>, <highlight><bold>110</bold></highlight>, and <highlight><bold>112</bold></highlight> also are connected to network <highlight><bold>102</bold></highlight>. These clients <highlight><bold>108</bold></highlight>, <highlight><bold>110</bold></highlight>, and <highlight><bold>112</bold></highlight> may be, for example, personal computers or network computers. In the depicted example, server <highlight><bold>104</bold></highlight> provides data, such as boot files, operating system images, and applications to clients <highlight><bold>108</bold></highlight>-<highlight><bold>112</bold></highlight>. Clients <highlight><bold>108</bold></highlight>, <highlight><bold>110</bold></highlight>, and <highlight><bold>112</bold></highlight> are clients to server <highlight><bold>104</bold></highlight>. Network data processing system <highlight><bold>100</bold></highlight> may include additional servers, clients, and other devices not shown. In the depicted example, network data processing system <highlight><bold>100</bold></highlight> is the Internet with network <highlight><bold>102</bold></highlight> representing a worldwide collection of networks and gateways that use the TCP/IP suite of protocols to communicate with one another. At the heart of the Internet is a backbone of high-speed data communication lines between major nodes or host computers, consisting of thousands of commercial, government, educational and other computer systems that route data and messages. Of course, network data processing system <highlight><bold>100</bold></highlight> also may be implemented as a number of different types of networks, such as for example, an intranet, a local area network (LAN), or a wide area network (WAN). <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is intended as an example, and not as an architectural limitation for the present invention. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> block diagram of a data processing system that may be implemented as a server, such as servers <highlight><bold>104</bold></highlight>, <highlight><bold>114</bold></highlight>, <highlight><bold>118</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>B, is depicted in accordance with a preferred embodiment of the present invention. Data processing system <highlight><bold>200</bold></highlight> may be a symmetric multiprocessor (SMP) system including a plurality of processors <highlight><bold>202</bold></highlight> and <highlight><bold>204</bold></highlight> connected to system bus <highlight><bold>206</bold></highlight>. Alternatively, a single processor system may be employed. Also connected to system bus <highlight><bold>206</bold></highlight> is memory controller/cache <highlight><bold>208</bold></highlight>, which provides an interface to local memory <highlight><bold>209</bold></highlight>. I/O bus bridge <highlight><bold>210</bold></highlight> is connected to system bus <highlight><bold>206</bold></highlight> and provides an interface to I/O bus <highlight><bold>212</bold></highlight>. Memory controller/cache <highlight><bold>208</bold></highlight> and I/O bus bridge <highlight><bold>210</bold></highlight> may be integrated as depicted. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Peripheral component interconnect (PCI) bus bridge <highlight><bold>214</bold></highlight> connected to I/O bus <highlight><bold>212</bold></highlight> provides an interface to PCI local bus <highlight><bold>216</bold></highlight>. A number of modems may be connected to PCI bus <highlight><bold>216</bold></highlight>. Typical PCI bus implementations will support four PCI expansion slots or add-in connectors. Communications links to network computers <highlight><bold>108</bold></highlight>-<highlight><bold>112</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> may be provided through modem <highlight><bold>218</bold></highlight> and network adapter <highlight><bold>220</bold></highlight> connected to PCI local bus <highlight><bold>216</bold></highlight> through add-in boards. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Additional PCI bus bridges <highlight><bold>222</bold></highlight> and <highlight><bold>224</bold></highlight> provide interfaces for additional PCI buses <highlight><bold>226</bold></highlight> and <highlight><bold>228</bold></highlight>, from which additional modems or network adapters may be supported. In this manner, data processing system <highlight><bold>200</bold></highlight> allows connections to multiple network computers. A memory-mapped graphics adapter <highlight><bold>230</bold></highlight> and hard disk <highlight><bold>232</bold></highlight> may also be connected to I/O bus <highlight><bold>212</bold></highlight> as depicted, either directly or indirectly. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Those of ordinary skill in the art will appreciate that the hardware depicted in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> may vary. For example, other peripheral devices, such as optical disk drives and the like, also may be used in addition to or in place of the hardware depicted. The depicted example is not meant to imply architectural limitations with respect to the present invention. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> The data processing system depicted in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> may be, for example, an IBM RISC/System 6000 system, a product of International Business Machines Corporation in Armonk, N.Y., running the Advanced Interactive Executive (AIX) operating system. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> With reference now to <cross-reference target="DRAWINGS">FIG. 3, a</cross-reference> block diagram illustrating a data processing system is depicted in which the present invention may be implemented. Data processing system <highlight><bold>300</bold></highlight> is an example of a client computer. Data processing system <highlight><bold>300</bold></highlight> employs a peripheral component interconnect (PCI) local bus architecture. Although the depicted example employs a PCI bus, other bus architectures such as Accelerated Graphics Port (AGP) and Industry Standard Architecture (ISA) may be used. Processor <highlight><bold>302</bold></highlight> and main memory <highlight><bold>304</bold></highlight> are connected to PCI local bus <highlight><bold>306</bold></highlight> through PCI bridge <highlight><bold>308</bold></highlight>. PCI bridge <highlight><bold>308</bold></highlight> also may include an integrated memory controller and cache memory for processor <highlight><bold>302</bold></highlight>. Additional connections to PCI local bus <highlight><bold>306</bold></highlight> may be made through direct component interconnection or through add-in boards. In the depicted example, local area network (LAN) adapter <highlight><bold>310</bold></highlight>, SCSI host bus adapter <highlight><bold>312</bold></highlight>, and expansion bus interface <highlight><bold>314</bold></highlight> are connected to PCI local bus <highlight><bold>306</bold></highlight> by direct component connection. In contrast, audio adapter <highlight><bold>316</bold></highlight>, graphics adapter <highlight><bold>318</bold></highlight>, and audio/video adapter <highlight><bold>319</bold></highlight> are connected to PCI local bus <highlight><bold>306</bold></highlight> by add-in boards inserted into expansion slots. Expansion bus interface <highlight><bold>314</bold></highlight> provides a connection for a keyboard and mouse adapter <highlight><bold>320</bold></highlight>, modem <highlight><bold>322</bold></highlight>, and additional memory <highlight><bold>324</bold></highlight>. Small computer system interface (SCSI) host bus adapter <highlight><bold>312</bold></highlight> provides a connection for hard disk drive <highlight><bold>326</bold></highlight>, tape drive <highlight><bold>328</bold></highlight>, and CD-ROM drive <highlight><bold>330</bold></highlight>. Typical PCI local bus implementations will support three or four PCI expansion slots or add-in connectors. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> An operating system runs on processor <highlight><bold>302</bold></highlight> and is used to coordinate and provide control of various components within data processing system <highlight><bold>300</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. The operating system may be a commercially available operating system, such as Windows <highlight><bold>2000</bold></highlight>, which is available from Microsoft Corporation. An object oriented programming system such as Java may run in conjunction with the operating system and provide calls to the operating system from Java programs or applications executing on data processing system <highlight><bold>300</bold></highlight>. &ldquo;Java&rdquo; is a trademark of Sun Microsystems, Inc. Instructions for the operating system, the object-oriented operating system, and applications or programs are located on storage devices, such as hard disk drive <highlight><bold>326</bold></highlight>, and may be loaded into main memory <highlight><bold>304</bold></highlight> for execution by processor <highlight><bold>302</bold></highlight>. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Those of ordinary skill in the art will appreciate that the hardware in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> may vary depending on the implementation. Other internal hardware or peripheral devices, such as flash ROM (or equivalent nonvolatile memory) or optical disk drives and the like, may be used in addition to or in place of the hardware depicted in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. Also, the processes of the present invention may be applied to a multiprocessor data processing system. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> As another example, data processing system <highlight><bold>300</bold></highlight> may be a stand-alone system configured to be bootable without relying on some type of network communication interface, whether or not data processing system <highlight><bold>300</bold></highlight> comprises some type of network communication interface. As a further example, data processing system <highlight><bold>300</bold></highlight> may be a Personal Digital Assistant (PDA) device, which is configured with ROM and/or flash ROM in order to provide non-volatile memory for storing operating system files and/or user-generated data. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The depicted example in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> and above-described examples are not meant to imply architectural limitations. For example, data processing system <highlight><bold>300</bold></highlight> also may be a notebook computer or hand held computer in addition to taking the form of a PDA. Data processing system <highlight><bold>300</bold></highlight> also may be a kiosk or a Web appliance. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The present invention provides a mechanism in the application layer and TCP layer of the standard TCP/IP stack that moves the monitoring function of the socket receive buffer from the recv( ) function to the TCP processing. In moving the monitoring function to the TCP processing, much of the overhead associated with waking up the recv( ) thread and putting it back to sleep in the prior art is eliminated. In addition, the problems with regard to not sending out acknowledgment messages are also overcome by the present invention. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> With the present invention, a new field, so_rcvlen is added to the socket structure, i.e. the kernel structure per socket that contains the socket send and receive buffer queues, points to the communication protocol (TCP, UDP, UNIX, etc.) private data, and contains state and error information. This new field identifies the bulk read size requested by the user. The kernel of the recv( ) function, i.e. the fundamental part of a the recv( ) function that resides in memory at all times, is also modified so that it sets the so rcvlen to the size requested by the user prior to the recv( ) function going to sleep and waiting for the full data size requested by the user. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> In addition, a new flag, SP_MSGWAITALL, is provided in the field of the socket structure that stores flags. The SP_MSGWAITALL flag is used to identify when the functions of the present invention are to be implemented, as described hereafter. Thus, the application layer of the present invention is modified from the application layer of the prior art by providing a new field in the socket structure for identifying the requested bulk read size and by providing a new flag for identifying when the functions of the present invention are to be implemented. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> With regard to the TCP layer, the present invention modifies the TCP layer of the prior art by providing additional functionality for performing functions based on the settings of the so_rcvlen, SP_MSGWAITALL, and the amount of data stored in the socket receive buffer, as detailed hereafter. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> At different TCP states, TCP is required (under RFC 793), to handle incoming segments differently. TCP state transitions occur based on events such as incoming TCP segments. TCP input processing is the TCP code that is implemented to handle a TCP segment that arrives at a TCP enabled device. Some of the different tasks performed by TCP input processing include validating an incoming segment for data corruption, determining to which socket, i.e. which user application, this segment belongs, delivering data to the user application, performing state transitions (e.g., when the incoming segment indicates the connection needs to be closed), and the like. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> With the present invention, in the TCP input processing, the following new functions are provided. When data is received for a particular socket, the current setting of the SP_MSGWAITALL is checked. If the SP_MSGWAITALL flag is set on the socket, a determination is made as to whether the amount of data stored in the socket receive buffer is less than the value of so_rcvlen. If the amount of data stored in the socket receive buffer is less than the value of so rcvlen, the TCP input processing does not wake up the recv( ) thread. However, for every alternate segment, the TCP input processing sends back an acknowledgment (ACK). </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> Thus, the overhead of waking up the recv( ) thread and putting it back to sleep again, because there is not enough data in the receive socket buffer, is avoided. Additionally, the present invention sends out acknowledgments for every alternate segment and thus, the problems outlined above with regard to the prior art not sending out acknowledgments are avoided. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> In the TCP output processing, the following new functions are provided. When the SP_MSGWAITALL flag is set in the socket and the amount of data in the socket receive buffer is less than so_rcvlen, the full window is advertised. The full window is the window size advertised by the receiving computing device to the sending computing device at connection setup time. By advertising the full window, the receiving computing device informs the sending computing device of the available socket buffer space. This size then dynamically changes depending on how much space is available at any one time in the socket buffer. The space available is the original, or full window, size minus the amount of data queued in the socket buffer. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> By advertising the full window in this manner, the present invention emulates the situation where the data stored in the socket receive buffer has been read by the application. This is only done when the SP_MSGWAITALL flag is set which guarantees that the recv( ) thread is blocked waiting for a sufficient amount of data. When the application is not looking at this socket at all, such as when the application is busy doing something else or when the system is busy, the operations of the prior art are implemented, i.e. the window is reduced as the buffer fills up. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Once the TCP input processing determines that there is at least an amount of data in the socket receive buffer equal to the value of so_rcvlen, the TCP input processing will wake up the recv( ) thread. The recv( ) thread is modified to reset the SP_MSGWAITALL flag and copy an amount of data equal to so rcvlen in the socket receive buffer to the application&apos;s buffer. The next time the user calls recv( ) with MSG_WAITALL, if there is partial data stored in the socket receive buffer, a window update is sent out to the sending computing device. This will let the sender resume sending in case it is waiting for the window to be opened, i.e. Waiting for the receiver to inform the sender that there is space available in the receive socket buffer. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart outlining an exemplary operation of the present invention. The functions described in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> may be performed in software, hardware, or a combination of software and hardware. In a preferred embodiment, the functions of the present invention detailed in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> are performed as software instructions executed on a processor, such as those shown in <cross-reference target="DRAWINGS">FIGS. 2 and 3</cross-reference>. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the operation starts with invoking the recv( ) function (step <highlight><bold>410</bold></highlight>). The value for so_rcvlen is set (step <highlight><bold>420</bold></highlight>). A determination is then made as to whether there is an amount of data stored in the socket receive buffer at least equal to the value of so_rcvlen (step <highlight><bold>430</bold></highlight>). If so, an amount of data equal to so_rcvlen is copied to the application buffer (step <highlight><bold>500</bold></highlight>). </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> If there is not at least an amount of data equal to so_rcvlen in the socket receive buffer, the SP_MSGWAITALL flag is set (step <highlight><bold>440</bold></highlight>). The operation then waits for a data segment to be received in the socket receive buffer (step <highlight><bold>450</bold></highlight>). A determination is made as to whether a data segment is received in the socket receive buffer (step <highlight><bold>460</bold></highlight>). If not, the operation returns to step <highlight><bold>450</bold></highlight> and continues to wait for a data segment. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Upon receiving a data segment in the socket receive buffer, a determination is made as to whether there is at least an amount of data in the socket receive buffer equal to so rcvlen (step <highlight><bold>470</bold></highlight>). If so, then the recv( ) thread is awaken (step <highlight><bold>480</bold></highlight>) and the SP_MSGWAITALL flag is reset (step <highlight><bold>490</bold></highlight>). An amount of data equal to so rcvlen is then copied from the socket receive buffer to the application buffer, i.e. the application that called the recv( ) function (step <highlight><bold>500</bold></highlight>). </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> If there is not at least an amount of data equal to so_rcvlen in the socket receive buffer, the modified TCP input and output processing are performed (step <highlight><bold>510</bold></highlight>). This includes not waking up the recv( ) thread and sending out acknowledgments for every alternate segment received. In addition, the full window is advertised to the sender of the data segment. The operation then returns to step <highlight><bold>450</bold></highlight> and waits for the next data segment to arrive at the socket receive buffer. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Thus, the present invention provides a mechanism for performing bulk read operations using a socket receive buffer that avoids the problems associated with the prior art. The present invention moves the monitoring functions from the application layer recv( ) function to the TCP layer and thus, eliminates the need to repeatedly awaken and put back to sleep the recv( ) function. This provides a considerable savings with regard to processing cycles due to the reduction in overhead. In addition, the present invention provides acknowledgment messages for every alternate segment and thus, the problems associated with the non-transmission of acknowledgment messages in the prior art are avoided. Moreover, the full window is advertised to senders of data segments so that the delay associate with the prior art is avoided. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> It is important to note that while the present invention has been described in the context of a fully functioning data processing system, those of ordinary skill in the art will appreciate that the processes of the present invention are capable of being distributed in the form of a computer readable medium of instructions and a variety of forms and that the present invention applies equally regardless of the particular type of signal bearing media actually used to carry out the distribution. Examples of computer readable media include recordable-type media such a floppy disc, a hard disk drive, a RAM, and CD-ROMs and transmission-type media such as digital and analog communications links. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> The description of the present invention has been presented for purposes of illustration and description, but is not intended to be exhaustive or limited to the invention in the form disclosed. Many modifications and variations will be apparent to those of ordinary skill in the art. The embodiment was chosen and described in order to best explain the principles of the invention, the practical application, and to enable others of ordinary skill in the art to understand the invention for various embodiments with various modifications as are suited to the particular use contemplated. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of performing a bulk read from a socket receive buffer, comprising: 
+<claim-text>initiating a bulk read function having a bulk read size; </claim-text>
+<claim-text>determining if an amount of data in the socket receive buffer is equal to or greater than the bulk read size; and </claim-text>
+<claim-text>activating the bulk read function only when there is an amount of data in the socket receive buffer equal to or greater than the bulk read size. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the bulk read size is stored in a field in the socket structure. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the bulk read size is a size identified by a user. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of activating the bulk read function only when there is an amount of data in the socket receive buffer equal to or greater than the bulk read size is performed in response to setting of a flag in the socket structure. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further comprising: 
+<claim-text>checking a state of the flag in the socket structure; and </claim-text>
+<claim-text>determining if an amount of data stored in the socket receive buffer is less than the bulk read size, if the flag is set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein if the amount of data stored in the socket receive buffer is less than the bulk read size, the bulk read function is not activated. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a Transport Control Protocol (TCP) segment from a sending device, wherein the steps of checking the state of the flag in the socket structure and determining if an amount of data in the socket receive buffer is less than the bulk read size are performed in response to receiving the TCP segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein if the amount of data stored in the socket receive buffer is less than the bulk read size, an acknowledgment is sent to the sending device for every alternate TCP segment received. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the steps of checking a state of the flag, determining if an amount of data stored in the socket receive buffer is less than the bulk read size, and activating the bulk read function are performed in a Transport Control Protocol (TCP) layer. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further comprising: 
+<claim-text>informing a sending device that a full window size of data is available in the socket receive buffer, if the flag is set and the amount of data stored in the socket receive buffer is less than the bulk read size. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein activating the bulk read function includes: 
+<claim-text>copying an amount of data equal to the bulk read size from the socket receive buffer to an application buffer; and </claim-text>
+<claim-text>resetting the flag. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein activating the bulk read function further includes: 
+<claim-text>determining if there is data stored in the socket receive buffer after copying the amount of data equal to the bulk read size from the socket receive buffer to the application buffer; and </claim-text>
+<claim-text>sending a window update to a sending device if there is data stored in the socket receive buffer after the copying. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. An apparatus for performing a bulk read from a socket receive buffer, comprising: 
+<claim-text>means for initiating a bulk read function having a bulk read size; </claim-text>
+<claim-text>means for determining if an amount of data in the socket receive buffer is equal to or greater than the bulk read size; and </claim-text>
+<claim-text>means for activating the bulk read function only when there is an amount of data in the socket receive buffer equal to or greater than the bulk read size. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the bulk read size is stored in a field in the socket structure. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the bulk read size is a size identified by a user. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the means for activating the bulk read function only when there is an amount of data in the socket receive buffer equal to or greater than the bulk read size operates in response to setting of a flag in the socket structure. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising: 
+<claim-text>means for checking a state of the flag in the socket structure; and </claim-text>
+<claim-text>means for determining if an amount of data stored in the socket receive buffer is less than the bulk read size, if the flag is set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein if the amount of data stored in the socket receive buffer is less than the bulk read size, the bulk read function is not activated by the means for activating the bulk read function. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, further comprising: 
+<claim-text>means for receiving a Transport Control Protocol (TCP) segment from a sending device, wherein the means for checking the state of the flag in the socket structure and means for determining if an amount of data in the socket receive buffer is less than the bulk read size operate in response to receiving the TCP segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, further comprising a means for sending an acknowledgment to the sending device for every alternate TCP segment received, if the amount of data stored in the socket receive buffer is less than the bulk read size. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the means for checking a state of the flag, means for determining if an amount of data stored in the socket receive buffer is less than the bulk read size, and means for activating the bulk read function are part of a Transport Control Protocol (TCP) layer. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, further comprising: 
+<claim-text>means for informing a sending device that a full window size of data is available in the socket receive buffer, if the flag is set and the amount of data stored in the socket receive buffer is less than the bulk read size. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the means for activating the bulk read function includes: 
+<claim-text>means for copying an amount of data equal to the bulk read size from the socket receive buffer to an application buffer; and </claim-text>
+<claim-text>means for resetting the flag. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the means for activating the bulk read function further includes: 
+<claim-text>means for determining if there is data stored in the socket receive buffer after copying the amount of data equal to the bulk read size from the socket receive buffer to the application buffer; and </claim-text>
+<claim-text>means for sending a window update to a sending device if there is data stored in the socket receive buffer after the copying. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A computer program product in a computer readable medium for performing a bulk read from a socket receive buffer, comprising: 
+<claim-text>first instructions for initiating a bulk read function having a bulk read size; </claim-text>
+<claim-text>second instructions for determining if an amount of data in the socket receive buffer is equal to or greater than the bulk read size; and </claim-text>
+<claim-text>third instructions for activating the bulk read function only when there is an amount of data in the socket receive buffer equal to or greater than the bulk read size. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the bulk read size is stored in a field in the socket structure. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the bulk read size is a size identified by a user. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the third instructions for activating the bulk read function only when there is an amount of data in the socket receive buffer equal to or greater than the bulk read size are executed in response to setting of a flag in the socket structure. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, further comprising: 
+<claim-text>fourth instructions for checking a state of the flag in the socket structure; and </claim-text>
+<claim-text>fifth instructions for determining if an amount of data stored in the socket receive buffer is less than the bulk read size, if the flag is set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein if the amount of data stored in the socket receive buffer is less than the bulk read size, the third instructions are not executed. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00033">claim 30</dependent-claim-reference>, further comprising: 
+<claim-text>sixth instructions for receiving a Transport Control Protocol (TCP) segment from a sending device, wherein the fourth instructions for checking the state of the flag in the socket structure and fifth instructions for determining if an amount of data in the socket receive buffer is less than the bulk read size are executed in response to receiving the TCP segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, further comprising seventh instructions for sending an acknowledgment to the sending device for every alternate TCP segment received, if the amount of data stored in the socket receive buffer is less than the bulk read size. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the fifth instructions for checking a state of the flag, seventh instructions for determining if an amount of data stored in the socket receive buffer is less than the bulk read size, and third instructions for activating the bulk read function are executed in a Transport Control Protocol (TCP) layer. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, further comprising: 
+<claim-text>sixth instructions for informing a sending device that a full window size of data is available in the socket receive buffer, if the flag is set and the amount of data stored in the socket receive buffer is less than the bulk read size. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the third instructions for activating the bulk read function include: 
+<claim-text>instructions for copying an amount of data equal to the bulk read size from the socket receive buffer to an application buffer; and </claim-text>
+<claim-text>instructions for resetting the flag. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference>, wherein the third instructions for activating the bulk read function further include: 
+<claim-text>instructions for determining if there is data stored in the socket receive buffer after copying the amount of data equal to the bulk read size from the socket receive buffer to the application buffer; and </claim-text>
+<claim-text>instructions for sending a window update to a sending device if there is data stored in the socket receive buffer after the copying. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising placing the bulk read function in an inactive state if an amount of data in the socket receive buffer is not equal to or greater than the bulk read size. </claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, further comprising means for placing the bulk read function in an inactive state if an amount of data in the socket receive buffer is not equal to or greater than the bulk read size. </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, further comprising fourth instructions for placing the bulk read function in an inactive state if an amount of data in the socket receive buffer is not equal to or greater than the bulk read size.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002508A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002508A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002508A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002508A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002508A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030001838A1-20030102-D00000.TIF SYSTEM "US20030001838A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030001838A1-20030102-D00001.TIF SYSTEM "US20030001838A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030001838A1-20030102-D00002.TIF SYSTEM "US20030001838A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030001838A1-20030102-D00003.TIF SYSTEM "US20030001838A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030001838A1-20030102-D00004.TIF SYSTEM "US20030001838A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030001838</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10178548</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020625</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>2001118221</doc-number>
+</priority-application-number>
+<filing-date>20010629</filing-date>
+<country-code>RU</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06T015/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>345</class>
+<subclass>419000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Image-based methods of representation and rendering of three-dimensional object and animated three-dimensional object</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Mahn-jin</given-name>
+<family-name>Han</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Kyungki-do</city>
+<country-code>KR</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Alexey</given-name>
+<family-name>Ignatenko</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Moscow</city>
+<country-code>RU</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Samsung Electronics Co., Ltd.</organization-name>
+<address>
+<city>Kyungki-do</city>
+<country>
+<country-code>KR</country-code>
+</country>
+</address>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>BURNS DOANE SWECKER &amp; MATHIS L L P</name-1>
+<name-2></name-2>
+<address>
+<address-1>POST OFFICE BOX 1404</address-1>
+<city>ALEXANDRIA</city>
+<state>VA</state>
+<postalcode>22313-1404</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Provided are three-dimensional still and animated object representations obtained from photos of real-life objects and their geometrical representations, allowing compact storage, fast rendering with high output image quality, suitable for animation purposes. The method includes transforming original data of a three-dimensional object into an intermediate representation; transforming data of the intermediate representation into a rendering representation in the form of a circumscribing cube, where a layered depth image is attributed to each face of the circumscribing cube, and rendering the obtained representation by determining visible faces of the circumscribing cube with account of the viewer&apos;s position, transforming the layered depth image for each of the visible faces into a texture, and visualizing the visible faces with texture. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to computer graphics and more specifically to a three-dimensional (3D) still and animated object representations obtained from photos of real-life objects and their geometrical representations, and to a representation and rendering method using a simplified geometrical model of an object. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In the immediate future, high-quality rendering of 3D objects at interactive speed will receive the primary emphasis in modern graphic systems. The demand for high-quality rendering of 3D objects necessitates effective algorithms to be devised for compressing the objects and transmitting them via communications networks in such fields as electronic commerce, computer games, science, engineering, medicine. Use of traditional polygonal models of 3D objects during the last tens of years to simultaneously meet all these demands has failed to give the desired result. Polygonal models have two major shortcomings: large volume (e.g., realistic models require tens of million triangles) and difficulty of constructing. To overcome these difficulties, several approaches to 3D graphics have been suggested in recent years. The most advantageous of them seem to be methods based on images of objects, and methods based on points instead of triangles in 3D space. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Image-based methods represent the given object as a set of images&mdash;&lsquo;photos&rsquo; of the object&mdash;totally covering its visible surface, and taken from several different camera positions. Besides, each such image is accompanied with corresponding depth-map which is an array of distances from the pixels in the image plane to the object surface. An advantage of such a representation is that reference images can provide high quality of the object visualization regardless of its polygonal model complexity, and can be compressed by usual image compression techniques without sacrificing much quality. In addition, rendering time is proportional to the number of pixels in the reference and output images and not the object complexity. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Disadvantages are due to the fact that obtaining depth maps for real life objects (e.g., sculptures) is rather complicated operation, as well as to insufficiently developed techniques of handling such representations. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Point-based methods represent an object as a points cloud&apos; without imposing explicit local polygonal structure. In this method, a set of depth images defines a set of points (having corresponding colors) on the object surface by translating each pixel of each reference image by the corresponding depth value in the direction orthogonal to the image plane. Hence image-based representations are a particular case of point-based representations. In the following we shall concentrate on image-based representations as they are closer to our approach. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In the literature, the two aforementioned trends are described in references &lsqb;1&rsqb; to &lsqb;13&rsqb; describing such 3D object representation and rendering methods, as Relief Textures Mapping &lsqb;1&rsqb;, Layered Depth Images &lsqb;2&rsqb;, Layered Depth Image Tree &lsqb;3&rsqb;, Qsplat &lsqb;4&rsqb;, Surfels &lsqb;5&rsqb; and some other that have been known in prior art. In the following discussion of the prior art approaches, references will be made to the following publications: </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> &lsqb;1&rsqb; Manuel M. Oliveira, Gary Bishop, David McAllister. Relief Textures Mapping, Proceedings of SIGGRAPH &apos;00; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> &lsqb;2&rsqb; Jonathan Shade, Steven Gortler, Li-wei He, Richard Szeliski, Layered Depth Images, Proceedings of SIGGRAPH &apos;98; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> &lsqb;3&rsqb; Chun-Fa Chang, Gary Bishop, Anselmo Lastra. LDI Tree: A Hierarchical Representation for Image-Based Rendering, Proceedings of SIGGRAPH &apos;99; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> &lsqb;4&rsqb; Szymon Rusinkiewicz, Marc Levoy. QSplat: A Multiresolution Point Rendering System for Large Meshes, Proceedings of SIGGRAPH &apos;00; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> &lsqb;5&rsqb; Hanspeter Pfister, Matthias Zwicker, Jeroen van Baar, Markus Gross. Surfels: Surface Elements as Rendering Primitives, Proceedings of SIGGRAPH &apos;00; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> &lsqb;6&rsqb; Chamberlain et al., Fast Rendering of Complex Environments Using a Spatial Hierarchy, Proceedings of Graphics Interface &apos;96; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> &lsqb;7&rsqb; Grossman and Daily, Point sample rendering, Proceedings of Eurographics Workshops on Rendering Techniques &apos;98; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> &lsqb;8&rsqb; Lischinski and Rappoport, Image-Based Rendering for Non-Diffuse Synthetic Scenes, Proceedings of Eurographics Workshops on Rendering Techinques &apos;98; </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> &lsqb;9&rsqb; M. Levoy and T. Whitted, The Use of Points as Display Primitives. Technical Report TR 85-022, The University of North Carolina at Chapel Hill, Department of Computer Science, 1985; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> &lsqb;10&rsqb; L. Westover, Footprint Evaluation for Volume Rendering, Proceedings of SIGGRAPH &apos;90; </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> &lsqb;11&rsqb; C. I. Connolly. Cumulative Generation of Octree Models from Range Data, Proceedings of Intl. Conf. Robotics, pp. 25-32, March 1984; </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> &lsqb;12&rsqb; G. H Tarbox and S. N. Gottschlich. IVIS: An Integrated Volumetric Inspection System, Proceedings of the 1994 Second CAD-Based Vision Workshop, pp. 220-227, February 1994; </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> &lsqb;13&rsqb; Curless, B., Levoy, M., A Volumetric Method for Building Complex Models from Range Images, Proceedings of SIGGRAPH &apos;96; </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> &lsqb;14&rsqb; C. Bregler, Video Based Animation Techniques for Human Motion, SIGGRAPH &apos;00 Course 39: Image-based Modeling and Rendering; and </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> &lsqb;15&rsqb; Paul F. Debevec, Camillo J. Taylor, Jitendra Malik, Modeling and Rendering Architecture from Photographs: A Hybrid Geometry-and Image-based Approach, Proceedings of SIGGRAPH &apos;96. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The common problem with image-based methods is occurrence of holes in the resulting image. Unlike polygonal models that are &lsquo;continuous&rsquo; in the sense that the object surface is linearly interpolated into the interior of all the polygons (normally, triangles), image-based and point-based representations provide &lsquo;discrete&rsquo; approximations of the object. In case of image-based representations, object surface is, in fact, approximated with small colored squares, i.e. shifted pixels of reference images. When viewing direction differs substantially from the normal direction to each of the reference image planes, projections of the approximating squares generally do not completely cover the projection of the object surface. Let as call such holes the holes of the first type. Another source of holes in the resulting image for image-based representations is the fact that some parts of the surface may be not visible in all of the reference images, but become visible for some viewpoints (holes of the second type). These holes are due to insufficient information contained in a particular image-based representation. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Relief texture method &lsqb;1&rsqb; suppresses holes of the first type by using an analog of linear interpolation, which may lead to distortions and artifacts, since interpolation is performed in the 2-dimensional projection of the object rather than in 3D space. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> More importantly, holes of the second type can only be treated the same way under this approach. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Layered depth images (LDI) &lsqb;2&rsqb; are data structure designed to avoid the problem with holes of the second type. LDI is an image whose pixels contain all the object points projecting to a fixed location in the reference image plane. Fast prewarping algorithm of &lsqb;1&rsqb; applies here as well. However, problems with holes of the first type remain. Splatting (first introduced in &lsqb;10&rsqb;) is used to solve the problem of holes of the first type. Splat is a small two-dimensional rectilinear or elliptical surface patch endowed with a certain color distribution&mdash;e.g. Gaussian centered at the center of the patch, or constant. Disadvantage of the LDI method is in its nonsymmetry since the representation is based on a projection in a certain fixed direction. This leads to difficulties with hole filling for viewing directions that are very different from said fixed direction. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> LDI tree &lsqb;3&rsqb; is an octree with an LDI attached to each octree cell (node). The advantage of having a hierarchical model is that not every LDI in the octree should be rendered. Those cells that are farther away are rendered in less detail by using the filtered points that are stored in the LDIs higher in the hierarchy. This representation was devised in order to overcome the nonsymmetry of LDI by using many reference images. However, the storage space becomes very large: LDI tree for 512-by-512 image (obtained from 36 reference images) occupies 30 Mbytes as reported in &lsqb;3&rsqb;, and about half this amount was the tree structure itself. As reported in &lsqb;3&rsqb;, rendering time for this object is also large: 2-3 seconds per frame on Silicon Graphics Onyx2 with 32250 MHz MIPS R10000 processors (although parallelism was not used). </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Yet another representation combining image-based data into a tree structure is recently designed Surfels method &lsqb;5&rsqb;. It deals with a specific tree &lsqb;8&rsqb; that is a layered-depth cube (LDC) where instead of a single LDI tree, nodes contain three LDI&apos;s corresponding to three orthogonal planes. Results reported in &lsqb;5&rsqb; were obtained for original model containing 81000 triangles. Frame rate of 11 frames per second (fps) for 256-by-256 output buffer was obtained on Pentium III 700 MHz processor. Surfels are reference image pixels shifted by a corresponding depth vector. The tree structure is used to speed up computations for choosing visible elements. Hole filling is achieved by nearest-neighbor or Gaussian filtering. Splatting is implemented in this structure. High quality of the resulting image is attained at the cost of data volume and speed restrictions. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Recently introduced representation of Qsplat &lsqb;4&rsqb; should also be mentioned, although it is rather point-based than image-based method. This approach uses hierarchical point structure based on nested balls. Elliptical splats of proper size are used at the rendering stage. However somewhat complicated and time-consuming truncated culling was used in &lsqb;4&rsqb;. The data structure is also more complex, and requires more time to process. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The idea and various implementation methods for obtaining octree structured 3D model with from range data such as sets of depth images were developed in &lsqb;1&rsqb;-&lsqb;12&rsqb;. &lsqb;13&rsqb; deals with a construction of polygonal model from original data using octree. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> All the above relates to still 3D image-based representations. Speaking of animated 3D objects, it should be noted that only very few image-based methods were suggested for this problem so far. In &lsqb;14&rsqb; an idea of facial image modification for almost constant 3D face geometry is developed. This is applicable only to a restricted class of animated objects and is not animation of an actual 3D object. In &lsqb;15&rsqb; architectural scenes are animated with the aid of view-dependent texture mapping which reconstruct architectural views from various viewpoints on the base of a few photos. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> So, it is clear that an image-based representation allowing compact storage, fast rendering with high output image quality, and suitable for animation purposes is needed. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> It is an object of the invention to provide 3D object representations based on depth images, allowing for fast and high quality rendering, in which the above drawbacks are reduced or eliminated. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> It is another object of the invention to provide a method for 3D object representations based on depth images, allowing for fast and high-quality rendering and the possibility of using existing hardware-based acceleration means. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> A further object of the invention is to provide a method for compact representation of an animated 3D object, enabling fast and correct rendering. One more object of the invention is to provide a method for representation and rendering a three-dimensional object, allowing for fast warping, visualization with the aid of splats of accurately computed size, and culling process allowing to avoid unnecessary computations, thereby increasing the rendering speed. The above result is attained in a method for representation and rendering of a three-dimensional object in accordance with the invention, comprising the steps of: transforming original data of a three-dimensional object into an intermediate representation; transforming data of the intermediate representation into a rendering representation in the form of a circumscribing cube, where a layered depth image is attributed to each face of the circumscribing cube, and rendering the obtained representation by determining visible faces of the circumscribing cube with account of the viewer&apos;s position, and transforming the layered depth image for each of the visible faces into a texture, and visualizing the visible faces with texture. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In one embodiment of the method, said transforming of original data of a three-dimensional object into an intermediate representation comprises: placing a three-dimensional model inside the circumscribing cube; orthographically projecting the model onto all the faces of the circumscribing cube so that to obtain, for each face, a model image with a predetermined pixel resolution; computing, for every pixel in the obtained images, a corresponding depth value which is a distance from a point at the model surface to a corresponding face of the circumscribing cube, so that to obtain a gray-scale image for each face, every point of the gray-scale image having brightness corresponding to depth at this point; storing data of the obtained 12 images as 6 pairs of maps, each of the map pairs consisting of a color image and a gray-scale image corresponding to the face of the circumscribing cube; and constructing from the obtained 6 map pairs a layered depth image for every face of the circumscribing cube. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In another embodiment of the method, said transforming of original data of a three-dimensional object into an intermediate representation comprises generating a layered depth image and forming from the layered depth image corresponding multilayer depth images for each face of the circumscribing cube, wherein points of the intermediate images are discarded if an angle between normal at the point and normal to the cube face is smaller than a predetermined value. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> The transformation of the layered depth image for each visible face into a texture preferably comprises: determining texture size depending on the viewer&apos;s position relative to the face; dividing the face into quadrants by coordinate axes having the origin coinciding with a point which is the orthogonal projection of the viewpoint onto the face plane; determining, for each quadrant, a direction of traversal of the layered depth image by lines in the direction to said origin of coordinates and by depth from the points farthermost from the face plane to closer points, and checking in the process of traversal of the image for each point of the image, whether the point falls within the resulting texture, if the result is negative, ignoring the corresponding image point and passing to the next point, and if the result is affirmative, functionally transforming the coordinates and depth of the image point into coordinates of the point of the resulting texture; and forming a splat at the texture point with the obtained coordinates. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> The intermediate representation data is preferably used to store information of the three-dimensional object model. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The above result is also achieved in a method for representation of an animated three-dimensional object in accordance with the invention, comprising the steps of: transforming original data of a three-dimensional object into an intermediate representation; transforming data for frames of the intermediate representation into a rendering representation in the form of a circumscribing cube, where a layered depth image is attributed to each face of the circumscribing cube; and rendering the sequence of the obtained representation by determining, for each frame, visible faces of the circumscribing cube with account of the viewer&apos;s position, transforming, for each of the visible faces, the layered depth image into a texture, and visualizing the visible faces with texture. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The obtained intermediate representations in the form of 6 video streams may be compressed using MPEG4 compression format, wherein color information is stored in color channels, and depth maps are stored in alpha-channel.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> The invention will become more readily apparent from the following detailed description of its embodiments with reference to the drawings attached, in which </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a sequence of steps of a method for representation and rendering of a three-dimensional object; </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>a,b </italic></highlight>shows an example of a map pair consisting a gray-scale image (a) and color image (b); </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a,b </italic></highlight>is an example of a layered depth image, where (a) illustrates model projection principle, and (b) illustrates a data structure resulting from the projection; </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates checking the intermediate representation points at the step of forming a layered depth image for each face of the circumscribing cube; </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> shows an example of dividing a face of the circumscribing cube into quadrants at the step of transforming each of the visible faces of the multilayer depth image into a texture; </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference><highlight><italic>a,b </italic></highlight>illustrates principles of checking whether every point of the layered depth image falls within the resulting texture: (a) shows checking whether a point is visible for given viewer&apos;s position; (b) shows checking whether the points fall within the resulting texture.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The same elements are denoted by similar reference numerals throughout all the drawings illustrating the invention. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows: steps <highlight><bold>1</bold></highlight> to <highlight><bold>4</bold></highlight> of a method for representation and rendering of a three-dimensional object; three-dimensional object model <highlight><bold>5</bold></highlight>; intermediate representations <highlight><bold>6</bold></highlight>,<highlight><bold>7</bold></highlight>; rendering representation <highlight><bold>8</bold></highlight>; textures <highlight><bold>9</bold></highlight>; polygonal model <highlight><bold>10</bold></highlight> of the circumscribing cube; visualized image <highlight><bold>11</bold></highlight> of the model. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>a,b </italic></highlight>shows gray-scale image <highlight><bold>12</bold></highlight> and color image <highlight><bold>13</bold></highlight>. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a,b </italic></highlight>shows: model <highlight><bold>14</bold></highlight>; base plane <highlight><bold>15</bold></highlight>; set <highlight><bold>16</bold></highlight> of points of a model for each pixel of the layered depth image. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows: cube face <highlight><bold>17</bold></highlight>; points <highlight><bold>18</bold></highlight> of rendering representation, normals <highlight><bold>19</bold></highlight> at points <highlight><bold>18</bold></highlight>; visibility cones <highlight><bold>20</bold></highlight>. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> shows: viewer&apos;s position <highlight><bold>21</bold></highlight>; orthogonal projection <highlight><bold>22</bold></highlight> of the viewer&apos;s position point onto face <highlight><bold>17</bold></highlight>; quadrants <highlight><bold>23</bold></highlight> to <highlight><bold>26</bold></highlight> of face <highlight><bold>17</bold></highlight>; traversal directions <highlight><bold>27</bold></highlight> to <highlight><bold>30</bold></highlight> in each of the face quadrants. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference><highlight><italic>a,b </italic></highlight>shows: angle <highlight><bold>31</bold></highlight> between normal <highlight><bold>19</bold></highlight> at point <highlight><bold>18</bold></highlight> and direction to point <highlight><bold>21</bold></highlight>; projection <highlight><bold>32</bold></highlight> of the plane passing through point <highlight><bold>21</bold></highlight> at which the viewer is located, and the nearest edge of the cube face <highlight><bold>17</bold></highlight> with respect to the viewer. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> method for representation and rendering of a three-dimensional object is accomplished in the following manner. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> At step <highlight><bold>1</bold></highlight>, a model <highlight><bold>5</bold></highlight> of 3D object is converted into an intermediate representation <highlight><bold>6</bold></highlight> (<highlight><bold>7</bold></highlight>). The intermediate representation may be a set 6 of six pairs of maps, consisting of a gray-scale image <highlight><bold>12</bold></highlight> and a color image <highlight><bold>13</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>a,b</italic></highlight>), or a multilayer depth image <highlight><bold>7</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a,b</italic></highlight>). In the first case, the intermediate representation stores information only of the model surface portion which is visible from the face of the circumscribing cube. Brightness of a point of the gray-scale image <highlight><bold>12</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>a</italic></highlight>) is determined by a distance from the face of the circumscribing cube to the model surface. Maximal brightness corresponds to those points on the model surface that lie on the nearest face, while minimal brightness corresponds to the points lying on the opposite face. Image points which do not correspond to points belonging to the model surface are coded by zero brightness value. The second representation (<cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a,b</italic></highlight>) stores full information of the model <highlight><bold>14</bold></highlight> surface, since to each pixel of the layered depth image corresponds a set <highlight><bold>16</bold></highlight> of the model points projecting to the pixel, wherein color and depth of the model surface point and, additionally, the normal to the model surface at this point corresponds to each point in the set <highlight><bold>16</bold></highlight>. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> At step <highlight><bold>2</bold></highlight>, a rendering representation is formed as a layered depth image for each face of the circumscribing cube. In case of using the intermediate representation <highlight><bold>6</bold></highlight>, for each face of the circumscribing cube the coordinates of points of the model surface part visible from this face are transformed into the coordinate system associated with another face, the transformation result being added to the depth image corresponding to said face. Using the intermediate representation <highlight><bold>7</bold></highlight>, the layered depth image is transformed into the coordinate system associated with each face. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> In process of constructing a layered depth image for each face using the intermediate representation <highlight><bold>7</bold></highlight>, each new added point is checked for potential visibility from this face. As shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the point will not be added to the layered depth image for the face if angle <highlight><bold>20</bold></highlight> between normal <highlight><bold>19</bold></highlight> at point <highlight><bold>18</bold></highlight> and normal to point <highlight><bold>17</bold></highlight> is smaller than a predetermined value. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> At step <highlight><bold>3</bold></highlight>, textures are generated that are needed for visualizing by traditional means (step <highlight><bold>4</bold></highlight>). First, visible faces of the circumscribing cube are determined with account of the viewer&apos;s current position, then an image is generated for each face, which will be then imposed on the face as a texture. Texture size is determined using the angle between the normal to the face and the vector defined by the viewer&apos;s position point and the face center. If the angle is close to zero, the texture size is substantially equal to the original image size. With increasing the angle, the texture size reduces accordingly. The texture size is computed independently for each coordinate u, v. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> The texture construction process involves traversal of points of the multilayer depth image corresponding to a face of the circumscribing cube. As shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, order of the traversal is chosen as follows. Projection of the viewer&apos;s position point <highlight><bold>21</bold></highlight> is found on a face plane of the circumscribing cube. Point <highlight><bold>22</bold></highlight>, corresponding to said projection, divides the face into no more than four quadrants (<highlight><bold>23</bold></highlight>,<highlight><bold>24</bold></highlight>,<highlight><bold>25</bold></highlight>,<highlight><bold>26</bold></highlight>). In each quadrant, direction of traversal of the layered depth image is selected so that points were traversed by lines in directions <highlight><bold>27</bold></highlight>,<highlight><bold>28</bold></highlight>,<highlight><bold>29</bold></highlight>,<highlight><bold>30</bold></highlight>. Then points in each quadrant are traversed in the selected direction, the points with the same coordinates in the face being traversed in order of reducing depth. Each point undergoes a culling process comprising two steps. The first step is performed if normal vectors are present in the layered depth image, and comprises checking the direction of normal to the said point, as shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference><highlight><italic>a. </italic></highlight>Angle <highlight><bold>31</bold></highlight> between the viewing vector and normal <highlight><bold>19</bold></highlight> at point <highlight><bold>18</bold></highlight> is determined. If the angle <highlight><bold>31</bold></highlight> exceeds 90 degrees, the point is ignored, and the process goes to next point. Otherwise, the second test is performed involving removing the points which will not fall within the texture after the functional conversion. For each visible face of the circumscribing cube, two arrays M<highlight><subscript>u </subscript></highlight>and M<highlight><subscript>v </subscript></highlight>(indexed by corresponding coordinate (u,v) of the face) are preliminary constructed, the arrays consisting of depths of the points contained within the circumscribing cube and lying on planes passing through two nearest edges of the circumscribing cube face <highlight><bold>17</bold></highlight> and point <highlight><bold>21</bold></highlight> where the viewer is located. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference><highlight><italic>a </italic></highlight>shows projection <highlight><bold>32</bold></highlight> of one of the planes, corresponding to coordinate u. Array data elements are used as the second culling criterion for points of the layered depth image. If a point depth is greater than M<highlight><subscript>u</subscript></highlight>&lsqb;u&rsqb; or M<highlight><subscript>v</subscript></highlight>&lsqb;v&rsqb; value, where u,v are coordinates of the point in the circumscribing cube face, then the process goes to next point, since this point will not be visible in the resulting texture. Then, one-dimensional functional conversion (&lsquo;warping&rsquo;, see &lsqb;1&rsqb;) is applied to each chosen point, depending on the point coordinates (u,v) and depth d. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The functional conversion gives coordinates (u&prime;,v&prime;) in the coordinate system associated with the chosen viewer&apos;s position <highlight><bold>21</bold></highlight>. The conversions are performed for all points of visible faces. Splat is formed at the point with the obtained coordinates in the generated texture. Color of the splat corresponds to color of the point with original coordinates (u,v,d). Shape of the splat is selected from considerations of speed of imposing in the texture, and usually is square or circle. Size of the splat is determined from the original image size, the obtained texture size, and may be adjusted taking into account the normal at points of the layered depth image. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> Coordinates of the splat center should correspond to coordinates (u&prime;,v&prime;) obtained by the warping. As the result, an image is obtained for each visible face, which image is imposed at step <highlight><bold>4</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>) on the corresponding face of the polygonal model. Unoccupied areas in the obtained textures are marked as transparent, this ensuring correctness of the resulting image since the cube polygonal model does not cover the background. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> A method for representation of an animated object is performed as follows. A circumscribing cube is determined for a model original data stream, i.e. a sequence of animation frames, then six pairs of maps are constructed for each frame, the map pairs consisting of a gray-scale image and a color image as described above with reference to <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference><highlight><italic>a,b. </italic></highlight>This gives <highlight><bold>12</bold></highlight> video streams, two video streams per each face of the circumscribing cube. The streams corresponding to color images may be compressed using any algorithm of video stream compression with losses, such as MPEG2. The stream corresponding to gray-scale images (depth maps) should be compressed using a compression algorithm without loss in quality, such as alpha channel compression in MPEG4 format. The preferable embodiment of the method in accordance with the invention provides for compression of six video streams using MPEG4 compression format. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for representation and rendering of a three-dimensional object, comprising the steps of: 
+<claim-text>transforming original data of a three-dimensional object into an intermediate representation; </claim-text>
+<claim-text>transforming data of the intermediate representation into a rendering representation in the form of a circumscribing cube, where a layered depth image is attributed to each face of the circumscribing cube; and </claim-text>
+<claim-text>rendering the obtained representation by determining visible faces of the circumscribing cube with account of the viewer&apos;s position, transforming the layered depth image for each of the visible faces into a texture, and visualizing the visible faces with texture. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said transforming of original data of three-dimensional object into an intermediate representation comprises: 
+<claim-text>placing a three-dimensional model inside the circumscribing cube; </claim-text>
+<claim-text>orthographically projecting the model onto all the faces of the circumscribing cube so that to obtain, for each face, a model image with a predetermined pixel resolution; </claim-text>
+<claim-text>computing, for every pixel in the obtained images, a corresponding depth value which is a distance from a point at the model surface to a corresponding face of the circumscribing cube, so that to obtain a gray-scale image for each face, every point of the gray-scale image having brightness corresponding to depth at this point; storing data of the obtained 12 images as 6 pairs of maps, each of the map pairs consisting of a color image and gray-scale image corresponding to the face of the circumscribing cube; and </claim-text>
+<claim-text>constructing from the obtained <highlight><bold>6</bold></highlight> map pairs a layered depth image for each face of the circumscribing cube. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said transforming of original data of a three-dimensional object into an intermediate representation comprises generating a layered depth image and forming from the layered depth image corresponding multilayer depth images for each face of the circumscribing cube. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said forming of layered depth images for every face of the circumscribing cube comprises discarding points of the intermediate image, if an angle between normal at the point and normal to the cube face is smaller than a predetermined value. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said step of transforming of the layered depth image for each visible face into a texture comprises: 
+<claim-text>determining texture size depending on the viewer&apos;s position relative to the face; </claim-text>
+<claim-text>dividing the face into quadrants by coordinate axes having the origin coinciding with a point which is the orthogonal projection of the viewpoint onto the face plane; </claim-text>
+<claim-text>determining, for each quadrant, a direction of traversal of the layered depth image by lines in the direction to said origin of coordinates and by depth from points farthermost from the face plane to closer points, and checking in the process of traversal of the image for each point of the image whether the point falls within the resulting texture, if the result is negative, ignoring the corresponding point and passing to the next image point, and if the result is affirmative, functionally transforming the coordinates and depth of the image point into coordinates of the point of the resulting texture; and </claim-text>
+<claim-text>forming a splat at the texture point with the obtained coordinates. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said step of transforming of the layered depth image for each visible face into a texture comprises: 
+<claim-text>determining texture size depending on the viewer&apos;s position relative to the face; </claim-text>
+<claim-text>dividing the face into quadrants by coordinate axes having the origin coinciding with a point which is the orthogonal projection of the viewpoint onto the face plane; </claim-text>
+<claim-text>determining, for each quadrant, a direction of traversal of the layered depth image by lines in the direction to said origin of coordinates and by depth from points farthermost from the face plane to closer points, and checking in the process of traversal of the image for each point of the image whether the point falls within the resulting texture, if the result is negative, ignoring the corresponding point and passing to the next image point, and if the result is affirmative, functionally transforming the coordinates and depth of the image point into coordinates of the point of the resulting texture; and </claim-text>
+<claim-text>forming a splat at the texture point with the obtained coordinates. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said step of transforming of the layered depth image for each visible face into a texture comprises: 
+<claim-text>determining texture size depending on the viewer&apos;s position relative to the face; </claim-text>
+<claim-text>dividing the face into quadrants by coordinate axes having the origin coinciding with a point which is the orthogonal projection of the viewpoint onto the face plane; </claim-text>
+<claim-text>determining, for each quadrant, a direction of traversal of the layered depth image by lines in the direction to said origin of coordinates and by depth from points farthermost from the face plane to closer points, and checking in the process of traversal of the image for each point of the image whether the point falls within the resulting texture, if the result is negative, ignoring the corresponding point and passing to the next image point, and if the result is affirmative, functionally transforming the coordinates and depth of the image point into coordinates of the point of the resulting texture; and </claim-text>
+<claim-text>forming a splat at the texture point with the obtained coordinates. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said step of transforming of the layered depth image for each visible face into a texture comprises: 
+<claim-text>determining texture size depending on the viewer&apos;s position relative to the face; </claim-text>
+<claim-text>dividing the face into quadrants by coordinate axes having the origin coinciding with a point which is the orthogonal projection of the viewpoint onto the face plane; </claim-text>
+<claim-text>determining, for each quadrant, a direction of traversal of the layered depth image by lines in the direction to said origin of coordinates and by depth from points farthermost from the face plane to closer points, and checking in the process of traversal of the image for each point of the image whether the point falls within the resulting texture, if the result is negative, ignoring the corresponding point and passing to the next image point, and if the result is affirmative, functionally transforming the coordinates and depth of the image point into coordinates of the point of the resulting texture; and </claim-text>
+<claim-text>forming a splat at the texture point with the obtained coordinates. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said intermediate representation data is used to store information of the three-dimensional object model. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said intermediate representation data is used to store information of the three-dimensional object model. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said intermediate representation data is used to store information of the three-dimensional object model. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said intermediate representation data is used to store information of the three-dimensional object model. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein said intermediate representation data is used to store information of the three-dimensional object model. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method for representation and rendering of an animated three-dimensional object, comprising the steps of: 
+<claim-text>transforming original data of a three-dimensional object into an intermediate representation; transforming data for frames of the intermediate representation into a rendering representation in the form of a circumscribing cube, where a layered depth image is attributed to each face of the circumscribing cube; and </claim-text>
+<claim-text>rendering the sequence of the obtained representation by determining, for each frame, visible faces of the circumscribing cube with account of the viewer&apos;s position, transforming, for each of the visible faces, the layered depth image into a texture, and visualizing the visible faces with texture. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said transforming of original data of a three-dimensional object into an intermediate representation comprises: 
+<claim-text>placing a three-dimensional model inside the circumscribing cube; for each frame of animation, orthographically projecting the model onto all the faces of the circumscribing cube so that to obtain for each face a model image with a predetermined pixel resolution; </claim-text>
+<claim-text>for each pixel in the obtained images, computing a corresponding depth value, which is a distance from a point at the model surface to a corresponding face of the circumscribing cube, so that to obtain for each face a gray-scale image, each point of the gray-scale image having brightness corresponding to depth at this point; storing data of the obtained <highlight><bold>12</bold></highlight> images as <highlight><bold>6</bold></highlight> pairs of maps, each of the map pairs consisting of a color image and gray-scale image corresponding to the face of the circumscribing cube; and </claim-text>
+<claim-text>constructing from the obtained <highlight><bold>6</bold></highlight> map pairs a layered depth image for each face of the circumscribing cube. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the obtained intermediate representations in the form of six video streams are compressed using MPEG4 compression format, while storing color information in color channels, and depth maps in alpha channel.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030001838A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030001838A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030001838A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030001838A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030001838A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

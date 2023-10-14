@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030001868A1-20030102-D00000.TIF SYSTEM "US20030001868A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030001868A1-20030102-D00001.TIF SYSTEM "US20030001868A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030001868A1-20030102-D00002.TIF SYSTEM "US20030001868A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030001868A1-20030102-D00003.TIF SYSTEM "US20030001868A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030001868</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10179774</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020624</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>0115838.5</doc-number>
+</priority-application-number>
+<filing-date>20010628</filing-date>
+<country-code>GB</country-code>
+</foreign-priority-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>0119351.5</doc-number>
+</priority-application-number>
+<filing-date>20010808</filing-date>
+<country-code>GB</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G09G005/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>345</class>
+<subclass>660000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Graphics compression</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Adrian</given-name>
+<family-name>Sack</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>London</city>
+<country-code>GB</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Srikanth</given-name>
+<family-name>Bandi</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>London</city>
+<country-code>GB</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Ideaworks 3D Limited</organization-name>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>IPSOLON LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>805 SW BROADWAY, #2740</address-1>
+<city>PORTLAND</city>
+<state>OR</state>
+<postalcode>97205</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method of manipulating a vector graphics data file representative of at least one graphics element defined by a set of co-ordinate values in a graphics image, the method comprising the step of scaling down the at least one graphics element by applying a scaling factor to the set of co-ordinate values defining the at least one graphics element. There is also disclosed a method of previewing a vector graphics image composed of a plurality of graphics elements comprising the steps of: parsing a vector graphics data file into individual graphics elements; selecting at least one graphics element; selecting and applying a scaling factor to a set of co-ordinate values defining the at least one selected graphics element; applying an inverse of the scaling factor to the set of co-ordinate values defining the at least one selected graphics element; displaying the graphics image including the graphics element having the scaling factor and inverse scaling factor applied thereto; and providing an indication of data file compression as a result of said scaling such that the effect of the scaling on image quality and data file size can be appreciated. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND AND SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to methods, systems and software for compressing graphics files and is directed in particular to the compression of vector graphics. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Graphic images are used on the vast majority of internet and intranet websites. When a web page is accessed, these images must be downloaded and displayed within a user&apos;s browser. The size of the data file defining an image greatly influences the time taken to download the file and hence the delay a user experiences when viewing these images on a site. It is desirable, therefore, to minimise the size of the image data files that must be downloaded. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Unlike bitmap graphics, where the image is defined as an array of pixels, vector graphics represent images in terms of geometric formulae, each image essentially being made up from a series of curves and straight lines each having a start point and at least a direction. This basic information is supplemented by a variety of line styles and fill styles to define a complete image. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In many cases, vector graphics require less data than bitmap graphics and hence the resultant file size for representing the same image is smaller. For this reason, vector graphics are commonly used to draw images, both static and animated, on web pages and in other environments where file sizes need to be minimised. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Vector images also have the advantage that they can be more easily resized and stretched compared to bitmap graphics. Further, since the actual generation of the pixels to draw the image is left to the application and device to which the image is supplied, any changes in the scale and shape do not tend to affect the quality of the image since the image is effectively recalculated in situ. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> For web based vector graphics, a popular format is that offered by Macromedia Inc.&apos;s Flash environment. Flash is a vector graphic based animation technology which uses a downloadable plug-in to play Flash files (identified by a .swf extension and typically referred to as SWF&mdash;&ldquo;swiff &rdquo;&mdash;files) through a user&apos;s browser. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The SWF file format is well documented and, for the present purposes, it is not necessary to set out the detail of this format here. A detailed explanation of the format can be obtained from Macromedia Inc., for example from their website at http://www.macromedia.com and is also found at http://www.openswf.org. A brief overview of the format is set out below by way of background to the present invention. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> A SWF file stores information in binary format and is constructed as a sequence of data blocks referred to as &ldquo;tags&rdquo;. Each SWF file starts with a header tag, is followed by a sequence of tags, which define the flash &ldquo;movie&rdquo;, and finishes with an end tag to mark the end of the file for the player. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The header tag contains generic information for the whole file, including, for example, the file size in bytes, the size of the picture, and the frame rate of the SWF movie. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Each of the subsequent sequence of tags comprises a unique tag code, an indication of the total length of data in the tag, and the data itself. There are two principal types of tag: definition tags and control tags. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Definition tags store the content of a SWF movie. Vector graphics data defining shapes is stored as data blocks in the definition tags (apart from such vector data, definition tags can also store sounds and bit maps used in the movie). The geometry of shapes is defined as a sequence of curves and/or straight lines. The geometrical information can be supplemented by a variety of fill and line styles. Each definition tag or shape tag representing an individual shape is assigned a unique identifier known as a &ldquo;character ID&rdquo; to identify the shape represented by that definition tag for use by other tags. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The definition tags can also define higher order &ldquo;symbols&rdquo; using sprite tags by referring to the previously defined shapes or other symbols which may be organised in a hierarchical complex structure. The symbols themselves can be movie clips of their own consisting of several frames. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The second type of tag is a control tag. These tags are used to define, amongst other things, the flow of the movie, the placement of shapes (defined by the placement tags), and playing accompanying audio files. Whilst placing shapes, the control tag refers to the shape by means of its character ID. Placement tags optionally allow geometric and colour transformations to be applied to the original shape, thereby permitting a degree of flexibility and controlling the appearance of the original shape on the screen. Without placing a character using a placement tag the character will not be displayed. A geometric transformation accompanying a placement tag includes a scaling factor for effecting the transformation. The scaling factor is exploited to achieve compression in the present invention. A single shape definition may be re-used several times by various placement tags. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The vector shapes in SWF are defined by quadratic Bezier curves (requiring three points) and/or straight lines (requiring two end points). The point co-ordinates are defined in a device independent co-ordinate system which is not dependent on a pixelated bit map. The point co-ordinates are stored as integer co-ordinate values, in a unit of measurement called a TWIP. A TWIP is defined as one twentieth of a point which is a traditional measure in printing. In the context of an SWF file, a TWIP is considered to be one twentieth of a logical pixel. Thus, a rectangle 800 TWIPS wide by 400 TWIPS high would be rendered as 40&times;20 logical pixels. The number of bits occupied by a co-ordinate depends on its value. Large co-ordinate values require more bits compared to smaller co-ordinate values. The SWF format allocates just enough bits to precisely represent a given co-ordinate value. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In this way, the SWF file format provides a succinct representation of line shapes using a vector graphic approach. However, the nature of the software graphics world is such that there is always a desire to reduce file sizes further. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Accordingly, one aspect of the present invention provides a method of manipulating a vector graphics data file representative of at least one graphics element defined by a set of co-ordinate values in a graphics image, the method comprising the step of scaling down the at least one graphics element by applying a scaling factor to the set of co-ordinate values defining the at least one graphics element. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Preferably, each of the co-ordinate values is represented by a bit sequence and the step of applying the scaling factor comprises the step of eliminating at least the least significant bit from the co-ordinate values. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Conveniently, the scaling factor is 2<highlight><superscript>n </superscript></highlight>where n is an integer value of one or more and comprises the number of bits to be removed from the bit sequence. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Advantageously, the step of applying the scaling factor comprises the step of dividing the co-ordinate values by the scaling factor, the scaling factor having a value greater than 1. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Preferably, each of the co-ordinate values is represented by a bit sequence and the scaling factor has a value which lies between 2<highlight><superscript>n </superscript></highlight>and 2<highlight><superscript>n&plus;1</superscript></highlight>, where n and n&plus;1 are integer values representing the number of bits to be removed from the bit sequence. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Conveniently, the scaling factor is applied to all co-ordinate values used to define the at least one graphics element. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Advantageously, the data file is representative of a plurality of graphics elements, at least one of which has a respective scaling factor applied thereto. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Preferably, respective scaling factors are applied to respective ones of the graphics elements. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Conveniently, the further step of scaling up the at least one graphics element by applying an inverse of the scaling factor to the set of scaled co-ordinate values defining the at least one graphics element. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Advantageously, a predetermined scaling factor is applied to the co-ordinate values in the vector graphics data file. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Conveniently, the method comprises the step of applying a further scaling factor to the co-ordinate values in the vector graphics data file. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Preferably, the method comprises the further step of analysing the co-ordinate values in the vector graphics file and determining therefrom an appropriate scaling factor to be applied. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Advantageously, all the graphics elements are scaled up by an inverse of the scaling factor previously applied thereto. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Preferably, the data file comprises a series of frames, each frame showing at least one graphics element to which a scaling factor can be applied. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Conveniently, the step of applying a scaling factor to the set of co-ordinate values defining the at least one graphics element is carried out selectively on a frame by frame basis. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Advantageously, the scaling factor applied to a particular graphics element is selectable on a frame by frame basis. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Preferably, the scaling factor is applied to the at least one graphics element by setting a first scaling factor for the graphics element in one frame and setting a second scaling factor for the graphics element in another frame and applying a scaling factor between the first scaling factor and the second scaling factor to the graphics element for the frames between the one frame and the other frame. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Conveniently, the scaling factor is applied to the at least one graphics element in the intervening frames, as a linear function between the one frame and the other frame. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Advantageously, saving the vector graphics data file incorporating the scaled set of co-ordinate values and the respective scaling factors applied thereto. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Preferably, the step of reading the re-saved file and scaling up the at least one graphics element by applying an inverse of the scaling factor to the set of scaled co-ordinate values defining the at least one graphics element; and displaying the at least one graphics element. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Conveniently, the further steps of scaling up the at least one graphics element; displaying the graphics image including the graphics element; applying another scaling factor to the set of co-ordinate values defining the at least one graphics element; applying an inverse of the scaling factor to the set of co-ordinate values defining the at least one graphics element; and displaying the graphics image including the graphics element having the further scaling factor and inverse scaling factor applied thereto. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Advantageously, a further step of re-saving the data file is provided to incorporate the set of co-ordinate values scaled down by the further scaling factor. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Preferably, the method comprises the step of parsing a data file to extract vector graphics data representing individual graphics elements and then carrying out the scaling down step on one or more of the graphics elements. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Advantageously, the data file is a multimedia data file. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Preferably, the data file is a SWF file. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Conveniently, the method comprises the step of reconstituting the data file incorporating the scaled down co-ordinate values of the graphics elements. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> Preferably, a constituent of the graphics element defined by the set of co-ordinate values has a line weight assigned thereto, which line weight is scaled down and assigned a compensating line weight such that when the graphics element is scaled up for display the line weight of the graphics element appears to a user to be substantially as the uncompressed original line weight assigned thereto. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Another aspect of the present invention provides a method of previewing a vector graphics image composed of a plurality of graphics elements comprising the steps of: </paragraph>
+<paragraph id="P-0044" lvl="2"><number>&lsqb;0044&rsqb;</number> parsing a vector graphics data file into individual graphics elements; </paragraph>
+<paragraph id="P-0045" lvl="2"><number>&lsqb;0045&rsqb;</number> selecting at least one graphics element; </paragraph>
+<paragraph id="P-0046" lvl="2"><number>&lsqb;0046&rsqb;</number> selecting and applying a scaling factor to a set of co-ordinate values defining the at least one selected graphics element; </paragraph>
+<paragraph id="P-0047" lvl="2"><number>&lsqb;0047&rsqb;</number> applying an inverse of the scaling factor to the set of co-ordinate values defining the at least one selected graphics element; </paragraph>
+<paragraph id="P-0048" lvl="2"><number>&lsqb;0048&rsqb;</number> displaying the graphics image including the graphics element having the scaling factor and inverse scaling factor applied thereto; and </paragraph>
+<paragraph id="P-0049" lvl="2"><number>&lsqb;0049&rsqb;</number> providing an indication of data file compression as a result of said scaling such that the effect of the scaling on image quality and data file size can be appreciated. </paragraph>
+<paragraph id="P-0050" lvl="2"><number>&lsqb;0050&rsqb;</number> Conveniently, the further step of varying the scaling factor applied to the set of co-ordinate values for the at least one graphics element during display of the graphics element. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Advantageously, the step of applying a scaling factor to the set of co-ordinate values defining the at least one selected graphics element is carried out selectively on a frame by frame basis. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Preferably, the scaling factor applied to a particular graphics element is selectable on a frame by frame basis. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> Advantageously, said indication of data file compression to a user is graphical, numerical or audible. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Conveniently, the method of playing back a vector graphics data file manipulated in accordance with any preceding statement, comprises the steps of reading the vector graphics data file and extracting therefrom the scaled down set of co-ordinate values defining the at least one graphics element and the respective scaling factor applied to the set of co-ordinate values; applying an inverse of the respective scaling factors to the set of scaled co-ordinate values defining the at least one graphics element; and displaying the at least one graphics element. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Another aspect of the present invention provides a method of manipulating a vector graphics data file representative of at least one graphics element defined by a set of co-ordinate values in a graphics image, the method comprising the step of scaling down the at least one graphics element by eliminating at least a least significant bit from the co-ordinate values defining the at least one graphics element. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> Preferably, an authoring tool comprising a computer program adapted to perform the steps of any of the above method statements, when the program is run on a computer.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> In order that the present invention may be more readily understood, embodiments thereof will now be described, by way of example, with reference to the accompanying drawings in which: </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an exemplary vector graphic image comprising one frame of a Flash movie; </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is an image showing the individual symbols which make up the illustrated frame from the movie of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates four stages of compression embodying the present invention performed on one of the symbols from the frame of the movie shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a comparison showing image degradation from an original symbol from the movie frame of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; the original symbol compressed using a method embodying the present invention; and the original image compressed using a curve optimisation function available in the Flash authoring tool; </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a frame of the movie of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrating two of the symbols, one of which is subjected to scaling compression embodying the present invention and also showing a scaling compression tool bar embodying the present invention; </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a symbol taken from four separate frames from the movie of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the symbol being shown in an increasingly compressed state, and a per frame compression toolbar embodying the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> An authoring tool embodying the present invention is an adaptation of existing authoring software products for, for example, Flash files or other vector graphics based animation technologies. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> Many people regard the Flash format as being resolution independent. This is not, however, strictly the case. In fact, the Flash movie format (SWF format) has a resolution of some 20 points per pixel. Almost all flash files can therefore contain a significant amount of extraneous image data at this sub-pixel level which does not affect the appearance of an on-screen image. This over-specification in the Flash format is taken advantage of by the present invention to implement a form of data compression to minimise the size of SWF data files. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> As discussed in the background section of the present Application, the SWF format operates in a defined co-ordinate system assigning co-ordinate values to the points which define a graphics element. In fact, each co-ordinate describing a vector shape is allocated only enough bits to store that co-ordinate so that large co-ordinate values take up many bits whereas smaller co-ordinate values take up less bits. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> The degree of numerical precision provided by the co-ordinate values of the Flash file is, as mentioned above, over-specified and to a certain extent this information is redundant. The present invention takes advantage of this feature of the Flash files to optimise the appearance of the resultant image when a data file is compressed in accordance with the method embodying the present invention. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> An embodiment of the present invention therefore provides an authoring tool which is operable to manipulate the data held in a vector graphics data file which is representative of a number of graphics elements which, together, make up a graphics image to be rendered on a display screen. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> Each vector graphics data file, in this case a Flash file, comprises a header tag, a series of definition tags defining shapes, symbols or sounds, a series of control tags defining the placement of shapes and specifying frames in the movie defined by the file in which shapes are to be displayed, and the playback of sound. An end tag specifies the end of the file. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows an exemplary frame from a Flash movie made up of four graphics elements, three of which are symbols represented by definition tags (a loud-hailer <highlight><bold>1</bold></highlight>, sound waves <highlight><bold>1</bold></highlight><highlight><italic>b </italic></highlight>and a running man <highlight><bold>2</bold></highlight>). The fourth element, comprising the eight lines of a running track <highlight><bold>3</bold></highlight> is not defined as a symbol. The loud-hailer <highlight><bold>1</bold></highlight> remains stationary in the movie whilst the sound waves <highlight><bold>1</bold></highlight><highlight><italic>b </italic></highlight>pulse on and off. The lines of the running track <highlight><bold>3</bold></highlight> remain fixed on the screen and the running man <highlight><bold>2</bold></highlight> runs along the length of the running track and therefore comprises the only animated graphics element in the movie. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> The compression method embodying the present invention acts upon the definition tags which define the shapes of the graphics elements making up the resultant graphics image. The first stage is to parse the vector graphics data file into its respective components with a particular view to identifying the definition tags which define the shape of graphics elements (the so-called shape tags and higher order symbols, the so-called symbol tags). This step is readily accomplished by a number of methods but, most conveniently, can be effected by freely available SWF file parsing tools from www.openswf.org. The parsing of the vector graphics data file representing the movie shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is shown symbolically in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> Once the shape and symbol tags have been identified by parsing, the next stage is to compress the data represented in the definition tags by scaling down the co-ordinate values making up the set of co-ordinate values defining a graphics element. </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> The data file which is parsed may be a multimedia data file incorporating elements other than the vector graphics data such as sound and user interactivity. The parser is operable to identify and separate out the vector graphics elements. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> In a preferred embodiment, the authoring tool displays or lists the constituent vector graphic images on a screen or in a toolbar so as to provide for their selection. A user can select an individual symbol in isolation from the other symbols to allow manipulation of the data relating thereto. In particular, as shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the manipulation of the data takes the form of scaling down a graphics element by applying a scaling factor to the set of co-ordinate values defining that graphics element. In the example shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the loud-hailer symbol <highlight><bold>1</bold></highlight> is selected for compression. The original symbol is referred to in the Figure by reference numeral <highlight><bold>1</bold></highlight>. The original symbol takes up 0.41 kilobytes of file space. The symbol <highlight><bold>1</bold></highlight> is subjected to scalar compression by scaling down the set of co-ordinate values defining the symbol <highlight><bold>1</bold></highlight>, which scalar compression results in a 34% reduction of file size down to 0.27 kB. The resultant symbol <highlight><bold>1</bold></highlight>i is shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. It is apparent that there is very little degradation in image quality. For the purposes of illustration, symbols <highlight><bold>1</bold></highlight>ii and <highlight><bold>1</bold></highlight>iii represent further scalar compression of the original symbol resulting in, respectively, 43% reduction in the file size to 0.23 kB (<highlight><bold>1</bold></highlight>ii) and 52% reduction in file size to 0.20 kB (<highlight><bold>1</bold></highlight>iii). It is clear that the image quality in the most compressed data file has suffered. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> Importantly, this file size reduction is indicated to the user, preferably by an on-screen numerical display. It should be appreciated that many other modes of providing this valuable feedback to the user can be employed, such as a graphic or audible indicator. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> Once the various symbols have been selected and scaled down to a desired level, the resultant data file is re-saved as a Flash file incorporating the scaled down co-ordinate values together with the scaling factor applied to the respective symbols. This reconstitution of the data file maintains any other non-vector graphics data (if the data file is a multimedia file for example) and simply reinserts the scaled down co-ordinate value data. The reconstituted file benefits from significant file size reduction as a result of the scaling down of the co-ordinate values. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> The Flash movie player reads such re-saved SWF files and scales up the graphics element by applying the inverses of the respective scaling factors to the respective sets of co-ordinate values defined in the graphics elements which can then be displayed. This is a conventional feature of the Flash movie player which conventionally requires a scaling factor to display a symbol or a shape. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> It is preferred that the scaling down step is effected by bit elimination. Each of the co-ordinate values is represented as a bit sequence. Removal of the least significant bit from that bit sequence scales down the co-ordinate values by a factor of 2. If the two least significant bits are eliminated, then the scaling down factor would be 2<highlight><superscript>2 </superscript></highlight>i.e. 4. Thus, the scaling factor can be selected as 2<highlight><superscript>n</superscript></highlight>, where n is an integer of 1 or more. It should be noted that the bit elimination technique is particularly well suited and can be readily implemented to vector graphics data compression techniques. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> Another method of scaling down is to divide the co-ordinate values by the scaling factor which can take any value greater than 1. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> Additionally, a final scaling factor can be achieved by a combination of bit-elimination and scaling down by a divisor scaling factor. The final scaling factor can eliminate a varying number of bits (n or n&plus;1) bits depending on the co-ordinate values. For example, a scaling factor of 3 applied to a co-ordinate value of 4 eliminates two bits. A co-ordinate value of 6 having the same scaling factor of 3 applied thereto results in a value of 2 which means that the co-ordinate value loses one bit. This is because the scaling factor lies between 2<highlight><superscript>1 </superscript></highlight>and 2<highlight><superscript>2. </superscript></highlight>Such a combined scaling factor offers a more intelligent method of achieving superior visual quality than can be obtained using simple bit elimination. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> Scaling up of the co-ordinate values is effected by applying the inverse of the scaling factor to the co-ordinate values so that the co-ordinate values are restored to their original state although it should be noted that when scaling up following scaling down by bit elimination, data is irretrievably lost although, as previously mentioned, it is anticipated that most of the data which is lost will be at the sub-pixel level and therefore substantially unnoticeable when the image is displayed (for low order scaling factors). </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> It has been noted that the scaling up process can incorrectly scale up the weights applied to lines. For example, a Flash Player automatically enlarges a file for display and thus scales up the entire image including the line weights. There is no decimilasation of line weights in Flash so a line weight of 1 pt scaled down by a scaling factor of 10 does not result in a line weight of 0.1 pt but of 0 pt. When this image is reproduced by the Flash Player, a line weight of 1 pt is automatically attributed to the 0 pt value line weight. When the Flash Player scales up the image for display by the scaling factor of 10, the reproduced line is incorrectly displayed with a line weight of 10 pt. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> To correct this misattribution of line weights, a preferred example of the present invention assigns a compensating scaled down line weight to the graphics element in the Flash file, in this example, an apparent line weight of 0.1 pt would be attributed to the line weight in the graphics file being compressed. Thus, when the file is scaled up by a factor of 10, the line weight is reverted as close as possible to its true line weight of 1 pt. This step of recalculating an apparent line weight and attributing the same to a respective line weight in the vector graphics data file being compressed therefore compensates for any distorted line weights which would otherwise be created. In some circumstances, the resultant scaled up line weight may not be identical to the original line weight since there may be a limited number of discrete line weights which can be saved in the vector graphics data file or assigned to a graphics element, in which case the line weight is selected to be the closest assignable line weight to the original line weight&mdash;i.e. substantially the original line weight&mdash;so that when the image in the compressed data file is scaled up during the display process it appears to a user to have substantially the same line weight as the uncompressed original line weight. </paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number> The above described method of manipulating vector graphics data files is fairly unsophisticated in its most simple implementation. However, as will be described below, the above mentioned technique allows significant tailoring or tuning of data files in the Flash authoring environment which has previously been impossible. </paragraph>
+<paragraph id="P-0085" lvl="0"><number>&lsqb;0085&rsqb;</number> In many examples of Flash movies, there are graphics elements of prime interest or importance and those of lesser importance. Those graphics elements of lesser importance can have significant scaling factors applied thereto thereby minimising the amount of data file space which they occupy. Although the resultant image quality for some of these symbols may be degraded, this is not a prime concern as the other characters of greater importance can be rendered either without any scaling or only with minimal scaling which has little or no effect on image quality. </paragraph>
+<paragraph id="P-0086" lvl="0"><number>&lsqb;0086&rsqb;</number> The authoring tool embodying the present invention allows rapid previewing (if not real time) of the effects of scaling factors on respective graphics elements along with file size feedback relative to image degradation. This is an extremely powerful tool allowing a designer to see in real time the effect that scaling has on the appearance of a graphics element and allowing the designer to minimise the size of the data file occupied by the graphics element whilst maintaining an acceptable level of image quality for that graphics element. </paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number> Thus, referring to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, the authoring tool displays a scaling compression toolbar allowing adjustment of the scaling factor using a conventional scroll bar. The symbol being compressed is the combination of symbols <highlight><bold>1</bold></highlight> and <highlight><bold>1</bold></highlight><highlight><italic>b</italic></highlight>&mdash;the loud-hailer and the sound waves. The other graphics elements of the movie are also shown in the Figure but are not manipulated by scalar compression although, for example, the animated movie comprising the running man <highlight><bold>2</bold></highlight> is seen running across the screen whilst the scalar compression toolbar is active and implementing changes to the scaling factor applied to the symbols <highlight><bold>1</bold></highlight>, <highlight><bold>1</bold></highlight><highlight><italic>b. </italic></highlight></paragraph>
+<paragraph id="P-0088" lvl="0"><number>&lsqb;0088&rsqb;</number> Moving the scroll bar to the left allows the user to minimise the scaling factor thereby providing maximum image quality. Moving the scroll bar to the right allows the user to minimise file size by increasing the scaling factor although sacrificing image quality as can be seen in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. The designer is able, in real time, and importantly in the context of the rest of the movie, to apply a scaling factor which minimises file size to an appropriate level whilst preserving an acceptable level of image quality for that particular graphics element. Exactly the same process can be performed by selecting another of the symbols, for example, the running man <highlight><bold>2</bold></highlight>, and applying scalar compression thereto using the scalar compression toolbar whilst leaving the remainder of the graphics elements in the movie unaffected although still showing the running man <highlight><bold>2</bold></highlight> in various stages of scalar compression and in the context of the rest of the movie. </paragraph>
+<paragraph id="P-0089" lvl="0"><number>&lsqb;0089&rsqb;</number> Normally, it would be appropriate to apply a single scaling factor to a particular graphics element throughout the duration of a movie. However, in some circumstances, it is advantageous to be able to apply a variable scaling factor to an individual graphics element, the scaling factor varying from frame to frame within the movie. A particularly good example would be a movie incorporating as a graphics element a rotating human head. Clearly, the important facial features are on the front of the head&mdash;the face, whereas the sides and rear of the head are substantially devoid of important features. Accordingly, for those frames in the movie in which the face is visible, a low scaling factor can be applied so that maximum image quality is maintained. However, for those frames in the movie in which the face is only partially visible and the rear of the head is more prominent, the scaling factor can be greatly increased as it is unimportant to maintain image quality solely to display the back of the head. Thus, not only does the authoring tool of the present invention allow compression of data files with reference to image quality of individual graphics elements but it also allows the application of such scaling factors on a frame by frame basis throughout the movie. </paragraph>
+<paragraph id="P-0090" lvl="0"><number>&lsqb;0090&rsqb;</number> An example of such per frame compression is shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference> in which the running man symbol <highlight><bold>2</bold></highlight> is shown at four different levels of compression in four respective frames of the movie. Conveniently, the user of the authoring tool only needs to select the original scaling factor for the first frame and the final scaling factor for the last frame, the software interpolating the scaling factor between the levels indicated for the start and end frames so that the scaling factor is applied to the symbol <highlight><bold>2</bold></highlight> in the intervening frames as a linear function as shown in the per frame compression toolbar of <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. </paragraph>
+<paragraph id="P-0091" lvl="0"><number>&lsqb;0091&rsqb;</number> As a further means of compression, it is also possible to take advantage of curve compression or curve optimisation. This is a conventional technique which involves a sequence of curves being merged to form a single curve thereby reducing data size. In some circumstances, curves can be converted to straight lines taking up less data space. <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows an interesting comparison between the relative image qualities which can be obtained by using the scalar compression embodying the present invention and a curve optimisation technique. In <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the original symbol <highlight><bold>1</bold></highlight> is shown having a file size of 0.41 kB. When subjected to scalar compression embodying the present invention, the file size is reduced by 34% to 0.27 kB with minimal reduction in image quality (<highlight><bold>1</bold></highlight>iv). In contrast, compression using curve optimisation of the symbol <highlight><bold>1</bold></highlight> with the same reduction in file size results in a symbol with noticeable image degradation and loss of features (<highlight><bold>1</bold></highlight>v). Accordingly, it will be appreciated that scalar compression embodying the present invention offers a better alternative to curve optimisation techniques with less degradation in image quality. </paragraph>
+<paragraph id="P-0092" lvl="0"><number>&lsqb;0092&rsqb;</number> The above described examples preferably involve manual intervention by an author using the authoring tool to determine from the displayed graphics what level of compression is acceptable. Another example of the present invention uses the same concept for compressing the vector graphics files but does so without intervention from the author. In this alternative method of the invention, compression of a vector graphics file is accomplished by defining a tolerance level which is acceptable to the author and the file is then automatically compressed by scaling the co-ordinate values using a scaling factor determined by the selected tolerance. For example, there might be five tolerance levels: None, Low, Medium, High and Maximum each having their own associated scaling factor. </paragraph>
+<paragraph id="P-0093" lvl="0"><number>&lsqb;0093&rsqb;</number> It is also envisaged that the optimum level of compression can be determined automatically using an iterative process which applies a low scaling factor a number of times until the level of distortion approaches a set threshold beyond which the level of distortion is unacceptable or until an author reviewing a display of the compressed vector graphics file determines that the level of distortion is approaching the unacceptable. Algorithms can be readily provided to set the distortion thresholds and detect when a distortion threshold is being approached so as to halt the compression at a level which offers the optimum compression without unduly distorting the resultant image. Such algorithms or processes would analyse the co-ordinate values present in the vector graphics data file and determine therefrom whether there is compressible data present and, if so, determine an optimum scaling factor. </paragraph>
+<paragraph id="P-0094" lvl="0"><number>&lsqb;0094&rsqb;</number> In the crudest embodiment of the invention, the scaling factor is set to a sensible default value preferably determined heuristically and all appropriate co-ordinate values in a vector graphics data file are scaled thereby without recourse to the level of distortion that is to be incurred. </paragraph>
+<paragraph id="P-0095" lvl="0"><number>&lsqb;0095&rsqb;</number> The features disclosed in the foregoing description, or the following claims, or the accompanying drawings, expressed in their specific forms or in terms of a means for performing the disclosed function, or a method or process for attaining the disclosed result, as appropriate, may, separately, or in any combination of such features, be utilised for realising the invention in diverse forms thereof. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of manipulating a vector graphics data file representative of at least one graphics element defined by a set of co-ordinate values in a graphics image, the method comprising the step of scaling down the at least one graphics element by applying a scaling factor to the set of co-ordinate values defining the at least one graphics element. </claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein each of the co-ordinate values is represented by a bit sequence and the step of applying the scaling factor comprises the step of eliminating at least the least significant bit from the co-ordinate values. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the scaling factor is 2<highlight><superscript>n </superscript></highlight>where n is an integer value of one or more and comprises the number of bits to be removed from the bit sequence. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of applying the scaling factor comprises the step of dividing the co-ordinate values by the scaling factor, the scaling factor having a value greater than 1. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein each of the co-ordinate values is represented by a bit sequence and the scaling factor comprises a combined scaling factor having a value which lies between 2<highlight><superscript>n </superscript></highlight>and 2<highlight><superscript>n&plus;1</superscript></highlight>, where n and n&plus;1 are integer values representing the number of bits to be removed from the bit sequence, the number of bits being dependent on the co-ordinate value being scaled. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the scaling factor is applied to all co-ordinate values used to define the at least one graphics element. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the vector graphics data file is representative of a plurality of graphics elements, at least one of which has a respective scaling factor applied thereto. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein respective scaling factors are applied to respective ones of the graphics elements. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, comprising the further step of scaling up the at least one graphics element by applying an inverse of the scaling factor to the set of scaled co-ordinate values defining the at least one graphics element. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein all the graphics elements are scaled up by an inverse of the scaling factor previously applied thereto. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein a predetermined scaling factor is applied to the co-ordinate values in the vector graphics data file. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, comprising the step of applying a further scaling factor to the co-ordinate values in the vector graphics data file. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, comprising the further step of analysing the co-ordinate values in the vector graphics file and determining therefrom an appropriate scaling factor to be applied. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the vector graphics data file comprises a series of frames, each frame showing at least one graphics element to which a scaling factor can be applied. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the step of applying a scaling factor to the set of co-ordinate values defining the at least one graphics element is carried out selectively on a frame by frame basis. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the scaling factor applied to a particular graphics element is selectable on a frame by frame basis. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the scaling factor is applied to the at least one graphics element by setting a first scaling factor for the graphics element in one frame and setting a second scaling factor for the graphics element in another frame and applying a scaling factor between the first scaling factor and the second scaling factor to the graphics element for the frames between the one frame and the other frame. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the scaling factor is applied to the at least one graphics element in the intervening frames, as a linear function between the one frame and the other frame. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, comprising saving the vector graphics data file incorporating the scaled set of co-ordinate values and the respective scaling factors applied thereto. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, comprising the step of reading the re-saved file and scaling up the at least one graphics element by applying an inverse of the scaling factor to the set of scaled co-ordinate values defining the at least one graphics element; and displaying the at least one graphics element. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, comprising the further steps of scaling up the at least one graphics element; displaying the graphics image including the graphics element; applying another scaling factor to the set of co-ordinate values defining the at least one graphics element; applying an inverse of the scaling factor to the set of co-ordinate values defining the at least one graphics element; and displaying the graphics image including the graphics element having the further scaling factor and inverse scaling factor applied thereto. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, comprising the further step of re-saving the data file incorporating the set of co-ordinate values scaled down by the further scaling factor. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, comprising the step of parsing a data file to extract vector graphics data representing individual graphics elements and then carrying out the scaling down step on one or more of the graphics elements. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the data file is a multimedia data file. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the data file is a SWF file. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, comprising the step of reconstituting the data file incorporating the scaled down co-ordinate values of the graphics elements. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein a constituent of the graphics element defined by the set of co-ordinate values has a line weight assigned thereto, which line weight is scaled down and assigned a compensating line weight such that when the graphics element is scaled up for display the line weight of the graphics element appears to a user to be substantially as the uncompressed original line weight assigned thereto. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A method of previewing a vector graphics image composed of a plurality of graphics elements comprising the steps of: 
+<claim-text>parsing a vector graphics data file into individual graphics elements; </claim-text>
+<claim-text>selecting at least one graphics element; </claim-text>
+<claim-text>selecting and applying a scaling factor to a set of co-ordinate values defining the at least one selected graphics element; </claim-text>
+<claim-text>applying an inverse of the scaling factor to the set of co-ordinate values defining the at least one selected graphics element; </claim-text>
+<claim-text>displaying the graphics image including the graphics element having the scaling factor and inverse scaling factor applied thereto; and </claim-text>
+<claim-text>providing an indication of data file compression as a result of said scaling such that the effect of the scaling on image quality and data file size can be appreciated. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, comprising the further step of varying the scaling factor applied to the set of co-ordinate values for the at least one graphics element during display of the graphics element. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein the step of applying a scaling factor to the set of co-ordinate values defining the at least one selected graphics element is carried out selectively on a frame by frame basis. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein the scaling factor applied to a particular graphics element is selectable on a frame by frame basis. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein said indication of data file compression to a user is graphical, numerical or audible. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> comprising the steps of reading the vector graphics data file and extracting therefrom the scaled down set of co-ordinate values defining the at least one graphics element and the respective scaling factor applied to the set of co-ordinate values; applying an inverse of the respective scaling factors to the set of scaled co-ordinate values defining the at least one graphics element; and displaying the at least one graphics element. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. A method of manipulating a vector graphics data file representative of at least one graphics element defined by a set of co-ordinate values in a graphics image, the method comprising the step of scaling down the at least one graphics element by eliminating at least a least significant bit from the co-ordinate values defining the at least one graphics element. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. A computer-readable medium having instructions for performing steps of manipulating a vector graphics data file representative of at least one graphics element defined by a set of co-ordinate values in a graphics image, the method comprising scaling down the at least one graphics element by applying a scaling factor to the set of co-ordinate values defining the at least one graphics element. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. A method of manipulating a vector graphics data file representative of at least one graphics element defined by a set of co-ordinate values in a graphics image, the method comprising the step of scaling down the at least one graphics element by applying a scaling factor to the set of co-ordinate values defining the at least one graphics element to produce a set of scaled co-ordinate values defining the at least one graphics element and subsequently scaling up the at least one graphics element by applying an inverse of the scaling factor to the set of scaled co-ordinate values defining the at least one graphics element.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>6</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030001868A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030001868A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030001868A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030001868A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

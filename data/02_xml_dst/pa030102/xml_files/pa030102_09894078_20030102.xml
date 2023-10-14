@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004920A1-20030102-D00000.TIF SYSTEM "US20030004920A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004920A1-20030102-D00001.TIF SYSTEM "US20030004920A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004920A1-20030102-D00002.TIF SYSTEM "US20030004920A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004920A1-20030102-D00003.TIF SYSTEM "US20030004920A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004920A1-20030102-D00004.TIF SYSTEM "US20030004920A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004920A1-20030102-D00005.TIF SYSTEM "US20030004920A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004920A1-20030102-D00006.TIF SYSTEM "US20030004920A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004920</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894078</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>001000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method, system, and program for providing data to an application program from a file in a file system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Harriet</given-name>
+<middle-name>G.</middle-name>
+<family-name>Coverston</family-name>
+</name>
+<residence>
+<residence-us>
+<city>New Brighton</city>
+<state>MN</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Larry</given-name>
+<middle-name>D.</middle-name>
+<family-name>Kelley</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Maple Grove</city>
+<state>MN</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Sun Microsystems, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>David W. Victor</name-1>
+<name-2>KONRAD RAYNES &amp; VICTOR LLP</name-2>
+<address>
+<address-1>Suite 210</address-1>
+<address-2>315 S. Beverly Drive</address-2>
+<city>Beverly Hills</city>
+<state>CA</state>
+<postalcode>90212</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Provided is a method, system, and program for managing files in a file system. A plurality of files are provided in a primary storage used by an application program. A criteria is applied to determine files to release in the primary storage that have been copied to a secondary storage. A request is received for data from the application program in one file that was released and resides on the secondary storage. Data is read from the requested file in the secondary storage into a memory accessible to the application program. Data is provided from the file in the memory to the application program before the entire file has been read from the secondary storage into the memory. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to a method, system, and program for providing data to an application program from a file in a file system. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In hierarchical storage management (HSM) systems, files are migrated to tape storage when the data stored in disk cache reaches a certain threshold. HSM systems migrate files to tape to make room for further files being used in the system. If an application program requires data from a file migrated to tape to continue processing, then the application processing may be delayed while the entire file is staged back onto tape. Such HSM systems optimize the use of the storage space because less frequently used files may be migrated to tape and removed from the disk storage to make space available for new data, thereby increasing the effective storage capacity of the disk storage. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The delay in retrieving a migrated file from the tape storage is significant for database programs. The data in a database is stored in tables. Each database table is comprised of one or more tablespaces where the table data is stored. Each tablespace is comprised of one or more separate data files. In the prior art, all the tablespace files typically remain on the disk cache if the database tables which they comprise are open for writes by the database program. Such tablespace files remain on the disk space even if they have not been accessed for a long time. Thus, the benefits of hierarchical storage management (HSM) that would be realized by releasing old archived tablespace files cannot be realized when a substantial portion of the disk space is used to store tablespace files of an open database. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> For this reason, there is a need in the art to provide improved techniques for managing files in a file system. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Provided is a method, system, and program for managing files in a file system. A plurality of files are provided in a primary storage used by an application program. A criteria is applied to determine files to release in the primary storage that have been copied to a secondary storage. A request is received for data from the application program in one file that was released and resides on the secondary storage. Data is read from the requested file in the secondary storage into a memory accessible to the application program. Data is provided from the file in the memory to the application program before the entire file has been read from the secondary storage into the memory. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In further implementations, the primary storage stores a partial version of at least one released file, wherein the partial version includes a portion of the data in at least one released file. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Still further, a stage attribute is associated with each file indicating whether to stage the file transferred from the secondary storage to the memory into the primary storage. Data for the file is staged to the primary storage from the memory that was transferred from the secondary storage only if the stage attribute indicates that data from the file is to be staged. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In further implementations, groups of component files are accessed by the application program. In such case, the primary storage maintains a partial version of each released component file included in one of the groups accessed by the application program, wherein the partial version includes a portion of the released component file. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> In certain implementations, the application program comprises a database program and the groups of component files comprise tablespaces that the database program has opened, wherein the component files of one opened tablespace are eligible for release according to the criteria. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Referring now to the drawings in which like reference numbers represent corresponding parts throughout: </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an illustration of a computing environment in which aspects of the invention are implemented; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a data structure for metadata in accordance with implementations of the invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 3 and 4</cross-reference> illustrate files of a tablespace stored in the file system in accordance with implementations of the invention; and </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 5</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>5</bold></highlight><highlight><italic>b </italic></highlight>illustrate logic to I/O requests to files in the file system in accordance with implementations of the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In the following description, reference is made to the accompanying drawings which form a part hereof and which illustrate several embodiments of the present invention. It is understood that other embodiments may be utilized and structural and operational changes may be made without departing from the scope of the present invention. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a computing environment implementation of the invention. A computer <highlight><bold>2</bold></highlight>, which may comprise any computing device known in the art, including a desktop computer, mainframe, workstation, personal computer, hand held computer, palm computer, laptop computer, telephony device, network appliance, etc., includes a file system <highlight><bold>4</bold></highlight> and an application program <highlight><bold>8</bold></highlight>. The file system <highlight><bold>4</bold></highlight> may comprise any file system that an operating system provides to organize and manage files known in the art, such as the file system used with the Sun Microsystems Solaris operating system, Unix file system or any other file system known in the art. ** The application program <highlight><bold>8</bold></highlight> may comprise any application known in the art that creates and accesses data files in the file system <highlight><bold>4</bold></highlight>, such as a database program, word processing program, software development tool or any other application program known in the art. A network <highlight><bold>18</bold></highlight>, which may comprise any network system known in the art, such as Fibre Channel, Local Area Network (LAN), an Intranet, Wide Area Network (WAN), Storage Area Network (SAN), etc., enables communication between the computer <highlight><bold>2</bold></highlight>, primary storage <highlight><bold>10</bold></highlight>, and secondary storage <highlight><bold>12</bold></highlight>. Alternatively, the computer <highlight><bold>2</bold></highlight> may be connected to the disk cache <highlight><bold>10</bold></highlight> and tape library <highlight><bold>12</bold></highlight> via direct transmission lines or cables (not shown). Data transferred between the primary storage, such as a disk cache, <highlight><bold>10</bold></highlight> and the secondary storage <highlight><bold>12</bold></highlight>, such as a tape library, transferred through the file system <highlight><bold>4</bold></highlight> in the computer <highlight><bold>2</bold></highlight> or, alternatively, directly between the primary storage <highlight><bold>10</bold></highlight> and secondary storage <highlight><bold>12</bold></highlight> via the network <highlight><bold>18</bold></highlight> or a direct transmission line (not shown). <footnote id="FOO-00001">SOLARIS is a trademark of Sun Microsystems, Inc.; UNIX is a registered trademark of The Open Group; SAM-FS is a trademark of LSC, Inc. </footnote></paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In the described implementations, the file system <highlight><bold>4</bold></highlight> further includes programs for managing the storage of files in the file system <highlight><bold>4</bold></highlight> in a primary storage <highlight><bold>10</bold></highlight> and secondary storage <highlight><bold>12</bold></highlight>. In certain implementations, the primary storage <highlight><bold>10</bold></highlight> comprises a disk cache or group of interconnected hard disk drives that implement a single storage space. The applications <highlight><bold>8</bold></highlight> process data stored in the primary storage <highlight><bold>10</bold></highlight>. The secondary storage <highlight><bold>12</bold></highlight> is used for maintaining a backup copy of files in the file system <highlight><bold>4</bold></highlight> and for expanding the overall available storage space. In certain implementations, the secondary storage <highlight><bold>12</bold></highlight> comprises a slower access and less expensive storage system than the primary storage <highlight><bold>12</bold></highlight>. For instance, the secondary storage <highlight><bold>12</bold></highlight> may comprise a tape library including one or more tape drives and numerous tape cartridges, an optical library, slower and less expensive disk drives, etc. In certain implementations, once a tape cartridge is mounted in a tape drive, data may be transferred between the primary <highlight><bold>10</bold></highlight> and secondary <highlight><bold>12</bold></highlight> storage. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In certain implementations, the file system <highlight><bold>4</bold></highlight> is capable of performing Hierarchical Storage Management (HSM) related functions, such as automatically archiving files in the primary storage <highlight><bold>10</bold></highlight> in the secondary storage <highlight><bold>12</bold></highlight>. Files are archived when they meet a set of archive criteria, such as age, file size, time last accessed, etc. The file system <highlight><bold>4</bold></highlight> may also perform staging operations to copy data archived on the secondary storage <highlight><bold>12</bold></highlight> to the primary storage <highlight><bold>10</bold></highlight> to make available to the applications <highlight><bold>8</bold></highlight>. The file system <highlight><bold>4</bold></highlight> may also perform release operations to free space in the primary storage <highlight><bold>10</bold></highlight> used by files archived to the secondary storage <highlight><bold>12</bold></highlight> in order to make more space available for more recent data. In certain implementations, the release operation may utilize high and low thresholds. When the used space in the primary storage <highlight><bold>10</bold></highlight> reaches a high threshold, the file system <highlight><bold>4</bold></highlight> releases files in the primary storage <highlight><bold>10</bold></highlight> that have been archived to secondary storage. The primary storage <highlight><bold>10</bold></highlight> space used by the released file is available for use to store other data. In certain implementations, the file system <highlight><bold>4</bold></highlight> stops releasing files when the used storage space is at the low threshold level. Further details of the HSM capabilities that may be included in the file system <highlight><bold>4</bold></highlight> are described in the LSC, Inc. publication entitled &ldquo;SAM-FS System Administrator&apos;s Guide&rdquo;, LSC, Inc. publication no. SG-0001, Revision 3.5.0 (1995, July, 2000) and the archiving file system described in U.S. Pat. No. 5,764,972, which publication and patent are incorporated herein by reference in its entirety. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The computer <highlight><bold>2</bold></highlight> further includes a memory <highlight><bold>14</bold></highlight>, which may comprise any volatile memory device known in the art for buffering data and program code currently being executed. For instance, the application program <highlight><bold>8</bold></highlight> would read data from the primary storage <highlight><bold>10</bold></highlight> into the memory <highlight><bold>14</bold></highlight> to access and utilize. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In the described implementations, the file system <highlight><bold>4</bold></highlight> maintains metadata for each file represented in the file system <highlight><bold>4</bold></highlight>. For instance, in Unix type operating systems, a data structure referred to as the i-node maintains the file metadata. Other operating systems may maintain metadata in different formats. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates information fields maintained in file metadata <highlight><bold>50</bold></highlight>, which is maintained for each file and directory in the file system <highlight><bold>4</bold></highlight>. Below are some of the information fields that may be maintained in the file metadata <highlight><bold>50</bold></highlight> for files and directories in the file system <highlight><bold>4</bold></highlight>: </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> Access Times <highlight><bold>52</bold></highlight>: the time the file was last accessed, modified, created, etc. </paragraph>
+<paragraph id="P-0024" lvl="2"><number>&lsqb;0024&rsqb;</number> Release on Archive <highlight><bold>54</bold></highlight>: indicates that once one or more archive copies of the file are made in the secondary storage <highlight><bold>12</bold></highlight>, the file may be subject to an immediate or delayed release operation. </paragraph>
+<paragraph id="P-0025" lvl="2"><number>&lsqb;0025&rsqb;</number> Partial Release <highlight><bold>56</bold></highlight>: indicates that the first n bytes of the file are maintained in the primary storage <highlight><bold>10</bold></highlight> after the release operation, where n may be a user settable parameter. </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> Segment <highlight><bold>58</bold></highlight>: indicates that the file data is stored in separate segments as described in the copending and commonly assigned patent application entitled &ldquo;Method, System, and Program for Managing Files in a File System,&rdquo; having attorney docket no. P6433 filed on the same date herewith, which patent application is incorporated herein by reference in its entirety. </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> Offline <highlight><bold>60</bold></highlight>: indicates that the file is currently resident in the secondary storage <highlight><bold>12</bold></highlight> and not in the primary storage <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> Location <highlight><bold>62</bold></highlight>: indicates the location of the file, which may comprise an address in the primary storage and/or secondary storage, such as the disk or tape volume and block address therein. </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> Stage Never Attribute <highlight><bold>64</bold></highlight>: Comprises an attribute for the staging operation from the secondary storage <highlight><bold>12</bold></highlight> to the primary storage <highlight><bold>10</bold></highlight> for a file. The stage never attribute <highlight><bold>64</bold></highlight> indicates whether data transferred from the secondary storage <highlight><bold>12</bold></highlight> to the memory <highlight><bold>14</bold></highlight> for a particular file is to be destaged to the primary storage <highlight><bold>10</bold></highlight>. If the stage attribute is set, then the data is read from the secondary storage into the memory <highlight><bold>14</bold></highlight> used by the application program <highlight><bold>8</bold></highlight> to buffer data and not staged to the primary storage <highlight><bold>10</bold></highlight>, thereby not affecting the storage of other files in the primary storage. If the stage attribute not set, then the file is staged from the secondary storage <highlight><bold>12</bold></highlight> to memory <highlight><bold>14</bold></highlight>, and then destaged from memory <highlight><bold>14</bold></highlight> to primary storage <highlight><bold>10</bold></highlight> according to the memory <highlight><bold>14</bold></highlight> caching algorithms. When the stage never attribute <highlight><bold>64</bold></highlight> is set, a window of data is staged into memory <highlight><bold>14</bold></highlight>. The size of the window can be set by the user. If the file size is small, such as small database records, e.g., credit card transactions or other On-Line Transaction Processing (OLTP), then the user may set a small window size. If transferring large files, such as during a sequential access, then the window may be large. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Further types of file metadata that may be included with the file metadata <highlight><bold>50</bold></highlight> are described in U.S. Pat. No. 5,764,972, which was incorporated by reference above. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates how database tables and indexes <highlight><bold>100</bold></highlight> accessed by a database program <highlight><bold>118</bold></highlight> are comprised of multiple tablespaces <highlight><bold>102</bold></highlight><highlight><italic>a, b, c</italic></highlight>, wherein each tablespace <highlight><bold>102</bold></highlight><highlight><italic>a, b, c </italic></highlight>is comprised of multiple component data files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c </italic></highlight>that store the database data, such as database records. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In implementing the HSM features, the file system <highlight><bold>4</bold></highlight> would archive and release the files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c </italic></highlight>using the same criteria that is applied to determine regular files to release in the file system. Moreover the tablespace files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c </italic></highlight>may be archived and released at different times, thereby leaving less than all the tablespace files in the primary storage <highlight><bold>10</bold></highlight>. For instance, a more recently accessed tablespace file <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c </italic></highlight>may remain in the primary storage <highlight><bold>10</bold></highlight> while a tablespace file that is one of the least recently used files may be marked for release. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> In certain implementations, the partial release field <highlight><bold>56</bold></highlight> in the metadata <highlight><bold>50</bold></highlight> for each tablespace file would indicate a partial release, such that when the tablespace files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c </italic></highlight>are released a partial version of the tablespace file remains in the primary storage <highlight><bold>10</bold></highlight> that includes a first n bytes of the table space file, e.g., where n may be a predetermined or user specified number of bytes. <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates that the primary storage <highlight><bold>10</bold></highlight> includes both complete tablespace files <highlight><bold>104</bold></highlight><highlight><italic>a, b</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>c </italic></highlight>as well as partial versions <highlight><bold>104</bold></highlight><highlight><italic>c</italic></highlight>&prime;, <highlight><bold>106</bold></highlight><highlight><italic>a</italic></highlight>&prime;, <highlight><bold>108</bold></highlight><highlight><italic>a</italic></highlight>&prime;, and <highlight><bold>108</bold></highlight><highlight><italic>b</italic></highlight>&prime; of certain files that have been archived in the secondary storage and released. For any file <highlight><bold>104</bold></highlight><highlight><italic>c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a</italic></highlight>, <highlight><bold>108</bold></highlight><highlight><italic>a, b </italic></highlight>released and having a partial version <highlight><bold>104</bold></highlight><highlight><italic>c</italic></highlight>&prime;, <highlight><bold>106</bold></highlight><highlight><italic>a</italic></highlight>&prime;, <highlight><bold>108</bold></highlight><highlight><italic>a</italic></highlight>&prime;, and <highlight><bold>108</bold></highlight><highlight><italic>b</italic></highlight>&prime; remaining on the primary storage <highlight><bold>10</bold></highlight>, one or more copies the full version of the file <highlight><bold>104</bold></highlight><highlight><italic>c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a</italic></highlight>, <highlight><bold>108</bold></highlight><highlight><italic>a, b </italic></highlight>are archived on secondary storage as shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 5</cross-reference><highlight><italic>a, b </italic></highlight>illustrate logic implemented in the file system <highlight><bold>4</bold></highlight> to process an Input/Output (I/O) request, i.e., read or write, to a file, such as the tablespace files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c</italic></highlight>, in response to a read request received at block <highlight><bold>200</bold></highlight> from an application program <highlight><bold>8</bold></highlight>, such as the database program <highlight><bold>118</bold></highlight> that reads data from the memory <highlight><bold>14</bold></highlight>. The logic of <cross-reference target="DRAWINGS">FIGS. 5</cross-reference><highlight><italic>a, b </italic></highlight>is invoked if the requested data at the offset location in the file is not in the memory <highlight><bold>14</bold></highlight>. Otherwise, if the requested data is in the memory <highlight><bold>14</bold></highlight>, then the data may be accessed directly from memory <highlight><bold>14</bold></highlight>. If (at block <highlight><bold>202</bold></highlight>) the metadata <highlight><bold>50</bold></highlight> for the file indicates that the target file is in the primary storage <highlight><bold>10</bold></highlight>, which is indicated by the offline field <highlight><bold>60</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>) being set to &ldquo;off&rdquo;, then the file system <highlight><bold>4</bold></highlight> accesses (at block <highlight><bold>206</bold></highlight>) the requested offset location within the target file and reads (at block <highlight><bold>208</bold></highlight>) a window length of data from the accessed location in the primary storage <highlight><bold>10</bold></highlight> until the window is filled in memory <highlight><bold>14</bold></highlight> or the end of the target file is reached. The window length may comprise a predefined or user specified amount of data that is read and stored in memory <highlight><bold>14</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> If (at block <highlight><bold>204</bold></highlight>) the target file is offline and if (at block <highlight><bold>210</bold></highlight>) the partial release attribute <highlight><bold>56</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>) is &ldquo;off&rdquo; (indicating that no partial version of the file is in the primary storage <highlight><bold>10</bold></highlight>), then the file system <highlight><bold>4</bold></highlight> accesses (at block <highlight><bold>212</bold></highlight>) the determined offset location in the target file in secondary storage <highlight><bold>12</bold></highlight> and reads (at block <highlight><bold>214</bold></highlight>) the window length of data from the accessed location in the secondary storage <highlight><bold>12</bold></highlight> until the window is filled in memory <highlight><bold>14</bold></highlight> or the end of the target file is reached. After reading the window of data from the secondary storage <highlight><bold>12</bold></highlight> into memory <highlight><bold>14</bold></highlight>, the file system <highlight><bold>4</bold></highlight> determines (at block <highlight><bold>216</bold></highlight>) whether the stage never attribute <highlight><bold>64</bold></highlight> indicates that the data is not to be staged from the memory <highlight><bold>14</bold></highlight> to the primary storage <highlight><bold>10</bold></highlight>. If the stage never attribute <highlight><bold>64</bold></highlight> indicates that data is not to be staged, then no action is taken to stage the data from the memory <highlight><bold>14</bold></highlight> to primary storage <highlight><bold>10</bold></highlight>; otherwise, if the stage never attribute <highlight><bold>64</bold></highlight> indicates that data is to be staged, then the file system <highlight><bold>4</bold></highlight> would initiate action (at block <highlight><bold>218</bold></highlight>) to stage the window of data in memory <highlight><bold>14</bold></highlight> to primary storage <highlight><bold>10</bold></highlight>. In further implementations, the file system <highlight><bold>4</bold></highlight> may inhibit the staging of data to the primary storage <highlight><bold>10</bold></highlight> if the stage never attribute <highlight><bold>64</bold></highlight> indicates that data is not to be staged in alternative manners, such as by controlling the memory <highlight><bold>14</bold></highlight> manager. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> If (at block <highlight><bold>210</bold></highlight>) a partial version of the target file is in the primary storage <highlight><bold>10</bold></highlight>, i.e., the first n bytes of the file are maintained on the primary storage <highlight><bold>10</bold></highlight>, then the file system <highlight><bold>4</bold></highlight> determines (at block <highlight><bold>220</bold></highlight>) whether the requested offset location is in the partial target file on the primary storage <highlight><bold>10</bold></highlight>, i.e., within the first n bytes of the target file maintained in the partial target file. If not, control proceeds to block <highlight><bold>212</bold></highlight> to access the window of data at the offset location from the secondary storage <highlight><bold>12</bold></highlight>. Otherwise, if the requested offset location is within the partial target file, then the file system <highlight><bold>4</bold></highlight> accesses (at block <highlight><bold>222</bold></highlight>) the requested offset location in the partial file and reads the window length of data from the accessed location in the partial file. At block <highlight><bold>224</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 5</cross-reference><highlight><italic>b</italic></highlight>, if the entire window length of data is read before reaching the end of the partial target file, then control ends; otherwise, the file system <highlight><bold>4</bold></highlight> determines (at block <highlight><bold>226</bold></highlight>) the offset location in the target file on secondary storage <highlight><bold>12</bold></highlight> of the last read data at the end of the target partial file. The file system <highlight><bold>4</bold></highlight> then accesses (at block <highlight><bold>228</bold></highlight>) the determined offset location of the target file in the secondary storage <highlight><bold>12</bold></highlight> and proceeds (at block <highlight><bold>230</bold></highlight>) back to block <highlight><bold>214</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 5</cross-reference><highlight><italic>a </italic></highlight>to continue reading data into the window in memory <highlight><bold>14</bold></highlight> from the secondary storage <highlight><bold>12</bold></highlight> until the window is filled or the end of the target file on secondary storage <highlight><bold>12</bold></highlight> is reached. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In further implementations, data being read into the window is immediately loaded into the memory <highlight><bold>14</bold></highlight> where it is available to application programs, such as the database program <highlight><bold>118</bold></highlight>, even before the entire window has been filled. This feature allows the application program to obtain immediate access to data once the data is read into memory <highlight><bold>14</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Still further, in performing an I/O request, the file system <highlight><bold>4</bold></highlight> may read multiple windows of data into memory <highlight><bold>14</bold></highlight> at a time, thereby prestaging data that may be requested. The number of windows of data to stage at a time in response to an I/O request may be a user settable parameter. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In implementations, where the application requesting data in files comprises a database program <highlight><bold>118</bold></highlight> requesting tablespace data in tablespace files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c</italic></highlight>, the tablespace file data read from the secondary storage <highlight><bold>12</bold></highlight> is transferred to the area of memory <highlight><bold>14</bold></highlight> used by the database program <highlight><bold>118</bold></highlight>. In this way, performance of the database program <highlight><bold>118</bold></highlight> is improved because data is made available to the database program <highlight><bold>118</bold></highlight> in memory <highlight><bold>14</bold></highlight> before the entire tablespace file <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c </italic></highlight>is staged into primary storage <highlight><bold>10</bold></highlight>. With the described implementations, data is provided directly from the secondary storage <highlight><bold>12</bold></highlight> to memory <highlight><bold>14</bold></highlight> and immediately made available in memory <highlight><bold>14</bold></highlight> to the database program <highlight><bold>118</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Moreover, in implementations where the data transferred to memory <highlight><bold>14</bold></highlight> is not staged into the primary storage <highlight><bold>10</bold></highlight>, providing the tablespace data to the database program <highlight><bold>118</bold></highlight> from the secondary storage <highlight><bold>12</bold></highlight> does not consume the primary storage <highlight><bold>10</bold></highlight> space and cause the file system <highlight><bold>4</bold></highlight> to release active data on the primary storage <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Further, in database implementations, the tablespace files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c </italic></highlight>may be released and a partial tablespace file <highlight><bold>104</bold></highlight><highlight><italic>b</italic></highlight>&prime;, <highlight><bold>106</bold></highlight><highlight><italic>a</italic></highlight>&prime;, <highlight><bold>108</bold></highlight><highlight><italic>a</italic></highlight>&prime;, <highlight><bold>108</bold></highlight><highlight><italic>b </italic></highlight>(<cross-reference target="DRAWINGS">FIG. 4</cross-reference>) left on the primary storage <highlight><bold>10</bold></highlight> even while the tablespace <highlight><bold>102</bold></highlight><highlight><italic>a, b, c </italic></highlight>is in an open state, i.e., available to receive writes from the database program <highlight><bold>118</bold></highlight>. This process of releasing tablespace files, including open tablespace files, according to migration criteria and leaving a partial tablespace file on primary storage <highlight><bold>10</bold></highlight> frees primary storage <highlight><bold>10</bold></highlight> space for more frequently accessed data from other applications or further tablespace files. Moreover, the described implementations provide fast access to tablespace files on the secondary storage by transferring windows of data to the memory to make data immediately available to the database program <highlight><bold>118</bold></highlight> before the entire tablespace file is staged. </paragraph>
+<paragraph id="P-0042" lvl="7"><number>&lsqb;0042&rsqb;</number> Additional Implementation Details </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> The technique for managing data in a file system may be implemented as a method, apparatus or article of manufacture using standard programming and/or engineering techniques to produce software, firmware, hardware, or any combination thereof. The term &ldquo;article of manufacture&rdquo; as used herein refers to code or logic implemented in hardware logic (e.g., an integrated circuit chip, Field Programmable Gate Array (FPGA), Application Specific Integrated Circuit (ASIC), etc.) or a computer readable medium (e.g., magnetic storage medium (e.g., hard disk drives, floppy disks, tape, etc.), optical storage (CD-ROMs, optical disks, etc.), volatile and non-volatile memory devices (e.g., EEPROMs, ROMs, PROMs, RAMs, DRAMs, SRAMs, firmware, programmable logic, etc.). Code in the computer readable medium is accessed and executed by a processor. The code in which preferred embodiments of the configuration discovery tool are implemented may further be accessible through a transmission media or from a file server over a network. In such cases, the article of manufacture in which the code is implemented may comprise a transmission media, such as a network transmission line, wireless transmission media, signals propagating through space, radio waves, infrared signals, etc. Of course, those skilled in the art will recognize that many modifications may be made to this configuration without departing from the scope of the present invention, and that the article of manufacture may comprise any information bearing medium known in the art. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> In the illustrations, a certain number of devices were shown. For instance, <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates one primary <highlight><bold>10</bold></highlight> and secondary <highlight><bold>12</bold></highlight> storage device. However, additional or fewer devices than shown may be used, e.g., more or less tape cartridges and tape drives may be included in the secondary storage <highlight><bold>12</bold></highlight>. Further, the primary <highlight><bold>10</bold></highlight> and secondary <highlight><bold>12</bold></highlight> storage may be comprised of multiple storage devices and systems. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The described file management operations were are performed by the file system component of an operating system. In alternative implementations, certain of the operations described as performed by the file system may be performed by some other program executing in the computer <highlight><bold>2</bold></highlight>, such as an application program or middleware. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> In certain described implementations, the files that were represented as partial files and read into the memory <highlight><bold>14</bold></highlight> from secondary storage <highlight><bold>12</bold></highlight> comprised tablespace files <highlight><bold>104</bold></highlight><highlight><italic>a, b, c</italic></highlight>, <highlight><bold>106</bold></highlight><highlight><italic>a, b, c</italic></highlight>, and <highlight><bold>108</bold></highlight><highlight><italic>a, b, c</italic></highlight>. Additionally, the above described technique for making tablespace data available to a database program <highlight><bold>118</bold></highlight> without having to stage in the entire data file is applicable to any data files used by any application program, and is not just limited to database programs. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In the described implementations, the primary storage <highlight><bold>10</bold></highlight> comprised a faster access storage than the secondary storage, and the storage media were different. Alternatively, the primary storage <highlight><bold>10</bold></highlight> and secondary storage <highlight><bold>12</bold></highlight> may have the same access speeds and be implemented on the same storage media. Still further, the described file management technique may be used for files stored in one storage device that are not archived on a secondary storage. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The program flow logic described in the flowcharts indicated certain events occurring in a certain order. Those skilled in the art will recognize that the ordering of certain programming steps or program flow may be modified without affecting the overall operation performed by the preferred embodiment logic, and such modifications are in accordance with the preferred embodiments. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> The described implementations were discussed with respect to a Unix based operating systems. However, the described implementations may apply to any operating system that provides file metadata and allows files in the system to be associated with different groups of users. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The described implementations may apply to situations where an application program accesses data maintained in multiple files. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> In the described implementations, file information, such as the stage attributes and other file attributes was maintained in file metadata used by the file system. Alternatively, the file attribute information may be maintained in data structures and tables other than the file metadata used by the file system. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The foregoing description of the preferred embodiments of the invention has been presented for the purposes of illustration and description. It is not intended to be exhaustive or to limit the invention to the precise form disclosed. Many modifications and variations are possible in light of the above teaching. It is intended that the scope of the invention be limited not by this detailed description, but rather by the claims appended hereto. The above specification, examples and data provide a complete description of the manufacture and use of the composition of the invention. Since many embodiments of the invention can be made without departing from the spirit and scope of the invention, the invention resides in the claims hereinafter appended. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for managing files in a file system, wherein an application program accesses files in the file system, comprising: 
+<claim-text>providing a plurality of files in a primary storage used by the application program; </claim-text>
+<claim-text>applying a criteria to determine files to release in the primary storage that have been copied to a secondary storage; </claim-text>
+<claim-text>receiving a request for data from the application program in one file that was released and resides on the secondary storage; </claim-text>
+<claim-text>reading the data from the file in the secondary storage into a memory accessible to the application program; and </claim-text>
+<claim-text>providing data from the file in the memory to the application program before the entire file has been read from the secondary storage into the memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>storing in the primary storage a partial version of at least one released file, wherein the partial version includes a portion of the data in at least one released file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the partial version of the file comprises a first number of bytes of the released file that is less than all the bytes in the file, further comprising: 
+<claim-text>receiving user input indicating the first number of bytes included in the partial version of the file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein an attribute is provided for each file indicating whether the partial version of the file is maintained in the primary storage after the file is released, wherein the partial version is only maintained in the primary storage for those released files having the attribute indicating that the partial version is to be maintained. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the requested data is in the partial version, further comprising: 
+<claim-text>reading the data from the partial version of the file in the primary storage into the memory to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a further request from the application program for data in the file that is not included in the partial version of the file; and </claim-text>
+<claim-text>determining a location in the file in the secondary storage of the further requested data, wherein reading the data from the file in the secondary storage comprises reading data from the determined location in the file in the secondary storage into the memory to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein data is read from the file in the secondary storage in a fixed byte length window, and wherein reading the further requested data from the determined location in the file in the secondary storage further comprises: 
+<claim-text>reading enough data to fill the fixed length byte window by reading data from the partial version and the further requested data read from the determined location in the secondary storage, wherein the window of the data is transferred to the memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein data is read from the file in the secondary storage in a fixed byte length window. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein multiple windows of data are read from the file in the secondary storage into the memory in response to the data request. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a request for data from the file that follows the data transferred into the memory; and </claim-text>
+<claim-text>reading at least one window of further data having the fixed byte length from the file in the secondary storage into the memory to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein reading the data into the window further comprises: 
+<claim-text>storing the data read into the window in the memory; and </claim-text>
+<claim-text>making the data from the window read into the memory available to the application program before the entire window of data is read into the memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising: 
+<claim-text>receiving user input indicating a size of the fixed byte length of the window. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein a stage attribute is associated with each file indicating whether to stage the file transferred from the secondary storage to the memory into the primary storage, comprising: 
+<claim-text>staging data to the primary storage from the memory that was transferred from the secondary storage only if the stage attribute indicates that data from the file is to be staged. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the files include component files of groups that are accessed by the application program, further comprising: 
+<claim-text>storing in the primary storage a partial version of each released component file included in one of the groups accessed by the application program, wherein the partial version includes a portion of the released component file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the component files are capable of being stored in both the primary and secondary storages. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein component files capable of being released and replaced by the partial version are included in groups that are open to the application program. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the application program comprises a database program and wherein the groups of component files comprise tablespaces that the database program has opened, and wherein the component files of one opened tablespace are eligible for release according to the criteria. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein at least one component file of one tablespace is stored in the primary storage and the partial version of at least one released component file of the tablespace is stored in the primary storage. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A system for managing files in a file system, wherein an application program accesses files in the file system, comprising: 
+<claim-text>a primary storage including a plurality of files used by the application program; </claim-text>
+<claim-text>a secondary storage maintaining copies of files in the primary storage; </claim-text>
+<claim-text>a computer readable medium accessible to the application program; </claim-text>
+<claim-text>means for applying a criteria to determine files to release in the primary storage that have been copied to the secondary storage; </claim-text>
+<claim-text>means for receiving a request for data from the application program in one file that was released and resides on the secondary storage; </claim-text>
+<claim-text>means for reading the data from the file in the secondary storage into the computer readable medium accessible to the application program; and </claim-text>
+<claim-text>means for providing data from the file in the computer readable medium to the application program before the entire file has been read from the secondary storage into the computer readable medium. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, further comprising: 
+<claim-text>means for storing in the primary storage a partial version of at least one released file, wherein the partial version includes a portion of the data in at least one released file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein the partial version of the file comprises a first number of bytes of the released file that is less than all the bytes in the file, further comprising: 
+<claim-text>means for receiving user input indicating the first number of bytes included in the partial version of the file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein an attribute is provided for each file indicating whether the partial version of the file is maintained in the primary storage after the file is released, wherein the partial version is only maintained in the primary storage for those released files having the attribute indicating that the partial version is to be maintained. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein the requested data is in the partial version, further comprising: 
+<claim-text>means for reading the data from the partial version of the file in the primary storage into the computer readable medium to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, further comprising: 
+<claim-text>means for receiving a further request from the application program for data in the file that is not included in the partial version of the file; and </claim-text>
+<claim-text>means for determining a location in the file in the secondary storage of the further requested data, wherein the means for reading the data from the file in the secondary storage reads data from the determined location in the file in the secondary storage into the computer readable medium to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein data is read from the file in the secondary storage in a fixed byte length window, and wherein the means for reading the further requested data from the determined location in the file in the secondary storage further performs: 
+<claim-text>reading enough data to fill the fixed length byte window by reading data from the partial version and the further requested data read from the determined location in the secondary storage, wherein the window of the data is transferred to the computer readable medium. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein data is read from the file in the secondary storage in a fixed byte length window. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein multiple windows of data are read from the file in the secondary storage into the computer readable medium in response to the data request. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, further comprising: 
+<claim-text>means for receiving a request for data from the file that follows the data transferred into the computer readable medium; and </claim-text>
+<claim-text>means for reading at least one window of further data having the fixed byte length from the file in the secondary storage into the computer readable medium to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein the means for reading the data into the window further performs: 
+<claim-text>storing the data read into the window in the computer readable medium; and </claim-text>
+<claim-text>making the data from the window read into the computer readable medium available to the application program before the entire window of data is read into the computer readable medium. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, further comprising: 
+<claim-text>means for receiving user input indicating a size of the fixed byte length of the window. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein a stage attribute is associated with each file indicating whether to stage the file transferred from the secondary storage to the computer readable medium into the primary storage, further comprising: 
+<claim-text>means for staging data to the primary storage from the computer readable medium that was transferred from the secondary storage only if the stage attribute indicates that data from the file is to be staged. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the files include component files of groups that are accessed by the application program, further comprising: 
+<claim-text>means for storing in the primary storage a partial version of each released component file included in one of the groups accessed by the application program, wherein the partial version includes a portion of the released component file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the component files are capable of being stored in both the primary and secondary storages. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein component files capable of being released and replaced by the partial version are included in groups that are open to the application program. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the application program comprises a database program and wherein the groups of component files comprise tablespaces that the database program has opened, and wherein the component files of one opened tablespace are eligible for release according to the criteria. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference>, wherein at least one component file of one tablespace is stored in the primary storage and the partial version of at least one released component file of the tablespace is stored in the primary storage. </claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. An article of manufacture including code for managing files in a file system, wherein an application program accesses files in the file system by: 
+<claim-text>providing a plurality of files in a primary storage used by the application program; </claim-text>
+<claim-text>applying a criteria to determine files to release in the primary storage that have been copied to a secondary storage; </claim-text>
+<claim-text>receiving a request for data from the application program in one file that was released and resides on the secondary storage; </claim-text>
+<claim-text>reading the data from the file in the secondary storage into a memory accessible to the application program; and </claim-text>
+<claim-text>providing data from the file in the memory to the application program before the entire file has been read from the secondary storage into the memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, further comprising: 
+<claim-text>storing in the primary storage a partial version of at least one released file, wherein the partial version includes a portion of the data in at least one released file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00033">claim 38</dependent-claim-reference>, wherein the partial version of the file comprises a first number of bytes of the released file that is less than all the bytes in the file, further comprising: 
+<claim-text>receiving user input indicating the first number of bytes included in the partial version of the file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00033">claim 38</dependent-claim-reference>, wherein an attribute is provided for each file indicating whether the partial version of the file is maintained in the primary storage after the file is released, wherein the partial version is only maintained in the primary storage for those released files having the attribute indicating that the partial version is to be maintained. </claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00033">claim 38</dependent-claim-reference>, wherein the requested data is in the partial version, further comprising: 
+<claim-text>reading the data from the partial version of the file in the primary storage into the memory to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 41</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a further request from the application program for data in the file that is not included in the partial version of the file; and </claim-text>
+<claim-text>determining a location in the file in the secondary storage of the further requested data, wherein reading the data from the file in the secondary storage comprises reading data from the determined location in the file in the secondary storage into the memory to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 42</dependent-claim-reference>, wherein data is read from the file in the secondary storage in a fixed byte length window, and wherein reading the further requested data from the determined location in the file in the secondary storage further comprises: 
+<claim-text>reading enough data to fill the fixed length byte window by reading data from the partial version and the further requested data read from the determined location in the secondary storage, wherein the window of the data is transferred to the memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein data is read from the file in the secondary storage in a fixed byte length window. </claim-text>
+</claim>
+<claim id="CLM-00045">
+<claim-text><highlight><bold>45</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 44</dependent-claim-reference>, wherein multiple windows of data are read from the file in the secondary storage into the memory in response to the data request. </claim-text>
+</claim>
+<claim id="CLM-00046">
+<claim-text><highlight><bold>46</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 44</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a request for data from the file that follows the data transferred into the memory; and </claim-text>
+<claim-text>reading at least one window of further data having the fixed byte length from the file in the secondary storage into the memory to make available to the application program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00047">
+<claim-text><highlight><bold>47</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 44</dependent-claim-reference>, wherein reading the data into the window further comprises: 
+<claim-text>storing the data read into the window in the memory; and </claim-text>
+<claim-text>making the data from the window read into the memory available to the application program before the entire window of data is read into the memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00048">
+<claim-text><highlight><bold>48</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 44</dependent-claim-reference>, further comprising: 
+<claim-text>receiving user input indicating a size of the fixed byte length of the window. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00049">
+<claim-text><highlight><bold>49</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein a stage attribute is associated with each file indicating whether to stage the file transferred from the secondary storage to the memory into the primary storage, comprising: 
+<claim-text>staging data to the primary storage from the memory that was transferred from the secondary storage only if the stage attribute indicates that data from the file is to be staged. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00050">
+<claim-text><highlight><bold>50</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the files include component files of groups that are accessed by the application program, further comprising: 
+<claim-text>storing in the primary storage a partial version of each released component file included in one of the groups accessed by the application program, wherein the partial version includes a portion of the released component file. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00051">
+<claim-text><highlight><bold>51</bold></highlight>. The article of manufacture of claim <highlight><bold>50</bold></highlight>, wherein the component files are capable of being stored in both the primary and secondary storages. </claim-text>
+</claim>
+<claim id="CLM-00052">
+<claim-text><highlight><bold>52</bold></highlight>. The article of manufacture of claim <highlight><bold>50</bold></highlight>, wherein component files capable of being released and replaced by the partial version are included in groups that are open to the application program. </claim-text>
+</claim>
+<claim id="CLM-00053">
+<claim-text><highlight><bold>53</bold></highlight>. The article of manufacture of claim <highlight><bold>50</bold></highlight>, wherein the application program comprises a database program and wherein the groups of component files comprise tablespaces that the database program has opened, and wherein the component files of one opened tablespace are eligible for release according to the criteria. </claim-text>
+</claim>
+<claim id="CLM-00054">
+<claim-text><highlight><bold>54</bold></highlight>. The article of manufacture of claim <highlight><bold>53</bold></highlight>, wherein at least one component file of one tablespace is stored in the primary storage and the partial version of at least one released component file of the tablespace is stored in the primary storage.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004920A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004920A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004920A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004920A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004920A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004920A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004920A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

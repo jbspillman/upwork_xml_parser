@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005102A1-20030102-D00000.TIF SYSTEM "US20030005102A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005102A1-20030102-D00001.TIF SYSTEM "US20030005102A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005102A1-20030102-D00002.TIF SYSTEM "US20030005102A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005102A1-20030102-D00003.TIF SYSTEM "US20030005102A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005102</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895235</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F015/173</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>223000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>226000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>238000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Migrating recovery modules in a distributed computing environment</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Lance</given-name>
+<middle-name>W.</middle-name>
+<family-name>Russell</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Hollister</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>HEWLETT-PACKARD COMPANY</name-1>
+<name-2>Intellectual Property Administration</name-2>
+<address>
+<address-1>P.O. Box 272400</address-1>
+<city>Fort Collins</city>
+<state>CO</state>
+<postalcode>80527-2400</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Systems and methods for implementing recovery processes on failed nodes in a distributed computing environment are described. In accordance with this scheme, one or more migratory recovery modules are launched into the network. The recovery modules migrate from node to node, determine the status of each node, and initiate recovery processes on failed nodes. In this way, scalable recovery processes may be implemented in distributed systems, even with incomplete network topology and membership information. In addition, the complexity and cost associated with manual status monitoring and recovery operations may be avoided. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">TECHNICAL FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This invention relates to systems and methods for managing nodes and implementing recovery processes in a distributed computing environment. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> In modern computer systems, computers may communicate with each other and with other computing equipment over various types of data networks. Routable data networks are configured to route data packets (or frames) from a source network node to one or more destination network nodes. As used herein, the term &ldquo;routable protocol&rdquo; refers to a communications protocol that contains a network address as well as a device address, allowing data to be routed from one network to another. Examples of routable protocols are SNA, OSI, TCP/IP, XNS, IPX, AppleTalk, and DECnet. A &ldquo;routable network&rdquo; is a network in which communications are conducted in accordance with a routable protocol. One example of a routable network is the Internet, in which data packets are routed in accordance with the Internet Protocol (IP). In a routable data network, when a network routing device (or router) receives a data packet, the device examines the data packet in order to determine how the data packet should be forwarded. Similar forwarding decisions are made as necessary at one or more intermediate routing devices until the data packet reaches a desired destination node. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Network routers typically maintain routing tables that specify network node addresses for routing data packets from a source network node to a destination network node. When a data packet arrives at a router, an address contained within the packet is used to retrieve an entry from the routing table that indicates the next hop (or next node) along a desired route to the destination node. The router then forwards the data packet to the indicated next hop node. The process is repeated at successive router nodes until the packet arrives at the desired destination node. A data packet may take any available path to the destination network node. In accordance with IP, data packets are routed based upon a destination address contained in the data packet. The data packet may contain the address of the source of the data packet, but usually does not contain the address of the devices in the path from the source to the destination. These addresses typically are determined by each routing device in the path based upon the destination address and the available paths listed in the routing tables. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Distributed computer systems typically include a number of recovery functions that increase the reliability of process execution. For example, various checkpointing and restoration (or rollback) techniques have been developed for recovering from hardware and software failures. In accordance with these techniques, the information that is needed to re-execute a process in a given state is stored at a number of checkpoints during the operation of the process. If the execution of the process is interrupted (e.g., the process has failed or is hung), the state of the interrupted process is rolled back to the checkpoint state immediately preceding the interruption, and the process is re-executed from that checkpoint state. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Various heartbeat fault detection schemes also have been developed. In relatively small network environment in which the topology and membership information is known, such heartbeat-based fault detection schemes typically involve heartbeat monitors that are installed at each node of the distributed system to probe the health of each associated node. In general, heartbeat monitors require constant monitoring of all nodes of the system. A heartbeat monitor may probe the health of an associated node process by, for example, detecting if the node process has failed, monitoring the node log file for any indication of process failure, exchanging messages with the node process, or making calls to the node system manager to determine if the system is operating properly. If a heartbeat monitor detects that a particular node process has failed, it may attempt to restart the process or notify a network management system (or console) of the failure, or both. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Still other network recovery schemes have been proposed. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The invention features a novel scheme (systems and methods) for implementing recovery processes on failed nodes in a distributed computing environment. In accordance with this inventive scheme, one or more migratory recovery modules are launched into the network. The recovery modules migrate from node to node, determine the status of each node, and initiate recovery processes on failed nodes. In this way, the invention allows scalable recovery processes to be implemented in distributed systems, even with incomplete network topology and membership information. By periodically monitoring each of the network nodes&mdash;as opposed to continuously monitoring each node&mdash;the invention easily may be scaled to large networks. In addition, the invention avoids the complexity and cost associated with manual status monitoring and recovery operations. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In one aspect of the invention a recovery module is configured to migrate from one network node to another, determine a status of a network node, and initiate a recovery process on a failed network node. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Embodiments in accordance with this aspect of the invention may include one or more of the following features. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The recovery module may comprise a routing component for determining a next hop address from an origin network node to a destination network node. The routing component may be configured to determine the next hop address based upon a routing table that is stored at the origin network node. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The recovery module may be configured to determine the status of a network node by sending an inter-process communication to a node process. The recovery module may be configured to determine the status of a network node in accordance with a heartbeat messaging protocol. The recovery module also may be programmed to use standard operating facilities (e.g., the Unix &ldquo;ps&rdquo; command) to determine the status of a network node process. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The recovery module may be configured to initiate a recovery process on a failed network node in accordance with a restart protocol. The recovery module may be configured to initiate a restart of a failed node process by transmitting a request to a process execution service operating on the failed network node. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The recovery module preferably is configured to transmit a node status message to a network management module operating at a network management network node. The node status message may comprise information that is obtained from a log file generated at the failed network node. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A network management module may be configured to launch a plurality of recovery modules into the network. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The invention also features a method and a computer program for managing a plurality of distributed nodes of a network. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Other features and advantages of the invention will become apparent from the following description, including the drawings and the claims.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">DESCRIPTION OF DRAWINGS </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagrammatic view of a communication network interconnecting a plurality of distributed nodes, including a network management node and two device nodes. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a diagrammatic view of components of the network management node of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow diagram of a method of managing the nodes of the network of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow diagram of a method of handling the receipt of a migratory recovery module at a network node. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow diagram of a method by which a migratory recovery module may determine the status of a network node and initiate a recovery process on a failed network node.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In the following description, like reference numbers are used to identify like elements. Furthermore, the drawings are intended to illustrate major features of exemplary embodiments in a diagrammatic manner. The drawings are not intended to depict every feature of actual embodiments nor relative dimensions of the depicted elements, and are not drawn to scale. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, in one embodiment, a distributed computing system <highlight><bold>10</bold></highlight> includes a plurality of distributed nodes, including a network management node <highlight><bold>12</bold></highlight> and two device nodes <highlight><bold>14</bold></highlight>, <highlight><bold>16</bold></highlight>, that are interconnected by a network <highlight><bold>18</bold></highlight>. Communications over distributed computing system <highlight><bold>10</bold></highlight> are conducted in accordance with a routable communications protocol (e.g., TCP/IP, SNA, OSI, XNS, IPX, AppleTalk, and DECnet). Network <highlight><bold>18</bold></highlight> may be implemented as a local area network (LAN), a wide area network (WAN), or other routable network (e.g., the Internet). As explained in detail below, network management node <highlight><bold>12</bold></highlight> is configured to implement recovery processes on failed nodes by launching one or more migratory recovery modules <highlight><bold>20</bold></highlight> into distributed computing system <highlight><bold>10</bold></highlight>. Network management node <highlight><bold>12</bold></highlight> also is configured to monitor the number of failures reported by recovery modules <highlight><bold>20</bold></highlight>. As the number of reported failures increases, network management node <highlight><bold>12</bold></highlight> may launch more recovery modules <highlight><bold>20</bold></highlight> into distributed computing system <highlight><bold>10</bold></highlight>. Not all network nodes are monitored continuously below the level of monitoring increases as the probability of failure increases. The recovery modules <highlight><bold>20</bold></highlight> migrate from node to node, determine the status of each node, and initiate recovery processes on failed nodes. In accordance with this approach, scalable recovery processes may be implemented in distributed computing system <highlight><bold>10</bold></highlight>, even with incomplete network topology and membership information. In addition, the complexity and cost associated with manual status and recovery operations may be avoided. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, in one embodiment, network management node <highlight><bold>12</bold></highlight> may be implemented as a computer (or server) that include a processor <highlight><bold>22</bold></highlight>, a random access memory (RAM) <highlight><bold>24</bold></highlight>, a permanent storage system <highlight><bold>26</bold></highlight>, a user interface <highlight><bold>28</bold></highlight>, a network interface <highlight><bold>30</bold></highlight>, and a system bus <highlight><bold>32</bold></highlight> that couples the various components of network management node <highlight><bold>12</bold></highlight>. Processor <highlight><bold>22</bold></highlight> may include one or more processors, each of which may be in the form of any one of various commercially available processors. Permanent storage system <highlight><bold>26</bold></highlight> may be implemented as a hard drive, a floppy drive, a CD ROM drive, or a combination of one or more of such storage drives. These storage drives may connect to system bus <highlight><bold>32</bold></highlight> through respective interfaces and may contain respective computer-readable media disks that provide non-volatile or persistent storage for data, data structures and computer-executable instructions. Permanent storage system <highlight><bold>26</bold></highlight> may contain a read only memory (ROM) that stores a basic input/output system (BIOS) containing start-up routines for network management node <highlight><bold>12</bold></highlight>. System bus <highlight><bold>32</bold></highlight> may be a memory bus, a peripheral bus or a local bus, and may be compatible with any of a variety of bus protocols, including PCI, VESA, Microchannel, ISA, and EISA. Other computer-readable storage devices (e.g., magnetic tape drives, flash memory devices, and digital video disks) also may be used with network management node <highlight><bold>12</bold></highlight>. A user may interact (e.g., enter commands or data) with network management node <highlight><bold>12</bold></highlight> through user interface <highlight><bold>28</bold></highlight>, which may include a keyboard and a mouse. Other input devices (e.g., a microphone, joystick, or touch pad) also may be provided. User interface <highlight><bold>28</bold></highlight> also may include a monitor for displaying information to the user. Network management node <highlight><bold>12</bold></highlight> also may include peripheral output devices, such as speakers and a printer (not shown). </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> A number of program modules may be stored in permanent storage system <highlight><bold>26</bold></highlight> and in RAM <highlight><bold>24</bold></highlight>, including an operating system <highlight><bold>34</bold></highlight> (e.g., the Windows NT Server operating system available from Microsoft Corporation of Redmond, Wash. U.S.A.), one or more application programs <highlight><bold>36</bold></highlight>, and program data <highlight><bold>38</bold></highlight>. Operating system <highlight><bold>34</bold></highlight> includes an executive that provides the base operating system services (e.g., memory management, process and thread management, security, input/output, and interprocess communication) for creating a run-time execution environment on network management node <highlight><bold>12</bold></highlight> and, in some embodiments, on device nodes <highlight><bold>14</bold></highlight>, <highlight><bold>16</bold></highlight>. A configuration database (or registry) contains the following information: parameters needed to boot and configure the system; system-wide software settings that control the operation of operating system <highlight><bold>60</bold></highlight>; a security database; and per-user profile settings. A native operating system (OS) application programming interface (API) exposes the base operating system services of the executive to user applications and to one or more service modules (or simply &ldquo;services&rdquo;). As used herein, the term &ldquo;service&rdquo; (or &ldquo;service module&rdquo;) refers to a component of an operating system that provides a set of one or more functions. The service modules are user-mode processes that may be configured to start automatically at system boot time without requiring an interactive logon; they also may be controlled dynamically during run-time. The service modules call certain base operating system services (or functions) to interact with a service controller; such functions may include registering a successful startup, responding to status requests, and pausing or shutting down the service. The service controller starts, manages and directs operations within the service modules. The service modules, on the other hand, create the environment in which one or more processes may operate and control the start-up, maintenance and termination of such processes. Typically, the run-time execution environment is installed on network management node <highlight><bold>12</bold></highlight>, and one or more client programs operating on device nodes <highlight><bold>14</bold></highlight>, <highlight><bold>16</bold></highlight> may access the functionality provided by the service modules over their respective network connections. Before a service module may operate in the run-time execution environment, it must be installed on network management node <highlight><bold>12</bold></highlight>. A service module typically is installed by storing the service module in a data storage area that is accessible by network management node <highlight><bold>12</bold></highlight> (e.g., on a disk of permanent storage system <highlight><bold>26</bold></highlight>), and registering the attributes of the service module in the configuration database. Further details about the Windows NT operating system may be obtained from &ldquo;Inside Windows NT,&rdquo; Second Edition, David A. Solomon, Microsoft Press (1998), which is incorporated herein by reference. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> JAVA virtual machine (JVM) <highlight><bold>40</bold></highlight>, which provides a platform for executing an operating environment <highlight><bold>42</bold></highlight> for the migratory recovery modules <highlight><bold>20</bold></highlight>, also may be stored in permanent storage system <highlight><bold>26</bold></highlight> and in RAM <highlight><bold>24</bold></highlight>. In the 32-bit Windows environment, for an application (or another DLL) to call the system service functions of the Win <highlight><bold>32</bold></highlight> API, the application must conform to a standard C-based interface. Accordingly, most service components operating in a 32-bit Windows environment are written in the C or C &plus;&plus;programming languages. In order to invoke the functionality of service components written in other programming languages, each component must provide its own customized operating environment in which the component may operate. For example, programs written in the JAVA programming language must operate in an environment provided by JVM <highlight><bold>40</bold></highlight>. The JVM is an abstract native computing machine that runs within an operating system to interpret and execute JAVA applications. Further details about JVM <highlight><bold>40</bold></highlight> may be obtained from &ldquo;The Java&trade; Virtual machine Specification,&rdquo; Tim Lindholm and Frank Yellin, Addison Wesley (1997), which is incorporated herein by reference. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Recovery modules <highlight><bold>20</bold></highlight> are software components that are capable of migrating from one network node to another and executing on each network node. In one embodiment, recovery modules <highlight><bold>20</bold></highlight> are implemented as JAVA objects that are instantiated by recovery module operating environment <highlight><bold>42</bold></highlight>. Each node in distributed computing system <highlight><bold>10</bold></highlight> may include a recovery module operating environment <highlight><bold>42</bold></highlight> that executes on a JVM and provides recovery modules <highlight><bold>20</bold></highlight> access to certain status monitoring, recovery resources and native operating system resources that are available at each network node. Recovery modules <highlight><bold>20</bold></highlight> may access node resources indirectly through services (e.g., JAVA classes that may be instantiated as objects containing methods for accessing node resources) or they may access node resources directly. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, in one embodiment, a network management module operating at network management node <highlight><bold>12</bold></highlight> may monitor the status and implement recovery processes on one or more nodes of distributed computing system <highlight><bold>10</bold></highlight>, as follows. The network management module launches one or more recovery modules <highlight><bold>20</bold></highlight> into distributed computing system <highlight><bold>10</bold></highlight> (step <highlight><bold>50</bold></highlight>). The network management module transmits the recovery modules <highlight><bold>20</bold></highlight> to one or more target network nodes by transmitting the code and data for each recovery module <highlight><bold>20</bold></highlight> in the form of a JAVA class file. Typically, the number and identity of the target network nodes are identified statistically so that the reliability of the system is statistically monitored at a specified confidence level. The target node addresses may be obtained from a routing table that is stored at network management node <highlight><bold>12</bold></highlight>. The number of recovery modules <highlight><bold>20</bold></highlight> that are launched into distributed computing system <highlight><bold>10</bold></highlight> may be determined statistically based upon a desired service level (or policy). The network management module monitors transmissions that are received from the recovery modules <highlight><bold>20</bold></highlight> that were launched into distributed computing system <highlight><bold>10</bold></highlight> (step <highlight><bold>52</bold></highlight>). Communications between the network management module and the recovery modules <highlight><bold>20</bold></highlight> may be in accordance with a simple network management protocol (SNMP). If the number of reporting recovery modules <highlight><bold>20</bold></highlight> is sufficient to satisfy the desired service level (step <highlight><bold>54</bold></highlight>), the network management module continues to monitor recovery module transmissions until a network node failure is reported (step <highlight><bold>56</bold></highlight>); otherwise, the network management module launches additional recovery modules <highlight><bold>20</bold></highlight> into distributed computing system <highlight><bold>10</bold></highlight> to satisfy the desired service level (step <highlight><bold>50</bold></highlight>). If a network node failure is reported (step <highlight><bold>56</bold></highlight>), the network management module determines whether a global network recovery process should be implemented (step <highlight><bold>58</bold></highlight>). Typically, local recovery procedures initiated by recovery modules <highlight><bold>20</bold></highlight> are sufficient to correct for node failures and a global recovery process is not required. If a global network recovery process is not required (step <highlight><bold>58</bold></highlight>), the network management module continues monitoring recovery module transmissions (step <highlight><bold>52</bold></highlight>). If a global network recovery process is required (step <highlight><bold>58</bold></highlight>), the network management module initiates a global recovery process (step <highlight><bold>60</bold></highlight>). The global recovery process may be a conventional checkpointing and rollback recovery process. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, in one embodiment, upon receipt of a recovery module <highlight><bold>20</bold></highlight> (step <highlight><bold>70</bold></highlight>), a recovery module operating environment <highlight><bold>42</bold></highlight> executing at a receiving network node loads the recovery module <highlight><bold>20</bold></highlight> (step <highlight><bold>72</bold></highlight>). The recovery module operating environment <highlight><bold>42</bold></highlight> may use JAVA methods to load the recovery module <highlight><bold>20</bold></highlight> based upon the received recovery module JAVA class file. JAVA methods also may be used to instantiate a recovery module object based upon the received recovery module data. If the recovery module is authorized to operate at the receiving network node (step <highlight><bold>74</bold></highlight>), the recovery module operating environment <highlight><bold>42</bold></highlight> starts the recovery module object (step <highlight><bold>76</bold></highlight>); otherwise, the recovery module operating environment <highlight><bold>42</bold></highlight> unloads the received recovery module <highlight><bold>20</bold></highlight> (step <highlight><bold>78</bold></highlight>). </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, in one embodiment, during execution on a network node, a migratory recovery module <highlight><bold>20</bold></highlight> may monitor the status and initiate recovery processes (if necessary), as follows. Initially, recovery module <highlight><bold>20</bold></highlight> monitors the health of the network node (step <highlight><bold>80</bold></highlight>). Recovery module <highlight><bold>20</bold></highlight> may probe the health of an associated node process by accessing one or more node monitoring resources of the network node in accordance with a conventional heartbeat messaging protocol. Recovery module <highlight><bold>20</bold></highlight> may detect if the node process has failed, monitor the node log file for any indication of process failure, exchange heartbeat messages with the node process, or make calls to the node system manager to determine if the system is operating properly. If recovery module <highlight><bold>20</bold></highlight> determines that one or more node processes have failed (step <highlight><bold>82</bold></highlight>), recovery module <highlight><bold>20</bold></highlight> may initiate a recovery process in accordance with a conventional restart protocol (step <highlight><bold>84</bold></highlight>). For example, recovery module <highlight><bold>20</bold></highlight> may attempt to restart the failed process by transmitting a request to a process execution service operating on the failed network node. The status of the node, including information relating to any failed node processes (e.g., any logged checkpointing information or other information dumps), is reported to the network management module (step <highlight><bold>86</bold></highlight>). The node status report may be transmitted in accordance with SNMP. Recovery module <highlight><bold>20</bold></highlight> then may request to be transmitted to the next destination network node (step <highlight><bold>88</bold></highlight>). Recovery module <highlight><bold>20</bold></highlight> may make the transmission request by invoking a recovery module migration method. The migration method may call a corresponding migration method of recovery module operating environment that halts operation of the recovery module <highlight><bold>20</bold></highlight> and transmits the recovery module code and data to a specified destination node. Recovery module <highlight><bold>20</bold></highlight> may include a routing method that may be invoked to identify the destination node address based upon a routing table stored at the network node. The destination node may be selected randomly or in accordance with a prescribed routing policy. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Although systems and methods have been described herein in connection with a particular distributed computing environment, these systems and methods are not limited to any particular hardware or software configuration, but rather they may be implemented in any computing or processing environment, including in digital electronic circuitry or in computer hardware, firmware or software. In general, the component systems of the network nodes may be implemented, in part, in a computer process product tangibly embodied in a machine-readable storage device for execution by a computer processor. In some embodiments, these systems preferably are implemented in a high level procedural or object oriented processing language; however, the algorithms may be implemented in assembly or machine language, if desired. In any case, the processing language may be a compiled or interpreted language. The methods described herein may be performed by a computer processor executing instructions organized, for example, into process modules to carry out these methods by operating on input data and generating output. Suitable processors include, for example, both general and special purpose microprocessors. Generally, a processor receives instructions and data from a readonly memory and/or a random access memory. Storage devices suitable for tangibly embodying computer process instructions include all forms of non-volatile memory, including, for example, semiconductor memory devices, such as EPROM, EEPROM, and flash memory devices; magnetic disks such as internal hard disks and removable disks; magneto-optical disks; and CD-ROM. Any of the foregoing technologies may be supplemented by or incorporated in specially-designed ASICs (application-specific integrated circuits). </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Other embodiments are within the scope of the claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for managing a plurality of distributed nodes of a network, comprising: 
+<claim-text>a recovery module configured to migrate from one network node to another, determine a status of a network node, and initiate a recovery process on a failed network node. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the recovery module comprises a routing component for determining a next hop address from an origin network node to a destination network node. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the routing component is configured to determine the next hop address based upon a routing table stored at the origin network node. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the recovery module is configured to determine the status of a network node by sending an inter-process communication to a node process. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the recovery module is configured to determine the status of a network node in accordance with a heartbeat messaging protocol. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the recovery module is configured to initiate a recovery process on a failed network node in accordance with a restart protocol. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the recovery module is configured to initiate a restart of a failed node process by transmitting a request to a process execution service operating on the failed network node. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the recovery module is configured to transmit a node status message to a network management module operating at a network management network node. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the node status message comprises information obtained from a log file generated at the failed network node. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising a network management module configured to launch a plurality of recovery modules into the network. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method for managing a plurality of distributed nodes of a network, comprising: 
+<claim-text>migrating from one network node to another; </claim-text>
+<claim-text>determining a status of a network node; and </claim-text>
+<claim-text>initiating a recovery process on a failed network node. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein migrating from one network node to another comprises determining a next hop address from an origin network node to a destination network node. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the next hop address is determined based upon a routing table stored at the origin network node. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the status of a network node is determined by sending an inter-process communication to a node process. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the status of a network node is determined in accordance with a heartbeat messaging protocol. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein a recovery process is initiated on a failed network node in accordance with a restart protocol. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein a restart of a failed node process is initiated by transmitting a request to a process execution service operating on the failed network node. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising transmitting a node status message to a network management module operating at a network management network node. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising launching into the network a plurality of recovery modules, each configured to migrate from one network node to another, determine the status of a network node, and initiate a recovery process on a failed network node. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A computer program for managing a plurality of distributed nodes of a network, the computer program residing on a computer-readable medium and comprising computer-readable instructions for causing a computer to: 
+<claim-text>migrate the computer program from one network node to another; </claim-text>
+<claim-text>determine a status of a network node; and </claim-text>
+<claim-text>initiate a recovery process on a failed network node.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005102A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005102A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005102A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005102A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

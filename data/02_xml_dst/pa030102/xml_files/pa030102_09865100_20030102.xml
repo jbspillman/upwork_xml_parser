@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030001391A1-20030102-D00000.TIF SYSTEM "US20030001391A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030001391A1-20030102-D00001.TIF SYSTEM "US20030001391A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030001391A1-20030102-D00002.TIF SYSTEM "US20030001391A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030001391A1-20030102-D00003.TIF SYSTEM "US20030001391A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030001391</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09865100</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010524</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H02P009/04</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>290</class>
+<subclass>04000C</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Hybrid electric vehicle control strategy while traveling in reverse</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Ming</given-name>
+<middle-name>Lang</middle-name>
+<family-name>Kuang</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Canton</city>
+<state>MI</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Prabhakar</given-name>
+<middle-name>B.</middle-name>
+<family-name>Patil</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Southfield</city>
+<state>MI</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>James</given-name>
+<middle-name>Paul</middle-name>
+<family-name>McCarthy</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Milford</city>
+<state>MI</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>FORD GLOBAL TECHNOLOGIES, INC</name-1>
+<name-2></name-2>
+<address>
+<address-1>SUITE 600 - PARKLANE TOWERS EAST</address-1>
+<address-2>ONE PARKLANE BLVD.</address-2>
+<city>DEARBORN</city>
+<state>MI</state>
+<postalcode>48126</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The invention is a controller for a hybrid electric vehicle (HEV) that provides a strategy to control a split powertrain hybrid electric vehicle (HEV) when a vehicle travels in reverse, battery state-of-charge (SOC) is low and the powertrain is configured to only use the motor while traveling in reverse. The powertrain reverse drive mode controller can be configured to determine whether the engine and generator motor are running, calculate a benefit power from the engine if the engine and the generator motor are running, compare the benefit power with a first predetermined value, determine whether a driver torque request plus the generator torque is greater than a predetermined maximum motor torque if the benefit power is greater than or equal to the first predetermined value, calculate a new generator torque request if the determination of whether a driver torque request plus the generator torque is greater than a predetermined maximum motor torque, determine whether the new generator torque request is greater than or equal to a second predetermined value, calculate a new generator speed for the new generator torque request if the new generator torque request is greater than or equal to the second predetermined value, determine whether the new generator speed is less than or equal to a maximum generator speed, and determine a new motor torque request if the new generator speed is less than or equal to a maximum generator speed. The controller can also be configured to add a stop engine command if the benefit power is less than the first predetermined value, the new generator torque request is less than the second predetermined value, or the new generator speed is greater than a maximum generator speed. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates generally to a hybrid electric vehicle (HEV), and specifically to a strategy to control a split powertrain HEV while the vehicle travels in reverse and vehicle state-of-charge (SOC) is low. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Discussion of the Prior Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The need to reduce fossil fuel consumption and emissions in automobiles and other vehicles predominately powered by internal combustion engines (ICEs) is well known. Vehicles powered by electric motors attempt to address these needs. Another alternative solution is to combine a smaller ICE with electric motors into one vehicle. Such vehicles combine the advantages of an ICE vehicle and an electric vehicle and are typically called hybrid electric vehicles (HEVs). See generally, U.S. Pat. No. 5,343,970 to Severinsky. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The HEV is described in a variety of configurations. Many HEV patents disclose systems where an operator is required to select between electric and internal combustion operation. In other configurations, the electric motor drives one set of wheels and the ICE drives a different set. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Other, more useful, configurations have developed. For example, a series hybrid electric vehicle (SHEV) configuration is a vehicle with an engine (most typically an ICE) connected to an electric motor called a generator. The generator, in turn, provides electricity to a battery and another electric motor, called a traction motor. In the SHEV, the traction motor is the sole source of wheel torque. There is no mechanical connection between the engine and the drive wheels. A parallel hybrid electrical vehicle (PHEV) configuration has an engine (most typically an ICE) and an electric motor that work together in varying degrees to provide the necessary wheel torque to drive the vehicle. Additionally, in the PHEV configuration, the motor can be used as a generator to charge the battery from the power produced by the ICE. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> A parallel/series hybrid electric vehicle (PSHEV) has characteristics of both PHEV and SHEV configurations and is sometimes referred to as a &ldquo;powersplit&rdquo; configuration. In one of several types of PSHEV configurations, the ICE is mechanically coupled to two electric motors in a planetary gear-set transaxle. A first electric motor, the generator, is connected to a sun gear. The ICE is connected to a carrier gear. A second electric motor, a traction motor, is connected to a ring (output) gear via additional gearing in a transaxle. Engine torque can power the generator to charge the battery. The generator can also contribute to the necessary wheel (output shaft) torque if the system has a one-way clutch. The traction motor is used to contribute wheel torque and to recover braking energy to charge the battery. In this configuration, the generator can selectively provide a reaction torque that may be used to control engine speed. In fact, the engine, generator motor and traction motor can provide a continuous variable transmission (CVT) effect. Further, the HEV presents an opportunity to better control engine idle speed over conventional vehicles by using the generator to control engine speed. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The desirability of combining an ICE with electric motors is clear. There is great potential for reducing vehicle fuel consumption and emissions with no appreciable loss of vehicle performance or drive-ability. The HEV allows the use of smaller engines, regenerative braking, electric boost, and even operating the vehicle with the engine shutdown. Nevertheless, new ways must be developed to optimize the HEV&apos;s potential benefits. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> One such area of HEV development is controlling a powersplit HEV while traveling in reverse. In the prior art, a reverse gear in a transmission is engaged when the vehicle operator moves a shift lever to the reverse, or &ldquo;R&rdquo;, position. In an HEV, a variety of powertrain configurations based on vehicle conditions can require new strategies to move the vehicle in reverse. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> A strategy for moving an HEV in reverse is known in the prior art. See U.S. Pat. No. 5,847,469 to Tabata et al. Tabata et al. describes an HEV using a conventional transmission to power the vehicle&apos;s wheels. The patent describes a system for the electric traction motor alone to reverse the direction of the vehicle without reversing the rotation of the motor so long as there is enough battery charge. Otherwise, the engine is started to assist the motor. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> A conventional transmission with a reverse gear could be considered an inefficient and unnecessary complication and expense in a split powertrain HEV. Alternatively, the electric traction motor alone is used to propel the vehicle in reverse direction. When moving in reverse, the ring gear torque, resulting from engine output, goes against the vehicle moving in reverse. Thus, using the engine while the vehicle is in reverse is undesirable. Nevertheless, if battery state-of-charge (SOC) is low, the engine may need to run to power a generator to charge the battery and allow the motor to operate. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Unfortunately, no strategy is known to control a split powertrain HEV while the vehicle travels in reverse with the engine running because the battery state-of-charge (SOC) is low and the electric traction motor requires electricity produced by the generator for reverse motive power. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Accordingly, an object of the present invention is to provide a strategy to control a split powertrain hybrid electric vehicle (HEV) when the vehicle travels in reverse, vehicle state-of-charge (SOC) is low and the powertrain is configured to only use the motor while traveling in reverse. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The powersplit hybrid electric vehicle (HEV) powertrain of the present invention has an engine, a traction motor, a generator, an electric energy storage device for storing electric energy, the electric energy storage device connected to the traction motor to power the traction motor, and the electric energy storage device connected to the generator to receive energy generated by the generator. The powersplit HEV powertrain also has a power transmission device having at least one forward drive position to move the HEV in a forward direction and at least one reverse drive position to move the vehicle in a reverse direction. The power transmission device is connected to the engine, the traction motor, and the generator motor. In addition, the powersplit HEV powertrain has a driver operated drive position selector comprising a reverse drive mode, a vehicle system controller comprising a reverse drive mode controller activated when the drive position selector is in the reverse drive mode, wherein the reverse drive mode controller preventing the battery SOC from continuously falling while meeting driver demand. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The powertrain reverse drive mode controller can be configured to determine whether the engine and generator motor are running, calculate a benefit power from the engine if the engine and the generator motor are running, compare the benefit power with a first predetermined value, determine whether a driver torque request plus the generator torque is greater than a predetermined maximum motor torque if the benefit power is greater than or equal to the first predetermined value, calculate a new generator torque request if the determination of whether a driver torque request plus the generator torque is greater than a predetermined maximum motor torque, determine whether the new generator torque request is greater than or equal to a second predetermined value, calculate a new generator speed for the new generator torque request if the new generator torque request is greater than or equal to the second predetermined value, determine whether the new generator speed is less than or equal to a maximum generator speed, and determine a new motor torque request if the new generator speed is less than or equal to a maximum generator speed. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The controller can also be configured to add a stop engine command if the benefit power is less than the first predetermined value, the new generator torque request is less than the second predetermined value, or the new generator speed is greater than a maximum generator speed. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Other objects of the present invention will become more apparent to persons having ordinary skill in the art to which the present invention pertains from the following description taken in conjunction with the accompanying figures.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE FIGURES </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The foregoing objects, advantages, and features, as well as other objects and advantages, will become apparent with reference to the description and figures below, in which like numerals represent like elements and in which: </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a general hybrid electric vehicle (HEV) configuration. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates the power flow within the powertrain. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates the strategy of the present invention for an HEV while traveling in reverse. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The present invention relates to electric vehicles and, more particularly, to hybrid electric vehicles (HEVs). <cross-reference target="DRAWINGS">FIG. 1</cross-reference> demonstrates just one possible configuration, specifically a parallel/series hybrid electric vehicle (powersplit) configuration. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In a basic HEV, a planetary gear set <highlight><bold>20</bold></highlight> mechanically couples a carrier gear <highlight><bold>22</bold></highlight> to an engine <highlight><bold>24</bold></highlight> with a one-way clutch <highlight><bold>26</bold></highlight> to prevent the engine from rotating in a counter clock wise (CCw) direction. The planetary gear set <highlight><bold>20</bold></highlight> also mechanically couples a sun gear <highlight><bold>28</bold></highlight> to a generator motor <highlight><bold>30</bold></highlight> and a ring (output) gear <highlight><bold>32</bold></highlight>. The generator motor <highlight><bold>30</bold></highlight> also mechanically links to a generator brake <highlight><bold>34</bold></highlight> and is electrically linked to an electric energy storage device (battery) <highlight><bold>36</bold></highlight> to receive electric energy converted from mechanical energy by the generator motor <highlight><bold>30</bold></highlight>. A traction motor <highlight><bold>38</bold></highlight> is mechanically coupled to the ring gear <highlight><bold>32</bold></highlight> of the planetary gear set <highlight><bold>20</bold></highlight> via a second gear set <highlight><bold>40</bold></highlight> and is electrically linked to the battery <highlight><bold>36</bold></highlight>. The ring gear <highlight><bold>32</bold></highlight> of the planetary gear set <highlight><bold>20</bold></highlight> and the traction motor <highlight><bold>38</bold></highlight> are mechanically coupled to drive wheels <highlight><bold>42</bold></highlight> via an output shaft <highlight><bold>44</bold></highlight>. The mechanical coupling represents collectively a power transmission device, the power transmission devise being connected to the engine <highlight><bold>24</bold></highlight>, the traction motor <highlight><bold>38</bold></highlight> and the generator motor <highlight><bold>30</bold></highlight>. This power transmission device can be configured to have at least one forward drive position to move the HEV in a forward direction and at least one reverse drive position to move the HEV in a reverse direction. A driver operated drive position selector (gear selector) (not shown) determines whether the vehicle is to move in the reverse direction. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The planetary gear set <highlight><bold>20</bold></highlight>, splits the engine <highlight><bold>24</bold></highlight> output energy into a series path from the engine <highlight><bold>24</bold></highlight> to the generator motor <highlight><bold>30</bold></highlight> and a parallel path from the engine <highlight><bold>24</bold></highlight> to the drive wheels <highlight><bold>42</bold></highlight>. Engine <highlight><bold>24</bold></highlight> speed can be controlled by varying the split to the series path while maintaining the mechanical connection through the parallel path. The traction motor <highlight><bold>38</bold></highlight> augments the engine <highlight><bold>24</bold></highlight> power to the drive wheels <highlight><bold>42</bold></highlight> on the parallel path through the second gear set <highlight><bold>40</bold></highlight>. The traction motor <highlight><bold>38</bold></highlight> also provides the opportunity to use energy directly from the series path, essentially running off power created by the generator motor <highlight><bold>30</bold></highlight>. This reduces losses associated with converting energy into and out of chemical energy in the battery <highlight><bold>36</bold></highlight> and allows all engine <highlight><bold>24</bold></highlight> energy, minus conversion losses, to reach the drive wheels <highlight><bold>42</bold></highlight>. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> A vehicle system controller (VSC) <highlight><bold>46</bold></highlight> controls many components in this HEV configuration by connecting to each component&apos;s controller. An engine control unit (ECU) (not shown)connects to the engine <highlight><bold>24</bold></highlight> via a hardwire interface. The ECU and VSC <highlight><bold>46</bold></highlight> can be based in the same unit, but are actually separate controllers. The VSC <highlight><bold>46</bold></highlight> communicates with the ECU, as well as a battery control unit (BCU) <highlight><bold>50</bold></highlight> and a transaxle management unit (TMU) <highlight><bold>52</bold></highlight> through a communication network such as a controller area network (CAN) <highlight><bold>54</bold></highlight>. The BCU <highlight><bold>50</bold></highlight> connects to the battery <highlight><bold>36</bold></highlight> via a hardwire interface. The TMU <highlight><bold>52</bold></highlight> controls the generator motor <highlight><bold>30</bold></highlight> and traction motor <highlight><bold>38</bold></highlight> via a hardwire interface. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> All vehicles require movement in a reverse direction from time to time. Such movement usually begins with a driver manually shifting a gear selector to a reverse (or &ldquo;R&rdquo;) position. In the powertrain configuration of the present invention, the engine <highlight><bold>24</bold></highlight> does not provide primary drive to the vehicle while traveling in reverse. There is no true rear drive shifting means in that there is no discrete exchange of power flow elements that produces a reverse range as opposed to a forward range. In fact, torque from the engine <highlight><bold>24</bold></highlight> while in reverse would work against the traction motor <highlight><bold>38</bold></highlight> traveling in reverse. Nevertheless, to operate the traction motor <highlight><bold>38</bold></highlight> in a reverse rotation, the engine <highlight><bold>24</bold></highlight> may be needed to charge the battery <highlight><bold>36</bold></highlight> if a low state-of-charge (SOC) exists. During engine <highlight><bold>24</bold></highlight> operation to generate the electricity, the engine <highlight><bold>24</bold></highlight> would produce torque through the second gear set <highlight><bold>40</bold></highlight> that would attempt to drive the vehicle in a forward direction. It is only by the balance of the relative forward and reverse torques that the net vehicle rearward torque is augmented. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> For example, if the vehicle is moving in reverse at a certain vehicle speed (equivalent to &ohgr;<highlight><subscript>r</subscript></highlight>) , the traction motor&apos;s <highlight><bold>38</bold></highlight> output power required for the vehicle speed is P<highlight><subscript>V</subscript></highlight>. Also assume the engine <highlight><bold>24</bold></highlight> is running at a constant power output (&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight>), and both efficiencies of the planetary gear set <highlight><bold>20</bold></highlight> and the second gear set <highlight><bold>40</bold></highlight> are one. The resulted ring output gear <highlight><bold>32</bold></highlight> torque from the engine <highlight><bold>24</bold></highlight> torque (&tgr;<highlight><subscript>e</subscript></highlight>) is &tgr;<highlight><subscript>r</subscript></highlight>&equals;&tgr;<highlight><subscript>e</subscript></highlight>/(1&plus;&rgr;). &rgr; is the gear ratio between the sun gear <highlight><bold>28</bold></highlight> and the ring gear <highlight><bold>32</bold></highlight> (N<highlight><subscript>s</subscript></highlight>/N<highlight><subscript>r</subscript></highlight>). &eegr;<highlight><subscript>g </subscript></highlight>and &eegr;<highlight><subscript>m </subscript></highlight>are the efficiencies for the generator motor and the traction motor respectively. The power flow within the powertrain under these assumptions is illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. The following symbols listed below will assist in understanding the present invention:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="21PT" align="left"/>
+<colspec colname="3" colwidth="133PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>&ohgr;<highlight><subscript>r</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>ring gear speed</entry>
+</row>
+<row>
+<entry>&ohgr;<highlight><subscript>e</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>engine speed</entry>
+</row>
+<row>
+<entry>P<highlight><subscript>v</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>output power</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>engine power output</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>e</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>engine torque</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>r</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>ring gear torque</entry>
+</row>
+<row>
+<entry>&rgr;</entry>
+<entry>&equals;</entry>
+<entry>gear ratio between sun gear and ring gear</entry>
+</row>
+<row>
+<entry>Ns</entry>
+<entry>&equals;</entry>
+<entry>number of teeth in sun gear</entry>
+</row>
+<row>
+<entry>Nr</entry>
+<entry>&equals;</entry>
+<entry>number of teeth in ring gear</entry>
+</row>
+<row>
+<entry>&eegr;<highlight><subscript>g</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>overall efficiency for generator</entry>
+</row>
+<row>
+<entry>&eegr;<highlight><subscript>m</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>overall efficiency for motor</entry>
+</row>
+<row>
+<entry>P<highlight><subscript>batt</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>power charging the battery</entry>
+</row>
+<row>
+<entry>&eegr;<highlight><subscript>g</subscript></highlight>&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>engine&apos;s electrical output power (through</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>generator)</entry>
+</row>
+<row>
+<entry>P<highlight><subscript>v</subscript></highlight>/&eegr;<highlight><subscript>m</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>motor&apos;s input power (electrical)</entry>
+</row>
+<row>
+<entry>(1/&eegr;<highlight><subscript>m </subscript></highlight>&minus; &eegr;<highlight><subscript>g</subscript></highlight>) &tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>power circulation loss between motor and</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>generator</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>d&mdash;req&commat;m</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>driver&apos;s torque request at the motor</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>g</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>generator torque</entry>
+</row>
+<row>
+<entry>&ohgr;<highlight><subscript>g</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>generator speed</entry>
+</row>
+<row>
+<entry>W<highlight><subscript>benefit</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>benefit power from the engine</entry>
+</row>
+<row>
+<entry>K<highlight><subscript>w</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>a predetermined W<highlight><subscript>benefit </subscript></highlight>value</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>m&mdash;max</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>maximum motor torque</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>g&mdash;req</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>generator torque request</entry>
+</row>
+<row>
+<entry>&tgr;<highlight><subscript>g&mdash;min</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>generator torque request minimum</entry>
+</row>
+<row>
+<entry>&ohgr;<highlight><subscript>g&mdash;cal</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>calculated generator speed</entry>
+</row>
+<row>
+<entry>&ohgr;<highlight><subscript>g&mdash;max</subscript></highlight></entry>
+<entry>&equals;</entry>
+<entry>maximum generator speed.</entry>
+</row>
+<row>
+<entry>T</entry>
+<entry>&equals;</entry>
+<entry>gear ratio from generator to motor</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The power flow illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> demonstrates part of the traction motor <highlight><bold>38</bold></highlight> output (&tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r </subscript></highlight>required to overcome the engine <highlight><bold>24</bold></highlight> output at the ring gear <highlight><bold>32</bold></highlight>) is also part of the generator motor <highlight><bold>30</bold></highlight> input, which generates electricity. Clearly, this is a power circulation between the traction motor <highlight><bold>38</bold></highlight> and the generator motor <highlight><bold>30</bold></highlight>, which results in power circulation loss in the powertrain system. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> The power charging the battery <highlight><bold>36</bold></highlight> is P<highlight><subscript>batt </subscript></highlight>and is shown by: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>P</italic></highlight><highlight><subscript>batt</subscript></highlight>&equals;&eegr;<highlight><subscript>g</subscript></highlight>(&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight>&plus;&tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r</subscript></highlight>)&minus;(<highlight><italic>P</italic></highlight><highlight><subscript>v</subscript></highlight>&plus;&tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r</subscript></highlight>)/&eegr;<highlight><subscript>m</subscript></highlight>, or </in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>P</italic></highlight><highlight><subscript>batt</subscript></highlight>&equals;&eegr;<highlight><subscript>g</subscript></highlight>&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight><highlight><italic>&minus;P</italic></highlight><highlight><subscript>v</subscript></highlight>/&eegr;<highlight><subscript>m</subscript></highlight>&minus;(1/&eegr;<highlight><subscript>m</subscript></highlight>&minus;&eegr;<highlight><subscript>g</subscript></highlight>) &tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r</subscript></highlight>. </in-line-formula></paragraph>
+<paragraph id="P-0030" lvl="7"><number>&lsqb;0030&rsqb;</number> In this example, &eegr;<highlight><subscript>g</subscript></highlight>&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e </subscript></highlight>is the engine&apos;s <highlight><bold>24</bold></highlight> electrical output power (through the generator motor <highlight><bold>30</bold></highlight>), P<highlight><subscript>V</subscript></highlight>/&eegr;<highlight><subscript>m </subscript></highlight>is the traction motor&apos;s <highlight><bold>38</bold></highlight> input power (electrical) required to propel the vehicle, and (1/&eegr;<highlight><subscript>m</subscript></highlight>&minus;&eegr;<highlight><subscript>g</subscript></highlight>)&tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r </subscript></highlight>is the power circulation loss between the traction motor <highlight><bold>38</bold></highlight> and generator motor <highlight><bold>30</bold></highlight>. If the power circulation loss is greater than or close to the engine&apos;s <highlight><bold>24</bold></highlight> electrical output power, there is no benefit to operate the engine <highlight><bold>24</bold></highlight> since the engine <highlight><bold>24</bold></highlight> output only generates heat in the traction motor <highlight><bold>38</bold></highlight> and generator motor <highlight><bold>30</bold></highlight>, and does not charge the battery <highlight><bold>36</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> To ensure the benefit of operating the engine <highlight><bold>24</bold></highlight> when the vehicle travels in reverse and the battery <highlight><bold>36</bold></highlight> SOC is low, it is necessary for the VSC <highlight><bold>46</bold></highlight> to control the powertrain system properly to avoid the result illustrated above. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The present invention is a control strategy within the VSC <highlight><bold>46</bold></highlight> to efficiently control the illustrated powersplit HEV powertrain system when the vehicle travels in reverse and the battery <highlight><bold>36</bold></highlight> SOC is low. The reverse drive mode controller is activated when the drive position selector is in the reverse drive mode. The present invention operates the powertrain system efficiently and prevents the battery <highlight><bold>36</bold></highlight> SOC from continuously falling while meeting the driver&apos;s demand. The strategy is illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> At Step <highlight><bold>60</bold></highlight>, the reverse drive mode controller strategy first reads the following vehicle inputs <highlight><bold>58</bold></highlight>: PRND position, driver&apos;s torque request at the motor (&tgr;<highlight><subscript>d&mdash;req&commat;m</subscript></highlight>), generator torque (&tgr;<highlight><subscript>g</subscript></highlight>) and speed (&ohgr;<highlight><subscript>g</subscript></highlight>), vehicle speed (to calculate ring gear speed &ohgr;<highlight><subscript>r</subscript></highlight>), engine speed (&ohgr;<highlight><subscript>e</subscript></highlight>), and engine and generator status. PRND position represents a driver operated drive position selector, or gear selector, (not shown) that is manually shifted by the vehicle driver. If the gear selector is in the &ldquo;R&rdquo; position, the driver has requested the vehicle to move in reverse. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> At Step <highlight><bold>62</bold></highlight>, the strategy next determines if the gear selector is in the &ldquo;R&rdquo; position. If no, the strategy ends. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> If &ldquo;R&rdquo; is selected at Step <highlight><bold>62</bold></highlight>, the strategy next determines if both the engine <highlight><bold>24</bold></highlight> and generator motor <highlight><bold>30</bold></highlight> are running at Step <highlight><bold>64</bold></highlight>. If no, the strategy ends. If both the engine <highlight><bold>24</bold></highlight> and generator motor <highlight><bold>30</bold></highlight> are running at Step <highlight><bold>64</bold></highlight>, the strategy calculates the benefit power from the engine <highlight><bold>24</bold></highlight> W<highlight><subscript>benefit </subscript></highlight>at Step <highlight><bold>66</bold></highlight> using the equation W<highlight><subscript>benefit</subscript></highlight>&equals;&eegr;<highlight><subscript>g</subscript></highlight>&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight>&minus;(1 /&eegr;<highlight><subscript>m</subscript></highlight>&minus;&eegr;<highlight><subscript>g</subscript></highlight>)&tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r</subscript></highlight>. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Next the strategy determines at Step <highlight><bold>68</bold></highlight> whether the W<highlight><subscript>benefit </subscript></highlight>is greater than or equal to a first predetermined value K<highlight><subscript>w</subscript></highlight>. This value indicates it is desirable to run the engine <highlight><bold>24</bold></highlight> to charge the battery <highlight><bold>36</bold></highlight>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> If W<highlight><subscript>benefit </subscript></highlight>is greater than or equal to K<highlight><subscript>w </subscript></highlight>at Step <highlight><bold>68</bold></highlight>, the strategy next determines at Step <highlight><bold>72</bold></highlight> whether the sum of the driver&apos;s torque request at motor(&tgr;<highlight><subscript>d&mdash;req&commat;m</subscript></highlight>) plus the generator motor <highlight><bold>30</bold></highlight> torque reflected at the motor shaft (&tgr;<highlight><subscript>g</subscript></highlight>T, where T is the gear ratio from generator to motor and is well known in the prior art) is greater than the predetermined maximum motor torque (&tgr;<highlight><subscript>m&mdash;max</subscript></highlight>) If the W<highlight><subscript>benefit </subscript></highlight>is less than K<highlight><subscript>w</subscript></highlight>, the strategy executes a stop engine process at Step <highlight><bold>70</bold></highlight> and ends the strategy. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> If the sum is greater than the predetermined maximum motor torque at Step <highlight><bold>72</bold></highlight>, the strategy calculates a new generator motor <highlight><bold>30</bold></highlight> torque request (&tgr;<highlight><subscript>g&mdash;req</subscript></highlight>) at Step <highlight><bold>74</bold></highlight> so that the driver&apos;s torque request is not compromised and the vehicle reverse acceleration performance meets driver demand. The calculation is as follows: &tgr;<highlight><subscript>g&mdash;req</subscript></highlight>&equals;(&tgr;<highlight><subscript>m&mdash;max</subscript></highlight>&minus;&tgr;<highlight><subscript>d&mdash;req&commat;m</subscript></highlight>) /T. Otherwise, the strategy proceeds to calculate a new traction motor <highlight><bold>38</bold></highlight> torque request (&tgr;<highlight><subscript>m&mdash;req</subscript></highlight>) at Step <highlight><bold>76</bold></highlight> using: &tgr;<highlight><subscript>m&mdash;req</subscript></highlight>&equals;&tgr;<highlight><subscript>d&mdash;req&commat;m</subscript></highlight>&plus;&tgr;<highlight><subscript>g&mdash;req </subscript></highlight>T and the strategy ends. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Next, the strategy determines at Step <highlight><bold>78</bold></highlight> whether the new generator motor <highlight><bold>30</bold></highlight> torque request (&tgr;<highlight><subscript>g&mdash;req</subscript></highlight>) is greater than or equal to a second predetermined value (&tgr;<highlight><subscript>g&mdash;min</subscript></highlight>). This implies the generator motor&apos;s <highlight><bold>30</bold></highlight> torque can be accurately controlled. If (&tgr;<highlight><subscript>g&mdash;req</subscript></highlight>) is greater than or equal to the second predetermined value (&tgr;<highlight><subscript>g&mdash;min</subscript></highlight>) at Step <highlight><bold>78</bold></highlight>, the strategy proceeds to determine the calculated generator motor <highlight><bold>30</bold></highlight> speed (&ohgr;<highlight><subscript>g&mdash;cal</subscript></highlight>) for the given new generator motor <highlight><bold>30</bold></highlight> torque request at Step <highlight><bold>80</bold></highlight>. Otherwise, the strategy proceeds to execute the stop engine process at Step <highlight><bold>70</bold></highlight> and ends the strategy. With the new generator motor <highlight><bold>30</bold></highlight> torque request (&tgr;<highlight><subscript>g&mdash;req</subscript></highlight>), a new engine <highlight><bold>24</bold></highlight> speed (&ohgr;<highlight><subscript>e</subscript></highlight>) can be determined and then the calculated generator motor <highlight><bold>30</bold></highlight> speed (&ohgr;<highlight><subscript>g&mdash;cal</subscript></highlight>) of Step <highlight><bold>80</bold></highlight> can be derived based on the new engine <highlight><bold>24</bold></highlight> speed and ring gear <highlight><bold>32</bold></highlight> speed (equivalent to present vehicle speed). </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Next, at Step <highlight><bold>82</bold></highlight>, the strategy determines whether the calculated generator motor <highlight><bold>30</bold></highlight> speed (&ohgr;<highlight><subscript>g&mdash;cal</subscript></highlight>) is less than or equal to a predetermined maximum generator motor <highlight><bold>30</bold></highlight> speed (&ohgr;<highlight><subscript>g&mdash;max</subscript></highlight>). If yes, the strategy proceeds to Step <highlight><bold>76</bold></highlight> (described above) to determine the new traction motor <highlight><bold>38</bold></highlight> torque request to meet the driver&apos;s demand. This motor torque request compensates the ring gear <highlight><bold>32</bold></highlight> torque resulted from the engine <highlight><bold>24</bold></highlight> output to meet the driver&apos;s demand. If the calculated generator motor <highlight><bold>30</bold></highlight> speed (&ohgr;<highlight><subscript>g&mdash;cal</subscript></highlight>) is greater than the maximum generator motor <highlight><bold>30</bold></highlight> speed (&ohgr;<highlight><subscript>g&mdash;max</subscript></highlight>) at Step <highlight><bold>82</bold></highlight>, the strategy proceeds to execute the stop engine process at Step <highlight><bold>70</bold></highlight> and the strategy ends. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The above-described embodiment of the invention is provided purely for purposes of example. Many other variations, modifications, and applications of the invention may be made. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A powersplit hybrid electric vehicle (HEV) powertrain, comprising: 
+<claim-text>an engine; </claim-text>
+<claim-text>a traction motor; </claim-text>
+<claim-text>a generator motor; </claim-text>
+<claim-text>an electric energy storage device for storing electric energy, the electric energy storage device connected to the traction motor to power the traction motor, and the electric energy storage device connected to the generator motor to receive energy generated by the generator motor; a power transmission device having at least one forward drive position to move the HEV in a forward direction and at least one reverse drive position to move the HEV in a reverse direction, the power transmission device being connected to the engine, the traction motor, and the generator motor; and </claim-text>
+<claim-text>a driver operated drive position selector comprising a reverse drive mode; and </claim-text>
+<claim-text>a vehicle system controller comprising a reverse drive mode controller activated when the drive position selector is in the reverse drive mode, the reverse drive mode controller preventing the electric energy storage device state-of-charge (SOC) from continuously falling while meeting driver demand. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The powertrain of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the reverse drive mode controller comprises: 
+<claim-text>a determination of whether the engine and generator motor are running; </claim-text>
+<claim-text>a calculation of a benefit power from the engine if the engine and the generator motor are running; </claim-text>
+<claim-text>a comparison of the benefit power with a first predetermined value; </claim-text>
+<claim-text>a determination of whether a driver torque request plus the traction motor torque is greater than a predetermined maximum traction motor torque if the benefit power is greater than or equal to the first predetermined value; a calculation of new generator motor torque request if the determination of whether the driver torque request plus the generator motor torque is greater than the predetermined maximum torque; </claim-text>
+<claim-text>a determination of whether the new generator motor torque request is greater than or equal to a second predetermined value; </claim-text>
+<claim-text>a calculation of a new generator motor speed for the new generator motor torque request if the new generator motor torque request is greater than or equal to the second predetermined value; </claim-text>
+<claim-text>a determination of whether the new generator motor speed is less than or equal to a maximum generator motor speed; and </claim-text>
+<claim-text>a determination of a new generator motor torque request if the new generator motor speed is less than or equal to the maximum generator motor speed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The powertrain of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the benefit power from the engine is determined by the equation: </claim-text>
+<claim-text><in-line-formula>&eegr;<highlight><subscript>g</subscript></highlight>&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight>&minus;(1/&eegr;<highlight><subscript>m </subscript></highlight>&minus;&eegr;<highlight><subscript>g</subscript></highlight>)&tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r</subscript></highlight>. </in-line-formula></claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The powertrain of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the calculation of the new generator motor torque request is determined by the equation: </claim-text>
+<claim-text><in-line-formula>&tgr;<highlight><subscript>g&mdash;req</subscript></highlight>&equals;(&tgr;<highlight><subscript>m&mdash;max</subscript></highlight>&minus;&tgr;<highlight><subscript>d &mdash;req&commat;m</subscript></highlight>)/T. </in-line-formula></claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The powertrain of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the new traction motor torque request is determined by adding the driver torque request to the new generator motor torque request. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The powertrain of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the reverse drive mode controller further comprises a stop engine command if the benefit power is less than the first predetermined value. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The powertrain of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the reverse drive mode controller further comprises a stop engine command if the new generator motor torque request is less than the second predetermined value. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The powertrain of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the reverse drive mode controller further comprises a stop engine command if the new generator motor speed is greater than a maximum generator motor speed. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method to control reverse drive mode in a hybrid electric vehicle (HEV) when a drive position selector is in a reverse drive mode to prevent an electric energy storage device state-of-charge (SOC) from continuously falling while meeting driver demand, comprising the steps of: 
+<claim-text>determining whether an engine and generator motor are running; </claim-text>
+<claim-text>calculating a benefit power from the engine if the engine and the generator motor are running; </claim-text>
+<claim-text>comparing the benefit power with a first predetermined value; </claim-text>
+<claim-text>determining whether a driver torque request plus generator motor torque is greater than a predetermined maximum traction motor torque if the benefit power is greater than or equal to the first predetermined value; calculating a new generator motor torque request if the step of determining whether the driver torque request plus the generator motor torque is greater than the </claim-text>
+<claim-text>predetermined maximum traction motor torque; determining whether the new generator motor torque request is greater than or equal to a second predetermined value; </claim-text>
+<claim-text>calculating a new generator motor speed for the new generator motor torque request if the new generator motor torque request is greater than or equal to the second predetermined value; </claim-text>
+<claim-text>determining whether the new generator motor speed is less than or equal to a maximum generator motor speed; and determining a new traction motor torque request if the new generator motor speed is less than or equal to the maximum generator motor speed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the step of determining the benefit power from the engine uses the equation: </claim-text>
+<claim-text><in-line-formula>&eegr;<highlight><subscript>g</subscript></highlight>&tgr;<highlight><subscript>e</subscript></highlight>&ohgr;<highlight><subscript>e</subscript></highlight>&minus;(1/&eegr;<highlight><subscript>m</subscript></highlight>&minus;&eegr;<highlight><subscript>g</subscript></highlight>)&tgr;<highlight><subscript>r</subscript></highlight>&ohgr;<highlight><subscript>r</subscript></highlight>. </in-line-formula></claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the calculation of the new generator motor torque request is determined by the equation: </claim-text>
+<claim-text><in-line-formula>&tgr;<highlight><subscript>g&mdash;req</subscript></highlight>&equals;(&tgr;<highlight><subscript>m&mdash;max</subscript></highlight>&minus;&tgr;<highlight><subscript>d&mdash;req&commat;m</subscript></highlight>) /T. </in-line-formula></claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the step of determining the new traction motor torque request is achieved by adding the driver torque request to the new generator motor torque request. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> further comprising the step of stopping the engine if the benefit power is less than the first predetermined value. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> further comprising the step of stopping the engine if the new generator motor torque request is less than the second predetermined value. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> further comprising the step of stopping the engine if the new generator motor speed is greater than the maximum generator motor speed.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030001391A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030001391A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030001391A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030001391A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

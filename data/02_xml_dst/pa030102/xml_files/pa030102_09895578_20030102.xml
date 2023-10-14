@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005219A1-20030102-P00001.TIF SYSTEM "US20030005219A1-20030102-P00001.TIF" NDATA TIF>
+<!ENTITY US20030005219A1-20030102-D00000.TIF SYSTEM "US20030005219A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005219A1-20030102-D00001.TIF SYSTEM "US20030005219A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005219A1-20030102-D00002.TIF SYSTEM "US20030005219A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005219A1-20030102-D00003.TIF SYSTEM "US20030005219A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005219</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895578</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>113000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>711</class>
+<subclass>203000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Partitioning cache metadata state</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Robert</given-name>
+<middle-name>J.</middle-name>
+<family-name>Royer</family-name>
+<name-suffix>JR.</name-suffix>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Knut</given-name>
+<middle-name>S.</middle-name>
+<family-name>Grimsrud</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Forest Grove</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Richard</given-name>
+<middle-name>L.</middle-name>
+<family-name>Coulson</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">An apparatus and method to reduce the initialization time of a system is disclosed. In one embodiment, the invention stores metadata for data in a cache memory in a partitioned section of a non-volatile storage media. This allows multiple metadata entries to be read in one operation, thereby improving system performance. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates to operating systems, and more particularly, to cache memory devices in operating systems. </paragraph>
+</section>
+<section>
+<heading lvl="1">GENERAL DESCRIPTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The use of a cache in a computer reduces memory access time and increases the overall speed of a device. Typically, a cache is an area of memory which serves as a temporary storage area for a device and has a shorter access time than the device it is caching. Data frequently accessed by the processor remain in the cache after an initial access and subsequent accesses to the same data may be made to the cache. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Two types of caching are commonly used, memory caching and disk caching. A memory cache, sometimes known as cache store, is typically a high-speed memory device such as a static random access memory (SRAM). Memory caching is effective because most programs access the same data or instructions repeatedly. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Disk caching works under the same principle as memory caching but uses a conventional memory device such as a dynamic random access memory (DRAM). The most recently accessed data from the disk is stored in the disk cache. When a program needs to access the data from the disk, the disk cache is first checked to see if the data is in the disk cache. Disk caching can significantly improve the performance of applications because accessing a byte of data in RAM can be thousands of times faster than accessing a byte on a disk. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Both the SRAM and DRAM are volatile. Therefore, in systems using a volatile memory as the cache memory, data stored in the cache memory would be lost when the power is shut off to the system. Accordingly, some existing devices may have a battery backup to &lsquo;emulate&rsquo; the behavior of a non-volatile cache by not letting the device go un-powered. However, using an emulated cache increases the cost and reduces the reliability of the device, thereby making it unattractive to users. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In other devices, data is moved from the cache to a non-volatile storage device to preserve the cache data through a system shutdown or power failure. However, in order to use the data that has been stored on the non-volatile storage device, the state of the cache or meta-data need to be preserved. If the state is not preserved the system still needs to re-initialize the cache because the state of data currently in the cache is unknown. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Although the initialization time is not long in smaller caches (tens of megabytes), the initialization time for a cache in the Gigabyte range can possibly last longer than a typical personal computer (PC) use session. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The invention will be described in detail with reference to the following drawings in which like reference numerals refer to like elements wherein: </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an exemplary system in accordance to one embodiment of the invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is an exemplary memory layout in accordance to one embodiment of the invention; and </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows an exemplary storage method in accordance with one embodiment of the invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In the following description, specific details are given to provide a thorough understanding of the invention. For example, some circuits are shown in block diagram in order not to obscure the present invention in unnecessary detail. However, it will be understood by those skilled in the art that the present invention may be practiced without such specific details. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> As disclosed herein, a &ldquo;cache&rdquo; refers to a temporary storage area and can be either a memory cache or a disk cache. The term &ldquo;system boot&rdquo; refers to initialization of a computer both when the power is first turned on, known as cold booting, and when a computer is restarted, known as warm booting. The term &ldquo;computer readable medium&rdquo; includes, but is not limited to portable or fixed storage devices, optical storage devices, and any other memory devices capable of storing computer instructions and/or data. The term &ldquo;computer instructions&rdquo; are software or firmware including data, codes, and programs that can be read and/or executed to perform certain tasks. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Generally, a non-volatile storage media is used as a non-volatile data cache. In one embodiment of the invention, the cache state metadata is stored in a partitioned section of the non-volatile storage media. By storing this metadata in the non-volatile storage media, the cache state can be preserved through a power failure or normal system shutdown. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> An exemplary embodiment of a system <highlight><bold>100</bold></highlight> implementing the principles of the invention is shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The system <highlight><bold>100</bold></highlight> includes a processor <highlight><bold>110</bold></highlight> coupled to a main memory <highlight><bold>120</bold></highlight> by a bus <highlight><bold>130</bold></highlight>. The main memory <highlight><bold>110</bold></highlight> may comprise of a random-access-memory (RAM) and is coupled to a memory control hub <highlight><bold>140</bold></highlight>. The memory control hub <highlight><bold>140</bold></highlight> is also coupled to the bus <highlight><bold>130</bold></highlight>, to a nonvolatile storage cache device <highlight><bold>150</bold></highlight> and to a mass storage device <highlight><bold>160</bold></highlight>. The mass storage device <highlight><bold>160</bold></highlight> may be a hard disk drive, a floppy disk drive, a compact disc (CD) drive, a Flash memory (NAND and NOR types, including multiple bits per cell), a ferroelectric RAM (FRAM), or a polymer FRAM (PFRAM) or any other existing or future memory device for mass storage of information. The memory control hub <highlight><bold>140</bold></highlight> controls the operations of the main memory <highlight><bold>120</bold></highlight>, the non-volatile storage cache device <highlight><bold>150</bold></highlight> and the mass storage device <highlight><bold>160</bold></highlight>. Finally, a number of input/output devices <highlight><bold>170</bold></highlight> such as a keyboard, mouse and/or display may be coupled to the bus <highlight><bold>130</bold></highlight>. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Although the system <highlight><bold>100</bold></highlight> is shown as a system with a single processor, the invention may be implemented with multiple processors, in which additional processors would be coupled to the bus <highlight><bold>130</bold></highlight>. In such case, each additional processor would share the non-volatile storage cache device <highlight><bold>150</bold></highlight> and main memory <highlight><bold>120</bold></highlight> for writing data and/or instructions to and reading data and/or instructions from the same. Also, the non-volatile storage cache device <highlight><bold>150</bold></highlight> is shown external to the mass storage device <highlight><bold>160</bold></highlight>. However, the non-volatile storage cache device <highlight><bold>150</bold></highlight> can be internally implemented into any non-volatile media in a system. For example, in one embodiment, the non-volatile storage cache device <highlight><bold>150</bold></highlight> can be a portion of the mass storage device <highlight><bold>160</bold></highlight>. The invention will next be described below. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Because retrieving data from the mass storage device <highlight><bold>160</bold></highlight> can be slow, caching can be achieved by storing data recently accessed from the mass storage device <highlight><bold>160</bold></highlight> in a non-volatile storage media such as the non-volatile storage cache device <highlight><bold>150</bold></highlight>. Next time the data is needed, it may be available in the non-volatile storage cache device <highlight><bold>150</bold></highlight>, thereby avoiding a time-consuming search and fetch in the mass storage device <highlight><bold>160</bold></highlight>. The non-volatile storage cache device <highlight><bold>150</bold></highlight> can also be used for writing. In particular, data can be written to the non-volatile storage cache device <highlight><bold>150</bold></highlight> at high speed and then stored until the data is written to the mass storage device, for example, during idle machine cycles or idle cycles in a mass storage subsystem. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows an exemplary layout of a non-volatile storage media <highlight><bold>200</bold></highlight> including a first section <highlight><bold>210</bold></highlight> and a second section <highlight><bold>220</bold></highlight>. In the first section <highlight><bold>210</bold></highlight>, the data with corresponding error correction code (ECC) can respectively be stored in cache lines &ldquo;A,&rdquo; &ldquo;B,&rdquo; &ldquo;C,&rdquo; &ldquo;D&rdquo;. . . &ldquo;x&rdquo; with corresponding block addresses 0, 1, 2, 3 . . . n. In the second section <highlight><bold>220</bold></highlight>, metadata for cache lines &ldquo;A,&rdquo; &ldquo;B,&rdquo; &ldquo;C,&rdquo; &ldquo;D&rdquo; &ldquo;x&rdquo; with corresponding ECC can respectively be stored in block addresses &ldquo;n&plus;1,&rdquo; &ldquo;n&plus;2&rdquo;. . . &ldquo;n&plus;m.&rdquo; Here, the ECC is for recovering the metadata stored in a corresponding block address. Also, although the non-volatile storage media <highlight><bold>200</bold></highlight> is showno to have a memory line of 512 bytes, the size of the cache line may vary depending upon the needs of the system <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows an exemplary embodiment of data storage and access method <highlight><bold>300</bold></highlight> in accordance with the invention. Referring to <cross-reference target="DRAWINGS">FIG. 3, a</cross-reference> non-volatile storage media is partitioned (block <highlight><bold>310</bold></highlight>). In one embodiment, the partitioning is logical. Using the non-volatile storage media as a cache memory device, the memory control hub <highlight><bold>140</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> causes cache data to be stored in a first partitioned section, for example, the first section <highlight><bold>210</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and causes metadata for the cache data to be stored in a second partitioned section, for example, the second section <highlight><bold>220</bold></highlight> (block <highlight><bold>320</bold></highlight>). In one embodiment, as shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the metadata is partitioned into packed metadata blocks. As a result, each line of the second section may contain information about several cache lines. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The cache data and metadata are then updated when a line of cache data in the first section is changed (blocks <highlight><bold>330</bold></highlight> and <highlight><bold>340</bold></highlight>). A line of cache data may change as new data is stored and/or existing lines of stored data is replaced or de-allocated to make room for new lines of data. Here, any caching algorithm can be used to update the data and metadata. In one embodiment, the cache data and metadata is updated atomically with respect to a system power fail. The use of an atomic update insures that there will be no race-condition in maintaining both the cache data and the metadata due to a power fail, thereby insuring the maintenance of data integrity. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> By storing both the metadata and the data on a non-volatile media, the state of the cache and its respective data can be accessed upon a system boot, resulting in a significant reduction of the initialization time for a cache. This is particularly useful as the size of the cache grows, for example, to a Gigabyte range. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Accordingly, when the state of the cache needs to be known such as when a system boot is detected, the partitioned section of a non-volatile storage media may be accessed to read metadata entries to determine the state of the cache. If the metadata is stored as packed metadata blocks, one line or block of the partitioned section of a non-volatile storage media would contain metadata information of several cache lines. Therefore, multiple metadata entries can be read in one operation. In another embodiment, the partitioned section of a non-volatile storage media storing the metadata can be queried as data requests are issued from a host such as a processor. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Normally, users would benefit by a quicker initiation of system operations. This could occur in at least three areas. Initially, when a computer is turned on or the user runs a new program, operations should begin as quickly as possible. Second, when a program error or crash occurs, the computer should be restarted as soon as possible. Similarly, when a variety of issues come up during the course of computer operation, some users may want to simply restart the computer to avoid dealing with and identifying the source of the problem. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Typical cache devices are volatile and should be rebuilt on a next system boot. However, the storage and access method in accordance with the invention eliminates the need and time necessary to rebuild the cache on a system boot. By storing the metadata on a partitioned section of the non-volatile storage media, the state of the cache can correctly be determined on a next system boot. This enables the full benefit of having the cache pre-warmed or fully occupied with data, because the user data and program code is already stored in the faster cache from previous user sessions. As a result, the system performance is improved on the next system boot/power on. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> While the metadata can be appended onto each cache line or stored in a volatile system memory, partitioning the meta-data into a separate array allows for several cost and performance advantages. One such advantage is that the partitioning allows the metadata to be stored into packed metadata blocks for more efficient access to metadata, as information about several cache lines in the same operation can be obtained as apposed to a unique request per cache line. Another advantage is that the standard array layout of the metadata can simplify both the layout and device logic design, reducing the overall cost of a memory device. Furthermore, the invention can simply and easily be implemented by using a mass storage device that is logically partitioned for use as a cache device through software/firmware programming. This also lowers cost and improves development time by reducing the number of unique memory device designs needed. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Finally, although the invention has been discussed with reference to a cache memory device, the teachings of the invention can be applied to other memory devices storing data and state data. Accordingly, the foregoing embodiments are merely exemplary and are not to be construed as limiting the present invention. The present teachings can be readily applied to other types of apparatuses. The description of the present invention is intended to be illustrative, and not to limit the scope of the claims. Many alternatives, modifications, and variations will be apparent to those skilled in the art. 
+<image file="US20030005219A1-20030102-P00001.TIF" id="EMI-00001"></image>
+</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>partitioning a non-volatile storage media; </claim-text>
+<claim-text>storing data in a first partitioned section of the non-volatile storage media; and </claim-text>
+<claim-text>storing, in a second partitioned section of the non-volatile storage media, metadata corresponding to the data stored in the first partitioned section of the nonvolatile storage media. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein storing the metadata as packed metadata block. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the partitioning is logical. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein storing cache data in the first partitioned section. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further comprising: 
+<claim-text>updating the data and metadata atomically when a line of cache data in the first partitioned section is changed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>allocating a portion of a mass storage device as the non-volatile storage media. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A non-volatile memory comprising: 
+<claim-text>a first section to store data; and </claim-text>
+<claim-text>a second section partitioned from the first section, the second section to store metadata for the data stored in the first section. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The memory of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the second section is to store the metadata as packed metadata blocks. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The memory of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the partitioning of the first section and the second section is logical. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The memory of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the non-volatile memory is a portion of a massive storage device. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The memory of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the mass storage device is one of a disk drive, a Flash memory, a ferroelectric random access memory, or a polymer ferroelectric random access memory. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The memory of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the non-volatile memory is a cache memory. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A system comprising: 
+<claim-text>a non-volatile storage media having a first section and a second section partitioned from the first section; and </claim-text>
+<claim-text>a memory control hub to cause the first section to store data and the second section to store metadata for the data stored in the first section. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein second section is to store the metadata as packed metadata blocks. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the partition is logical. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising a massive storage device and wherein a portion of the massive storage device is the non-volatile storage media. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the non-volatile storage media is a cache memory. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A method comprising: 
+<claim-text>partitioning a non-volatile storage media; </claim-text>
+<claim-text>storing cache data in a first partitioned section of the non-volatile storage media; </claim-text>
+<claim-text>storing metadata corresponding to the cache data in a second partitioned section of the non-volatile storage media; and </claim-text>
+<claim-text>accessing the second partitioned section to determine the state of the cache data in a system boot. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein storing the metadata in the second partitioned section as packed metadata blocks. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the partition is logical. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, further comprising: 
+<claim-text>updating the cache data and metadata atomically when a line of cache data in the first partitioned section is changed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A program loaded in a computer readable medium comprising: 
+<claim-text>a first group of computer instructions to logically partition a non-volatile storage media; </claim-text>
+<claim-text>a second group of computer instructions to store data in a first partitioned section of the non-volatile storage media; and </claim-text>
+<claim-text>a third group of computer instructions to store metadata for the data in a second partitioned section of the non-volatile storage media. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The program of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the second group of computer instructions include computer instructions to store the metadata as packed metadata blocks. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The program of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the second group of computer instructions include computer instructions to store cache data as the data in the first partitioned section. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The program of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, further comprising: 
+<claim-text>computer instructions to update the data and metadata atomically when a line of cache data in the first partitioned section is changed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The program of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, further comprising: 
+<claim-text>computer instructions to access a line of the second partitioned section to read metadata for the cache data in the first partitioned section. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. A program loaded in a computer readable medium comprising: 
+<claim-text>a first group of computer instructions to logically partition a non-volatile storage media; </claim-text>
+<claim-text>a second group of computer instructions to store cache data in a first partitioned section of a non-volatile storage media; </claim-text>
+<claim-text>a third group of computer instructions to store, in a second partitioned section of the non-volatile storage media, metadata corresponding to the cache data stored in the first partitioned section; and </claim-text>
+<claim-text>a fourth group of instructions to access the second partitioned section to determine the state of the cache data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The program of <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, wherein the third group of computer instructions includes computer instructions to store the metadata as packed metadata blocks. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The program of <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, further comprising: 
+<claim-text>computer instructions to update the cache data and metadata atomically when a line of cache data in the first partitioned section is changed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The program of <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, further comprising: 
+<claim-text>computer instructions to allocate a portion of a mass storage device as the non-volatile storage media. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A system boot comprising: 
+<claim-text>accessing a first partitioned section of a non-volatile cache memory to read metadata for cache data stored in a second partitioned section of the non-volatile cache memory; and </claim-text>
+<claim-text>determining the state of the cache data based upon the read metadata to initialize the non-volatile cache memory for the system boot. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The system boot of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein the metadata is stored in the first partitioned section as packed metadata blocks. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The system boot of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein the non-volatile cache memory is logically partitioned into the first and second partitioned sections. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The system boot of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, further comprising: allocating a portion of a mass storage device as the non-volatile cache memory. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The system boot of <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference>, wherein the mass storage device is one of a disk drive, a Flash memory, a ferroelectric random access memory, or a polymer ferroelectric random access memory.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005219A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005219A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005219A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005219A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

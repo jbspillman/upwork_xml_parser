@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004926A1-20030102-D00000.TIF SYSTEM "US20030004926A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004926A1-20030102-D00001.TIF SYSTEM "US20030004926A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004926A1-20030102-D00002.TIF SYSTEM "US20030004926A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004926A1-20030102-D00003.TIF SYSTEM "US20030004926A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004926</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10042294</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020111</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>001000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Generation of partial traces in model checking</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60261550</doc-number>
+<document-date>20010112</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Shoham</given-name>
+<family-name>Ben-David</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Haifa</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>INTERNATIONAL BUSINESS MACHINES CORPORATION</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+</address>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>BROWDY AND NEIMARK, P.L.L.C.</name-1>
+<name-2>624 NINTH STREET, NW</name-2>
+<address>
+<address-1>SUITE 300</address-1>
+<city>WASHINGTON</city>
+<state>DC</state>
+<postalcode>20001-5303</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method for checking a model includes specifying a path to be traversed through the states of a system under study, such that a specified sequence of events is to occur on the specified path between an initial state and a target set of states on the path. Beginning from the initial state, successive reachable sets of states along the specified path are computed, such that in the successive reachable sets the events occur in the specified sequence. When an intersection is not found to exist between one of the reachable sets on the specified path and the target set, a partial trace is produced along the specified path between the initial state and a termination state in which at least one of the specified events occurs. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">CROSS-REFERENCE TO RELATED APPLICATIONS </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application claims the benefit of U.S. Provisional Patent Application No. 60/261,550, filed Jan. 12, 2001. It is related to U.S. patent application 09/367,720, filed Jul. 29, 1999, as well as to another U.S. patent application, filed on even date, entitled &ldquo;Time-Memory Tradeoff Control in Counterexample Production.&rdquo; All of these related applications are assigned to the assignee of the present patent application and are incorporated herein by reference.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates generally to design automation and verification, and specifically to design exploration and verification based on symbolic model checking. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Model checking is a method of formal verification that is gaining in popularity as a tool for use in designing complex systems, such as integrated circuits. The method is described generally by Clarke et al. in Model Checking (MIT Press, 1999), which is incorporated herein by reference. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> To perform model checking of the design of a device, a user reads the definition and functional specifications of the device and then, based on this information, writes a set of properties &lcub;&oslash;&rcub; (also known as a specification) that the design is expected to fulfill. The properties are written in a suitable specification language for expressing temporal logic relationships between the inputs and outputs of the device. Such languages are commonly based on Computation Tree Logic (CTL). A hardware model M (also known as an implementation) of the design, which is typically written in a hardware description language, such as VHDL or Verilog, is then tested to ascertain that the model satisfies all of the properties in the set, i.e., that M &verbar;&equals;&oslash;, under all relevant input sequences. Such testing is a form of reachability analysis. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> One of the most useful features of model checking is its ability, when a property &oslash; is found to be false on M, to construct a sequence of states and transitions (a path) that leads to the problematic state of the design. This path is called a counterexample. It can be used by the engineer in understanding and remedying the design defect that led to the failure of the model. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Model checking is typically carried out automatically using a symbolic model checking program, such as SMV, as described, for example, by McMillan in Symbolic Model Checking (Kluwer Academic Publishers, 1993), which is incorporated herein by reference. A number of practical model checking tools are available, among them RuleBase, developed by IBM Corporation. This tool is described by Beer et al. in &ldquo;RuleBase: an Industry-Oriented Formal Verification Tool,&rdquo; in <highlight><italic>Proceedings of the Design Automation Conference DAC&apos;</italic></highlight>96 (Las Vegas, Nev., 1996), which is incorporated herein by reference. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Symbolic CTL model checking as described by McMillan involves computing the transition-relation (TR) of the model, and then applying the model checking algorithm to verify a specified formula. In many cases, the full TR is too big to be computed. This problem is addressed by Beer et al., in &ldquo;On-the-fly Model Checking of RCTL Formulas,&rdquo; <highlight><italic>Proceedings of the Tenth International Conference on Computer Aided Verification </italic></highlight>(CAV 1998), which is incorporated here in by reference. In this paper, the authors describe a technique for solving CTL formulas of the form AG(p), wherein p is a Boolean expression. An AG(p) formula states that p is true in every reachable state of the model. Therefore, to disprove this formula, it is sufficient to find one reachable state in which p is false. In the context of the present patent application and in the claims, such a state is referred to as a target state. It may also be called a &ldquo;bad&rdquo; state, as it violates the specified formula. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> If S is the set of states in which p is false, then in order to find a &ldquo;bad&rdquo; state, it is necessary only to intersect S with the set of reachable states R of the model, and check that the intersection is not empty. Finding this intersection is computationally easy, and therefore can be performed on the fly, i.e., after each iteration of the reachability analysis. If the intersection of S and R is found at any point to be non-empty, the process is stopped, and AG(p) is false. Otherwise, the process continues and terminates when the entire reachable state space has been computed, so that AG(p) is shown to be true. Thus, this method eliminates the large expenditure of computation resources needed to compute the full transition relation. Furthermore, since counterexamples are produced as soon as the target state is found, only a portion of the reachable state space must be computed when the formula fails, saving even more time and memory space. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The on-the-fly model checking procedure is shown formally in Table I below:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE I</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>ON-THE-FLY MODEL CHECKING</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="161PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>1</entry>
+<entry><highlight><italic>reachable </italic></highlight>&equals; <highlight><italic>new </italic></highlight>&equals; initialStates;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>2</entry>
+<entry><highlight><italic>i </italic></highlight>&equals; 0;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>3</entry>
+<entry>while ((<highlight><italic>new </italic></highlight>&ne; &Oslash;)&amp;&amp;(<highlight><italic>new </italic></highlight>&cap; <highlight><italic>p </italic></highlight>&equals; &Oslash;)) &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>4</entry>
+<entry><highlight><italic>S</italic></highlight><highlight><subscript>i </subscript></highlight>&equals; <highlight><italic>new</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>5</entry>
+<entry><highlight><italic>i </italic></highlight>&equals; <highlight><italic>i</italic></highlight>&plus;1;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>6</entry>
+<entry><highlight><italic>next </italic></highlight>&equals; nextStateImage (new)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>7</entry>
+<entry><highlight><italic>new </italic></highlight>&equals; <highlight><italic>next </italic></highlight>&bsol; <highlight><italic>reachable</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>8</entry>
+<entry><highlight><italic>reachable </italic></highlight>&equals; <highlight><italic>reachable </italic></highlight>&cup; <highlight><italic>next</italic></highlight>;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="161PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>9</entry>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>10</entry>
+<entry>if (<highlight><italic>new </italic></highlight>&equals; &Oslash;) &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>11</entry>
+<entry>print &ldquo;formula is true in the model&rdquo;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>12</entry>
+<entry>return;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="161PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>13</entry>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0010" lvl="7"><number>&lsqb;0010&rsqb;</number> Here the &ldquo;&amp;&amp;&rdquo; operator represents logical conjunction, and the function &ldquo;nextStateImage(new)&rdquo; returns the states that are reached in one cycle of the system transition relation beginning from the states in &lcub;new&rcub;. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> If it is found at any cycle of the above process that new &cap;n p&ne;&Oslash;, the model checker informs the user that the formula AG(p) is false for the model in question. Typically, the model checker goes on to compute a counterexample, by finding a trace back through the state space from one of the states in the intersection region &lcub;new &cap;p&rcub; to one of the initial states. A similar procedure can be used to find a &ldquo;witness,&rdquo; or positive example, demonstrating fulfillment of a formula EF(p). This latter formula states that there exists some path through the state space of the model to some state on which p is true. It is the dual of AG(p). In this case, the target states are those in which p is true. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In the above-mentioned article, Beer et al. describe a technique for translating many CTL formulas conveniently into state machines having an error state. Such formulas can then be verified by on-the-fly model checking of the formula AG( error). The authors also define a specification language RCTL, as an extension to the conventional CTL language using regular expressions. More recently, Beer et al. have extended RCTL to include further expressions and syntax that are useful in creating formulas for on-the-fly model checking, as described in &ldquo;The Temporal Logic Sugar,&rdquo; <highlight><italic>Proceedings of the Thirteenth International Conference on Computer Aided Verification </italic></highlight>(CAV 2001), which is incorporated here in by reference. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> As described above, model checkers known in the art trace and return a counterexample (or witness) only if their state space exploration finds a reachable target state. In preferred embodiments of the present invention, however, a novel model checker generates a partial trace even when it has found no reachable target states. The partial trace reflects a path through the state space that approaches the target states, even if it does not succeed in reaching them. Preferably, the model checker generates a maximal partial trace, i.e., a trace that most closely approaches the target states among the traces that can be produced in the reachable state space of the model. Such partial traces provide the user with helpful insight into the behavior of the system under study. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Model checkers in accordance with preferred embodiments of the present invention are particularly useful in the context of design exploration, as described, for example, in the above-mentioned U.S. patent application 09/367,720. In the exploration paradigm, instead of seeking errors in finished designs, the model checker assists the user in understanding the operation of his or her design during the development phase. The exploration tool is given a model M and a path specification P. It then applies model checking to find a path that conforms to the path specification. In preferred embodiments of the present invention, the tool finds a witness&mdash;a full trace that conforms to the full path specification, if such a path exists in the reachable state space, or a partial trace if not. The user can then analyze the trace to decide whether the model behaves as it should. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Preferably, the path specification is input to the model checker as a sequence of events (which do not necessarily occur on consecutive cycles of the system under study). Typically, each event corresponds to a Boolean expression over the set of state variables. The event is considered to have occurred when the corresponding expression is true. The model checker uses techniques of on-the-fly model checking to find a path through the reachable state space on which all the events occur in the order given by the specification, as it proceeds to explore the state space of the system. Most preferably, the model checker returns a progress indication to the user each time it finds that there is a path that reaches the next event in the sequence. If and when the model checker succeeds in finding a complete path, on which all the events occur in the proper sequence, it returns that trace. Even when no complete path is found, however, the model checker returns a partial trace, on which the largest possible number of the specified events occur in the proper sequence. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> There is therefore provided, in accordance with a preferred embodiment of the present invention, a method for checking a model, which defines states of a system under study and a transition relation among the states, the method including: </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> specifying a path to be traversed through the states of the system under study from an initial set that includes at least one initial state among the states of the system to a target set that includes at least one target state among the states of the system, such that a specified sequence of events is to occur on the specified path between the at least one initial state and the at least one target state; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> beginning from the initial set, computing successive reachable sets including the states of the system that are reachable from the initial set along the specified path, such that in the successive reachable sets the events occur in the specified sequence; </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> determining whether an intersection exists between one of the reachable sets on the specified path and the target set; and </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> when the intersection is not found to exist, producing a partial trace along the specified path between the at least one initial state and a termination state in which at least one of the specified events occurs. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Preferably, specifying the path includes defining the events in terms of transitions among the states of the system under study. Typically, defining the events includes defining the transitions such that in the sequence of events, at least two consecutive transitions are separated by more than one cycle of the transition relation. Additionally or alternatively, computing the successive reachable sets includes building a non-deterministic automaton based on the transitions, and computing the reachable sets using the automaton. Preferably, building the non-deterministic automaton includes defining Boolean conditions corresponding respectively to the transitions, and detecting the occurrence of the events includes testing the Boolean conditions. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Preferably, computing the successive reachable sets includes detecting occurrence of the events in the sequence and informing a user upon detecting occurrence of the events. Additionally or alternatively, producing the partial trace includes choosing the termination state to be one of the states in which a final event occurs in the sequence of the events whose occurrence has been detected. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Preferably, computing the successive reachable sets includes determining a first set among the reachable sets, disjoint from the initial set, such that all of the states in the first set are reached from the initial states in a first cycle of the transition relation, and determining the successive reachable sets, following the first set, such that all the states in each of the sets are reached from the states in the preceding set in a successive cycle of the transition relation, and so that each of the sets is disjoint from the initial set and from the other sets determined before it. Further preferably, producing the partial trace includes selecting one of the states from each of at least some of the successive reachable sets. Most preferably, selecting the one of the states includes, for each of the selected states, choosing a predecessor state among the states in the preceding set until the state on the trace in the first set is found, and choosing the predecessor state in the initial set to the state in the first set. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Preferably, when it is determined that the intersection exists between the target set and one of the reachable sets, the method includes producing a complete trace from the at least one target state through the states in the reachable sets to the at least one initial state. Most preferably, producing the complete trace includes computing the trace so that all the events occur along the trace in the specified sequence. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Typically, specifying the path includes specifying a property to be fulfilled by the at last one target state. Preferably, specifying the property includes specifying a condition that is expected to be true over all of the reachable states of the system under study, wherein the condition is false in the at least one target state. Alternatively, specifying the property includes specifying a condition representing a desired behavior of the system under study, such that the condition is fulfilled in the at least one target state. Most preferably, computing the successive reachable sets includes testing the property while computing the sets, and ceasing to compute the sets when the intersection is found to exist. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> There is also provided, in accordance with a preferred embodiment of the present invention, model checking apparatus, including a model processor, which is arranged to receive a model that defines states of a system under study and a transition relation among the states, and to receive a specification of a path to be traversed through the states of the system under study from an initial set that includes at least one initial state among the states of the system to a target set that includes at least one target state among the states of the system, such that a specified sequence of events is to occur on the path between the at least one initial state and the at least one target state, the processor being further arranged to compute, beginning from the initial set, successive reachable sets including the states of the system that are reachable from the initial set along the path, such that in the successive reachable sets the events occur in the specified sequence, and to determine whether an intersection exists between one of the reachable sets on the path and the target set, and when the intersection is not found to exist, to produce a partial trace along the specified path between the at least one initial state and a termination state in which at least one of the specified events occurs. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> There is additionally provided, in accordance with a preferred embodiment of the present invention, a computer software product, including a computer-readable medium in which program instructions are stored, which instructions, when read by a computer, cause the computer to receive a model that defines states of a system under study and a transition relation among the states, and to receive a specification of a path to be traversed through the states of the system under study from an initial set that includes at least one initial state among the states of the system to a target set that includes at least one target state among the states of the system, such that a specified sequence of events is to occur on the path between the at least one initial state and the at least one target state, and which cause the computer to compute, beginning from the initial set, successive reachable sets including the states of the system that are reachable from the initial set along the path, such that in the successive reachable sets the events occur in the specified sequence, and to determine whether an intersection exists between one of the reachable sets on the path and the target set, and when the intersection is not found to exist, to produce a partial trace along the specified path between the at least one initial state and a termination state in which at least one of the specified events occurs.. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The present invention will be more fully understood from the following detailed description of the preferred embodiments thereof, taken together with the drawings in which:</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic, pictorial illustration showing a system for design exploration, in accordance with a preferred embodiment of the present invention; </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram that schematically illustrates a path specification of a system under study; </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a schematic representation of a system state space, illustrating generation of a partial trace, in accordance with a preferred embodiment of the present invention; and </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow chart that schematically illustrates a method for design exploration, in accordance with a preferred embodiment of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic pictorial illustration of a system <highlight><bold>20</bold></highlight> for symbolic model checking, in accordance with a preferred embodiment of the present invention. System <highlight><bold>20</bold></highlight> typically comprises a model processor <highlight><bold>22</bold></highlight>, typically a general-purpose computer workstation running suitable model checking software. The system is operated by a user <highlight><bold>24</bold></highlight>, typically a design or verification engineer. The model checking software may be downloaded to processor <highlight><bold>22</bold></highlight> in electronic form, over a network, for example, or it may be supplied on tangible media, such as CD-ROM or non-volatile memory. Processor <highlight><bold>22</bold></highlight> receives a hardware implementation model <highlight><bold>26</bold></highlight> of a target system or device <highlight><bold>30</bold></highlight> in development, which may refer to the entire system or device or to a sub-unit, such as a circuit or functional block. User <highlight><bold>24</bold></highlight> prepares a path specification <highlight><bold>28</bold></highlight>, comprising properties for use in model checking of model <highlight><bold>26</bold></highlight>, and selects initial states of the model. System <highlight><bold>20</bold></highlight> analyzes the model, using methods described in detail hereinbelow, to find full or partial traces between the initial states and target states, which are inferred by processor <highlight><bold>22</bold></highlight> based on the path specification. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram that schematically illustrates a path specification with respect to a state machine <highlight><bold>40</bold></highlight>, &ldquo;machine(0:3),&rdquo; having sixteen possible values of a state variable ma (shown in the figure as &ldquo;MA&rdquo;) . This state machine and path specification will be used hereinbelow to illustrate methods of design exploration and partial path generation in accordance with preferred embodiments of the present invention. Three states (or sets of states) of the machine are shown: an intermediate set <highlight><bold>42</bold></highlight> in which ma&equals;4, another intermediate set <highlight><bold>44</bold></highlight> in which ma&equals;6, and a target set <highlight><bold>46</bold></highlight> in which ma&equals;1. The corresponding path specification requires that machine <highlight><bold>40</bold></highlight> pass through a state in set <highlight><bold>42</bold></highlight> and then a state in set <highlight><bold>44</bold></highlight> before reaching target set <highlight><bold>46</bold></highlight>. As noted above, the machine need not necessarily reach these states on consecutive cycles. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a schematic representation of a state space <highlight><bold>48</bold></highlight> of machine <highlight><bold>40</bold></highlight>, providing a conceptual view of a method for model checking with generation of partial traces, in accordance with a preferred embodiment of the present invention. The method is described in greater details below, with reference to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, and a pseudocode implementation is listed in Table III. Design exploration begins from a set <highlight><bold>50</bold></highlight> of initial states, labeled S<highlight><subscript>0</subscript></highlight>, which are typically specified by user <highlight><bold>24</bold></highlight>. At the first iteration of the transition relation, processor <highlight><bold>22</bold></highlight> applies an image operation (using the nextStateImage() function at line 6 in Table I) to map S<highlight><subscript>0 </subscript></highlight>into a set of states S<highlight><subscript>1</subscript></highlight>. Subsequent iterations map each set S<highlight><subscript>I </subscript></highlight>into a successive set S<highlight><subscript>I&plus;1</subscript></highlight>. Referring back to Table I, at line <highlight><bold>7</bold></highlight>, it is seen that states reached previously are removed from each succeeding set. These sets can thus be seen as a succession of concentric rings in state space, and are therefore referred to as &ldquo;donuts&rdquo; <highlight><bold>52</bold></highlight>. The Ith donut is the set of states that can be reached in I cycles of the transition relation, but no less. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> For simplicity, it is assumed here that all of the donuts are saved as the iterations through state space <highlight><bold>48</bold></highlight> proceed. When large numbers of states are involved, however, saving all these donuts can be excessively costly in terms of memory requirements. Therefore, in many cases it is preferable to save the donuts only intermittently (say one donut in every N successive donuts), and then to recompute the donuts subsequently when they are needed for finding counterexample traces. This method of memory conservation is described further in the above-mentioned patent application entitled &ldquo;Time-Memory Tradeoff Control in Counterexample Production.&rdquo;</paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> As each new donut <highlight><bold>52</bold></highlight> is computed, it is checked against the path specification to determine whether the next specified event along the path has been reached, i.e., in the case of the example shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, whether the state variable ma for machine <highlight><bold>40</bold></highlight> has the next specified value in any of the states in the new donut. For this purpose, an automaton is created from the path specification, as described below, and is used to track the progress of the original model along the path. A Boolean condition corresponding to the expected state transition is evaluated against the state of the automaton to determine when the event has occurred. When the event occurs, the processor returns a message to user <highlight><bold>24</bold></highlight> at this point stating, for example, that &ldquo;Event ma&equals;4 was reached on cycle 3.&rdquo;</paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Generation of donuts <highlight><bold>52</bold></highlight> continues until processor <highlight><bold>22</bold></highlight> finds that there is a reachable path through state space <highlight><bold>48</bold></highlight> that satisfies the path specification and reaches a set <highlight><bold>54</bold></highlight> of target states (in which ma&equals;1), or until it determines that no such path exists. For example, a path <highlight><bold>58</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is seen to reach an intersection region <highlight><bold>56</bold></highlight> between donut S<highlight><subscript>9 </subscript></highlight>and set <highlight><bold>54</bold></highlight>. Along the way, the path encounters a first event <highlight><bold>60</bold></highlight> when ma&equals;4, a second event <highlight><bold>62</bold></highlight> when ma&equals;6, and a final event <highlight><bold>64</bold></highlight> when ma&equals;1 and the target state is reached. When the entire path specification is satisfied, processor <highlight><bold>22</bold></highlight> informs the user that a full trace exists. It generates a full counterexample (or witness) trace by working back through donuts <highlight><bold>52</bold></highlight>, beginning from a selected state in intersection region <highlight><bold>56</bold></highlight>. For each state in each donut along the way, the processor finds a predecessor state in the preceding donut, until it reaches one of the initial states in set <highlight><bold>50</bold></highlight>. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> In may sometimes occur, however, that the state space exploration terminates, with no new reachable states to find, before reaching target set <highlight><bold>54</bold></highlight>. For example, a path <highlight><bold>66</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is seen to reach only events <highlight><bold>60</bold></highlight> and <highlight><bold>62</bold></highlight>, and not final event <highlight><bold>64</bold></highlight>. The processor accordingly informs user <highlight><bold>24</bold></highlight> that no full trace exists for the user&apos;s path specification. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> In this case, processor <highlight><bold>22</bold></highlight> generates a partial trace showing a path up to the last event that it succeeded in reaching&mdash;in this case, event <highlight><bold>62</bold></highlight> (ma&equals;6). The processor then works backward through donuts <highlight><bold>52</bold></highlight>, beginning from a state that satisfied the last event, and finding predecessor states back through the preceding donuts to an initial state in set <highlight><bold>50</bold></highlight>, as described above. It returns this partial trace to user <highlight><bold>24</bold></highlight>, who will typically use the partial trace to understand how the model behaved and why it did not reach a state in target set <highlight><bold>54</bold></highlight>. optionally, processor <highlight><bold>22</bold></highlight> generates and returns to the user multiple partial traces. Preferably, these traces are chosen to be as far as possible from one another in state space <highlight><bold>48</bold></highlight>, as described in a U.S. patent application entitled, &ldquo;Efficient Production of Disjoint Multiple Traces,&rdquo; filed on even date, which is assigned to the assignee of the present patent application, and whose disclosure is incorporated herein by reference. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow chart that schematically illustrates a method for on-the-fly model checking with partial trace generation, in accordance with a preferred embodiment of the present invention. The method is described here with reference to machine <highlight><bold>40</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> and state space <highlight><bold>48</bold></highlight> illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. The method begins with input by user <highlight><bold>24</bold></highlight> of model <highlight><bold>26</bold></highlight> and path specification <highlight><bold>28</bold></highlight>, at an input step <highlight><bold>70</bold></highlight>. Preferably, the path specification is translated into a temporal logic safety formula, as is known in the art. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> Most preferably, a &ldquo;sugar&rdquo; formula is used, as described by Beer et al. in the above-mentioned article entitled &ldquo;The Temporal Logic Sugar.&rdquo; For example, the path specification shown pictorially in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> would be translated into the following sugar expression:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>&lcub;ma&ne;</italic></highlight>4<highlight><italic>&lsqb;*&rsqb;, ma&equals;</italic></highlight>4, <highlight><italic>ma&ne;</italic></highlight>6<highlight><italic>&lsqb;*&rsqb;, ma&equals;</italic></highlight>6, <highlight><italic>ma&ne;</italic></highlight>1<highlight><italic>&lsqb;*&rsqb;, ma&equals;</italic></highlight>1&rcub;(<highlight><italic>false</italic></highlight>)&emsp;&emsp;(1)</in-line-formula></paragraph>
+<paragraph id="P-0043" lvl="7"><number>&lsqb;0043&rsqb;</number> This expression indicates that the machine must pass in sequence through states in which ma&equals;4, 6, and 1, not necessarily in consecutive cycles. The machine may assume other states for an indeterminate number of cycles (as indicated by the notation &ldquo;&lsqb;*&rsqb;&rdquo;) in between the states in the specified sequence. The suffix &ldquo;false&rdquo; indicates to the model checker that it must attempt to find a counterexample on which the path specification is true. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> The sugar formula corresponding to the specification &oslash; is used to build a non-deterministic automaton A<highlight><subscript>&phgr;</subscript></highlight> and an EF (p) type formula for model checking, at an automaton building step <highlight><bold>72</bold></highlight>. The automaton is preferably created automatically, as described by Beer et al. in the above-mentioned article entitled &ldquo;On-the-fly Model Checking of RCTL Formulas.&rdquo; Formally, the automaton A<highlight><subscript>&phgr;</subscript></highlight> is built so as to satisfy the condition that</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>M&verbar;&equals;&oslash;&rlarr;M&times;A</italic></highlight><highlight><subscript>&oslash;</subscript></highlight><highlight><italic>&verbar;&equals;EF</italic></highlight>(<highlight><italic>p</italic></highlight>)&emsp;&emsp;(2)</in-line-formula></paragraph>
+<paragraph id="P-0045" lvl="7"><number>&lsqb;0045&rsqb;</number> wherein M is the model under test, and p<highlight><subscript>&oslash;</subscript></highlight> is the formula that defines the target states of the automaton. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> For machine <highlight><bold>40</bold></highlight>, as described by formula (1), the automaton generated at step <highlight><bold>72</bold></highlight> is listed below in Table II, written in the well-known SMV model checking language:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE II</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>NON-DETERMINISTIC AUTOMATON</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="49PT" align="left"/>
+<colspec colname="1" colwidth="168PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>VAR aut:&lcub;0,1,2,3,4,5,6&rcub;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>ASSIGN</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="63PT" align="left"/>
+<colspec colname="1" colwidth="154PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>init(aut) :&equals;&lcub;1,2&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>next(aut) :&equals;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>case</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="77PT" align="left"/>
+<colspec colname="1" colwidth="140PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>aut&equals;1 {circumflex over (&thinsp;)} ma&ne;4:&lcub;2,1&rcub;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>aut&equals;2 {circumflex over (&thinsp;)} ma&equals;4:&lcub;4,3&rcub;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>aut&equals;3 {circumflex over (&thinsp;)} ma&ne;6:&lcub;4,3&rcub;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>aut&equals;4 {circumflex over (&thinsp;)} ma&equals;6:&lcub;6,5&rcub;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>aut&equals;5 {circumflex over (&thinsp;)} ma&ne;1:&lcub;6,5&rcub;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>1:0;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="63PT" align="left"/>
+<colspec colname="1" colwidth="154PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>esac</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The states of the above automaton (aut&equals;1, 2, . . . , 6) correspond to the expected states and transitions of machine <highlight><bold>40</bold></highlight> along the path shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, as expressed by formula (1). The automaton is built so that each move from one of its states to another is determined by a Boolean condition C, which is derived from the path specification of machine <highlight><bold>40</bold></highlight>. The automaton begins in state aut&equals;1 or aut&equals;2 and advances to the next state at each cycle based on the current value of the variable ma. For example, in the second case in Table II, if aut&equals;2 and ma&equals;1, the automaton will be in either state 3 or state 4 in the next cycle. Automaton states 1, 3 and 5 have self-loops, indicating that the automaton may remain in each of these states until the next transition on the path of machine <highlight><bold>40</bold></highlight> is encountered. The EF(p<highlight><subscript>&oslash;</subscript></highlight>) formula that must be satisfied by the automaton is EF((aut&equals;6)(ma&equals;1)). When aut&equals;6 and ma&equals;1, this final Boolean condition is satisfied, indicating that the automaton has reached a state in target set <highlight><bold>54</bold></highlight> (in the conceptual view of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>). The last case expression in Table II, &ldquo;1:0&rdquo;, is invoked if none of the other conditions are satisfied. In this case, the automaton advances to state aut&equals;0, which is used to trap all paths that do not conform to the path specification and can therefore be disregarded in the state space computation. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> In the subsequent steps of the method of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the reachable state space of machine <highlight><bold>40</bold></highlight> is computed while at the same time imposing the logical conditions specified by the automaton of Table II. The use of the automaton automatically enforces the path specification that requires the machine to pass through intermediate states in sets <highlight><bold>42</bold></highlight> and <highlight><bold>44</bold></highlight> before reaching target set <highlight><bold>46</bold></highlight>. The EF(p<highlight><subscript>&oslash;</subscript></highlight>) formula is verified on the fly, as described below, while computing the reachable state space of machine <highlight><bold>40</bold></highlight>, subject to the automaton generated at step <highlight><bold>72</bold></highlight>. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> In addition to the full path formula EF(p<highlight><subscript>&oslash;</subscript></highlight>), additional event formulas are also generated at step <highlight><bold>72</bold></highlight>. The event formulas are used in tracking the progress of the reachability analysis and in producing a partial trace in the event that no target state can be reached, as described below. For every state s of the automaton that does not have a self-loop, the event formula has the form EF(s C). Thus, the following event formulas are generated for states aut&equals;2 and aut&equals;4, respectively:</paragraph>
+<paragraph lvl="0"><in-line-formula>Event 1: <highlight><italic>EF</italic></highlight>((<highlight><italic>aut&equals;</italic></highlight>2) (<highlight><italic>ma&equals;</italic></highlight>4))</in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula>Event 2: <highlight><italic>EF</italic></highlight>((<highlight><italic>aut&equals;</italic></highlight>4) (<highlight><italic>ma&equals;</italic></highlight>6))</in-line-formula></paragraph>
+<paragraph id="P-0050" lvl="7"><number>&lsqb;0050&rsqb;</number> &ldquo;Event 3&rdquo; in this case is the path formula EF((aut&equals;6)A(ma&equals;1)) for the target state. The event formulas are verified on the fly, and effectively represent preconditions to satisfying the path formula. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Having generated the required automaton and event formulas, processor <highlight><bold>22</bold></highlight> initializes its reachability analysis of state space <highlight><bold>48</bold></highlight>, at an initialization step <highlight><bold>74</bold></highlight>. Here the index I tracks donuts <highlight><bold>52</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, while J tracks the events that have been generated along the specified path. Each successive donut S<highlight><subscript>I </subscript></highlight>is found by the image operation described above, at a donut finding step <highlight><bold>76</bold></highlight>. After computing the new reachable states in each iteration, the states found in the preceding iteration are subtracted out (line 7 in Table I above) to determine the new donut. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> If the state space of the model is exhausted at some iteration without reaching a target state, the new donut will be found to be empty, at a search termination step <highlight><bold>78</bold></highlight>. In this case, processor <highlight><bold>22</bold></highlight> checks to determine whether any of the specified event formulas have so far been satisfied, at an event index checking step <highlight><bold>80</bold></highlight>. If none of the events has yet occurred, it means that the model did not reach even the first event on the specified path before the reachability analysis terminated. (In terms of the present example, this equivalently means that machine <highlight><bold>40</bold></highlight> has not reached a state in set <highlight><bold>42</bold></highlight>, and therefore Event 1 has not been triggered.) In this case, processor <highlight><bold>22</bold></highlight> informs user <highlight><bold>24</bold></highlight> that no trace can be generated, at a non-tracing step <highlight><bold>82</bold></highlight>. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> On the other hand, if some or all of the events have been triggered (so that J&gt;0), processor <highlight><bold>22</bold></highlight> computes a trace from the farthest point reached on the path back to one of the states in initial set <highlight><bold>50</bold></highlight>, at a trace production step <highlight><bold>84</bold></highlight>. The method for generating traces in this case was described above briefly with reference to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> and is shown in pseudocode form in Table III below. It is described in greater detail in the related patent applications cited above, including &ldquo;Time-Memory Tradeoff Control in Counterexample Production&rdquo; and &ldquo;Efficient Production of Disjoint Multiple Traces.&rdquo; As long as the latest donut S<highlight><subscript>I </subscript></highlight>is not found to be empty at step <highlight><bold>78</bold></highlight>, processor <highlight><bold>22</bold></highlight> checks whether the current donut intersects target set <highlight><bold>54</bold></highlight>, at an intersection checking step <highlight><bold>86</bold></highlight>. In terms of the automaton A<highlight><subscript>&phgr;</subscript></highlight>, this step is carried out on the fly by determining whether the path formula EF(p<highlight><subscript>&oslash;</subscript></highlight>) has been satisfied. (This step will not be reached, however, until all the preceding events EF(J) have occurred.) At this point, the reachability analysis of state space <highlight><bold>48</bold></highlight> is complete. The processor indicates to user <highlight><bold>24</bold></highlight> that a full trace will be produced, at a full trace step <highlight><bold>88</bold></highlight>. It then produces such a trace, at step <highlight><bold>84</bold></highlight>, from a state in target set <highlight><bold>46</bold></highlight> back to initial set <highlight><bold>50</bold></highlight>, corresponding to path <highlight><bold>58</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> If processor <highlight><bold>22</bold></highlight> determines that it has not reached the target set, it checks whether the next expected event on the specified path has been triggered, at an event checking step <highlight><bold>90</bold></highlight>. This step is equivalent to determining whether the current donut S<highlight><subscript>I </subscript></highlight>intersects the space defined by the event formula EF(J&plus;1). Until this event occurs, processor <highlight><bold>22</bold></highlight> continues to increment the donut index I, at a donut incrementation step <highlight><bold>91</bold></highlight>, and returns to step <highlight><bold>76</bold></highlight> to construct the next donut. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> When event J&plus;1 is triggered, processor <highlight><bold>22</bold></highlight> informs the user that Event J&plus;1 was encountered on cycle I of the reachability analysis, at a reporting step <highlight><bold>92</bold></highlight>. Both the event index J and the donut index I are incremented in this case, at an event incrementation step <highlight><bold>94</bold></highlight>, and the process continues to iterate at step <highlight><bold>76</bold></highlight>. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> The report provided at step <highlight><bold>92</bold></highlight> enables the user to keep track of the progress of the model checker and, possibly, to interrupt the search if a long time passes without completing the specified path. Upon interrupting the search, the user may ask processor <highlight><bold>22</bold></highlight> to provide a partial trace, showing how far along the specified path it has reached. In this case, a partial trace is generated, depending on the last event triggered, as illustrated by path <highlight><bold>66</bold></highlight>, shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. The user can then either abort or resume the search, as appropriate. The same sort of partial trace is generated at step <highlight><bold>84</bold></highlight> if the reachability analysis terminates after one or more of the events EF(J) have been triggered but before target set <highlight><bold>54</bold></highlight> has been reached. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Table III is a pseudocode listing corresponding to the method of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, based on the automaton A<highlight><subscript>&oslash;</subscript></highlight> and the event formulas described above. The method in the listing assumes that donuts S<highlight><subscript>i </subscript></highlight>are represented in the form of binary decision diagrams (BDDs), as are known in the art. The theory of BDDs is described, for example, by Bryant, in &ldquo;Graph-based Algorithms for Boolean Function Manipulation,&rdquo; <highlight><italic>IEEE Transactions on Computers </italic></highlight>C-35:8 (1986), which is incorporated herein by reference. The use of BDDs in on-the-fly model checking is described in the above-mentioned U.S. patent application entitled, &ldquo;Efficient Production of Disjoint Multiple Traces.&rdquo; The term found is used initially in the listing below to indicate the BDD representing p<highlight><subscript>&oslash;</subscript></highlight>. (Subsequently, found is used to indicate the BDD from which the trace termination state is chosen in order to produce the trace, whether the trace is complete or partial.) The terms ef<highlight><subscript>j </subscript></highlight>represent the BDDs of the event formulas, wherein the path specification comprises n such events.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE III</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>MODEL CHECKING WITH PARTIAL TRACE GENERATION</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="left"/>
+<colspec colname="2" colwidth="189PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>1</entry>
+<entry><highlight><italic>reachable </italic></highlight>&equals; <highlight><italic>new </italic></highlight>&equals; initialStates;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>2</entry>
+<entry><highlight><italic>i </italic></highlight>&equals; 0; maxe &equals; 0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>3</entry>
+<entry>while ((<highlight><italic>new </italic></highlight>&ne; &Oslash;)&amp;&amp;(<highlight><italic>new </italic></highlight>&cap; <highlight><italic>found </italic></highlight>&equals; &Oslash;)) &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>4</entry>
+<entry><highlight><italic>S</italic></highlight><highlight><subscript>i </subscript></highlight>&equals; <highlight><italic>new</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>5</entry>
+<entry><highlight><italic>i </italic></highlight>&equals; <highlight><italic>i </italic></highlight>&plus; 1;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>6</entry>
+<entry><highlight><italic>next </italic></highlight>&equals; nextStateImage (new);</entry>
+</row>
+<row>
+<entry></entry>
+<entry>7</entry>
+<entry><highlight><italic>new </italic></highlight>&equals; <highlight><italic>next </italic></highlight>&bsol; <highlight><italic>reachable</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>8</entry>
+<entry><highlight><italic>reachable </italic></highlight>&equals; <highlight><italic>reachable </italic></highlight>&cup; <highlight><italic>next</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>9</entry>
+<entry>for (<highlight><italic>j </italic></highlight>&equals; <highlight><italic>n </italic></highlight>downto <highlight><italic>maxe</italic></highlight>&plus;1) do &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="161PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>10</entry>
+<entry>if (<highlight><italic>new </italic></highlight>&cap; <highlight><italic>ef</italic></highlight><highlight><subscript>j </subscript></highlight>&ne; &Oslash;) &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>11</entry>
+<entry><highlight><italic>maxe </italic></highlight>&equals;<highlight><italic>j </italic></highlight>; <highlight><italic>donut </italic></highlight>&equals; <highlight><italic>i</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>12</entry>
+<entry>print &ldquo;Event &ldquo;maxe&rdquo; encountered on cycle</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="84PT" align="left"/>
+<colspec colname="1" colwidth="133PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&ldquo;donut&rdquo;&rdquo;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="147PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>13</entry>
+<entry>break; (from &lsquo;for&rsquo; loop)</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="161PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>14</entry>
+<entry>&rcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>15</entry>
+<entry>&rcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="left"/>
+<colspec colname="2" colwidth="189PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>16</entry>
+<entry>if (<highlight><italic>new </italic></highlight>&equals; &Oslash;&amp;&amp; <highlight><italic>maxe </italic></highlight>&equals; 0) &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>17</entry>
+<entry>print &ldquo;No trace exists for this path&rdquo;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>18</entry>
+<entry>return;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="left"/>
+<colspec colname="2" colwidth="189PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>19</entry>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>20</entry>
+<entry>else if (<highlight><italic>new </italic></highlight>&equals; &Oslash; &amp;&amp; <highlight><italic>maxe </italic></highlight>&gt; 0) &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>21</entry>
+<entry>print &ldquo;No full trace exists, producing trace</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="56PT" align="left"/>
+<colspec colname="1" colwidth="161PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>until event &ldquo;maxe&rdquo;&rdquo;;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>22</entry>
+<entry><highlight><italic>found </italic></highlight>&equals; <highlight><italic>ef</italic></highlight><highlight><subscript>maxe</subscript></highlight>; <highlight><italic>k </italic></highlight>&equals; <highlight><italic>donut</italic></highlight>;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="left"/>
+<colspec colname="2" colwidth="189PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>23</entry>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>24</entry>
+<entry>else &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>25</entry>
+<entry><highlight><italic>k </italic></highlight>&equals; <highlight><italic>i </italic></highlight>&minus; 1;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>26</entry>
+<entry>print &ldquo;Trace found on cycle k&rdquo;;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="left"/>
+<colspec colname="2" colwidth="189PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>27</entry>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>28</entry>
+<entry><highlight><italic>good </italic></highlight>&equals; <highlight><italic>S</italic></highlight><highlight><subscript>k </subscript></highlight>&cap; <highlight><italic>found</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>29</entry>
+<entry>while (k &gE; 0) &lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>30</entry>
+<entry><highlight><italic>X</italic></highlight><highlight><subscript>k </subscript></highlight>&equals; choose one state from <highlight><italic>good</italic></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>31</entry>
+<entry>if (k &gt; 0) <highlight><italic>good </italic></highlight>&equals; pred (X<highlight><subscript>k</subscript></highlight>) &cap;<highlight><italic>S</italic></highlight><highlight><subscript>k&minus;1</subscript></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>32</entry>
+<entry><highlight><italic>k </italic></highlight>&equals; <highlight><italic>k&minus;1;</italic></highlight></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="14PT" align="left"/>
+<colspec colname="2" colwidth="189PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>33</entry>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>34</entry>
+<entry>print &ldquo;Trace is:&rdquo; <highlight><italic>X</italic></highlight><highlight><subscript>0</subscript></highlight>...<highlight><italic>X</italic></highlight><highlight><subscript>k</subscript></highlight>;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> As noted above, the process described in Table III above includes two main components: reachability analysis (lines 1-15) and trace production (lines 16-34). In the reachability analysis, donuts &lcub;S<highlight><subscript>0</subscript></highlight>, S<highlight><subscript>1</subscript></highlight>, . . . , S<highlight><subscript>n</subscript></highlight>&rcub; are constructed using the function &ldquo;nextStateImage(new)&rdquo; to return the states that are reached in one cycle of the system transition relation beginning from the states in &lcub;new&rcub;. The trace of states &lcub;X<highlight><subscript>0 </subscript></highlight>. . . X<highlight><subscript>k</subscript></highlight>&rcub; is constructed using the function &ldquo;pred(X<highlight><subscript>i</subscript></highlight>)&rdquo; to find, for each state along the trace, a predecessor state in the preceding donut S<highlight><subscript>k&minus;1 </subscript></highlight>that would be mapped to the state by the nextStateImage function. The set of the predecessor states X<highlight><subscript>0 </subscript></highlight>. . . X<highlight><subscript>k </subscript></highlight>from one of the initial states to one of the target states constitutes a counterexample trace. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Although the sample computations described above are based on a particular type of path specification, the principles behind these computations may similarly be applied in model checking using logical formulas of other types. For example, any specification written in CTL, as well as a large subset of linear temporal logic (LTL) specifications, may be translated into a state machine with a formula of type AG(p) and then checked in this manner. As another example, the techniques of the present invention may be applied to specification formalisms in which the specification itself is a state machine. In all these cases, it is possible to define a path specification with respect to the states of the system under study, and to express the general logical formula in terms of specified conditions on the states through which the system must pass in order to fulfill or contradict the formula. An automaton is built embodying the path specification, as described by Beer et al. in &ldquo;On-the-Fly Model Checking of RCTL Formulas,&rdquo; and is then used in the model checking process as described above. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> It will thus be appreciated that the preferred embodiments described above are cited by way of example, and that the present invention is not limited to what has been particularly shown and described hereinabove. Rather, the scope of the present invention includes both combinations and subcombinations of the various features described hereinabove, as well as variations and modifications thereof which would occur to persons skilled in the art upon reading the foregoing description and which are not disclosed in the prior art. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for checking a model, which defines states of a system under study and a transition relation among the states, the method comprising: 
+<claim-text>specifying a path to be traversed through the states of the system under study from an initial set that comprises at least one initial state among the states of the system to a target set that comprises at least one target state among the states of the system, such that a specified sequence of events is to occur on the specified path between the at least one initial state and the at least one target state; </claim-text>
+<claim-text>beginning from the initial set, computing successive reachable sets comprising the states of the system that are reachable from the initial set along the specified path, such that in the successive reachable sets the events occur in the specified sequence; </claim-text>
+<claim-text>determining whether an intersection exists between one of the reachable sets on the specified path and the target set; and </claim-text>
+<claim-text>when the intersection is not found to exist, producing a partial trace along the specified path between the at least one initial state and a termination state in which at least one of the specified events occurs. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein specifying the path comprises defining the events in terms of transitions among the states of the system under study. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein defining the events comprises defining the transitions such that in the sequence of events, at least two consecutive transitions are separated by more than one cycle of the transition relation. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein computing the successive reachable sets comprises building a non-deterministic automaton based on the transitions, and computing the reachable sets using the automaton. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein building the non-deterministic automaton comprises defining Boolean conditions corresponding respectively to the transitions, and wherein detecting the occurrence of the events comprises testing the Boolean conditions. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein computing the successive reachable sets comprises detecting occurrence of the events in the sequence. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, and comprising informing a user upon detecting occurrence of the events. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein producing the partial trace comprises choosing the termination state to be one of the states in which a final event occurs in the sequence of the events whose occurrence has been detected. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein computing the successive reachable sets comprises: 
+<claim-text>determining a first set among the reachable sets, disjoint from the initial set, such that all of the states in the first set are reached from the initial states in a first cycle of the transition relation; and </claim-text>
+<claim-text>determining the successive reachable sets, following the first set, such that all the states in each of the sets are reached from the states in the preceding set in a successive cycle of the transition relation, and so that each of the sets is disjoint from the initial set and from the other sets determined before it. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein producing the partial trace comprises selecting one of the states from each of at least some of the successive reachable sets. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein selecting the one of the states comprises, for each of the selected states, choosing a predecessor state among the states in the preceding set until the state on the trace in the first set is found, and choosing the predecessor state in the initial set to the state in the first set. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, and comprising, when it is determined that the intersection exists between the target set and one of the reachable sets, producing a complete trace from the at least one target state through the states in the reachable sets to the at least one initial state. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein producing the complete trace comprises computing the trace so that all the events occur along the trace in the specified sequence. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein specifying the path comprises specifying a property to be fulfilled by the at last one target state. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein specifying the property comprises specifying a condition that is expected to be true over all of the reachable states of the system under study, and wherein the condition is false in the at least one target state. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein specifying the property comprises specifying a condition representing a desired behavior of the system under study, such that the condition is fulfilled in the at least one target state. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein computing the successive reachable sets comprises testing the property while computing the sets, and ceasing to compute the sets when the intersection is found to exist. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. Model checking apparatus, comprising a model processor, which is arranged to receive a model that defines states of a system under study and a transition relation among the states, and to receive a specification of a path to be traversed through the states of the system under study from an initial set that comprises at least one initial state among the states of the system to a target set that comprises at least one target state among the states of the system, such that a specified sequence of events is to occur on the path between the at least one initial state and the at least one target state, the processor being further arranged to compute, beginning from the initial set, successive reachable sets comprising the states of the system that are reachable from the initial set along the path, such that in the successive reachable sets the events occur in the specified sequence, and to determine whether an intersection exists between one of the reachable sets on the path and the target set, and when the intersection is not found to exist, to produce a partial trace along the specified path between the at least one initial state and a termination state in which at least one of the specified events occurs. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the specification of the path comprises a definition of the events in terms of transitions among the states of the system under study. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the events are defined in terms of the transitions such that in the sequence of events, at least two consecutive transitions are separated by more than one cycle of the transition relation. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the processor is arranged to build a non-deterministic automaton based on the transitions, and to compute the reachable sets using the automaton. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the processor is arranged to determine Boolean conditions corresponding respectively to the transitions, and to detect the occurrence of the events comprises testing the Boolean conditions. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the processor is arranged to detect occurrence of the events in the sequence while computing the successive reachable sets. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the processor is arranged to inform a user upon detecting occurrence of the events. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein to produce the partial trace, the processor is arranged to choose the termination state to be one of the states in which a final event occurs in the sequence of the events whose occurrence has been detected. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the processor is arranged to compute the successive reachable sets by determining a first set among the reachable sets, disjoint from the initial set, such that all of the states in the first set are reached from the initial states in a first cycle of the transition relation, followed by determining the successive reachable sets, following the first set, such that all the states in each of the sets are reached from the states in the preceding set in a successive cycle of the transition relation, and so that each of the sets is disjoint from the initial set and from the other sets determined before it. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein the processor is arranged to produce the partial trace by selecting one of the states from each of at least some of the successive reachable sets. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, wherein the processor is arranged to select the states from each of the at least some of the successive sets by choosing, for each of the states, a predecessor state among the states in the preceding set until the state on the trace in the first set is found, and choosing the predecessor state in the initial set to the state in the first set. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, and wherein the processor is further arranged, upon determining that the intersection exists between the target sets and one of the reachable sets, to produce a complete trace from the at least one target state through the states in the reachable sets to the at least one initial state. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the processor is arranged to produce the complete trace so that all the events occur along the trace in the specified sequence. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the path specification comprises a property to be fulfilled by the at last one target state. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein the property comprises a condition that is expected to be true over all of the reachable states of the system under study, and wherein the condition is false in the at least one target state. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein the property comprises a condition representing a desired behavior of the system under study, such that the condition is fulfilled in the at least one target state. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. Apparatus according to <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein the processor is arranged to test the property while computing the successive reachable sets, and to cease to compute the sets when the intersection is found to exist. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. A computer software product, comprising a computer-readable medium in which program instructions are stored, which instructions, when read by a computer, cause the computer to receive a model that defines states of a system under study and a transition relation among the states, and to receive a specification of a path to be traversed through the states of the system under study from an initial set that comprises at least one initial state among the states of the system to a target set that comprises at least one target state among the states of the system, such that a specified sequence of events is to occur on the path between the at least one initial state and the at least one target state, and which cause the computer to compute, beginning from the initial set, successive reachable sets comprising the states of the system that are reachable from the initial set along the path, such that in the successive reachable sets the events occur in the specified sequence, and to determine whether an intersection exists between one of the reachable sets on the path and the target set, and when the intersection is not found to exist, to produce a partial trace along the specified path between the at least one initial state and a termination state in which at least one of the specified events occurs.. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference>, wherein the specification of the path comprises a definition of the events in terms of transitions among the states of the system under study. </claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 36</dependent-claim-reference>, wherein the events are defined in terms of the transitions such that in the sequence of events, at least two consecutive transitions are separated by more than one cycle of the transition relation. </claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 36</dependent-claim-reference>, wherein the instructions cause the computer to build a non-deterministic automaton based on the transitions, and to compute the reachable sets using the automaton. </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 38</dependent-claim-reference>, wherein the instructions cause the computer to determine Boolean conditions corresponding respectively to the transitions, and to detect the occurrence of the events comprises testing the Boolean conditions. </claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference>, wherein the instructions cause the computer to detect occurrence of the events in the sequence while computing the successive reachable sets. </claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 40</dependent-claim-reference>, wherein the instructions cause the computer to inform a user upon detecting occurrence of the events. </claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 40</dependent-claim-reference>, wherein the instructions cause the computer to produce the partial trace by choosing the termination state to be one of the states in which a final event occurs in the sequence of the events whose occurrence has been detected. </claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference>, wherein the instructions cause the computer to compute the successive reachable sets by determining a first set among the reachable sets, disjoint from the initial set, such that all of the states in the first set are reached from the initial states in a first cycle of the transition relation, followed by determining the successive reachable sets, following the first set, such that all the states in each of the sets are reached from the states in the preceding set in a successive cycle of the transition relation, and so that each of the sets is disjoint from the initial set and from the other sets determined before it. </claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 43</dependent-claim-reference>, wherein the instructions cause the computer to produce the partial trace by selecting one of the states from each of at least some of the successive reachable sets. </claim-text>
+</claim>
+<claim id="CLM-00045">
+<claim-text><highlight><bold>45</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 44</dependent-claim-reference>, wherein the instructions cause the computer to select the states from each of the at least some of the successive sets by choosing, for each of the states, a predecessor state among the states in the preceding set until the state on the trace in the first set is found, and choosing the predecessor state in the initial set to the state in the first set. </claim-text>
+</claim>
+<claim id="CLM-00046">
+<claim-text><highlight><bold>46</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference>, and wherein the instructions further cause the computer, upon determining that the intersection exists between the target sets and one of the reachable sets, to produce a complete trace from the at least one target state through the states in the reachable sets to the at least one initial state. </claim-text>
+</claim>
+<claim id="CLM-00047">
+<claim-text><highlight><bold>47</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference>, wherein the instructions cause the computer to produce the complete trace so that all the events occur along the trace in the specified sequence. </claim-text>
+</claim>
+<claim id="CLM-00048">
+<claim-text><highlight><bold>48</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference>, wherein the path specification comprises a property to be fulfilled by the at last one target state. </claim-text>
+</claim>
+<claim id="CLM-00049">
+<claim-text><highlight><bold>49</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 48</dependent-claim-reference>, wherein the property comprises a condition that is expected to be true over all of the reachable states of the system under study, and wherein the condition is false in the at least one target state. </claim-text>
+</claim>
+<claim id="CLM-00050">
+<claim-text><highlight><bold>50</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 48</dependent-claim-reference>, wherein the property comprises a condition representing a desired behavior of the system under study, such that the condition is fulfilled in the at least one target state. </claim-text>
+</claim>
+<claim id="CLM-00051">
+<claim-text><highlight><bold>51</bold></highlight>. A product according to <dependent-claim-reference depends_on="CLM-00044">claim 48</dependent-claim-reference>, wherein the instructions cause the computer to test the property while computing the successive reachable sets, and to cease to compute the sets when the intersection is found to exist.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004926A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004926A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004926A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004926A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

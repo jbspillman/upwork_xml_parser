@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004953A1-20030102-D00000.TIF SYSTEM "US20030004953A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004953A1-20030102-D00001.TIF SYSTEM "US20030004953A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004953A1-20030102-D00002.TIF SYSTEM "US20030004953A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004953A1-20030102-D00003.TIF SYSTEM "US20030004953A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004953A1-20030102-D00004.TIF SYSTEM "US20030004953A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004953A1-20030102-D00005.TIF SYSTEM "US20030004953A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004953A1-20030102-D00006.TIF SYSTEM "US20030004953A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004953</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09834393</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010413</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>100000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for managing and communicating state changes of a complex system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Joseph</given-name>
+<middle-name>K.</middle-name>
+<family-name>Cross</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Edina</city>
+<state>MN</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Crawford PLLC</name-1>
+<name-2></name-2>
+<address>
+<address-1>Suite 390</address-1>
+<address-2>1270 Northland Drive</address-2>
+<city>St. Paul</city>
+<state>MN</state>
+<postalcode>55120</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">System and method for managing and communicating state changes of a complex system. The system includes a plurality of configuration items, wherein each configuration item is a functional component of the system and has an associated state value that is one of a set of state values describing operational characteristics of the configuration item. A data structure that represents transitions between the state values is constructed in each of the configuration items. Each of the configuration items receives notification requests that include a first set of state values, a second set of state values, a requester identifier, and a message value. The requester identifier and message value of each notification request are associated with a transition of the configuration item for a transition from a state in the first set of state values to a state value in the second set of state values. In response to a transition of a configuration item between state values, a message value(s) and requester identifier(s) that are associated with the transition are selected, and the message value(s) is sent to the requester(s) referenced by the requester identifier(s). </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention generally relates to monitoring the operating state of a complex electronic system. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Monitoring the operational state of electronic systems is commonly performed to detect problems, take precautionary measures before problems occur, or inform users, for example. Systems that include many distributed components present unique challenges for managing the operational state of the system and the various components. Example operational states include starting up, standby, shutting down, and other states governed by the particular system. Based on transitions among the operational states, the system may take various actions. For example, the system may perform various automated actions, alert an operator for manual intervention, or generate informational messages. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> For large systems that include many components, managing the state-related interactions between components and monitoring the states of all the components can be complicated. For example, in a system having a large number of components, the number of different combinations of states of the different components can be very large, thereby complicating monitoring the different states. In addition, the system may be comprised of a hierarchy of constituent components. The constituent components may need to respond to state changes in other components at various levels in the hierarchy. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In addition, the system may be geographically dispersed. In this case it may be important to minimize that amount of data traffic among components required to satisfy the monitoring requirements. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Thus, an arrangement that supports monitoring the system state, the states of the individual ones of the constituent components, as well as inter-component state monitoring tends to be complex. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> A system and a method that addresses the aforementioned problems, as well as other related problems, are therefore desirable. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In various embodiments, the invention provides a system and method for managing and communicating state changes of a complex system. The system includes a plurality of configuration items, wherein each configuration item is a functional component of the system and has an associated state value that is one of a set of state values describing operational characteristics of the configuration item. A data structure that represents transitions between the state values is constructed in each of the configuration items. Each of the configuration items receives notification requests that include a first set of state values, a second set of state values, a requester identifier, and a message value. The requester identifier and message value of each notification request are associated with a transition in the data structure of the configuration item from a state in the first set of state values to a state value in the second set of state values. In response to such a transition of a configuration item between state values, a message value(s) and requester identifier(s) that are associated with the transition are selected, and the message value(s) is sent to the requester(s) referenced by the requester identifier(s). </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It will be appreciated that various other embodiments are set forth in the Detailed Description and Claims which follow.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Various aspects and advantages of the invention will become apparent upon review of the following detailed description and upon reference to the drawings in which: </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagram of an example system hierarchy; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows the format of a registration table that is maintained by a configuration item in accordance with one embodiment of the invention; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram of a system that includes a mode monitor for detecting mode changes in the system; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart of a process for registering notification requests with a configuration item; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart of a process for canceling a notification registration by a configuration item; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a process for notifying registrants of changes in state of a configuration item; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7A</cross-reference> is a flowchart of a process for notification of a mode transition of a system, according to one embodiment of the invention; </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7B</cross-reference> depicts the state transition table of Table 2 in graphical form; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> is a flowchart of a process for mode transition notification which has been optimized to reduce the number of state change notifications from the configuration items; and </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8B</cross-reference> is a state diagram of all the meta-state transitions for the mode ExampleMode.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In various embodiments, the invention provides a method and system for monitoring the operational state of a complex system as defined by the constituent states of the elements comprising the system. The system operates efficiently for large complex systems and is suitable for systems in which the elements are geographically dispersed. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagram of an example system hierarchy. System <highlight><bold>100</bold></highlight> is comprised of multiple configuration items. A configuration item is either comprised of a set of configuration items or it is a configuration unit. The configuration units are the indivisible functional elements comprising the system, and the collection of the respective states of the configuration items constitutes the system state. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Each configuration item has associated therewith a non-empty, finite set of values, or states. Every state is associated with one configuration item. The invention assumes that for the purpose of state monitoring, a state change is possible in each of the configuration items. A state change may be in response to an external (relative to the system) or an internal signal. For example, state changes may occur in response to user commands or control settings or in response to system-programmed resource monitors. In the examples presented herein, the states are represented as uppercase letters. The particular representation of a state in a system depends on system requirements and may include, for example, numerical values or sequences of codes. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows the format of a registration table that is maintained by a configuration item in accordance with one embodiment of the invention. A configuration item receives and stores requests for notifications of changes in state for that configuration item. The registration is accomplished by sending to the configuration item a notification request that includes a pre-condition, a post-condition, a requester identifier, and a message. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The pre-condition and post-condition are sets of states of the configuration item. If the configuration item changes from a state in the pre-condition to a state in the post-condition, then the message in the notification request is sent to the requester identified by the requester identifier. Upon registration, the configuration item generates and returns a key to the requester. The key can be used to cancel the registration. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Each configuration item maintains an n by n table to track registrations for state changes of that configuration item, where n is the number of possible states of the configuration item. The rows of the table <highlight><bold>150</bold></highlight> represent states from which the configuration item transitions, and the columns of the table represent the states to which the configuration item transitions. Each cell in the table contains a list of triples, and each triple includes a requester identifier, a message, and a registration key. The lists of triples supports multiple registrations for a single state change. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Where a system is comprised of multiple configuration items, a mode of the system is defined to be a selected Boolean function of the state of the constituent configuration items. The system is in a mode when the function evaluates to true and enters a mode when the value of the function changes from false to true. The notation, CI(A, B, C) denotes the predicate that configuration item, CI, is in one of the states A, B, or C. If a system includes three configuration items, CI1, CI2, and CI3 where CI1 has states A, B, and C; CI2 has states M and N, and CI3 has states X, Y, and Z; then an example mode is: </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> CI1 (B) and (not CI2 (M) or CI3 (X, Y)) </paragraph>
+<paragraph id="P-0028" lvl="7"><number>&lsqb;0028&rsqb;</number> This example mode is referred to as ExampleMode from this point forward. If the function evaluates to true, then the system in ExampleMode. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> In another embodiment of the invention, the states in the registration table are consolidated in accordance with a system-defined mode to reduce the message traffic in reporting state changes of configuration items. <cross-reference target="DRAWINGS">FIGS. 8A and 8B</cross-reference> provide further details on the &ldquo;optimized&rdquo; embodiment of the invention. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram of a system <highlight><bold>170</bold></highlight> that includes a state monitor for detecting mode changes in the system. System <highlight><bold>170</bold></highlight> includes a mode monitor <highlight><bold>172</bold></highlight> for monitoring and reacting to changes in mode. The mode monitor implements one or more functions that define modes of the system. For example, one mode is the ExampleMode defined above. To monitor the system, the mode monitor registers with selected configuration items <highlight><bold>172</bold></highlight>, <highlight><bold>174</bold></highlight>, <highlight><bold>176</bold></highlight>, and <highlight><bold>180</bold></highlight> to receive notifications of state changes. The notifications of state changes are represented by the messages defined in the registration tables of selected configuration items. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In an example embodiment, mode monitor <highlight><bold>172</bold></highlight> and configuration items <highlight><bold>174</bold></highlight>, <highlight><bold>176</bold></highlight>, <highlight><bold>178</bold></highlight>, and <highlight><bold>180</bold></highlight> are implemented as computer processes, for example, executing on one or more nodes on a network. It will be appreciated that each of configuration items <highlight><bold>174</bold></highlight>, <highlight><bold>176</bold></highlight>, <highlight><bold>178</bold></highlight>, and <highlight><bold>180</bold></highlight> may in turn be coupled to other configuration items depending on the particular application. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart of a process for registering notification requests with a configuration item. Each configuration item in the system implements a registration process so that other configuration items or a mode monitor can register to receive notifications of state changes. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> At step <highlight><bold>202</bold></highlight>, memory is allocated for a registration table <highlight><bold>150</bold></highlight>, and the entries in the table are initialized to null values. A notification request is received at step <highlight><bold>204</bold></highlight>. As described above, a notification request includes a pre-condition, a post-condition, requester identifier, and a message value. Step <highlight><bold>206</bold></highlight> generates a unique registration key that is associated with the notification request and returned to the requester. The registration key allows the requester to cancel the registration at a later time. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> At step <highlight><bold>208</bold></highlight>, the triple consisting of the requester identifier, message value, and key is added to selected entries in the registration table <highlight><bold>150</bold></highlight>. The entries are selected according to the pre-condition and post-condition in the notification request. In one embodiment, the row indices of the registration table represent the states from which the configuration item may transition, and the column indices represent the states to which the configuration may transition. Thus, for each state, s<highlight><subscript>i</subscript></highlight>, in the pre-condition set and each state, s<highlight><subscript>j</subscript></highlight>, in the post-condition set, the triple is added to the entries in the registration table as indexed by i and j. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> At step <highlight><bold>210</bold></highlight>, the registration key is returned to the requester, and the process returns to step <highlight><bold>204</bold></highlight> to receive and process another notification request. It will be appreciated that, depending on system requirements, the registration process may be either limited to an initialization phase of system operation or active while the system is operational. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart of a process for canceling a notification registration by a configuration item. As described above, the registration process generates a unique registration key for each notification request and returns the registration keys to the requesters. At step <highlight><bold>222</bold></highlight>, a configuration item receives a cancellation request from a requester, for example, either a mode monitor or another configuration item. The cancellation request includes a registration key. At step <highlight><bold>224</bold></highlight>, the configuration item removes from the table all triples having registration keys that match the registration key in the cancellation request. The process then returns to step <highlight><bold>222</bold></highlight> to process subsequent cancellation requests. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a process for notifying registrants of changes in state of a configuration item. Upon detecting a change in state at step <highlight><bold>272</bold></highlight>, the configuration item at step <highlight><bold>274</bold></highlight> selects and reads registrations (&ldquo;triples&rdquo;) from the registration table. The selected registrations are those in the entry indexed by the previous state and the current state. At step <highlight><bold>276</bold></highlight>, the registrations in the selected entry are used to send messages to the registrants. The requester identifier in each registration specifies the registrant, and the message part of the registration is the code or sequence of bytes sent to the registrant. When the registrants have been notified of the state change, the process returns to step <highlight><bold>272</bold></highlight> to wait for the next change in state. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The techniques described above for managing state changes of configuration items of a system can be used at a system level for system-level mode monitoring. By using modes to detect and react to the operational state of a system, the system mode monitor can be configured to register with selected configuration items in order to detect mode changes. As explained above, a mode is a Boolean function of selected states of selected ones of the configuration items. The mode monitor registers with each configuration item in the mode and in response to notifications of state changes, evaluates the mode to determine a suitable action. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> A system may have defined different modes for different scenarios. For example, the system may have a need to react to entry into a mode; that is, when the value of the Boolean function changes from false to true in response to a change in state of one of the configuration items. In another scenario, the system may have a need to react to exit from a mode (mode value changes from true to false). In still another scenario, the system may need to react to a transition between modes; that is, when the value of a first mode changes from true to false, and the value of a second mode changes from false to true. In one embodiment, the mode transitions are represented as a state machine. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7A</cross-reference> is a flowchart of a process for notification of a mode transition of a system, according to one embodiment of the invention. <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> is an alternative embodiment in which the process has been optimized. Continuing now with <cross-reference target="DRAWINGS">FIG. 7</cross-reference>A, at step <highlight><bold>302</bold></highlight>, the mode monitor registers with each configuration item in the mode for notification of state changes of the configuration item. For example, in the mode, ExampleMode, configuration item CI1 that contributes to the mode has three states, A, B, and C. Table 1 below illustrates how the mode monitor would register with CI1.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="left"/>
+<colspec colname="3" colwidth="70PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Pre-condition</entry>
+<entry>Post-condition</entry>
+<entry>Message</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>not A</entry>
+<entry>A</entry>
+<entry>&ldquo;CI1 enters A&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>not B</entry>
+<entry>B</entry>
+<entry>&ldquo;CI1 enters B&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>not C</entry>
+<entry>C</entry>
+<entry>&ldquo;CI1 enters C&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0041" lvl="7"><number>&lsqb;0041&rsqb;</number> The requester identifier of each registration references the mode monitor. The mode monitor registers with configuration items CI2 and CI3 in a similar manner. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> At step <highlight><bold>304</bold></highlight>, a finite state machine is constructed to support detection of the mode transition. The state machine includes states for the combinations of states of the configuration items in the mode and actions associated with the state transitions. For example, Table 2 below illustrates a portion of the state machine for entry into ExampleMode. The states of the system state machine are denoted as a concatenation of the states of the three configuration elements that comprise ExampleMode. For example, &ldquo;ANX&rdquo; denotes the state of the machine when CI1 is in state A, CI2 is in state N, and CI3 is in state X. The ExampleMode state columns in the table are included to assist in understanding the state transitions and are not part of the actual state machine.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="6">
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="49PT" align="left"/>
+<colspec colname="3" colwidth="35PT" align="left"/>
+<colspec colname="4" colwidth="21PT" align="left"/>
+<colspec colname="5" colwidth="49PT" align="left"/>
+<colspec colname="6" colwidth="35PT" align="left"/>
+<thead>
+<row>
+<entry namest="1" nameend="6" align="center">TABLE 2</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Current</entry>
+<entry>ExampleMode</entry>
+<entry></entry>
+<entry>Next</entry>
+<entry>ExampleMode</entry>
+<entry>Action on</entry>
+</row>
+<row>
+<entry>state</entry>
+<entry>in current state</entry>
+<entry>Message</entry>
+<entry>state</entry>
+<entry>in next state</entry>
+<entry>transition</entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>AMX</entry>
+<entry>false</entry>
+<entry>&ldquo;CI1</entry>
+<entry>BMX</entry>
+<entry>true</entry>
+<entry>notify</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>enters B&rdquo;</entry>
+</row>
+<row>
+<entry>BMX</entry>
+<entry>true</entry>
+<entry>&ldquo;CI3</entry>
+<entry>BMY</entry>
+<entry>true</entry>
+<entry>none</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>enters Y&rdquo;</entry>
+</row>
+<row>
+<entry>BMY</entry>
+<entry>true</entry>
+<entry>&ldquo;CI3</entry>
+<entry>BMZ</entry>
+<entry>false</entry>
+<entry>none</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>enters Z&rdquo;</entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0043" lvl="7"><number>&lsqb;0043&rsqb;</number> The first row of the table shows that the &ldquo;notify&rdquo; action is performed when the state machine is in the AMX state (ExampleMode&equals;false) and the message &ldquo;CI1 enters B&rdquo; is received after CI1 transitions to state B (ExampleMode&equals;true). </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Continuing now with step <highlight><bold>306</bold></highlight>, the finite state machine is initialized to a selected state, which is dependent on the particular application. At step <highlight><bold>308</bold></highlight>, a state change message is received from a configuration item, and the state machine is transitioned to the next state in response to the state change message at step <highlight><bold>310</bold></highlight>. If there is any action associated with the transition, the action is performed at step <highlight><bold>312</bold></highlight>. The process is then returned to step <highlight><bold>308</bold></highlight> to receive the next state change message. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7B</cross-reference> depicts the state transition table of Table 2 in graphical form. Each node is labeled with a combination of state values of the configuration items CI1, CI2, and CI3, the directional lines represent a transition to the next state, and the text associated with the directional lines specifies the message that gives notice of the transition, along with any associated action. The nodes to the left of dashed line <highlight><bold>314</bold></highlight> correspond to ExampleMode&equals;false, and the nodes to the right of dashed line <highlight><bold>314</bold></highlight> correspond to ExampleMode&equals;true. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The mode transition notification process of <cross-reference target="DRAWINGS">FIG. 7A</cross-reference> may result in the generation of more notification messages than is necessary to detect a mode change. For systems having many configuration items, the excess sending of notification messages may impede other functions of the system by consuming more communications bandwidth than is necessary. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> is a flowchart of a process for mode transition notification which has been optimized to reduce the number of state change notifications from the configuration items. The process begins by reducing the number of configuration item states in the mode to a set of meta-states. For any fixed mode, each meta-state is a set of equivalent states of a configuration item. Two states S1 and S2 of a configuration item, CIi, are equivalent for a mode if for every combination of states of the other configuration items in the system, the value of the mode is the same when CIi is in S1 as when CIi is in S2. Thus, the set of states of each configuration item can be divided into pairwise, disjoint, exhaustive subsets. The subsets are called meta-states. Table 3 below shows the meta-states of ExampleMode.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="35PT" align="left"/>
+<colspec colname="1" colwidth="105PT" align="left"/>
+<colspec colname="2" colwidth="77PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 3</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Configuration item</entry>
+<entry>Meta-states</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>CI1</entry>
+<entry>&lcub;A, C&rcub;, &lcub;B&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>CI2</entry>
+<entry>&lcub;M&rcub;, &lcub;N&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>CI3</entry>
+<entry>&lcub;X,Y&rcub;, &lcub;Z&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> It will be appreciated that the mode is well-defined on meta-states. For example, ExampleMode has a well-defined value knowing only that CI1 is in meta-state&lcub;A, C&rcub; (i.e., that CI1 is in either state A or C), that CI2 is in meta-state &lcub;M&rcub;, and that CI3 is in meta-state &lcub;X, Y&rcub;. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> At step <highlight><bold>352</bold></highlight>, the mode monitor registers with each configuration item in the mode for notification of entry into each meta-state of the configuration item. Continuing with the previous example, Table 4 below illustrates the registration of the mode monitor with CI1.  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="left"/>
+<colspec colname="3" colwidth="77PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center">TABLE 4</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Pre-condition</entry>
+<entry>Post-condition</entry>
+<entry>Message</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>B</entry>
+<entry>A or C</entry>
+<entry>&ldquo;CI1 enters &lcub;A, C&rcub;&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>not B</entry>
+<entry>B</entry>
+<entry>&ldquo;CI1 enters &lcub;B&rcub;&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0050" lvl="7"><number>&lsqb;0050&rsqb;</number> The mode transition notification process similarly registers for meta-state change notifications with configuration items CI2 and CI3. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Table 1 illustrates the notification registrations made to configuration CI1 in the non-optimized process, and Table 4 illustrates the notification registrations made to CI1 in the optimized process (using meta-states). The reduction in the number of notification messages can be seen from the registrations listed in Tables 1 and 4. Specifically, the registrations from Table 1 show that configuration item CI1 has the potential for sending 6 notification messages: &ldquo;CI1 enters A&rdquo; in response to B-to-A and C-to-A transitions; &ldquo;CI1 enters B&rdquo; in response to A-to-B and C-to-B transitions; and &ldquo;CI1 enters C&rdquo; in response to A-to-C and B-to-C transitions. In contrast, the optimized version reduces the number potential notification messages to 4: &ldquo;CI1 enters &lcub;A, C&rcub;&rdquo; in response to B-to-A and B-to-C transitions; and &ldquo;CI1 enters &lcub;B&rcub;&rdquo; in response to A-to-B and C-to-B transitions. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Continuing now with the optimized mode transition notification process, at step <highlight><bold>354</bold></highlight> a finite state machine is constructed using the combinations of meta-states in the mode. At step <highlight><bold>356</bold></highlight>, the state machine is initialized to a selected state that is suitable for the application. Before completing the description of the process of <cross-reference target="DRAWINGS">FIG. 8</cross-reference>A, <cross-reference target="DRAWINGS">FIG. 8B</cross-reference> is introduced. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8B</cross-reference> is a state diagram of all the meta-state transitions for the mode ExampleMode. It will be appreciated that the ExampleMode state transitions of <cross-reference target="DRAWINGS">FIG. 7</cross-reference>B, in contrast, are only a subset of all the possible state transition in the mode. The nodes represent and are labeled with the combinations of meta-states of the configuration items, the arcs represent transitions between the nodes, and the arc labels describe the notification reported in the transition and any associated action. The nodes to the left of dashed line <highlight><bold>357</bold></highlight> correspond to ExampleMode&equals;false, and the nodes to the right of dashed line <highlight><bold>357</bold></highlight> correspond to ExampleMode&equals;true. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> After the finite state machine is initialized, the process continues with steps <highlight><bold>358</bold></highlight>, <highlight><bold>360</bold></highlight>, and <highlight><bold>362</bold></highlight>, which function similar to steps <highlight><bold>308</bold></highlight>, <highlight><bold>310</bold></highlight>, and <highlight><bold>312</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 7A</cross-reference>. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Those skilled in the art will appreciate that the example embodiments described here are suitable for applications that require actions in response to exiting a mode as well as those for transitioning between modes. The mode-exit and mode-transition applications can be implemented by constructing finite state machines consistent with the teachings set forth above. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> The present invention is believed to be applicable to a variety of systems that require certain actions in response to changes in the state of the system. The invention is believed to be particularly applicable to large, complex, and geographically dispersed systems. Other aspects and embodiments of the present invention beyond those specifically described herein will be apparent to those skilled in the art from consideration of the specification and practice of the invention disclosed herein. It is intended that the specification and illustrated embodiments be considered as examples only, with a true scope and spirit of the invention being indicated by the following claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A computer-implemented method for managing state changes of a system that includes a plurality of configuration items, wherein each configuration item is a functional component of the system and has an associated state value that is one of a set of state values describing operational characteristics of the configuration item, comprising: 
+<claim-text>constructing a data structure in each of the configuration items representing transitions between the state values; </claim-text>
+<claim-text>receiving notification requests at the configuration items, each notification request including a first set of state values, a second set of state values, a requester identifier, and a message value; </claim-text>
+<claim-text>associating the requester identifier and message value of each notification request with a transition from a state in the first set of state values to a state value in the second set of state values; and </claim-text>
+<claim-text>in response to a transition of a configuration item between state values, selecting the message value and requester identifier associated with the transition and sending the message value to the requester referenced by the requester identifier. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the system further includes a system monitor and the method further comprises: 
+<claim-text>defining at the system monitor a system mode as a Boolean function of one or more state values in the set of state values of one or more selected configuration items; </claim-text>
+<claim-text>sending notification requests from the system monitor to each of the selected configuration items, the message value in each notification request indicating a transition to a state in the second set of state values in the notification request, and the requester identifier indicating the system monitor; </claim-text>
+<claim-text>receiving message values from the selected configuration items at the system monitor; and </claim-text>
+<claim-text>evaluating the system mode in response to the message values. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising: 
+<claim-text>generating a registration key for each notification request and associating each registration key with the requester identifier and message for each state transition in the notification request; and </claim-text>
+<claim-text>for each notification request, returning the registration key to the requester. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a cancellation request at a configuration item, the cancellation request including a selected registration key; and </claim-text>
+<claim-text>for each state transition having an associated registration key that matches the registration key in the cancellation request, disassociating the requester identifier and message value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising maintaining a registration table in each of the configuration items, each entry in the registration table representing a transition from a first state to a second state and including a requester identifier, a message value, and a registration key. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the system further includes a system monitor and the method further comprises: 
+<claim-text>defining at the system monitor a system mode as a Boolean function of one or more state values in the set of state values of one or more selected configuration items, C<highlight><subscript>1</subscript></highlight>-C<highlight><subscript>n</subscript></highlight>; </claim-text>
+<claim-text>reducing the one or more state values to a set of meta-states, wherein each meta-state includes one or more state values associated with one of the selected configuration items, C<highlight><subscript>1</subscript></highlight>, and the system mode is equal for every combination state values within the meta-state and state values of configuration items other than C<highlight><subscript>1</subscript></highlight>. </claim-text>
+<claim-text>sending notification requests from the system monitor to each of the selected configuration items, the notification request including a first set of meta-states and a second set of meta-states, the message value in each notification request indicating a transition to a state in the second set of meta-states, and the requester identifier indicating the system monitor; </claim-text>
+<claim-text>receiving message values from the selected configuration items at the system monitor; and </claim-text>
+<claim-text>evaluating the system mode in response to the message values. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising: 
+<claim-text>generating a registration key for each notification request and associating each registration key with the requester identifier and message for each state transition in the notification request; and </claim-text>
+<claim-text>for each notification request, returning the registration key to the requester. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a cancellation request at a configuration item, the cancellation request including a selected registration key; and </claim-text>
+<claim-text>for each state transition having an associated registration key that matches the registration key in the cancellation request, disassociating the requester identifier and message value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising maintaining a registration table in each of the configuration items, each entry in the registration table representing a transition from a first state to a second state and including a requester identifier, a message value, and a registration key. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>generating a registration key for each notification request and associating each registration key with the requester identifier and message for each state transition in the notification request; and </claim-text>
+<claim-text>for each notification request, returning the registration key to the requester. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, further comprising: 
+<claim-text>receiving a cancellation request at a configuration item, the cancellation request including a selected registration key; and </claim-text>
+<claim-text>for each state transition having an associated registration key that matches the registration key in the cancellation request, disassociating the requester identifier and message value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising maintaining a registration table in each of the configuration items, each entry in the registration table representing a transition from a first state to a second state and including a requester identifier, a message value, and a registration key. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. An apparatus for managing state changes of a system that includes a plurality of configuration items, wherein each configuration item is a functional component of the system and has an associated state value that is one of a set of state values describing operational characteristics of the configuration item, comprising: 
+<claim-text>means for representing transitions between the state values in each of the configuration items; </claim-text>
+<claim-text>means for processing notification requests at the configuration items, each notification request including a first set of state values, a second set of state values, a requester identifier, and a message value; </claim-text>
+<claim-text>means for associating the requester identifier and message value of each notification request with a transition from a state in the first set of state values to a state value in the second set of state values; and </claim-text>
+<claim-text>means, responsive to a transition of a configuration item between state values, for selecting the message value and requester identifier associated with the transition and sending the message value to the requester referenced by the requester identifier. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A state management arrangement for an electronic system, comprising a plurality of configuration items, wherein each configuration item is a functional component of the system and has an associated state value that is one of a set of state values describing operational characteristics of the configuration item, each configuration item configured and arranged to receive notification requests from one or more other configuration items, each notification request including a first set of state values, a second set of state values, a requester identifier, and a message value, associate the requester identifier and message value of each notification request with a transition from a state in the first set of state values to a state value in the second set of state values, and in response to a transition of a configuration item between state values, select the message value and requester identifier associated with the transition and send the message value to the requester referenced by the requester identifier. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The arrangement of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, further comprising a system monitor coupled to the configuration items, wherein the system monitor is configured and arranged to establish a system mode as a Boolean function of one or more state values in the set of state values of one or more selected configuration items, send notification requests to each of the selected configuration items, the message value in each notification request indicating a transition to a state in the second set of state values in the notification request, and the requester identifier indicating the system monitor, and evaluate the system mode in response to the message values received from the configuration items.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004953A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004953A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004953A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004953A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004953A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004953A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004953A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

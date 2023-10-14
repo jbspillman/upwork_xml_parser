@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004589A1-20030102-D00000.TIF SYSTEM "US20030004589A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004589A1-20030102-D00001.TIF SYSTEM "US20030004589A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004589A1-20030102-D00002.TIF SYSTEM "US20030004589A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004589</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10139182</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020506</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>01201686.1</doc-number>
+</priority-application-number>
+<filing-date>20010508</filing-date>
+<country-code>EP</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F017/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>700</class>
+<subclass>094000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Watermarking</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Alphons</given-name>
+<middle-name>Antonius Maria Lambertus</middle-name>
+<family-name>Bruekers</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Eindhoven</city>
+<country-code>NL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Jaap</given-name>
+<middle-name>Andre</middle-name>
+<family-name>Haitsma</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Eindhoven</city>
+<country-code>NL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Antonius</given-name>
+<middle-name>Adrianus Cornelis Maria</middle-name>
+<family-name>Kalker</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Eindhoven</city>
+<country-code>NL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Minne</given-name>
+<family-name>Van Der Veen</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Eindhoven</city>
+<country-code>NL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>U.S. Philips Corporation</name-1>
+<name-2></name-2>
+<address>
+<address-1>580 White Plains Road</address-1>
+<city>Tarrytown</city>
+<state>NY</state>
+<postalcode>10591</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Disclosed are methods of embedding and detecting a watermark in an information signal (x(n), y&prime;(n)) which are robust against sampling rate conversions (<highlight><bold>102</bold></highlight>) of the watermarked signal (y(n)). The frame lengths used by the embedder (<highlight><bold>101</bold></highlight>) and the detector (<highlight><bold>103</bold></highlight>), respectively, are adapted so as to preserve a constant ratio between the respective sampling rate and frame length. The frame lengths may be calculated from a greatest common divisor of a set of sampling rates providing watermarks which are robust against sampling rate conversions between any sampling rates of the set of sampling rates. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This invention relates to embedding a watermark in an information signal. The invention further relates to detecting a watermark embedded in an information signal. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> In recent years, an increasing trend towards the use and distribution of digital multimedia data has led to an increased need for adequate copy protection, copyright protection, and ownership verification of such data. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Digital watermarking is an emerging technology that may be used for a variety of purposes, such as proof of copyright ownership, tracing of illegal copies, controlling copy control equipment, broadcast monitoring, authenticity verification, adding auxiliary information into multimedia signals, etc. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> A watermark is a label which is embedded in an information signal by slightly modifying samples of the signal. Preferably, a watermarking scheme should be designed such that the watermark is imperceptible, i.e. that it does not affect the quality of the information signal significantly. In many applications, the watermark should further be robust, i.e. it should still be reliably detectable after possible signal processing operations. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Though many schemes of watermarking of still images and video have been published, there is relatively little literature on audio watermarking. Most of the published techniques employ methods such as echo-hiding or noise addition, exploiting temporal and/or spectral masking models of the human auditory system. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> A watermark may be embedded in an information signal by segmenting an information signal into frames via rectangular window functions, Fourier transforming the individual frames, slightly modifying the resulting Fourier components of each of the frames, and inverse Fourier transforming the modified coefficients, resulting in a watermark signal in the time domain. Finally, the watermark signal is scaled and added to the information signal. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> However, in this and other watermarking schemes the detection of the watermark is sensitive to differences in the sampling rates of the information signal during the embedding and the detection of the watermark. In the field of digital audio signals, for example, a considerable number of sampling rates are commonly used in e.g. CD players, speech applications, etc. Consequently, a watermarked information signal may be subject to a sampling rate conversion process which changes the sampling rate of the information signal. However, if the detection algorithm operates at a different sample frequency than the embedder, the watermark detection may fail. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It is known that the detection algorithm may compensate for a sampling rate conversion by reconverting the sampling rate to the original sampling rate used in the embedder. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> This prior art method involves the disadvantage that high quality sampling rate conversion is a complex process which requires considerable computational effort, thereby increasing the cost of a product. A low quality sampling rate conversion, on the other hand, may result in a decreased watermark detection reliability. Consequently, a sampling rate re-conversion as a part of the detection algorithm is an undesirable process. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The above and other problems are solved by a method of embedding a watermark in an information signal sampled at a first sampling rate, in which the watermark is to be detected at at least a second sampling rate, the method comprising the steps of </paragraph>
+<paragraph id="P-0011" lvl="2"><number>&lsqb;0011&rsqb;</number> generating a representation of the watermark corresponding to a frequency spectrum having predetermined values indicative of the watermark at a set of frequencies corresponding to integral multiples of a scaling factor; and </paragraph>
+<paragraph id="P-0012" lvl="2"><number>&lsqb;0012&rsqb;</number> embedding the representation of the watermark in the information signal; wherein </paragraph>
+<paragraph id="P-0013" lvl="3"><number>&lsqb;0013&rsqb;</number> the scaling factor is derived from a first common divisor of a predetermined set of sampling rates comprising the first and second sampling rates, divided by a predetermined integral factor. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Consequently, the method according to the invention provides a watermarking scheme which is robust against sampling rate conversions between the sampling rates in the predetermined set of sampling rates. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The method utilises the fact that the frequencies corresponding to the Fourier coefficients of a sampled signal are multiples of the sampling rate divided by the length of the frames used in the Fourier transformation. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> According to the invention, the watermark in the frequency domain is substantially specified at frequencies which correspond to multiples of a predetermined constant scaling factor. Consequently, a watermark detector may reproduce these frequencies by selecting a proper frame length based on the sampling rate and the scaling factor. Furthermore, since the scaling factor is derived from a common divisor of a set of sampling rates and, preferably, is substantially equal to the common divisor divided by the predetermined integral factor, it is ensured that the calculated frame length is an integral number for all sampling rates of the selected set of sampling rates. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Therefore, the method according to the invention ensures that a detection algorithm using any one of the sampling rates of the set of sampling rates may retrieve samples of the watermark in the frequency domain at the same frequencies at which they were embedded by an embedder operating at any sampling rate of the predetermined set of sampling rates. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> It is a further advantage of the invention that, in contrast to the above-mentioned prior art method, the detection algorithm does not need to know the sampling rate at which the watermark was embedded. Consequently, it is an advantage of the invention that it increases the flexibility of a watermarking scheme. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> It is a further advantage of the invention that it yields a watermark which is robust against signal processing operations, i.e. the watermark may still be detected in a signal, even after the signal has been subject to such operations. In the field of audio signals, examples of such processing operations include compression, cropping, D/A and A/D conversion, equalization, temporal scaling, group delay distortions, filtering, and removal or insertion of samples. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> It is an advantage of the invention that it overcomes the disadvantage of a decreased detection reliability of the alternative method of scaling the information signal in time prior to the detection process in order to compensate the difference in sampling rates. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In a preferred embodiment of the invention, the method further comprises the steps of </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> calculating a first frame length by dividing the first sampling rate by the scaling factor; </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> dividing the information signal into a series of signal frames with respective frame lengths related to the calculated first frame length; </paragraph>
+<paragraph id="P-0024" lvl="2"><number>&lsqb;0024&rsqb;</number> embedding a watermark in at least one signal frame of the series of signal frames to obtain a series of modified signal frames. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> It is understood that the signal frames may overlap with their respective neighbouring signal frames. Furthermore, the lengths of the signal frames of the series of frames may be the same for all the frames, preferably substantially equal to the first frame length. Alternatively, different frame lengths may be used within the series of signal frames, e.g. different multiples of the calculated first frame length. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> More preferably, the method further comprises the steps of </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> transforming the signal frames into series of coefficients; </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> modifying said coefficients as a function of the watermark; </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> inversely transforming the series of modified coefficients to obtain the modified signal frames. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The step of transforming the signal frames may comprise the calculation of a Fourier transform. Correspondingly, the step of inversely transforming the modified coefficients may comprise the calculation of an inverse Fourier transform. Alternatively, other transformations may be used, instead of a Fourier transformation, for example a discrete cosine transform or a wavelet transform. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Even more preferably, the step of transforming the signal frames comprises the step of applying a mixed-radix Fast Fourier Transform algorithm. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> It is an advantage of the above embodiments that they provide efficient methods of embedding the watermark even for frame lengths which are not powers of 2. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Further preferred embodiments are disclosed in the dependent claims. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The invention further provides a method of detecting a watermark, arrangements for embedding and detecting a watermark, an information signal having an embedded watermark, a storage medium having recorded thereon such a signal, and a device for processing multimedia content comprising an arrangement for detecting a watermark. The above-mentioned aspects of the invention are disclosed in the independent claims. As the advantages and preferred embodiments of these aspects of the invention correspond to the advantages and preferred embodiments of the method described above and in the following, these will not be repeated here.</paragraph>
+</summary-of-invention>
+<brief-description-of-drawings>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The invention will be explained more fully below in connection with preferred embodiments and with reference to the drawings, in which: </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a schematic diagram of a watermarking system according to an embodiment of the invention; </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a schematic diagram of an arrangement for embedding a watermark according to a first embodiment of the invention; </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows a schematic diagram of an arrangement for embedding a watermark according to a second embodiment of the invention; </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows a schematic diagram of an arrangement for detecting a watermark according to an embodiment of the invention.</paragraph>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a schematic view of a watermarking system according to the invention. The system comprises an embedder <highlight><bold>101</bold></highlight> which embeds a watermark in an information signal x(n), e.g. a digital audio signal, at a sampling rate f<highlight><subscript>s1</subscript></highlight>. Subsequently, the watermarked signal y(n) may be subject to a sampling rate conversion process <highlight><bold>102</bold></highlight> which changes the sampling rate of the watermarked signal to f<highlight><subscript>s2</subscript></highlight>. An example of a sampling rate conversion process is a D/A conversion and a subsequent A/D conversion using a different sampling rate. The resulting signal y&prime;(n) is then analysed by a watermark detector <highlight><bold>103</bold></highlight>. The embedder <highlight><bold>101</bold></highlight> implements a method of embedding a watermark where the watermark may be represented by a sequence of N<highlight><subscript>1 </subscript></highlight>coefficients w(k), k&equals;1, . . . , N<highlight><subscript>1</subscript></highlight>, in the frequency domain. For example, the coefficients may be a sequence of pseudo-random numbers with zero mean and variance 1. For example, as will be described in greater detail in connection with <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the method implemented by the embedder may comprise the segmentation of the audio signal into frames of length N<highlight><subscript>1</subscript></highlight>, the Fourier transforming of the frames, and a multiplication of the resulting N<highlight><subscript>1 </subscript></highlight>Fourier coefficients with the watermark coefficients w(k). The detector <highlight><bold>103</bold></highlight> implements a method of detecting the watermark which comprises the calculation of a correlation between the watermark coefficients w(k) and a Fourier representation of the signal y&prime;(n) of length N<highlight><subscript>2</subscript></highlight>. An example of an arrangement for detecting a watermark according to an embodiment of the invention will be described in connection with <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> According to the invention, it is realised that the Fourier coefficients of the sampled signal x(n), n&equals;1, . . . , N, are related to a frequency such that the frequency F<highlight><subscript>k </subscript></highlight>related to the k-th coefficient is F<highlight><subscript>k</subscript></highlight>&equals;k&middot;f<highlight><subscript>s</subscript></highlight>/N, where f<highlight><subscript>s </subscript></highlight>is the sampling rate of the signal x(n) and N is the length of the sampling interval. In the above-mentioned example, N corresponds to the frame lengths N<highlight><subscript>1 </subscript></highlight>and N<highlight><subscript>2 </subscript></highlight>of the segmented information signal in the embedder and the detector, respectively. Hence, the frequency F<highlight><subscript>k </subscript></highlight>is a multiple of the index k with a factor of proportionality of &Dgr;&equals;f<highlight><subscript>s</subscript></highlight>/N. The scaling factor &Dgr; may be interpreted as a grid size of the sampled signal. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> As the detector <highlight><bold>103</bold></highlight> correlates the signal y&prime;(n) with the watermark in the frequency domain, both the embedding and the detection algorithms should preferably use the same frequencies to embed and retrieve the watermark samples. Even though small deviations may be tolerable, a mismatch in frequencies decreases the detection performance. As the frequencies depend on the grid size &Dgr;, both algorithms should use matching grid sizes. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> The sampling rate conversion <highlight><bold>102</bold></highlight> changes the sampling rate. If, for example, an audio signal with a sampling rate of f<highlight><subscript>s1</subscript></highlight>&equals;44100 Hz is applied to a watermark embedder with a frame length of 2048 samples, the frequencies corresponding to the Fourier coefficients are multiples of the grid size &Dgr;<highlight><subscript>1</subscript></highlight>&ap;21.5 Hz. If the signal is subject to a subsequent sampling rate conversion and converted to a signal with a sampling rate of f<highlight><subscript>s2</subscript></highlight>&equals;48000 Hz, and if the detection algorithm also uses a frame length of 2048 samples, the frequencies corresponding to the Fourier coefficients are multiples of &Dgr;<highlight><subscript>2</subscript></highlight>&ap;23.4 Hz. Consequently, the detection algorithm will use different frequencies than the embedding algorithm and the detection will fail. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, according to the invention, the frame length N<highlight><subscript>1 </subscript></highlight>used in the embedder is chosen to be N<highlight><subscript>1</subscript></highlight>&equals;m&middot;f<highlight><subscript>s1</subscript></highlight>/gcd(f<highlight><subscript>s1</subscript></highlight>, f<highlight><subscript>s2</subscript></highlight>), where m is an integral factor and gcd(f<highlight><subscript>s1</subscript></highlight>, f<highlight><subscript>s2</subscript></highlight>) is the greatest common divisor of the sampling rates f<highlight><subscript>s1 </subscript></highlight>and f<highlight><subscript>s2 </subscript></highlight>of the embedding and detection algorithm, respectively. The frame length used in the detector is chosen to be N<highlight><subscript>2</subscript></highlight>&equals;m&middot;f<highlight><subscript>s2</subscript></highlight>/gcd(f<highlight><subscript>s1</subscript></highlight>, f<highlight><subscript>s2</subscript></highlight>). Hence, both the embedder and the detector correspond to the same grid size &Dgr;&equals;f<highlight><subscript>s1</subscript></highlight>/N<highlight><subscript>1</subscript></highlight>&equals;f<highlight><subscript>s2</subscript></highlight>/N<highlight><subscript>2</subscript></highlight>&equals;gcd(f<highlight><subscript>s1</subscript></highlight>, f<highlight><subscript>s2</subscript></highlight>)/m. In the above example, where f<highlight><subscript>s1</subscript></highlight>&equals;44100 Hz and f<highlight><subscript>s2</subscript></highlight>&equals;48000 Hz, the greatest common divisor is gcd(f<highlight><subscript>s1</subscript></highlight>, f<highlight><subscript>s2</subscript></highlight>)&equals;300 and, therefore, N<highlight><subscript>1</subscript></highlight>&equals;147 m and N<highlight><subscript>2</subscript></highlight>&equals;160 m. The following table summarises the resulting frame lengths for some possible values of m:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="98PT" align="center"/>
+<colspec colname="2" colwidth="21PT" align="center"/>
+<colspec colname="3" colwidth="98PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>m</entry>
+<entry>N<highlight><subscript>1</subscript></highlight></entry>
+<entry>N<highlight><subscript>2</subscript></highlight></entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="98PT" align="char" char="."/>
+<colspec colname="2" colwidth="21PT" align="char" char="."/>
+<colspec colname="3" colwidth="98PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry>1</entry>
+<entry>147</entry>
+<entry>160</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>294</entry>
+<entry>320</entry>
+</row>
+<row>
+<entry>14</entry>
+<entry>2058</entry>
+<entry>2240</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Hence, even with the constraint of a matching grid size, a number of different frame lengths are possible and may be selected by choosing different values of m. Large values of m correspond to large frame sizes allowing a large watermark payload. Small frame sizes, on the other hand, correspond to a lower complexity of the embedding and detection algorithms, smaller distortions of the information signal, and smaller delays introduced by the embedder and detector. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> It should be noted that, in the above example, the number of watermark coefficients w(k) was assumed to be equal to the frame length N<highlight><subscript>1 </subscript></highlight>at the embedder. Alternatively, the watermark which is stored both at the embedder and the detector may comprise a number N<highlight><subscript>w </subscript></highlight>of watermark coefficients w(k) where N<highlight><subscript>w </subscript></highlight>may be different from N<highlight><subscript>1 </subscript></highlight>and/or N<highlight><subscript>2</subscript></highlight>. In this case, the min(N<highlight><subscript>1</subscript></highlight>,N<highlight><subscript>w</subscript></highlight>) low-frequency coefficients of w(k) may be embedded at the embedder and, at the detector, the min(N<highlight><subscript>1</subscript></highlight>,N<highlight><subscript>2</subscript></highlight>,N<highlight><subscript>w</subscript></highlight>) low-frequency coefficients contribute to the calculated correlation. For a given range of possible values of N<highlight><subscript>1 </subscript></highlight>and N<highlight><subscript>2</subscript></highlight>, a value of N<highlight><subscript>w </subscript></highlight>may be chosen as a trade-off between computational complexity and detection reliability. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In the example of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the watermarking scheme was constructed to be compatible with two sampling rates. In the case where the watermarking scheme should be compatible with a set of n sampling rates f<highlight><subscript>s1</subscript></highlight>, . . . , f<highlight><subscript>sn</subscript></highlight>, the frame lengths corresponding to these sampling rates are selected as N<highlight><subscript>i</subscript></highlight>&equals;m&middot;f<highlight><subscript>si</subscript></highlight>/gcd(f<highlight><subscript>s1</subscript></highlight>, . . . , f<highlight><subscript>sn</subscript></highlight>), for i&equals;1, . . . , n, where gcd(f<highlight><subscript>s1</subscript></highlight>, . . . , f<highlight><subscript>sn</subscript></highlight>) is the greatest common devisor of the sampling rates f<highlight><subscript>s1</subscript></highlight>, . . . , f<highlight><subscript>sn</subscript></highlight>. For example, the sampling rates listed in the left column of the following table are examples of commonly used sampling rates in the field of digital audio recording, processing or playback:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="center"/>
+<colspec colname="2" colwidth="84PT" align="center"/>
+<colspec colname="3" colwidth="70PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>f<highlight><subscript>s</subscript></highlight> in Hz</entry>
+<entry>N</entry>
+<entry>factorisation</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="char" char="."/>
+<colspec colname="2" colwidth="84PT" align="center"/>
+<colspec colname="3" colwidth="70PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>6000</entry>
+<entry>&emsp;&ensp;240 m</entry>
+<entry>2<highlight><superscript>4</superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>8000</entry>
+<entry>&emsp;&ensp;320 m</entry>
+<entry>2<highlight><superscript>6</superscript></highlight> &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>11025</entry>
+<entry>&emsp;&ensp;441 m</entry>
+<entry>3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>16000</entry>
+<entry>&emsp;&ensp;640 m</entry>
+<entry>2<highlight><superscript>7</superscript></highlight> &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>22050</entry>
+<entry>&emsp;&ensp;882 m</entry>
+<entry>2 &middot; 3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>24000</entry>
+<entry>&emsp;&ensp;960 m</entry>
+<entry>2<highlight><superscript>6 </superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>32000</entry>
+<entry>&emsp;1280 m</entry>
+<entry>2<highlight><superscript>8</superscript></highlight> &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>44100</entry>
+<entry>&emsp;1764 m</entry>
+<entry>2<highlight><superscript>2</superscript></highlight> &middot; 3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>48000</entry>
+<entry>&emsp;1920 m</entry>
+<entry>2<highlight><superscript>7</superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>64000</entry>
+<entry>&emsp;2560 m</entry>
+<entry>2<highlight><superscript>9</superscript></highlight> &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>88200</entry>
+<entry>&emsp;3528 m</entry>
+<entry>2<highlight><superscript>3</superscript></highlight> &middot; 3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>96000</entry>
+<entry>&emsp;3840 m</entry>
+<entry>2<highlight><superscript>8</superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>192000</entry>
+<entry>&emsp;7680 m</entry>
+<entry>2<highlight><superscript>9</superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>2822400</entry>
+<entry>112896 m</entry>
+<entry>2<highlight><superscript>8</superscript></highlight> &middot; 3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> It is noted that the list comprises frequencies which are multiples or fractions of the CD sampling rates 44100 Hz and 48000 Hz as well as multiples of 8000 Hz. The greatest common divisor of these frequencies is 25 and the corresponding relative frame lengths are listed in the centre column of the above table. The relative frame lengths are listed as multiples of a common factor m. Different sets of absolute frame lengths may be obtained by choosing different values m. Hence, in a system which implements these relative frame lengths, the watermarking is robust against sampling rate conversions between frequencies of the corresponding set of frequencies, i.e. even though a sampling rate conversion is preformed on the watermarked signal, the watermark may still be reliably detected. In the right column of the above table, the factorisations of the frame length N are listed. It should be noted that, as the frame lengths factorise into small factors, in the above examples 2, 3, 5, and 7, efficient mixed radix Fast Fourier Transform (FFT) schemes may be used to calculate the Fourier transform of the segmented signal x(n). </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> If, as another example, a given watermarking application does not involve frequencies from the above table which are below 32000 Hz, the greatest common divisor of the remaining frequencies is 100. This situation is summarised in the following table:  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="center"/>
+<colspec colname="2" colwidth="84PT" align="center"/>
+<colspec colname="3" colwidth="70PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>f<highlight><subscript>s</subscript></highlight> in Hz</entry>
+<entry>N</entry>
+<entry>factorisation</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="char" char="."/>
+<colspec colname="2" colwidth="84PT" align="center"/>
+<colspec colname="3" colwidth="70PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>32000</entry>
+<entry>&emsp;320 m</entry>
+<entry>2<highlight><superscript>6</superscript></highlight> &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>44100</entry>
+<entry>&emsp;441 m</entry>
+<entry>3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>48000</entry>
+<entry>&emsp;480 m</entry>
+<entry>2<highlight><superscript>5</superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>64000</entry>
+<entry>&emsp;640 m</entry>
+<entry>2<highlight><superscript>7</superscript></highlight> &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>88200</entry>
+<entry>&emsp;882 m</entry>
+<entry>2 &middot; 3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>96000</entry>
+<entry>&emsp;960 m</entry>
+<entry>2<highlight><superscript>6</superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>192000</entry>
+<entry>&ensp;1920 m</entry>
+<entry>2<highlight><superscript>7</superscript></highlight> &middot; 3 &middot; 5 &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry>2822400</entry>
+<entry>28224 m</entry>
+<entry>2<highlight><superscript>6</superscript></highlight> &middot; 3<highlight><superscript>2</superscript></highlight> &middot; 7<highlight><superscript>2</superscript></highlight> &middot; m</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0050" lvl="7"><number>&lsqb;0050&rsqb;</number> It should be noted that the other embedding methods may be used within the scope of the invention. Another example of such a method which will be described in greater detail in connection with <cross-reference target="DRAWINGS">FIG. 3</cross-reference> comprises the calculation of a convolution of the audio signal with a limited-support watermark signal of length N<highlight><subscript>1 </subscript></highlight>which may be represented by its Fourier coefficients w(k), k&equals;1, . . . , N<highlight><subscript>1</subscript></highlight>. Even though this example does not comprise a segmentation of the audio signal into frames, it still involves the intrinsic length N<highlight><subscript>1</subscript></highlight>. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a schematic diagram of an arrangement for embedding a watermark according to a first embodiment of the invention. The arrangement comprises a division circuit <highlight><bold>201</bold></highlight> which divides the incoming information signal x(n) into frames of length N. The resulting frames x<highlight><subscript>s</subscript></highlight>(n) are applied to a Fast Fourier Transform circuit <highlight><bold>202</bold></highlight> which transforms the signal segments x<highlight><subscript>s</subscript></highlight>(n) to the Fourier domain resulting in a sequence of Fourier coefficients x&prime;<highlight><subscript>s</subscript></highlight>(k). Each Fourier coefficient x&prime;<highlight><subscript>s</subscript></highlight>(k) is related to a frequency, such that the frequency F<highlight><subscript>k </subscript></highlight>related to the k-th coefficient x&prime;<highlight><subscript>s</subscript></highlight>(k) is F<highlight><subscript>k</subscript></highlight>&equals;k&middot;f<highlight><subscript>s1</subscript></highlight>/N, where N is the frame length and f<highlight><subscript>s1 </subscript></highlight>is the sampling rate of the signal x(n). Subsequently, the Fourier coefficients x&prime;<highlight><subscript>s</subscript></highlight>(k) are modified by a watermark calculation module <highlight><bold>203</bold></highlight> as a function of a watermark sequence w(k), e.g. by multiplying w(k) with x&prime;<highlight><subscript>s</subscript></highlight>(k) and scaling the result with a scaling factor. The watermark sequence w(k) is generated by a watermark generation circuit <highlight><bold>204</bold></highlight> on the basis of a secret watermark W. The arrangement further comprises a storage medium <highlight><bold>205</bold></highlight>, preferably a read-only memory which cannot be interrogated, in which the watermark W is stored. The resulting scaled watermark samples w<highlight><subscript>s</subscript></highlight>(k) are applied to the inverse Fast Fourier transform circuit <highlight><bold>206</bold></highlight> which transforms the sequence of coefficients w<highlight><subscript>s</subscript></highlight>(k) back to sequences of signal samples w<highlight><subscript>s</subscript></highlight>&prime;(n). The watermarks w<highlight><subscript>s</subscript></highlight>&prime;(n) are applied to a reconstruction circuit <highlight><bold>207</bold></highlight> which generates the watermark w&prime;(n) from the watermark segments w<highlight><subscript>s</subscript></highlight>&prime;(n). Finally, the watermark w&prime;(n) is added to the original audio signal x(n) by the summing circuit <highlight><bold>208</bold></highlight> to obtain the watermarked audio signal y(n) x(n)&plus;w&prime;(n). Alternatively, the watermark signal w&prime;(n) may be combined with the audio signal x(n) using a different function, e.g. a subtraction or an XOR function in the case of a 1-bit audio format. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> According to this embodiment of the invention, the frame length N is adapted to the sampling rate f<highlight><subscript>s1 </subscript></highlight>such that the grid size is the same as the grid size to be used during a subsequent detection of the watermark, as was described in connection with <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows a schematic diagram of an arrangement for embedding a watermark according to a second, non-frame-based embodiment of the invention. Instead of dividing the information signal x(n) into frames, the arrangement comprises a convolution circuit <highlight><bold>302</bold></highlight> which calculates a convolution x(n)&compfn;v(n)&equals;&Sgr;<highlight><subscript>k</subscript></highlight>x(n&minus;k)&middot;v(k) of x(n) with a key sequence v(n) representing the watermark. The key sequence v(n) is generated by the generation circuit <highlight><bold>303</bold></highlight>, preferably an inverse Fourier transform of a watermark sequence w(k), k&equals;1, . . . , N. Hence, the frequency spectrum of v(n) is determined at a set of frequencies which are multiples of the index k. Hence, according to this embodiment, the length N of the sequence v(n) is determined so as to match the grid size parameter &Dgr; of the embedder and the detector as described in connection with <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. According to this embodiment, the watermarked signal y(n) is calculated according to x(n)&minus;&gt;y(n)&equals;x(n)&compfn;&lsqb;1&plus;&lgr;&middot;v(n)&rsqb;, where &lgr; is a predetermined embedding strength. Correspondingly, the arrangement of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> further comprises a multiplication circuit <highlight><bold>305</bold></highlight> which multiplies the samples of the convolution x(n)&compfn;v(n) with the embedding strength X, and a summing circuit <highlight><bold>306</bold></highlight> which adds the resulting watermark signal w<highlight><subscript>x</subscript></highlight>(n)&equals;&lgr;x(n)&compfn;v(n) to the information signal x(n), resulting in the watermarked signal y(n). </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> The subsequent watermark detection may, for example, use a Symmetrical Phase Only Matched Filtering (SPOMF) technique where the detection algorithm also comprises a segmentation of the signal to be analysed. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows a schematic diagram of an arrangement for detecting a watermark according to an embodiment of the invention. The arrangement comprises a Fourier transform circuit <highlight><bold>401</bold></highlight> which calculates Fourier transforms of frames of the information signal y(n) to be analysed for a watermark. According to the invention, the length N of the frames is calculated by the circuit <highlight><bold>402</bold></highlight> on the basis of the sampling rate of the signal y(n) and the grid size &Dgr; calculated according to the invention, preferably according to the embodiment of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The output of the Fourier transform circuit <highlight><bold>401</bold></highlight> is applied to a correlation circuit <highlight><bold>403</bold></highlight> which calculates a correlation of the Fourier coefficients with a watermark sequence w(k). Subsequently, in the thresholding circuit <highlight><bold>404</bold></highlight>, a dominant peak in the correlation spectrum is identified and its size is compared to a predetermined threshold value t, resulting in a control signal <highlight><bold>405</bold></highlight> indicating the presence or absence of the watermark and/or the payload of the watermark. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> It should be noted that the frame lengths used in the embedder and detector should, preferably, be substantially equal to the calculated frame lengths according to the method described above. However, small deviations from the optimal frame length do not necessarily cause the watermark detection to fail, but merely cause a decrease in detection reliability. It may be desirable to accept a slightly decreased detection reliability, if the implementation of the embedder or detector may be simplified due to a slightly suboptimal choice of the frame length. For example, if the optimal frame length is only slightly different from a power of 2, the power of two may be chosen as a frame length in order to achieve a particularly efficient Fast Fourier Transform algorithm, e.g. a radix-2 algorithm. Another example where a suboptimal frame length may be selected is in cases where the sampling rates are non-integral numbers or mutually prime, such that the greatest common divisor is 1. In order to reduce the sensitivity to small deviations from the optimal frame length, so-called scale searching methods may be used in the detector. However, these methods may cause a higher rate of false positive detections. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> It should further be noted that, instead of using the greatest common divisor of the set of sampling rates, any other common divisor, preferably different from 1, may be used. However, the use of the greatest common divisor provides the greatest flexibility in choosing a set of frame lengths by selecting a value of the factor m. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> It is further understood that the above arrangements for the embedding and detection of a watermark according to the invention may be implemented by any processing unit, e.g. a programmable microprocessor, an application-specific integrated circuit, or another integrated circuit, a smart card, or the like. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> The watermark and/or the watermark signal may be stored in a storage medium. Examples of such storage media include magnetic tape, optical disc, digital video disk (DVD), compact disc (CD or CD-ROM), mini-disc, hard disk, floppy disk, ferro-electric memory, electrically erasable programmable read only memory (EEPROM), flash memory, EPROM, read only memory (ROM), static random access memory (SRAM), dynamic random access memory (DRAM), synchronous dynamic random access memory (SDRAM), ferromagnetic memory, optical storage, charge coupled devices, smart cards, etc. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> It should finally be noted that even though the invention has primarily been described in connection with an audio signal, the scope of the invention is not restricted to audio signals. It is understood that the invention may also be applied to other information signals, such as multimedia signals, video signals, animations, graphics, still images, or the like. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> It should be noted that the above-mentioned embodiments illustrate rather than limit the invention, and that those skilled in the art will be able to design many alternative embodiments without departing from the scope of the appended claims. In the claims, any reference signs placed between parentheses shall not be construed as limiting the claim. The word &lsquo;comprising&rsquo; does not exclude the presence of other elements or steps than those listed in a claim. The invention can be implemented by means of hardware comprising several distinct elements, and by means of a suitably programmed computer. In a device claim enumerating several means, several of these means can be embodied by one and the same item of hardware. The mere fact that certain measures are recited in mutually different dependent claims does not indicate that a combination of these measures cannot be used to advantage. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> In summary, disclosed are methods of embedding and detecting a watermark in an information signal (x(n), y&prime;(n)) which are robust against sampling rate conversions of the watermarked signal (y(n)). The frame lengths used by the embedder and the detector, respectively, are adapted so as to preserve a constant ratio between the respective sampling rate and frame length. The frame lengths may be calculated from a greatest common divisor of a set of sampling rates providing watermarks which are robust against sampling rate conversions between any sampling rates of the set of sampling rates. </paragraph>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of embedding a watermark (W) in an information signal (x(n)) sampled at a first sampling rate (f<highlight><subscript>s1</subscript></highlight>), in which the watermark is to be detected at at least a second sampling rate (f<highlight><subscript>s2</subscript></highlight>), the method comprising the steps of 
+<claim-text>generating a representation of the watermark corresponding to a frequency spectrum having predetermined values (w(k)) indicative of the watermark at a set of frequencies corresponding to integral multiples of a scaling factor (&Dgr;); and </claim-text>
+<claim-text>embedding the representation of the watermark in the information signal; wherein 
+<claim-text>the scaling factor is derived from a first common divisor of a predetermined set of sampling rates comprising the first and second sampling rates, divided by a predetermined integral factor. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising the steps of 
+<claim-text>calculating a first frame length by dividing the first sampling rate by the scaling factor; </claim-text>
+<claim-text>dividing the information signal into a series of signal frames (x<highlight><subscript>s</subscript></highlight>(n)) with respective frame lengths related to the calculated first frame length; </claim-text>
+<claim-text>embedding a watermark in at least one signal frame of the series of signal frames to obtain a series of modified signal frames (w&prime;<highlight><subscript>s</subscript></highlight>(n)). </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising the steps of 
+<claim-text>transforming the signal frames into series of coefficients (x<highlight><subscript>s</subscript></highlight>(k)); </claim-text>
+<claim-text>modifying said coefficients as a function of the watermark; </claim-text>
+<claim-text>inversely transforming the series of modified coefficients (w<highlight><subscript>s</subscript></highlight>(k)) to obtain the modified signal frames. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the step of transforming the signal frames comprises the step of applying a mixed-radix Fast Fourier Transform algorithm. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the representation of the watermark is a watermark signal and wherein the step of embedding the representation of the watermark into the information signal comprises the step of calculating a convolution of the watermark signal with the information signal. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first set of sampling rates comprises at least one sampling rate selected from the group of sampling rates containing 6000 Hz, 8000 Hz, 11025 Hz, 16000 Hz, 22050 Hz, 24000 Hz, 32000 Hz, 44100 Hz, 48000 Hz, 64000 Hz, 88200 Hz, 96000 Hz, 192000 Hz, 28222400 Hz. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the information signal comprises a multimedia signal, selected from the class of multimedia signals including audio signals, still image signals, and video signals. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first common divisor is a greatest common divisor of the set of sampling rates. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method of detecting a watermark in an information signal (y(n)) sampled at a first sampling rate (f<highlight><subscript>s2</subscript></highlight>), the watermark having been embedded at a second sampling rate, the method comprising the steps of 
+<claim-text>calculating a first frame length (N) by multiplying the first sampling rate by a predetermined scale factor corresponding to a predetermined integral factor divided by a first common divisor of a set of sampling rates comprising the first and second sampling rates; </claim-text>
+<claim-text>dividing the information signal into signal frames with a length corresponding to the calculated first frame length; </claim-text>
+<claim-text>determining a correlation between the watermark and a series of coefficients derived from said signal frames; and </claim-text>
+<claim-text>detecting whether said correlation exceeds a predetermined value (t). </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. An arrangement for embedding a watermark in an information signal sampled at a first sampling rate, in which the watermark is to be detected at at least a second sampling rate, the arrangement comprising 
+<claim-text>means (<highlight><bold>204</bold></highlight>, <highlight><bold>303</bold></highlight>) for generating a representation of the watermark corresponding to a frequency spectrum having predetermined values indicative of the watermark at a set of frequencies corresponding to integral multiples of a scaling factor; and </claim-text>
+<claim-text>means (<highlight><bold>203</bold></highlight>, <highlight><bold>302</bold></highlight>) for embedding the representation of the watermark in the information signal; wherein 
+<claim-text>the scaling factor is derived from a first common divisor of a predetermined set of sampling rates comprising the first and second sampling rates, divided by a predetermined integral factor. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. An arrangement for detecting a watermark in an information signal sampled at a first sampling rate, the watermark having been embedded at a second sampling rate, the arrangement comprising 
+<claim-text>means (<highlight><bold>402</bold></highlight>) for calculating a first frame length by multiplying the first sampling rate by a predetermined scale factor corresponding to a predetermined integral factor divided by a first common divisor of a set of sampling rates comprising the first and second sampling rates; </claim-text>
+<claim-text>means (<highlight><bold>401</bold></highlight>) for dividing the information signal into signal frames with a length corresponding to the calculated first frame length; </claim-text>
+<claim-text>means (<highlight><bold>403</bold></highlight>) for determining a correlation between the watermark and a series of coefficients derived from said signal frames; and </claim-text>
+<claim-text>means (<highlight><bold>404</bold></highlight>) for detecting whether said correlation exceeds a predetermined value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A device for processing multimedia content, the multimedia content being included in an information signal sampled at a first sampling rate, the device comprising an arrangement for detecting a watermark signal in the information signal, the watermark having been embedded at a second sampling rate, the arrangement including 
+<claim-text>means for calculating a first frame length by multiplying the first sampling rate by a predetermined scale factor corresponding to a predetermined integral factor divided by a first common divisor of a set of sampling rates comprising the first and second sampling rates; </claim-text>
+<claim-text>means for dividing the information signal into signal frames with a length corresponding to the calculated first frame length; </claim-text>
+<claim-text>means for determining a correlation between the watermark and a series of coefficients derived from said signal frames; and </claim-text>
+<claim-text>means for detecting whether said correlation exceeds a predetermined value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. An information signal having an embedded watermark, wherein the information signal has been generated by generating a representation of the watermark corresponding to a frequency spectrum having predetermined values indicative of the watermark at a set of frequencies corresponding to integral multiples of a scaling factor; and 
+<claim-text>embedding the representation of the watermark in the information signal; wherein 
+<claim-text>the scaling factor is derived from a first common divisor of a predetermined set of sampling rates comprising first and second sampling rates, divided by a predetermined integral factor. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A storage medium having recorded thereon an information signal according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A device for transmitting an information signal, the device comprising an arrangement for embedding a watermark in the information signal, the information signal being sampled at a first sampling rate, in which the watermark is to be detected at at least a second sampling rate, the arrangement including 
+<claim-text>means for generating a representation of the watermark corresponding to a frequency spectrum having predetermined values indicative of the watermark at a set of frequencies corresponding to integral multiples of a scaling factor; and </claim-text>
+<claim-text>means for embedding the representation of the watermark in the information signal; wherein 
+<claim-text>the scaling factor is derived from a first common divisor of a predetermined set of sampling rates comprising the first and second sampling rates, divided by a predetermined integral factor.</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004589A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004589A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004589A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

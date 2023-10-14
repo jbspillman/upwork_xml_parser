@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005015A1-20030102-P00001.TIF SYSTEM "US20030005015A1-20030102-P00001.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-P00002.TIF SYSTEM "US20030005015A1-20030102-P00002.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-P00003.TIF SYSTEM "US20030005015A1-20030102-P00003.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-P00004.TIF SYSTEM "US20030005015A1-20030102-P00004.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-D00000.TIF SYSTEM "US20030005015A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-D00001.TIF SYSTEM "US20030005015A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-D00002.TIF SYSTEM "US20030005015A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-D00003.TIF SYSTEM "US20030005015A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005015A1-20030102-D00004.TIF SYSTEM "US20030005015A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005015</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09882766</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010615</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>708</class>
+<subclass>520000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>708</class>
+<subclass>208000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Vector scaling system for G.728 annex G</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Shiuh-Yuan</given-name>
+<family-name>Chen</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Los Altos</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>TOWNSEND AND TOWNSEND AND CREW, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>TWO EMBARCADERO CENTER</address-1>
+<address-2>EIGHTH FLOOR</address-2>
+<city>SAN FRANCISCO</city>
+<state>CA</state>
+<postalcode>94111-3834</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method, by a processing device, for scaling an M-bit integer input vector containing one or more vector elements. The method comprises receiving a maximum permitted left shift (MLS) value for the input vector, said MLS value being less than or equal to M&minus;2; determining a minimum left shift (NLS_MIN) for scaling said vector element with the largest magnitude; employing said NLS_MIN value to determine whether said input vector is a zero input vector, or a non-zero input vector irrespective of the positive or negative value of the largest element values of said non-zero input vector; if a non-zero input vector is determined, offsetting said NLS_MIN value by said MLS value to obtain an actual number of left shifts (NLS) value for scaling said input vector; and if a zero input vector is determined, offsetting said NLS_MIN value by said MLS value to obtain the NLS value. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to the field of information processing and more specifically to a vector scaling system for block floating point representation. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Conventional algorithms for vector scaling are well known. One such algorithm is the VSCALE routine defined by ITU (International Telecommunication Union)-T Recommendation G.728&mdash;Annex G. The recommendation relates to 16 kbit/s LD-CELP (code excited linear prediction) using a block floating point representation device. While directed to a 16-bit word size, it will be appreciated that VSCALE is applicable to other word sizes as well. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The importance of vector scaling for floating block representation cannot be over-emphasized. Vector scaling ensures the maximization of precision in fixed point DSP (digital signal processing) algorithms. Moreover, to obtain accuracy and consistency in fixed point fractional implementation, the vector values require left justification. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Generally, floating block representation is used for accommodating a more dynamic range of values (the ratio of the largest number represented to the smallest represented number that is non-zero for a given format). A floating point representation of a value comprises three portions, namely, a sign bit, an unsigned fractional number, and an exponent. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> As shown, <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a single precision, IEEE standard 754, single point precision floating point representation. In <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the representation comprises a sign <highlight><bold>102</bold></highlight> bit for representing the sign of the entire number, an exponent <highlight><bold>104</bold></highlight> which is an 8-bit value representing the true exponent of the number V (see below) and offset by a predetermined bias, the bias being employed for comparing both positive and negative true exponents of floating point numbers; and a mantissa <highlight><bold>106</bold></highlight> which is a 23-bit number having a leading 1 bit (typically implied): </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>V</italic></highlight>&equals;(&minus;1)<highlight><superscript>S</superscript></highlight>&middot;2<highlight><superscript>E-bias</superscript></highlight>(1<highlight><italic>&middot;F</italic></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0006" lvl="2"><number>&lsqb;0006&rsqb;</number> where S is the sign <highlight><bold>102</bold></highlight> bit, </paragraph>
+<paragraph id="P-0007" lvl="2"><number>&lsqb;0007&rsqb;</number> E is the exponent <highlight><bold>104</bold></highlight>, and </paragraph>
+<paragraph id="P-0008" lvl="2"><number>&lsqb;0008&rsqb;</number> F is the mantissa <highlight><bold>106</bold></highlight>. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> This format can accommodate numbers having exponents from &minus;127 to &plus;128 in accordance with the IEEE standard 754. Various conventional techniques for scaling a vector are known. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> One such scheme is the VSCALE originally proposed in G.728 Annex G. VSCALE is a pseudo-code for performing vector scaling for block floating point representation. Its purpose is to scale a vector of numbers so that the largest magnitude of its elements is left justified as desired. As discussed below, VSCALE initially conducts a maximum positive and negative value search of the vector elements. Thereafter, the result is classified into one of five cases. For each case, scaling is accomplished by looping and counting the number of shifts before a designated maximum or positive range. Disadvantageously, the VSCALE process results in relatively more complex code and relatively more time to accomplish scaling. For example, if a user wishes to scale a large vector, disadvantageously, additional time is needed by VSCALE to accomplish its objective. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Therefore, there is a need to resolve the aforementioned problems relating to the conventional approach for scaling vectors for floating point representation and the present invention and its embodiments meet this need. </paragraph>
+</section>
+<section>
+<heading lvl="1">BRIEF SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> A first embodiment of the present invention is a system that reduces the complexity of the VSCALE routine in G.728 Annex G. This technique simplifies the maximum positive and negative value search in the vector and the calculation of the number of bit shifts needed for normalizing the vector by employing a pdmsb instruction. The pdmsb instruction is part of the SHx-DSP&trade; DSP instruction set, available from Hitachi, Inc., of Japan. The pdmsb instruction functions to find the number of bits to left-shift in order to left-justify a value. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> According to another aspect of the present invention, a method for use in a fixed point arithmetic processing device having an input vector that contains one or more vector elements is disclosed. The input vector is an M bit integer, and a maximum permitted left shift (MLS) value for the input vector is less than or equal to the value of M&minus;2. The method is for scaling all the vector elements based on the vector element with the largest magnitude. The method includes the following: sequentially searching each vector element to find a left shift value for scaling each vector element, and comparing the left shift values to determine a minimum left shift (NLS_MIN) for scaling the largest vector element. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Also, the method employs the NLS_MIN value to determine whether the input vector is a zero input vector, and if so, offsetting the NLS_MIN value by the MLS value to obtain an actual number of left shifts (NLS) value, for which the input vector would have been shifted but for the zero value. It is determined whether the input vector is a non-zero input vector, and if so, regardless of whether the largest magnitude element of the non-zero input vector has a positive or negative magnitude, offsetting the NLS_MIN value by the MLS value to obtain the NLS value for scaling the non-zero input vector. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> According to another aspect of the present invention, the method further includes completing in one clock instruction the steps of sequentially searching, and comparing the left shift values with the pdmsb instruction. The pdmsb instruction finds the number of left shifts necessary to left justify a 2&apos;s complement 32-bit value in one instruction cycle. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> According to another aspect of the present invention, a method, by a processing device, for scaling an M-bit integer input vector containing one or more vector elements. The method comprises receiving a maximum permitted shift (MLS) value for the input vector, said MLS value being less than or equal to M&minus;2; determining a minimum left shift (NLS_MIN) for scaling said vector element with the largest magnitude; employing said NLS_MIN value to determine whether said input vector is a zero input vector, or a non-zero input vector irrespective of the positive or negative value of said largest element of non-zero input vector; if a zero input vector is determined, offsetting said NLS_MIN value by said MLS value to obtain an actual number of left shifts (NLS) value; determining whether said input vector is non-zero input vector, and if a non-zero input vector is determined, offsetting said NLS_MIN value by said MLS value to obtain said NLS value for scaling said non-zero input vector. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> According to another aspect of the present invention, the step of offsetting said NLS_MIN value for said zero input vector further comprises said NLS value being given by: MLS&plus;1. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> According to another aspect of the present invention, offsetting said NLS_MIN value for said non-zero input vector further comprises said NLS value being given by: NLS_MIN&plus;(MLS&minus;(M&minus;2)). </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> According to another aspect of the present invention, the method further comprises employing the pdmsb instruction for sequentially searching, and for comparing said left shift values. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> According to another aspect of the present invention, employing said MLS_INPUT value further comprises determining whether NLS_MIN&equals;31, if NLS_MIN&ne;31, then the input vector is a non-zero input vector. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> According to another aspect of the present invention, a processor operable from an M-bit instruction set where M is an integer. The processor includes a memory unit for storing at least first instruction stream comprising M-bit instructions; an execution unit operable to receive execution signals to execute the M-bit instructions; a decode unit coupled to the memory unit and to the execution unit to receive and decode the first instruction stream from the memory unit to produce therefrom the execution signals. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The execution signals for: determining a minimum left shift (NLS_MIN) for scaling said vector element with the largest magnitude; employing said NLS_MIN value to determine whether said input vector is a zero input vector, or a non-zero input vector by evaluating if NLS_MIN&equals;31; if NLS_MIN&ne;31, then the input vector is a non-zero input vector; and determining an actual number of left shifts (NLS) for scaling the non-zero input vector. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> According to another aspect of the present invention, the execution signals are for receiving a maximum permitted shift (MLS) value for said input vector, said MLS value being less than or equal to M&minus;2. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> According to another aspect of the present invention, determining an actual number of left shifts (NLS) further comprises offsetting said NLS_MIN with the MLS value to obtain said NLS value. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Advantageously, unlike conventional vector scaling schemes that search for the maximum positive and negative values, the present invention searches for the minimum number of left shift value (NLS_MIN) returned by the pdmsb instruction. Moreover, where the vector size is much larger, the instruction saving in the search routine are be more significant. Three steps are needed to search each vector element, whereas relatively more steps are required for the conventional method, resulting in a 25% cycle saving.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a single precision, IEEE standard 754, single point precision floating point representation. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow chart for scaling a vector in accordance with conventional scaling techniques. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart of a method for scaling an input vector in accordance with an exemplary embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> A further understanding of the nature and advantages of the present invention herein may be realized by reference to the remaining portions of the specification and the attached drawings. Reference to the remaining portions of the specification, including the drawings and claims, will realize other features and advantages of the present invention. Further features and advantages of the present invention, as well as the structure and operation of various embodiments of the present invention, are described in detail below with respect to the accompanying drawings. In the drawings, the same reference numbers indicate identical or functionally similar elements. Reference numbers differing by multiples of 100 indicate identical or functionally similar elements except as modified to accommodate the present invention. </paragraph>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> A first exemplary embodiment of the present invention is a system for simplifying the VSCALE routine in G.728 Annex G. Simplification is accomplished by using the pdmsb instruction available in the Hitachi, Inc., SHx-DSP&trade; DSP instruction set. The pdmsb instruction finds the number of bits to left-shift in order to left-justify a value. For example, assuming a 16-bit input vector with the following vector elements value, 0,2,4, 8 16, requires scaling such that the maximum number 16 is left justified. The equivalent values in binary are 0, 10, 100, 1000, 10000, respectively. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> To left justify 16, the most significant bit 1 of 10000 is shifted nine bits to the left from the 5th position to the 15th bit position. Moreover, the entire vector is scaled by the same amount. By employing the pdmsb instruction, a need to manually search for the most positive and negative values in the vector is no longer required, thus reducing the steps employed by conventional techniques for normalizing a vector. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow chart for scaling a vector in accordance with conventional scaling techniques. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 2</cross-reference> specifically, the steps employed by the VSCALE routine for vector scaling are shown. The input parameters to this routine are the input vector to be scaled (IN), the length of the input vector (LEN), the search length for finding the maximum value (SLEN), and the maximum number of left shifts permitted (MLS). The output parameters are the scaled output vector (OUT) and the number of left shifts used (NLS). </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> It should be observed that SLEN specifies the number of elements to search, and for most cases, SLEN is set to LEN. If it is known that the largest magnitude element is located within the first X elements (X&lt;LEN) of the vector, then specifying SLEN&equals;X reduces the search time. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> In a first implementation, the routine is simplified as follows: (1) LEN&equals;5, since VSCALE always operates on a frame vector of 5 samples; (2) SLEN&equals;5, since the location of the maximum value is always unknown. In addition, VSCALE searches all of the five vector elements. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> At block <highlight><bold>202</bold></highlight>, the input vector is sequentially searched for the maximum positive (MAX_POS) and maximum negative (MAX_NEG) values. Depending on the magnitude of the maximum positive and negative values and MLS value, the number of normalization shifts is calculated by looping and counting (performed in blocks below) the number of shifts before the designated maximum or minimum range is exceeded. As discussed below, there are five cases depending on the magnitude of the input vector. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> At decision block <highlight><bold>204</bold></highlight>, it is determined whether MAX_POS&equals;0 and MAX_NEG&equals;0. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> At block <highlight><bold>206</bold></highlight>, MAX_POS&equals;0 and MAX_NEG&equals;0. This is the first of five cases referred to as case 1. For this case, MLS is incremented by one to obtain the NLS value, which is used to scale the entire vector, as below. </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>NLS&equals;MLS&plus;</italic></highlight>1 </in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula>for I&equals;1 to 5, OUT&lsqb;I&rsqb;<highlight><bold>32</bold></highlight> 0 </in-line-formula></paragraph>
+<paragraph id="P-0039" lvl="2"><number>&lsqb;0039&rsqb;</number> where I is element number in the vector; and </paragraph>
+<paragraph id="P-0040" lvl="2"><number>&lsqb;0040&rsqb;</number> OUT&lsqb;I&rsqb;<highlight><bold>32</bold></highlight> the output element being set to zero. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> At block <highlight><bold>208</bold></highlight>, NLS is equated to zero, since MAX_POS and/or MAX_NEG has a value other than zero. That is, NLS&equals;0 is just to reset the counter to 0 before the number of shifts is counted. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> At decision block <highlight><bold>210</bold></highlight>, it is determined whether the absolute maximum negative value is larger than the maximum positive value. If so, the method proceeds to decision block <highlight><bold>212</bold></highlight>, as shown. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> At decision block <highlight><bold>212</bold></highlight>, the routine involves determining whether MAX_NEG&lt;&minus;2*2<highlight><superscript>MLS</superscript></highlight>. If yes, the routine proceeds to block <highlight><bold>214</bold></highlight>. Otherwise, it progresses to decision block <highlight><bold>220</bold></highlight> as shown. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> At block <highlight><bold>214</bold></highlight>, the steps for case 2 are shown. An iteration process begins such that while MAX_NEG&lt;&minus;2*2<highlight><superscript>MLS</superscript></highlight>, the iteration process is continued. For each loop, the MAX_NEG value is right shifted by 1 bit. The MAX_NEG value right shifted by 1 bit is equated to a new MAX_NEG value. Thereafter, the NLS value is decremented by one (for right shifting). The NLS value is basically a counter for counting the number of shifts until the maximum range is reached. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> At decision block <highlight><bold>216</bold></highlight>, the condition MAX_NEG&lt;.&minus;2*2<highlight><superscript>MLS </superscript></highlight>is checked again. If no, the loop is returned to block <highlight><bold>214</bold></highlight>, until the condition is met, wherein the loop is forwarded to block <highlight><bold>218</bold></highlight>. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> At block <highlight><bold>218</bold></highlight>, the entire input vector is scaled by the actual NLS value. The routine illustrating case 2 is as follows: </paragraph>
+<paragraph id="P-0047" lvl="2"><number>&lsqb;0047&rsqb;</number> while (MAX_NEG&lt;&minus;2*2<highlight><superscript>MLS S</superscript></highlight>) </paragraph>
+<paragraph id="P-0048" lvl="2"><number>&lsqb;0048&rsqb;</number> &lcub;MAX_NEG&equals;MAX_NEG&gt;<highlight><bold>22</bold></highlight> 1 </paragraph>
+<paragraph id="P-0049" lvl="3"><number>&lsqb;0049&rsqb;</number> NLS&equals;NLS&minus;1&rcub;</paragraph>
+<paragraph id="P-0050" lvl="2"><number>&lsqb;0050&rsqb;</number> &emsp;for I&equals;1 to 5, OUT&lsqb;I&rsqb;&equals;IN&lsqb;I&rsqb;<highlight><bold>21</bold></highlight>&lt;NLS </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Decision block <highlight><bold>220</bold></highlight> through blocks <highlight><bold>222</bold></highlight>, <highlight><bold>224</bold></highlight> illustrate case 3 wherein the maximum negative value has room for normalization. It should be observed that at block <highlight><bold>222</bold></highlight>, a left shift as opposed to a right shift occurs wherein the MAX_NEG value is left shifted by one bit and equated to a new MAX_NEG value. The following conditional routine illustrates case 3: </paragraph>
+<paragraph id="P-0052" lvl="2"><number>&lsqb;0052&rsqb;</number> while (MAX_NEG&gt;<highlight><bold>32</bold></highlight> &minus;2<highlight><superscript>MLS</superscript></highlight>) </paragraph>
+<paragraph id="P-0053" lvl="3"><number>&lsqb;0053&rsqb;</number> &lcub;MAX_NEG&equals;MAX_NEG&lt;<highlight><bold>21</bold></highlight> 1 </paragraph>
+<paragraph id="P-0054" lvl="3"><number>&lsqb;0054&rsqb;</number> NLS&equals;NLS&plus;1&rcub;</paragraph>
+<paragraph id="P-0055" lvl="2"><number>&lsqb;0055&rsqb;</number> &emsp;for I&equals;1 to 5, OUT&lsqb;I&rsqb;<highlight><bold>32</bold></highlight> IN&lsqb;I&rsqb;<highlight><bold>21</bold></highlight>&lt;NLS </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> At decision block <highlight><bold>226</bold></highlight>, the routine involves determining whether MAX_POS&gt;2*2<highlight><superscript>MLS</superscript></highlight>&minus;1. If yes, the routine progresses to block <highlight><bold>228</bold></highlight>. Otherwise, it progresses to decision block <highlight><bold>234</bold></highlight> as shown. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> At block <highlight><bold>234</bold></highlight>, the steps for case 5 are shown. An iteration process begins such that while MAX_POS&lt;2<highlight><superscript>MLS</superscript></highlight>, the iteration process is continued. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> At block <highlight><bold>236</bold></highlight>, for each loop, the MAX_POS value is left shifted by 1 bit. The MAX_POS value left shifted by one bit is equated to a new MAX_POS value. Thereafter, the NLS value is incremented by one (for left shifting). The routine proceeds back to block <highlight><bold>234</bold></highlight> to check the condition MAX_POS&lt;2<highlight><superscript>MLS</superscript></highlight>. For example, if MAX_POS is 16 (2<highlight><superscript>4</superscript></highlight>) and MLS is 14, then 2<highlight><superscript>4</superscript></highlight>&lt;2<highlight><superscript>14</superscript></highlight>. For a first bit shift to the left, MAX_POS becomes 2<highlight><superscript>5 </superscript></highlight>and the NLS counter is incremented, until the condition MAX_POS&lt;2<highlight><superscript>MLS </superscript></highlight>no longer holds true. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> At block <highlight><bold>238</bold></highlight>, the entire input vector is scaled by the actual NLS value. The routine illustrating case 5 (if maximum positive value still has room for normalization) is as follows: </paragraph>
+<paragraph id="P-0060" lvl="2"><number>&lsqb;0060&rsqb;</number> while (MAX_POS&lt;2<highlight><superscript>MLS</superscript></highlight>) </paragraph>
+<paragraph id="P-0061" lvl="3"><number>&lsqb;0061&rsqb;</number> &lcub;MAX_POS&equals;MAX_POS&lt;&lt;1 </paragraph>
+<paragraph id="P-0062" lvl="3"><number>&lsqb;0062&rsqb;</number> NLS&equals;NLS&plus;1&rcub;</paragraph>
+<paragraph id="P-0063" lvl="2"><number>&lsqb;0063&rsqb;</number> &emsp;for I&equals;1 to 5, OUT&lsqb;I&rsqb;<highlight><bold>32</bold></highlight> IN&lsqb;I&rsqb;<highlight><bold>21</bold></highlight>&lt;NLS </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> Blocks <highlight><bold>228</bold></highlight>, <highlight><bold>230</bold></highlight> and <highlight><bold>232</bold></highlight> illustrate case 4 wherein the maximum positive value exceeds the maximum range. As shown, the following conditional routine is illustrated. It should be observed that at block <highlight><bold>228</bold></highlight>, the MAX_POS value is right-shifted by one bit and equated to a new MAX_POS value. </paragraph>
+<paragraph id="P-0065" lvl="2"><number>&lsqb;0065&rsqb;</number> while (MAX_POS&gt;2*2<highlight><superscript>MLS</superscript></highlight>&minus;1) </paragraph>
+<paragraph id="P-0066" lvl="3"><number>&lsqb;0066&rsqb;</number> &lcub;MAX_POS&equals;MAX_POS&gt;<highlight><bold>22</bold></highlight> 1 </paragraph>
+<paragraph id="P-0067" lvl="3"><number>&lsqb;0067&rsqb;</number> NLS&equals;NLS&minus;1&rcub;</paragraph>
+<paragraph id="P-0068" lvl="2"><number>&lsqb;0068&rsqb;</number> &emsp;for I&equals;1 to 5, OUT&lsqb;I&rsqb;<highlight><bold>32</bold></highlight> IN&lsqb;I&rsqb;<highlight><bold>21</bold></highlight>&lt;NLS </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> Other than for case 1, the input vector elements are bit-shifted according to the computed NLS value and stored into the output vector. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart of a method for scaling an input vector in accordance with an exemplary embodiment of the present invention. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> The input vector contains one or more vector elements wherein all of the vector elements are scaled based on the vector element with the largest magnitude. Further, the input vector is a 16 bit integer (single precision block floating point), although one of ordinary skill in the art will realize that M-bit vectors may be scaled according to the present invention, where M is an integer. For example, the present embodiment is operable with a 32-bit integer vector (double precision block floating point). </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the method employs the SHx-DSP&trade; pdmsb instruction, a product of Hitachi Inc., of Japan. The pdmsb instruction finds the number of left shifts necessary to left justify a 2&apos;s complement 32-bit value in one instruction cycle. It should be observed that the pdmsb instruction operates on a 32 bit integer basis. The table below illustrates the functionality of the pdmsb instruction.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="1" colwidth="28PT" align="left"/>
+<colspec colname="2" colwidth="84PT" align="left"/>
+<colspec colname="3" colwidth="63PT" align="left"/>
+<colspec colname="4" colwidth="21PT" align="center"/>
+<colspec colname="5" colwidth="21PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="5" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>DC</entry>
+</row>
+<row>
+<entry>Format</entry>
+<entry>Abstract</entry>
+<entry>Code</entry>
+<entry>Cycle</entry>
+<entry>Bit</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>PDMSB</entry>
+<entry>Sx data MSB position &rarr;</entry>
+<entry>111110**********</entry>
+<entry>1</entry>
+<entry>Up-</entry>
+</row>
+<row>
+<entry>Sx, Dz</entry>
+<entry>MSW of Dz, clear LSW of</entry>
+<entry>10011101xx00zzzz</entry>
+<entry></entry>
+<entry>date</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Dz</entry>
+</row>
+<row>
+<entry>PDMSB</entry>
+<entry>Sy data MSB position &rarr;</entry>
+<entry>111110**********</entry>
+<entry>1</entry>
+<entry>Up-</entry>
+</row>
+<row>
+<entry>Sy, Dz</entry>
+<entry>MSW of Dz, clear LSW of</entry>
+<entry>1011110100yyzzzz</entry>
+<entry></entry>
+<entry>date</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Dz</entry>
+</row>
+<row>
+<entry>DCT</entry>
+<entry>If DC &equals; 1, Sx data MSB</entry>
+<entry>111110**********</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry>PDMSB</entry>
+<entry>position &rarr; MSW of Dz,</entry>
+<entry>10011110xx00zzzz</entry>
+</row>
+<row>
+<entry>Sx, Dz</entry>
+<entry>clear LSW of DZ; if 0 nop</entry>
+</row>
+<row>
+<entry>DCT</entry>
+<entry>If DC &equals; 1, Sy data MSB</entry>
+<entry>111110**********</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry>PDMSB</entry>
+<entry>position &rarr; MSW of Dz,</entry>
+<entry>101111100yyzzzz</entry>
+</row>
+<row>
+<entry>Sy, Dz</entry>
+<entry>clear LSW of Dz; if 0, nop</entry>
+</row>
+<row>
+<entry>DCF</entry>
+<entry>If DC &equals; 0, Sx data MSB</entry>
+<entry>111110**********</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry>PDMSB</entry>
+<entry>position &rarr; MSW of Dz,</entry>
+<entry>10011111xx00zzzz</entry>
+</row>
+<row>
+<entry>Sx, Dz</entry>
+<entry>clear LSW of Dz; if 1, nop</entry>
+</row>
+<row>
+<entry>DCF</entry>
+<entry>If DC &equals; 0, Sy data MSB</entry>
+<entry>111110**********</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry>PDMSB</entry>
+<entry>position &rarr; MSW of Dz,</entry>
+<entry>1011111100yyzzzz</entry>
+</row>
+<row>
+<entry>Sy, Dz</entry>
+<entry>clear LSW of Dz; if 1, nop</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> The pdmsb instruction finds the first position to change in the lineup of Sx and Sy operand bits and stores the bit position in the Dz operand. In other words, the pdmsb instruction finds the number of bits to shift the MSB bit to bit 30 (the bit before sign bit). e.g. for 00 . . . 010000 (16), pdmsb returns 26, which is stored in the higher 16-bit (MSW) of the 32-bit Dz register. The lower 16-bit of Dz is simply cleared. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> When conditions are specified for DCT and DCF, the instruction is executed when those conditions are TRUE. When they are FALSE, the instruction is not executed. When conditions are not specified, the DC bit of the DSR register is updated according to the specifications for the CS bits. The N, Z, V, and GT bits of the DSR register are also updated. The DC, N, Z, V, and GT bits are not updated when conditions are specified, even if the conditions are TRUE. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> The present invention is implementable on computer systems comparable to the SHx series DSPs, a new generation of RISC microcomputers, from Hitachi, Inc. that integrates a RISC-type CPU and the peripheral functions required for system configuration onto a single chip. Basic instructions can be executed in one clock cycle, improving instruction execution speed. In addition, the CPU has a 32-bit internal architecture for enhanced data-processing ability. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, at block <highlight><bold>302</bold></highlight>, using the pdmsb instruction, a minimum left shift (NLS_MIN) for scaling the vector element with the largest magnitude is determined. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> Although not shown, this step comprises the sub-steps of sequentially searching each vector element to find a left shift value for scaling each vector element, and comparing the left shift values to determine the NLS_MIN value for scaling the largest vector element. Herein lies one advantage of the present invention. Unlike conventional vector scaling schemes that search for the maximum positive and negative values, the present invention mere merely searches for the minimum number of left shift value (NLS_MIN) returned by the pdmsb instruction. The element with the smallest NLS represents the maximum positive or negative value in the vector. As discussed below, this search technique eliminates the need of having to later differentiate the 4 non-zero input vector cases described in the original algorithm since the maximum value is already uniquely identified as the one with minimum NLS (NLS_MIN) regardless of its polarity. Moreover, having found NLS_MIN, the task of computing NLS by the looping and shifting method implemented in the related is no longer required. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> At decision block <highlight><bold>304</bold></highlight>, after the NLS_MIN value is obtained, it is employed to determine whether the input vector is a zero input vector. When all vector elements are zero, the search will return NLS_MIN&equals;31 assuming the vector elements are single precision (16-bit values). It should be observed that NLS_MIN&lt;<highlight><bold>32</bold></highlight> 14 if at least one element is non-zero. Hence, this condition is used as a legitimate check for zero input vector case. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> At block <highlight><bold>306</bold></highlight>, if the input vector is zero, the NLS_MIN value is offset by the MLS value to obtain an actual number of left shifts (NLS) value. This is accomplished by simply setting to MLS&plus;1 and output vector set to zero. While the input zero vector is not scaled, the NLS value is returned. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> At block <highlight><bold>308</bold></highlight>, if the input vector is a non-zero vector, regardless of whether the largest element of the non-zero input vector has a positive or negative magnitude, the method involves offsetting the NLS_MIN value by the MLS value to obtain the NLS value for scaling the largest element of non-zero input vector. Advantageously, only two cases, for zero and non-zero vectors need be evaluated. This eliminates most of the condition checks and branches. For non-zero input vectors, NLS is obtained from the equation: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>NLS&equals;NLS</italic></highlight><highlight><subscript>&mdash;</subscript></highlight><highlight><italic>MIN</italic></highlight>&plus;(<highlight><italic>MLS</italic></highlight>&minus;(<highlight><italic>M&minus;</italic></highlight>2)) </in-line-formula></paragraph>
+<paragraph id="P-0081" lvl="2"><number>&lsqb;0081&rsqb;</number> where M is an integer for the bit value of the input vector. For example, for a 16-bit input vector, M&minus;2&equals;14. Advantageously, from the equation above, the computation of NLS involves one subtraction and one addition (2 instructions total) unlike conventional schemes which may incur significantly higher instruction cycles if more shifting is needed for normalization. More specifically, if n bit shifts are needed, then 4n instructions are required to perform the shifts, because each shift requires 4 steps as illustrated the table 2 below:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 2</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Old NLS computation method</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="126PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Step 1</entry>
+<entry>left/right-shift 1 bit</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Step 2</entry>
+<entry>increment/decrement NLS</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Step 3</entry>
+<entry>check if shifted number is fully</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>normalized</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Step 4</entry>
+<entry>branch back to Step 1 if false</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> In the more general case where the vector size is much larger, the instruction saving in the search routine are significant. Three steps are needed to search each vector element, whereas additional steps are required for the conventional technique, resulting in a 25% cycle saving. The table below compares the steps of the conventional and the present invention.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="98PT" align="left"/>
+<colspec colname="2" colwidth="98PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 3</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>New Search</entry>
+<entry>Conventional Search</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="21PT" align="left"/>
+<colspec colname="2" colwidth="98PT" align="left"/>
+<colspec colname="3" colwidth="98PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>Step</entry>
+<entry>Find NLS for element using</entry>
+<entry>Check if element is larger than</entry>
+</row>
+<row>
+<entry>1</entry>
+<entry>pdmsb</entry>
+<entry>maximum value</entry>
+</row>
+<row>
+<entry>Step</entry>
+<entry>Check if NLS is less than</entry>
+<entry>Update maximum value if true</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>minimum NLS</entry>
+</row>
+<row>
+<entry>Step</entry>
+<entry>Update minimum NLS if true</entry>
+<entry>Check if element is less than</entry>
+</row>
+<row>
+<entry>3</entry>
+<entry></entry>
+<entry>minimum value</entry>
+</row>
+<row>
+<entry>Step</entry>
+<entry></entry>
+<entry>Update minimum value if true</entry>
+</row>
+<row>
+<entry>4</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> At block <highlight><bold>310</bold></highlight>, having computed NLS, bit shifting of the input vector is performed, and stored in the output vector. </paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number> In this fashion, the present invention provides a system for efficient implementation of the G.728 annex G VSCALE routine. While the above is a complete description of exemplary specific embodiments of the invention, additional embodiments are also possible. Thus, the above description should not be taken as limiting the scope of the invention, which is defined by the appended claims along with their full scope of equivalents. 
+<image file="US20030005015A1-20030102-P00001.TIF" id="EMI-00001"></image>
+<image file="US20030005015A1-20030102-P00002.TIF" id="EMI-00002"></image>
+<image file="US20030005015A1-20030102-P00003.TIF" id="EMI-00003"></image>
+<image file="US20030005015A1-20030102-P00004.TIF" id="EMI-00004"></image>
+</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for use in a fixed point arithmetic processing device having an input vector that contains one or more vector elements, and is an M bit integer, and a maximum permitted left shift (MLS) value for the input vector is less than or equal to the value of M&minus;2, the method for scaling all the vector elements based on the vector element with the largest magnitude, the method comprising: 
+<claim-text>sequentially searching each vector element to find a left shift value for scaling each vector element; </claim-text>
+<claim-text>comparing the left shift values to determine a minimum left shift (NLS_MIN) for scaling the largest vector element; </claim-text>
+<claim-text>employing the NLS_MIN value to determine whether the input vector is a non-zero input vector; </claim-text>
+<claim-text>if so, regardless of whether the largest element of non-zero input vector has a positive or negative magnitude, offsetting the NLS_MIN value by the MLS value to obtain an actual number of left shifts (NLS) value for scaling the input vector; </claim-text>
+<claim-text>determining whether the input vector is a zero input vector; and </claim-text>
+<claim-text>if so, offsetting the NLS_MIN value by the MLS value to obtain the NLS value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising employing a pdmsb instruction for sequentially searching, and for comparing said left shift values. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method, by a processing device, for scaling an M-bit integer input vector containing one or more vector elements, said method comprising: 
+<claim-text>receiving a maximum permitted left shift (MLS) value for the input vector, said MLS value being less than or equal to M&minus;2; </claim-text>
+<claim-text>determining a minimum left shift (NLS_MIN) for scaling said vector element with the largest magnitude; </claim-text>
+<claim-text>employing said NLS_MIN value to determine whether said input vector is a zero input vector, or a non-zero input vector irrespective of the positive or negative value of said non-zero input vector; </claim-text>
+<claim-text>if a non-zero input vector is determined, offsetting said NLS_MIN value by said MLS value to obtain an actual number of left shifts (NLS) value for scaling said input vector; and </claim-text>
+<claim-text>if a zero input vector is determined, offsetting said NLS_MIN value by said MLS value to obtain the NLS value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein offsetting said NLS_MIN value for said zero input vector further comprises said NLS value being given by: MLS&plus;1. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein offsetting said NLS_MIN value for said non-zero input vector further comprises said NLS value given by: NLS&equals;NLS_MIN&plus;(MLS&minus;(M&minus;2)). </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further comprising employing a pdmsb instruction for sequentially searching, and for comparing said left shift values. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein employing said NLS_MIN value further comprises determining whether NLS_MIN&equals;31, if NLS_MIN&ne;31, then the input vector is a non-zero input vector. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A processor operable from an M-bit instruction set where M is an integer, the processor comprising: 
+<claim-text>a memory unit for storing at least first instruction stream comprising M-bit instructions; </claim-text>
+<claim-text>an execution unit operable to receive execution signals to execute the M-bit instructions; </claim-text>
+<claim-text>a decode unit coupled to the memory unit and to the execution unit to receive and decode the first instruction stream from the memory unit to produce therefrom the execution signals, the execution signals for: </claim-text>
+<claim-text>determining a minimum left shift (NLS_MIN) for scaling said vector element with the largest magnitude; </claim-text>
+<claim-text>employing said NLS_MIN value to determine whether said input vector is a zero input vector, or a non-zero input vector by evaluating if NLS_MIN&equals;31; </claim-text>
+<claim-text>if NLS_MIN&ne;31, then the input vector is a non-zero input vector; and </claim-text>
+<claim-text>determining an actual number of left shifts (NLS) for scaling the non-zero input vector. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the execution signals is for receiving a maximum permitted shift (MLS) value for said input vector, said MLS value being less than or equal to M&minus;2. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein determining an actual number of left shifts (NLS) further comprises offsetting said NLS_MIN with the MLS value to obtain said NLS value.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005015A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005015A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005015A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005015A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005015A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

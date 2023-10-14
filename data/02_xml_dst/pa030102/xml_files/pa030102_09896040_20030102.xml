@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004949A1-20030102-D00000.TIF SYSTEM "US20030004949A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004949A1-20030102-D00001.TIF SYSTEM "US20030004949A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004949A1-20030102-D00002.TIF SYSTEM "US20030004949A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004949A1-20030102-D00003.TIF SYSTEM "US20030004949A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004949A1-20030102-D00004.TIF SYSTEM "US20030004949A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004949A1-20030102-D00005.TIF SYSTEM "US20030004949A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004949</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896040</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>010000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Multi-thread shared memory message queue buffer systems, methods and computer program products for storing data in a database</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Jianrong</given-name>
+<family-name>Hong</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Plantation</city>
+<state>FL</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Lin</given-name>
+<family-name>Yu</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Fort Lauderdale</city>
+<state>FL</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>MYERS BIGEL SIBLEY &amp; SAJOVEC</name-1>
+<name-2></name-2>
+<address>
+<address-1>PO BOX 37428</address-1>
+<city>RALEIGH</city>
+<state>NC</state>
+<postalcode>27627</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Systems, methods and/or computer program products for storing data from multiple clients in a database include a Multi-thread Shared Memory message Queue Buffer (MSMQB) that includes multiple First-In First-Out (FIFO) queues, a respective one of which is associated with a respective one of the clients. The MSMQB is configured to store sequential bursts of data records that are received from the clients in the associated FIFO queues. The data records in the sequential bursts are sorted by a primary key. A Semi-Merge Sort Module (SMSM) also is provided that is responsive to the FIFO queues in the MSMQB. The SMSM is configured to sort the first sequential bursts in the FIFO queues based on the primary key of at least one selected record therein, to produce a semi-sorted record stream. The SMSM also serially stores the semi-sorted record stream in the database. Thus, a database can handle multiple clients and multiple bursts for high throughput writing of data into the database. Moreover, by performing a semi-merge sort, the records may be placed into the record stream based on the value of the primary key of at least one selected record, so that an efficient rough sort may be provided. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This invention relates to data processing systems, methods and computer program products, and more particularly to database systems, methods and computer program products. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Database systems, methods and computer program products are widely used for information management. More specifically, database systems, methods and computer program products may be used to reliably manage a large amount of data in a single-user or a multi-user environment. Database systems, methods and computer program products generally include a database that actually stores the data, a database management system and one or more applications that interface with the database management system to provide, for example, user interfaces and other applications. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> As is well known to those having skill in the art, relational databases may be provided that are based on a table-column concept, set theoretic relations and/or relational algebra. One widely-available relational database is the Oracle8i relational database system that is marketed by Oracle Corporation. Other database systems may not be based on the above-mentioned attributes, so that they are not relational databases. For example, Indexed Sequential Access Method (C-ISAM) is a database that is marketed by Informix Software, Inc., that is not a relational database. See, for example, the Informix C-ISAM DataBlade Module User&apos;s Guide, Version 1.0, December 1999, Part No. 000-6498. Both relational and non-relational databases may be used to manage a large amount of data. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> As is well known to those having skill in the art, databases generally facilitate database queries by building an index file in addition to storing the data in a data file. For very large databases, it may be desirable to manage creation of the index file and the data file, to handle large volumes of data. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> One application of very large database systems is to store and manage temporal data, i.e., data that is collected over time. Temporal data also may be referred to as &ldquo;historical&rdquo; data that describes the business transactions of an enterprise over intervals of time. For example, in Internet-related applications, a mechanism, referred to as &ldquo;flow&rdquo;, may be used to establish connection-oriented end-to-end Internet service that behaves as if the two ends are physically connected. More specifically, in Asynchronous Transfer Mode (ATM) technology, flow can be in the form of a Virtual Circuit (VC). Flow also can be in the form of Private Virtual Path (PVP). Flow data may be used to monitor quality of service (QoS) on network service providers, backbone or otherwise. Flow data may be collected over a series of time intervals, the duration of which may be set based upon service provider and/or customer desires. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Thus, for example, in a service management system, such as a quality of service monitoring system, network quality service performance data may be collected by multiple collection servers across multiple domains, such as across several Internet service providers. Each collection server may include many collection clients, that directly connect quality of service data from network elements, such as routers, switches and bridges. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Since quality of service performance data and/or other temporal data may be collected over a series of time intervals, the data may be received as temporally spaced apart bursts of data records. For example, <cross-reference target="DRAWINGS">FIG. 1</cross-reference> graphically illustrates data arrival rate versus time for data records, such as flow data. As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, large amounts of data are received during a burst of time and no or relatively small amounts of data are received between the bursts of time. The bursts are shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> to be equally spaced apart. However, in other scenarios, the bursts need not be equally spaced apart, and also need not be of equal burst length. As also shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the same amount of data need not be received during each burst. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Unfortunately, it may be difficult for databases to efficiently store temporally spaced apart bursts of data records. Moreover, these difficulties may be exacerbated when the number of bursts, the number of data records per burst and/or the number of sources of the bursts of data records become large. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Service management systems generally operate in a multiple client environment, to accommodate desired network service monitoring. Thus, service management systems may need to be able to handle large numbers of threads through which each of the multiple clients transmits large numbers of spaced apart bursts of data records. A service management system may allocate a dedicated thread per client. The service management system generally maintains its data in a database repository using a conventional relational and/or non-relational database management system to store the data. The data may arrive at the database in very large quantities. Moreover, multiple service requests may be sent from multiple collection servers simultaneously in real time, where each collection server sends high volumes of data in bursts at spaced apart times, as was shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. In order to provide desired network monitoring performance and/or throughput, it therefore may be desirable to allow the database to handle multiple threads with high efficiency. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> It is known to provide concurrency control for databases, by serializing read/write requests to reduce or prevent database collisions. However, database collisions may not be a primary consideration in the service management arena, because the quality of service performance data may only be written into the database by the collection servers, and the collection servers may not submit queries to the database. Also, since the quality of service performance data is historical in nature, it generally is not modified after being written into the database. Hence, there may not be read-write or write-write collisions Thus, database collisions and/or concurrency control may not be of prime concern. Rather, it may be desirable to provide an environment wherein high database storing throughput may be accommodated, to accommodate peak burst data from multiple clients. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Embodiments of the present invention provide systems, methods and/or computer program products for storing data from a plurality of clients in a database. A Multi-thread Shared Memory message Queue Buffer (MSMQB) is provided that includes a plurality of First-In First-Out (FIFO) queues, a respective one of which is associated with a respective one of the plurality of clients. The MSMQB is configured to store sequential bursts of data records that are received from the plurality of clients in the plurality of FIFO queues that are associated therewith. The data records in the sequential bursts are sorted by a primary key. A Semi-Merge Sort Module (SMSM) also is provided that is responsive to the plurality of FIFO queues in the MSMQB. The SMSM is configured to sort the first sequential bursts in the plurality of FIFO queues based on the primary key of at least one selected record therein, to produce a semi-sorted record stream. The SMSM also is configured to serially store the semi-sorted record stream into the database. Embodiments of the invention can allow a database to handle multiple clients and multiple bursts for high throughput writing of data into the database. Moreover, by performing a semi-merge sort, the records may be placed into the record stream based on the value of the primary key of at least one selected record therein, so that an efficient semi-sort may be provided. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In other embodiments of the invention, the SMSM is configured to produce the semi-sorted record stream as a series of data files, and to serially store the series of data files in the database. In other embodiments, an index builder also may be provided that is configured to build an index for the semi-sorted record stream and to store the index in the database. In yet other embodiments, a configuration module also is provided that is configured to specify a directory path for the data files and the index files, and to provide the directory path to the SMSM and to the index builder. In still other embodiments, a notification module also is provided that is responsive to storing a sequential burst of data records that is received from one of the clients in one of the FIFO queues that is associated therewith, and that is configured to notify the SMSM to produce a semi-sorted record stream. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> In some embodiments of the present invention, the primary key that is used is a timestamp that indicates a time when a record was created. However, other primary keys may be used for the semi-sort. Moreover, in some embodiments, the at least one selected record in the first sequential burst in each FIFO queue comprises the first record in the first sequential burst in each FIFO queue. However, in other embodiments, selected multiple records and/or a selected record other than the first record, may be used for the merge. Accordingly, embodiments of the present invention can allow large volumes of data records to be accepted from multiple clients and stored in a database. High throughput and/or high efficiency thereby may be provided. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> It will be understood that embodiments of the present invention may be provided as methods, systems and/or computer program products that may be embodied as one or more modules that execute on and interface with a database management system. Alternatively, systems, methods and/or computer program products according to embodiments of the present invention may be embodied as one or more modules that are integrated into a database management system. Systems, methods and/or computer program products according to embodiments of the present invention may execute in a mainframe environment, and/or in a client/server environment and/or in distributed database environment. Finally, systems, methods and/or computer program products according to embodiments of the invention may be used with any database system that stores temporal data, including Oracle, marketed by Oracle Corporation; C-ISAM, marketed by Informix Software, Inc.; Sybase, marketed by Sybase, Inc.; Ingres marketed by Computer Associates International, Inc. and DB2, marketed by IBM Corporation. Improved performance, manageability, availability, configurability, flexibility, scalability and/or maintainability thereby may be provided.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> graphically illustrates data arrival rate versus time for bursts of data records, such as flow data. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 2 and 3</cross-reference> are block diagrams of systems, methods and/or computer program products for storing data from a plurality of clients in a database according to embodiments of the present invention. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 4 and 5</cross-reference> are flowcharts of operations that may be performed by systems, methods and/or computer program products according to embodiments of the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The present invention now will be described more fully hereinafter with reference to the accompanying drawings, in which embodiments of the invention are shown. This invention may, however, be embodied in many different forms and should not be construed as limited to the embodiments set forth herein. Rather, these embodiments are provided so that this disclosure will be thorough and complete, and will fully convey the scope of the invention to those skilled in the art. Like numbers refer to like elements throughout. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> As also will be appreciated by one of skill in the art, the present invention may be embodied as methods, data processing systems, and/or computer program products. Accordingly, the present invention may take the form of an entirely hardware embodiment, an entirely software embodiment running on general purpose hardware or an embodiment combining software and hardware aspects. Furthermore, the present invention may take the form of a computer program product on a computer-usable storage medium having computer-usable program code embodied in the medium. Any suitable computer readable medium may be utilized including hard disks, CD-ROMs, optical storage devices, a transmission media such as those supporting the Internet or an intranet and/or magnetic storage devices. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Computer program code for carrying out operations of the present invention may be written in an object oriented programming language such as JAVA&reg;, Smalltalk or C&plus;&plus;. The computer program code for carrying out operations of the present invention may also be written in conventional procedural programming languages, such as &ldquo;C&rdquo;, or in various other programming languages. Software embodiments of the present invention do not depend on implementation with a particular programming language. Portions of the program code may execute entirely on one or more data processing systems. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> block diagram of systems, methods and/or computer program products for storing data from a plurality of clients in a database according to embodiments of the present invention now will be described. As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, systems, methods and/or computer program products <highlight><bold>200</bold></highlight> according to embodiments of the present invention include a database <highlight><bold>230</bold></highlight> that stores the data from the plurality of clients <highlight><bold>240</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>240</bold></highlight><highlight><italic>m</italic></highlight>, for example service management data records <highlight><bold>260</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>260</bold></highlight><highlight><italic>m </italic></highlight>from a plurality of collection agent clients at network elements. The design and operation of clients <highlight><bold>240</bold></highlight>, such collection agents, and the database <highlight><bold>230</bold></highlight>, are well known to those having skill in the art and need not be described in detail herein. Moreover, the clients and/or the database may be embodied in a lumped system, a distributed system and/or a client server system, and may be directly connected to one another and/or may be connected via a network including public and/or private, local and/or wide area networks, such as the Internet. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> Multi-thread Shared Memory message Queue Buffer (MSMQB) <highlight><bold>210</bold></highlight> also is provided, that includes a plurality of First-In First-Out (FIFO) queues <highlight><bold>250</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>250</bold></highlight><highlight><italic>m</italic></highlight>, a respective one of which is associated with a respective one of the plurality of clients <highlight><bold>240</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>240</bold></highlight><highlight><italic>m</italic></highlight>. The design and operation of a FIFO queue are well known to those having skill in the art, and need not be described in further detail herein. The MSMQB <highlight><bold>210</bold></highlight> is configured to store sequential bursts of data records <highlight><bold>260</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>260</bold></highlight><highlight><italic>m </italic></highlight>that are received from a plurality of clients <highlight><bold>240</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>240</bold></highlight><highlight><italic>m </italic></highlight>in the plurality of FIFO queues <highlight><bold>250</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>250</bold></highlight><highlight><italic>m </italic></highlight>that are associated therewith. The respective sequential bursts of data records <highlight><bold>260</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>260</bold></highlight><highlight><italic>m </italic></highlight>for a respective client <highlight><bold>240</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>240</bold></highlight><highlight><italic>m </italic></highlight>may be associated with a separate thread for the MSMQB <highlight><bold>210</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the data records in the sequential bursts of data records <highlight><bold>260</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>260</bold></highlight><highlight><italic>m </italic></highlight>generally are sorted by a primary key by the clients <highlight><bold>240</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>240</bold></highlight><highlight><italic>m</italic></highlight>, such as collection agents. For example, the primary key may be a timestamp that records the time the information in the record is composed, captured and/or generated. Another primary key may be an identification key, such as a Service Description ID, or other ID, which can include any form of identification number that can identify a record. The association of timestamps and/or identification numbers with data records is well known to those having skill in the art, and need not be described further herein. Moreover, the use of timestamps and/or identification numbers as a primary key in a burst of data records also is well known to those having skill in the art and need not be described further herein. It also will be understood that combinations of timestamps, IDs and/or other elements may be used as a primary key. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> Semi-Merged Sort Module (SMSM) also is provided, that is responsive to the plurality of FIFO queues <highlight><bold>250</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>250</bold></highlight><highlight><italic>m </italic></highlight>in the MSMQB <highlight><bold>210</bold></highlight>. It will be understood that as used herein, the term &ldquo;module&rdquo; denotes functionality that may be embodied in one or more hardware, process and/or software elements, and/or portions thereof. It also will be understood that some or all of the functionality of the MSMQB <highlight><bold>210</bold></highlight> and the SMSM <highlight><bold>220</bold></highlight> may be integrated into one or more common modules. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The SMSM <highlight><bold>220</bold></highlight> is configured to sort the first sequential bursts in the plurality of FIFO queues by the primary key of at least one selected record therein, to produce a semi-sorted record stream <highlight><bold>270</bold></highlight>. The semi-sorted record stream <highlight><bold>270</bold></highlight> is serially stored in the database <highlight><bold>230</bold></highlight>, for example using a conventional database management system. In some embodiments of the invention, the at least one selected record in the first sequential burst in the plurality of FIFO queues comprises the first record in the first sequential burst in the plurality of FIFO queues. In other embodiments, a record other than the first record and/or combinations of records, which may include the first record, are used as the selected record(s) for the semi-merged sort. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> A more detailed description of embodiments of a semi-merged sort that is performed by the SMSM now will be provided. As was already described in connection with the MSMQB <highlight><bold>210</bold></highlight>, the data records in the sequential bursts of data <highlight><bold>260</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>260</bold></highlight><highlight><italic>m </italic></highlight>generally are sorted by a primary key such as a timestamp. However, in merging the outputs of the FIFO queues <highlight><bold>250</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>250</bold></highlight><highlight><italic>m </italic></highlight>to produce the record stream <highlight><bold>270</bold></highlight>, the SMSM does not sort every record in first sequential bursts of the FIFO queues <highlight><bold>250</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>250</bold></highlight><highlight><italic>m </italic></highlight>by the primary key. Rather, the bursts in the FIFO queues <highlight><bold>250</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>250</bold></highlight><highlight><italic>m </italic></highlight>may be merged based upon a sort of one or more selected records, but less than all of the records in the first sequential burst in each FIFO queue. Thus, for example, a rough time sequence merging may be provided by sorting on the timestamp of the first record of the first sequential bursts in each FIFO queue. This rough time sort may not guarantee that every data record has been sorted by time, because some of the other records in the FIFO queues may overlap in time. However, a rough sort based on the timestamp of at least one selected record, such as the first record, may be used to efficiently merge the outputs of the FIFO queues into a single semi-sorted record stream <highlight><bold>270</bold></highlight>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> It will be understood that the MSMQB <highlight><bold>210</bold></highlight> may be embodied in disk storage. In other embodiments, the MSMQB <highlight><bold>210</bold></highlight> may be embodied in hardware using conventional FIFO integrated circuits. In still other embodiments, MSMQB <highlight><bold>210</bold></highlight> may be embodied in solid-state memory, such as Dynamic Random Access Memory (DRAM) and/or Static Random Access Memory (SRAM). It may be preferable to embody MSMQB <highlight><bold>210</bold></highlight> in FIFO integrated circuits and/or solid-state memory, such as DRAM and/or SRAM, in order to reduce disk I/O, and thereby allow increased throughput. Moreover, multi-threads may be more readily handled in solid-state circuitry than on a disk file. Similarly, the SMSM <highlight><bold>220</bold></highlight> also may be embodied in disk storage in some embodiments, but also may be embodied using dedicated hardware and/or software executing in solid-state memory, so as to allow increased throughput. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of other systems, methods and/or computer products according to embodiments of the present invention. As shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, these systems, methods and/or computer program products <highlight><bold>300</bold></highlight> may include a plurality of clients <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m </italic></highlight>that may correspond to clients <highlight><bold>240</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>240</bold></highlight><highlight><italic>m </italic></highlight>of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and need not be described further herein. An MSMQB <highlight><bold>310</bold></highlight> may correspond to the MSMQB <highlight><bold>210</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and may include a plurality of FIFO queues <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m</italic></highlight>, that may correspond to the plurality of FIFO queues <highlight><bold>250</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>250</bold></highlight><highlight><italic>m </italic></highlight>of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and need not be described further herein. An SMSM <highlight><bold>320</bold></highlight> also is provided that may correspond to the SMSM <highlight><bold>220</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and need not be described further herein, and which may produce a semi-sorted record stream <highlight><bold>370</bold></highlight> that may correspond to the semi-sorted record stream <highlight><bold>270</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. The semi-sorted record stream <highlight><bold>370</bold></highlight> may be stored in a database <highlight><bold>330</bold></highlight>, that may correspond to the database <highlight><bold>230</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and need not be described further herein. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, in some embodiments of the invention, the SMSM <highlight><bold>320</bold></highlight> is configured to produce the semi-sorted record stream <highlight><bold>370</bold></highlight> as a series of data files, and to serially store the series of data files in the database <highlight><bold>330</bold></highlight>. In some embodiments, an index builder module <highlight><bold>386</bold></highlight> also may be provided that is configured to build an index for the semi-sorted record stream <highlight><bold>370</bold></highlight> and to store the index in the database <highlight><bold>330</bold></highlight>. In other embodiments, the index builder module <highlight><bold>386</bold></highlight> is configured to build an index file for each of the data files, and to store the index file in the database <highlight><bold>330</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> In yet other embodiments, a configuration module <highlight><bold>384</bold></highlight> also may be provided that is configured to specify a directory path for the data file and the index file, and to provide the directory path to the SMSM <highlight><bold>320</bold></highlight> and to the index builder module <highlight><bold>386</bold></highlight>. The configuration module <highlight><bold>384</bold></highlight> also may be configured to specify the configuration information that is used to configure the MSMQB <highlight><bold>310</bold></highlight>. In particular, the size of the MSMQB may be configured, for example, as to the number of FIFO queues <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m</italic></highlight>, and the number of sequences of records corresponding to the blocks in each FIFO queue <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m</italic></highlight>. Finally, the configuration file <highlight><bold>384</bold></highlight> also may indicate to the SMSM how the MSMQB <highlight><bold>310</bold></highlight> is configured, so that these two components can cooperate with each other. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In still other embodiments, a notification module <highlight><bold>382</bold></highlight> also is provided that is responsive to storing a sequential burst of data records that is received from one of the clients <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m </italic></highlight>in one of the FIFO queues <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m </italic></highlight>that is associated therewith. The notification module <highlight><bold>382</bold></highlight> is configured to notify the SMSM <highlight><bold>320</bold></highlight> to produce the semi-sorted record stream <highlight><bold>370</bold></highlight>. More specifically, the notification module <highlight><bold>382</bold></highlight> can notify the SMSM <highlight><bold>370</bold></highlight> of the arrival of new sequential bursts of data records. As long as the MSMQB <highlight><bold>310</bold></highlight> is not empty, the SMSM can continuously process sequential bursts of data records from the MSMQB <highlight><bold>310</bold></highlight>. Moreover, when the SMSM <highlight><bold>320</bold></highlight> completes writing a data file, the notification module <highlight><bold>382</bold></highlight> can notify the index builder <highlight><bold>386</bold></highlight> to begin building the index file for the data file. It will be understood that the functionality of the MSMQB <highlight><bold>310</bold></highlight>, SMSM <highlight><bold>320</bold></highlight>, notification module <highlight><bold>382</bold></highlight>, configuration module <highlight><bold>384</bold></highlight> and/or index builder <highlight><bold>386</bold></highlight>, and/or elements thereof, may be integrated into one or more hardware and/or software elements and/or may be maintained as separate hardware and/or software elements. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In still other embodiments, an interface, such as a Common Object Request Broker Architecture (CORBA) interface <highlight><bold>380</bold></highlight> may be provided, to interface between the clients <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m </italic></highlight>and the MSMQB <highlight><bold>310</bold></highlight>, so as to allow a platform-independent interface for various platform-dependent applications. The CORBA interface may utilize a UNIX process known as a thin client, to generate the threads for the clients <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m</italic></highlight>. The use of CORBA as an interface is well known to those having skill in the art and need not be described further herein. Other interface architectures also may be used. An interface also need not be used. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, in other embodiments, each of the clients <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m </italic></highlight>may include a collection agent that is configured to collect the sequential bursts of data records and to transmit the sequential bursts of data records <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m </italic></highlight>that are collected to the MSMQB <highlight><bold>310</bold></highlight>. Finally, in yet other embodiments, the sequential bursts of data records from the plurality of clients <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m </italic></highlight>may comprise Quality of Service (QoS) data from the plurality of clients. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart of operations that may be performed by embodiments of MSMQBs, such as MSMQB <highlight><bold>310</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, according to embodiments of the present invention. Referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, these operations <highlight><bold>400</bold></highlight> begin when a database service request is received at the MSMQB <highlight><bold>310</bold></highlight>, directly from one of the plurality of clients, such as clients <highlight><bold>340</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>340</bold></highlight><highlight><italic>m</italic></highlight>, and/or via a CORBA interface <highlight><bold>380</bold></highlight> and/or other intermediary interface. The database service request can comprise a request to store a burst of data records that are sorted by the primary key value, such as by a timestamp, an ID and/or other primary key value. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Referring now to Block <highlight><bold>420</bold></highlight>, each burst of data records is placed in the appropriate FIFO queue, such as FIFO queue <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m </italic></highlight>of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. Then, at Block <highlight><bold>430</bold></highlight>, assuming that the MSMQB <highlight><bold>310</bold></highlight> was empty prior to receiving the database service request at Block <highlight><bold>410</bold></highlight>, a notification module, such as the notification module <highlight><bold>382</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, is alerted at Block <highlight><bold>440</bold></highlight> to activate or wake up the SMSM <highlight><bold>320</bold></highlight>, such as the SMSM <highlight><bold>320</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. If the MSMQB was not empty at Block <highlight><bold>430</bold></highlight>, then the SMSM may not need to be notified, and operations continue, to await a next database service request at Block <highlight><bold>410</bold></highlight>. Thus, as long as there are service requests in the MSMQB <highlight><bold>310</bold></highlight>, the SMSM <highlight><bold>320</bold></highlight> can continue to process these service requests. Once the MSMQB <highlight><bold>310</bold></highlight> is empty, the SMSM <highlight><bold>320</bold></highlight> can return to an inactive state until further notice from the notification module <highlight><bold>382</bold></highlight>. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, operations that may be performed by an SMSM, such as the SMSM <highlight><bold>320</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, now will be described. As shown at <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, these operations <highlight><bold>500</bold></highlight> can begin by determining at Block <highlight><bold>510</bold></highlight> as to whether only a single burst of data records is in the MSMQB <highlight><bold>310</bold></highlight>. If a single burst of data records is in the MSMQB <highlight><bold>310</bold></highlight>, then at Block <highlight><bold>520</bold></highlight>, the single burst of data records is placed in a semi-sorted stream, such as the semi-sorted stream <highlight><bold>370</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. A file is built from the semi-sorted stream at Block <highlight><bold>530</bold></highlight>. If the file is complete at Block <highlight><bold>540</bold></highlight>, then the file is stored in the database, such as the database <highlight><bold>330</bold></highlight>, at Block <highlight><bold>550</bold></highlight>. The notification module <highlight><bold>382</bold></highlight> then may be alerted at Block <highlight><bold>560</bold></highlight>, to notify an index builder, such as the index builder <highlight><bold>386</bold></highlight>, to build the index file. On the other hand, if the file is not complete at Block <highlight><bold>540</bold></highlight>, bursts of records continue to be placed in the semi-sorted stream at Block <highlight><bold>520</bold></highlight>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Referring again to Block <highlight><bold>510</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, if a single record is not in the MSMQB at Block <highlight><bold>510</bold></highlight>, then a test is made at Block <highlight><bold>570</bold></highlight> as to whether multiple bursts of data records are in the MSMQB, thus indicating that a semi-merge sort may need to be performed. If multiple bursts of data records are in the MSMQB at Block <highlight><bold>570</bold></highlight>, then at Block <highlight><bold>580</bold></highlight>, the SMSM performs a semi-merge sort based, for example, on the lowest primary key value of the first record in each of the FIFO queues. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> More particularly, in processing service requests from the MSMQB <highlight><bold>310</bold></highlight>, the SMSM <highlight><bold>320</bold></highlight> merges the bursts from multiple FIFO queues <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m </italic></highlight>in the MSMQB <highlight><bold>310</bold></highlight> into a single stream of records before physically writing the records into the database <highlight><bold>330</bold></highlight>, using a semi-merge sort. In some embodiments of a semi-merge sort, the SMSM <highlight><bold>320</bold></highlight> determines which burst is the next one to be put into the record stream <highlight><bold>370</bold></highlight> by examining the first record from the first sequential thread of each FIFO queue <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m </italic></highlight>in the MSMQB <highlight><bold>310</bold></highlight>. The first record that has the lowest key value is selected. It will be understood that if the same key value is present in two or more first records, an arbitrary tie-breaking scheme may be used to break ties. Thus, if the primary keys in two or more first records are identical, the burst from the lowest numbered FIFO queue <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m </italic></highlight>may be selected. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> It will be understood that the above-described merge sort is a semi-merge sort, because it does not sort all records in all bursts completely. Stated differently, although within each burst of data records the records are in sorted order, the same assumption may not be made about the data records in the semi-sorted record stream <highlight><bold>370</bold></highlight> across multiple sequences of data records. For example, if the primary key is a timestamp, the bursts of data records may be sorted based on the timestamp of the first records thereof. However, other records within a burst may be out-of-time sequence, relative to records in other bursts, because they may overlap in time. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> A semi-merge sort may provide excellent near-linear time efficiency. For example, assuming there are m FIFO queues <highlight><bold>350</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>350</bold></highlight><highlight><italic>m </italic></highlight>in the MSMQB <highlight><bold>310</bold></highlight>, corresponding to m client processes, and there are a total of n records in each burst, the computational time complexity of a merge sort can be on the order of m x n. If the value of m is bounded by a constant, the complexity then can be on the order of n. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Finally, returning again to Block <highlight><bold>570</bold></highlight>, if a single record is not in the MSMQB <highlight><bold>310</bold></highlight> at Block <highlight><bold>510</bold></highlight>, and multiple bursts are not in the MSMQB <highlight><bold>310</bold></highlight> at Block <highlight><bold>570</bold></highlight>, then no records are in the MSMQB <highlight><bold>310</bold></highlight>. The SMSM <highlight><bold>320</bold></highlight> may return into an inactive mode until a further record is received at Block <highlight><bold>510</bold></highlight>. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> Additional discussion of potential advantages of systems, methods and/or computer program products according to embodiments of the present invention now will be provided. In particular, performance tests on an implementation of systems, methods and/or computer program products of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> have indicated that at a 100% throughput improvement or more may be obtained when processing over 6,000 data records per second, compared to an architecture that relies on a commercial relational database management system to handle both the multi-thread front end and the back end data storing into the database at a rate of only 3,000 records per second. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Moreover, in service management systems, data records may arrive in very large quantities on a continuous basis. Also, the service requests from clients may come in bursts. By using systems, methods and/or computer program products according to embodiments of the invention, the impact of these burst characteristics of input may be moderated. Incoming traffic may be handled in real time, without choking the database management system. The turnaround time for service requests from clients may be reduced. The database repository server also can handle multiple clients and multiple threads, so that the server can service many concurrent clients. With one dedicated high-performance database write driver interfacing with the database, embodiments of the present invention can allow high performance processing of incoming quality of service performance data, which therefore can enhance scalability. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> In conventional service management systems that use a buffer to moderate the impact of bursty input data, the data in the buffer area may actually first be stored in secondary storage, such as disk, before being recalled back into memory to be further processed. In contrast, some embodiments of the invention can embody the MSMQB in solid-state memory, such as SRAM and/or DRAM, without the need to first write the data into disk. The extra overhead of disk write and read operations can be reduced or avoided. Since disk I/O operations generally are much slower than processor operations, embodiments of the present invention may run at processor speed, to thereby allow higher throughput to be obtained. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Finally, in embodiments of the invention that use a notification module <highlight><bold>382</bold></highlight>, the SMSM <highlight><bold>320</bold></highlight> need not waste time checking the status of the MSMQB <highlight><bold>310</bold></highlight>. Overall performance of the SMSM <highlight><bold>320</bold></highlight> therefore also can be improved. The overall performance of the index builder <highlight><bold>386</bold></highlight> also can be improved. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The flowcharts and block diagrams of FIGS. <highlight><bold>2</bold></highlight>-<highlight><bold>5</bold></highlight> illustrate the architecture, functionality, and operation of possible implementations of systems, methods and computer program products according to embodiments of the invention. In this regard, each block in the flowcharts or block diagrams can represent a module, segment, or portion of code, which comprises one or more executable instructions for implementing the specified logical function(s). It should also be noted that in some alternative implementations, the functions noted in the blocks may occur out of the order noted in the figures. For example, two blocks shown in succession may in fact be executed substantially concurrently or the blocks may sometimes be executed in the reverse order, depending upon the functionality involved. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In the drawings and specification, there have been disclosed typical preferred embodiments of the invention and, although specific terms are employed, they are used in a generic and descriptive sense only and not for purposes of limitation, the scope of the invention being set forth in the following claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for storing data from a plurality of clients in a database, comprising: 
+<claim-text>a Multi-thread Shared Memory message Queue Buffer (MSMQB) that includes a plurality of First-In-First-Out (FIFO) queues, a respective one of which is associated with a respective one of the plurality of clients, and that is configured to store sequential bursts of data records that are received from the plurality of clients in the plurality of FIFO queues that are associated therewith, the data records in the sequential bursts of data being sorted by a primary key; and </claim-text>
+<claim-text>a Semi-Merge Sort Module (SMSM) that is responsive to the plurality of FIFO queues in the MSMQB and that is configured to sort the first sequential bursts in the plurality of FIFO queues based on the primary key of at least one selected record therein to produce a semi-sorted record stream and to serially store the semi-sorted record stream in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the SMSM is further configured to produce the semi-sorted record stream as a series of data files and to serially store the series of data files in the database. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>an index builder that is configured to build an index for the semi-sorted record stream and to store the index in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> further comprising: 
+<claim-text>an index builder that is configured to build an index file for each of the data files and to store the index files in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> further comprising: 
+<claim-text>a configuration module that is configured to specify a directory path for the data files and the index files, and to provide the directory path to the SMSM and to the index builder. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>a notification module that is responsive to storing a sequential burst of data records that is received from one of the clients in one of the FIFO queues that is associated therewith, and that is configured to notify the SMSM to produce the semi-sorted record stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further comprising: 
+<claim-text>a notification module that is responsive to storing a sequential burst of data records that is received from one of the clients in one of the FIFO queues that is associated therewith, and that is configured to notify the SMSM to produce the semi-sorted record stream and to notify the index builder to build the index. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the primary key is a timestamp. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the at least one selected record in the first sequential burst in each FIFO queue comprises a first record in the first sequential burst in each FIFO queue. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> in combination with the database. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising a collection agent at each of the plurality of clients that is configured to collect the sequential bursts of data records from the respective client and to transmit the sequential bursts of data records that are collected to the MSMQB. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the sequential bursts of data records from the plurality of clients comprises Quality of Service (QoS) data from the plurality of clients. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method for storing data from a plurality of clients in a database, comprising: 
+<claim-text>storing sequential bursts of data records that are received from the plurality of clients in a plurality of First-In First-Out (FIFO) queues, a respective one of which is associated with a respective one of the clients, the data records in the sequential bursts of data being sorted by a primary key; </claim-text>
+<claim-text>semi-sorting the first sequential bursts in the plurality of FIFO queues based on the primary key of at least one selected record therein to produce a semi-sorted record stream; and </claim-text>
+<claim-text>serially storing the semi-sorted record stream in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the semi-sorting produces the semi-sorted record stream as a series of data files and wherein the serially storing comprises serially storing the series of data files in the database. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> further comprising: 
+<claim-text>building an index for the semi-sorted record stream; and </claim-text>
+<claim-text>storing the index in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising: 
+<claim-text>building an index file for each of the data files; and </claim-text>
+<claim-text>storing the index files in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> further comprising: 
+<claim-text>specifying a directory path for the data files and the index files. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> further comprising: 
+<claim-text>initiating production of the semi-sorted record stream in response to the storing a sequential burst of data records that is received from one of the clients in one of the FIFO queues that is associated therewith. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the primary key is a timestamp. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the at least one selected record in the first sequential burst in each FIFO queue comprises a first record in the first sequential burst in each FIFO queue. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the storing sequential bursts of data is preceded by collecting the sequential bursts of data records from the respective client. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the sequential bursts of data records from the plurality of clients comprises Quality of Service (QoS) data from the plurality of clients. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A system for storing data from a plurality of clients in a database, comprising: 
+<claim-text>means for storing sequential bursts of data records that are received from the plurality of clients in a plurality of First-In First-Out (FIFO) queues, a respective one of which is associated with a respective one of the clients, the data records in the sequential bursts of data being sorted by a primary key; </claim-text>
+<claim-text>means for semi-sorting the first sequential bursts in the plurality of FIFO queues based on the primary key of at least one selected record therein to produce a semi-sorted record stream; and </claim-text>
+<claim-text>means for serially storing the semi-sorted record stream in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein the means for semi-sorting produces the semi-sorted record stream as a series of data files and wherein the means for serially storing comprises means for serially storing the series of data files in the database. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> further comprising: 
+<claim-text>means for building an index for the semi-sorted record stream; and </claim-text>
+<claim-text>means for storing the index in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> further comprising: 
+<claim-text>means for building an index file for each of the data files; and </claim-text>
+<claim-text>means for storing the index files in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> further comprising: 
+<claim-text>means for specifying a directory path for the data files and the index files. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> further comprising: 
+<claim-text>means for activating the means for semi-sorting in response to activating of the means for storing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein the primary key is a timestamp. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein the at least one selected record in the first sequential burst in each FIFO queue comprises a first record in the first sequential burst in each FIFO queue. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> further comprising: 
+<claim-text>means for collecting the sequential bursts of data records from the respective client. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein the sequential bursts of data records from the plurality of clients comprises Quality of Service (QoS) data from the plurality of clients. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> in combination with the database. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. A computer program product for storing data from a plurality of clients in a database, the computer program product comprising a computer-readable storage medium having computer-readable program code embodied in the medium, the computer-readable program code comprising: 
+<claim-text>computer-readable program code that is configured to provide a Multi-thread Shared Memory message Queue Buffer (MSMQB) that includes a plurality of First-In-First-Out (FIFO) queues, a respective one of which is associated with a respective one of the plurality of clients, and that is configured to store sequential bursts of data records that are received from the plurality of clients in the plurality of FIFO queues that are associated therewith, the data records in the sequential bursts of data being sorted by a primary key; and </claim-text>
+<claim-text>computer-readable program code that is configured to provide a Semi-Merge Sort Module (SMSM) that is responsive to the plurality of FIFO queues in the MSMQB and that is configured to sort the first sequential bursts in the plurality of FIFO queues based on the primary key of at least one selected record therein to produce a semi-sorted record stream and to serially store the semi-sorted record stream in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> wherein the computer-readable program code that is configured to provide the SMSM is further configured to produce the semi-sorted record stream as a series of data files and to serially store the series of data files in the database. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference>, further comprising: 
+<claim-text>computer-readable program code that is configured to provide an index builder that is configured to build an index for the semi-sorted record stream and to store the index in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 35</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to provide an index builder that is configured to build an index file for each of the data files and to store the index files in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to provide a configuration module that is configured to specify a directory path for the data files and the index files, and to provide the directory path to the SMSM and to the index builder. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to provide a notification module that is responsive to storing a sequential burst of data records that is received from one of the clients in one of the FIFO queues that is associated therewith, and that is configured to notify the SMSM to produce the semi-sorted record stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 36</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to provide a notification module that is responsive to storing a sequential burst of data records that is received from one of the clients in one of the FIFO queues that is associated therewith, and that is configured to notify the SMSM to produce the semi-sorted record stream and to notify the index builder to build the index. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> wherein the primary key is a timestamp. </claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> wherein the at least one selected record in the first sequential burst in each FIFO queue comprises a first record in the first sequential burst in each FIFO queue. </claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> in combination with computer-readable program code that is configured to provide the database. </claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> further comprising computer-readable program code that is configured to provide a collection agent at each of the plurality of clients that is configured to collect the sequential bursts of data records from the respective client and to transmit the sequential bursts of data records that are collected to the MSMQB. </claim-text>
+</claim>
+<claim id="CLM-00045">
+<claim-text><highlight><bold>45</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference> wherein the sequential bursts of data records from the plurality of clients comprises Quality of Service (QoS) data from the plurality of clients. </claim-text>
+</claim>
+<claim id="CLM-00046">
+<claim-text><highlight><bold>46</bold></highlight>. A computer program product for storing data from a plurality of clients in a database, the computer program product comprising a computer-readable storage medium having computer-readable program code embodied in the medium, the computer-readable program code comprising: 
+<claim-text>computer-readable program code that is configured to store sequential bursts of data records that are received from the plurality of clients in a plurality of First-In First-Out (FIFO) queues, a respective one of which is associated with a respective one of the clients, the data records in the sequential bursts of data being sorted by a primary key; </claim-text>
+<claim-text>computer-readable program code that is configured to semi-sort the first sequential bursts in the plurality of FIFO queues based on the primary key of at least one selected record therein to produce a semi-sorted record stream; and </claim-text>
+<claim-text>computer-readable program code that is configured to serially store the semi-sorted record stream in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00047">
+<claim-text><highlight><bold>47</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> wherein the computer-readable program code that is configured to semi-sort produces the semi-sorted record stream as a series of data files and wherein the computer-readable program code that is configured to serially store comprises computer-readable program code that is configured to serially store the series of data files in the database. </claim-text>
+</claim>
+<claim id="CLM-00048">
+<claim-text><highlight><bold>48</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to build an index for the semi-sorted record stream; and </claim-text>
+<claim-text>computer-readable program code that is configured to store the index in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00049">
+<claim-text><highlight><bold>49</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 47</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to build an index file for each of the data files; and </claim-text>
+<claim-text>computer-readable program code that is configured to store the index files in the database. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00050">
+<claim-text><highlight><bold>50</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 49</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to specify a directory path for the data files and the index files. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00051">
+<claim-text><highlight><bold>51</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> further comprising: 
+<claim-text>computer-readable program code that is configured to activate the computer-readable program code that is configured to semi-sort in response to activating of the computer-readable program code that is configured to store. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00052">
+<claim-text><highlight><bold>52</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> wherein the primary key is a timestamp. </claim-text>
+</claim>
+<claim id="CLM-00053">
+<claim-text><highlight><bold>53</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> wherein the at least one selected record in the first sequential burst in each FIFO queue comprises a first record in the first sequential burst in each FIFO queue. </claim-text>
+</claim>
+<claim id="CLM-00054">
+<claim-text><highlight><bold>54</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> further comprising computer-readable program code that is configured to collect the sequential bursts of data records from the respective client. </claim-text>
+</claim>
+<claim id="CLM-00055">
+<claim-text><highlight><bold>55</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> wherein the sequential bursts of data records from the plurality of clients comprises Quality of Service (QoS) data from the plurality of clients. </claim-text>
+</claim>
+<claim id="CLM-00056">
+<claim-text><highlight><bold>56</bold></highlight>. A computer program product according to <dependent-claim-reference depends_on="CLM-00044">claim 46</dependent-claim-reference> further comprising computer-readable program code that is configured to provide the database.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004949A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004949A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004949A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004949A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004949A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004949A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

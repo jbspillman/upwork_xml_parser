@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005367A1-20030102-D00000.TIF SYSTEM "US20030005367A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005367A1-20030102-D00001.TIF SYSTEM "US20030005367A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005367A1-20030102-D00002.TIF SYSTEM "US20030005367A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005367A1-20030102-D00003.TIF SYSTEM "US20030005367A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005367</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09893574</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L001/22</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>714</class>
+<subclass>042000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Reporting hard disk drive failure</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Son</given-name>
+<middle-name>H.</middle-name>
+<family-name>Lam</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Puyallup</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>ANTONELLI TERRY STOUT AND KRAUS</name-1>
+<name-2></name-2>
+<address>
+<address-1>SUITE 1800</address-1>
+<address-2>1300 NORTH SEVENTEENTH STREET</address-2>
+<city>ARLINGTON</city>
+<state>VA</state>
+<postalcode>22209</postalcode>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A technique for reporting a hard disk drive failure in a computer system includes detecting a failure of one of a plurality of hard disk drives and reporting the failure to a CIMOM (Conceptual Information Model Object Manager) which in turn forwards a message by an LRA (Local Response Agent) to a PMP (Platform Management Provider which in turn forwards a command to an SMC (Server Management Controller), which forward the command to an HSC (Hot-Swap Controller) activate a display, the display reporting the failure or of a particular one of the hard disk drives to a user. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to reporting hard disk drive failures. More particularly, the present invention is related to reporting hard disk drive failures in an entry level server or appliance server without using SAF-TE logic. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Typically, an entry level server has two hot-swap HDDs (Hard Disk Drives). If one of the HDDs fails, SAF-TE (SCSI Accessed Fault-Tolerant Enclosures) Interface logic will turn on an LED (Light Emitting Diode) to indicate which HDD has failed so that a user can replace the failed HDD. Hot-swapping allows the user to replace the failed HDD without shutting down the system, thereby improving the system reliability and availability. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The SAF-TE Interface logic provides a standard non-proprietary way for third party disk and RAID controllers to be automatically integrated with peripheral packaging that supports status signals (e.g.-LEDs, audible alarms, LCDs, etc.), hot swapping of HDDs, and monitoring of enclosure components. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Presently, the SAF-TE logic capability is only supported via a RAID controller which resides either on a PCI card or on a motherboard. However, to reduce costs, entry level servers may not include a RAID controller. Accordingly, such entry level servers cannot use SAF-TE logic to report an HDD failure to the user. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Similarly, in appliance servers, SAF-TE controllers communicate with respective BMCs (Baseboard Management Controllers) via IPMI (Intelligent Platform Management Interface) commands. As noted above, SAF-TE logic capability is only supported via the RAID controller which resides either on a PCI card or on a motherboard. Unfortunately, to reduce costs, appliance servers may not include a BMC or a RAID controller. Accordingly, such appliance servers also cannot use SAF-TE logic to report an HDD failure to the user.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The foregoing and a better understanding of the present invention will become apparent from the following detail description of example embodiments and the claims when read in connection with the accompanying drawings, all forming a part of the disclosure of this invention. While the foregoing and following written and illustrated disclosure focuses on disclosing example embodiments of the invention, it should be clearly understood that the same is by way of illustration and example only and that the invention is not limited thereto. The spirit and scope of the present invention are limited only by the terms of the appended claims. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The following represents brief descriptions of the drawings, wherein: </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating the management bus routing in a RAID equipped server. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram illustrating an example of server management components. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram illustrating an example of entry level server management components. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram illustrating an example of appliance server management components. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Before beginning a detailed description of the subject invention, mention of the following is in order. When appropriate, like reference numerals and characters may be used to designate identical, corresponding, or similar components in differing drawing figures. Furthermore, in the detailed description to follow, example sizes/models/values/ranges may be given, although the present invention is not limited thereto. In addition, arrangements may be shown a block diagram form to avoid obscuring the invention, and also view of the fact that specifics with respect to implementation of such block diagrams are highly dependent upon the platform within which the present invention is to be implemented, that is, such specifics should be well within the purview of one skilled in the art. Where specific details have been set forth in noted to describe example embodiments of the invention, it should be apparent to one skilled in the art that the invention can be practiced without, or with variations of, these specific details. Finally, it should be apparent to one skilled in the art that differing combinations of hard-wired circuitry and software instructions can be used to implement embodiments of the present invention, that is, the present invention is not limited to any specific combination of hardware and software. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating the management bus routing in a RAID equipped server having both a BMC and a RAID controller. As illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, power supplies are connected to a Power Share Board including a Power Supply Presence &amp; Fault Monitor and an EEPROM having FRU information stored therein. A baseboard includes a BMC and an SMM which are connected to an IPMB bus. The baseboard also includes a SCSI or RAID controller connected to a Hot-Swap Backplane having a SCSI controller and drive slots to which hard disk drives are connected. The backplane also includes a hot-swap controller having both FLASH and RAM memories. A front panel includes the usual indicators and switches as well as the drive fault lights. The drive fault lights are used to inform the user of an HDD fault and to inform the user as to which HDD needs to be replaced. An ICMB Bridge Card including an ICMB Bridge Controller is also included. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is another block diagram illustrating an example of the server management components. As illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the LRA (Local Response Agent) is responsible for monitoring all of events originating from the PMP (Platform Management Provider) or other CIM (Conceptual Information Model) based providers and taking pre-configured actions for that event. Instructions regarding various actions and events are set up and designated by the user. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The SHA (Server Health Agent) obtains information regarding the overall health of the server. The SHA subscribes to all events that a configured for health status contribution. Various event classes can be user configurable via a management application. The SHA generates health update events, which will, in turn, update the managed server&apos;s health depiction. There is no direct user interface to the SHA but rather all interfaces are via a management application. The SHA maintains a database and reads it and updates information from that database. Management applications update this database with various health related configurable parameters. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The PMP includes all the WMI (Windows Management Interface) specific code and interacts with the Windows Management. It also registers the CIM Schema (e.g.-sensors, processor, memory, etc.) with Windows Management. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The PMAL (Platform Management Abstraction Layer) isolates the hardware specific knowledge of the devices and presents a common interface to this module. This interface is exposed via a user mode DLL. The PMP uses the API routines that are exposed by the PMAL.DLL. The DLL communicates to the SMC (Server Management Controller) Driver using a private interface. The DLL converts the API requests into an IOCTL interface. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The SMC Driver interacts with the SMC (Server Management Controller) to issue commands to the firmware and to process the responses. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The HSC (Hot-Swap Controller) controls the drive fault lights, indicated as the HDD LEDs in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, and utilizes up to two main interfaces to communicate with the remainder of the system, namely, the SCSI bus using the SAF-TE command set (not shown) in the case of a system having a RAID controller and either the 12C (Inter-Integrated Circuit) bus or the IPMB (Intelligent Platform Management Bus) which is built on the 12C bus. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> As noted above, while the arrangement of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> informs the user of an HDD failure in an efficient manner, a BMC or RAID controller is necessary. Since, an entry level server does not contain a RAID controller and since at appliance server does not include a BMC or RAID controller, there is a need for a hard disk drive reporting technique which operates without using SAF-TE logic. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, when there is a failure of an HDD, one of the SCSI providers reports a failure event to the CIMOM indicating that a particular HDD has failed. The LRA is programmed to respond to an internal HDD failure event by sending a message via the CIMOM to the PMP which then sends a command to the PMAL. The PMAL in turn sends a command to the SMC driver which forwards the command to the SMC. The SMC then sends a command to the HSC to turn on the appropriate failure HDD LED (that is, the appropriate drive fault light). </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> It is to be noted that in the arrangement of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the SAF-TE logic was not needed, thereby obviating the need for a RAID controller. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram illustrating an example of entry level server management components which may operate in accordance with an example of the hard disk drive failure reporting technique in accordance with the present invention. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> As illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, as compared to the arrangement of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the PMAL and SMC Driver and SMC of <cross-reference target="DRAWINGS">FIG. 2</cross-reference> are replaced by the PMD (Platform Management Driver) including the IPMB or ICMB and the BMC directly driving the HSC. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> When there is a failure of an HDD, one of the SCSI providers reports a failure event to the CIMOM indicating that a particular HDD has failed. The LRA is programmed to respond to an internal HDD failure event by sending a message via the CIMOM to the PMP. The PMP then sends a command to the BMC which in turn sends an IMPI command to the HSC to turn on the appropriate failure HDD LED (that is, the appropriate drive fault light). </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> It is to be noted that in the arrangement of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the SAF-TE logic was not needed, thereby obviating the need for a RAID controller. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Similarly, <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram illustrating an example of appliance server management components which may operate in accordance with an example of the hard disk drive failure reporting technique in accordance with the present invention. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> As illustrated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, as compared to the arrangement of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the PMAL and SMC driver and SMC are replaced by the Platform Management Driver and 12C Controller included in the chipset. When there is a failure of an HDD, one of the SCSI providers reports a failure event to the CIMOM indicating that a particular HDD has failed. The LRA is programmed to respond to an internal HDD failure event by sending a message via the CIMOM to the PMP. The PMP sends a command to the HSC via the Platform Management Driver and 12C Controller to turn on the appropriate failure HDD LED. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> It is to be noted that in the arrangement of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the SAF-TE logic was also not needed, thereby obviating the need for a RAID controller or BMC. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> This concludes the description of the example embodiments. Although the present invention has been described with reference to a number of illustrative embodiments, it should be understood that numerous other modifications and embodiments can be devised by those skilled in the art that will fall within the spirit and scope of the principles of this invention. More particularly, reasonable variations and modifications are possible in the component parts and/or arrangements of the subject combination arrangement within the scope of the foregoing disclosure, the drawings, and the appended claims without departing from the spirit of the invention. In addition to variations and modifications in the component parts and/or arrangements, alternative uses will be apparent to those skilled in the art. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of reporting hard disk drive failure in a computer system, the method comprising: 
+<claim-text>detecting a failure of a particular one of a plurality of hard disk drives of the computer system; </claim-text>
+<claim-text>reporting the failure of the particular one of the plurality of hard disk drives to a CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>forwarding a message by an LRA (Local Response Agent) to a PMP (Platform Management Provider) via the CIMOM; </claim-text>
+<claim-text>sending a command from the PMP to a BMC (Baseboard Management Controller); </claim-text>
+<claim-text>sending a command from the BMC to an HSC (Hot-Swap Controller); and </claim-text>
+<claim-text>activating a display by the HSC, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the command sent from the BMC to the HSC comprises an IMPI (Intelligent Platform Management Interface) command. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the PMP sends the command to the BMC via an IPMB (Intelligent Platform Management Bus). </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the PMP sends the command to the BMC via an ICMB (Inter-chassis Management Bus). </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the failure of the particular hard disk drive is detected by a SCSI (Small Computer System Interface) provider. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A program storage device, readable by a machine, tangibly embodying a program of instructions executable by the machine to perform a method of reporting hard disk drive failure in a computer system, the method comprising: 
+<claim-text>detecting a failure of a particular one of a plurality of hard disk drives of the computer system; </claim-text>
+<claim-text>reporting the failure of the particular one of the plurality of hard disk drives to a CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>forwarding a message by an LRA (Local Response Agent) to a PMP (Platform Management Provider) via the CIMOM; </claim-text>
+<claim-text>sending a command from the PMP to a BMC (Baseboard Management Controller); </claim-text>
+<claim-text>sending a command from the BMC to an HSC (Hot-Swap Controller); and </claim-text>
+<claim-text>activating a display by the HSC, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the command sent from the BMC to the HSC comprises an IMPI (Intelligent Platform Management Interface) command. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the PMP sends the command to the BMC via an IPMB (Intelligent Platform Management Bus). </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the PMP sends the command to the BMC via an ICMB (Inter-chassis Management Bus). </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the failure of the particular hard disk drive is detected by a SCSI (Small Computer System Interface) provider. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A computer system comprising: 
+<claim-text>a plurality of hard disk drives; </claim-text>
+<claim-text>a SCSI (Small computer System Interface) provider operatively connected to the plurality of hard disk drives, the SCSI provider to detect a failure of a particular one of the plurality of hard disk drives; </claim-text>
+<claim-text>a CIMOM (Conceptual Information Model Object Manager) operatively connected to the SCSI provider; </claim-text>
+<claim-text>an LRA (Local Response Agent) operatively connected to the CIMOM; </claim-text>
+<claim-text>a PMP (Platform Management Provider) operatively connected to the CIMOM; </claim-text>
+<claim-text>a BMC (Baseboard Management Controller) operatively connected to the PMP; </claim-text>
+<claim-text>an HSC (Hot-Swap Controller) operatively connected to the BMC; and </claim-text>
+<claim-text>a display operatively connected to the HSC; </claim-text>
+<claim-text>wherein, upon the detection of a failure of a particular hard disk drive, the SCSI provider reports the failure to the CIMOM which in turn forwards a message by the LRA to the PMP which in turn sends a command to the BMC which in turn sends a command to the HSC to activate the display, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the command sent from the BMC to the HSC comprises an IMPI (Intelligent Platform Management Interface) command. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the PMP sends the command to the BMC via an IPMB (Intelligent Platform Management Bus). </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the PMP sends the command to the BMC via an ICMB (Inter-chassis Management Bus). </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A method of reporting hard disk drive failure in a computer system, the method comprising: 
+<claim-text>detecting a failure of a particular one of a plurality of hard disk drives of the computer system; </claim-text>
+<claim-text>reporting the failure of the particular one of the plurality of hard disk drives to a CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>forwarding a message by an LRA (Local Response Agent) to a PMP (Platform Management Provider) via the CIMOM; </claim-text>
+<claim-text>sending a command from the PMP to an HSC (Hot-Swap Controller); and </claim-text>
+<claim-text>activating a display by the HSC, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the failure of the particular hard disk drive is detected by a SCSI (Small Computer System Interface) provider. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A program storage device, readable by a machine, tangibly embodying a program of instructions executable by the machine to perform a method of reporting hard disk drive failure in a computer system, the method comprising: 
+<claim-text>detecting a failure of a particular one of a plurality of hard disk drives of the computer system; </claim-text>
+<claim-text>reporting the failure of the particular one of the plurality of hard disk drives to a CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>forwarding a message by an LRA (Local Response Agent) to a PMP (Platform Management Provider) via the CIMOM; </claim-text>
+<claim-text>sending a command from the PMP to an HSC (Hot-Swap Controller); and </claim-text>
+<claim-text>activating a display by the HSC, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the failure of the particular hard disk drive is detected by a SCSI (Small Computer System Interface) provider. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. A computer system comprising: 
+<claim-text>a plurality of hard disk drives; </claim-text>
+<claim-text>a SCSI (Small Computer System Interface) provider operatively connected to the plurality of hard disk drives, the SCSI provider to detect a failure of a particular one of the plurality of hard disk drives; </claim-text>
+<claim-text>a CIMOM (Conceptual Information Model Object Manager) operatively connected to the SCSI provider; </claim-text>
+<claim-text>an LRA (Local Response Agent) operatively connected to the CIMOM; </claim-text>
+<claim-text>a PMP (Platform Management Provider) operatively connected to the CIMOM; </claim-text>
+<claim-text>an HSC (Hot-Swap Controller) operatively connected to the PMP; and </claim-text>
+<claim-text>a display operatively connected to the HSC; </claim-text>
+<claim-text>wherein, upon the detection of a failure of a particular hard disk drive, the SCSI provider reports the failure to the CIMOM which in turn forwards a message by the LRA to the PMP which in turn sends a command to the HSC to activate the display, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. A method of reporting hard disk drive failure in a computer system, the method comprising: 
+<claim-text>detecting a failure of a particular one of a plurality of hard disk drives of the computer system; </claim-text>
+<claim-text>reporting the failure of the particular one of the plurality of hard disk drives to a CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>forwarding a message by an LRA (Local Response Agent) to a PMP (Platform Management Provider) via the CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>sending a command from the PMP to an SMC (Server Management Controller) driver; </claim-text>
+<claim-text>sending a command from the SMC driver to an SMC (Server Management Controller); </claim-text>
+<claim-text>sending a command from the SMC to an HSC (Hot-Swap Controller; and </claim-text>
+<claim-text>activating a display by the HSC, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the failure of a particular hard disk drive is detected by a SCSI (Small Computer System Interface) provider. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein sending a command from the PMP to the SMC driver comprises sending the command to a PMAL (Platform Management Extraction Layer) which in turn sends the command to the SMC driver. </claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. A program storage device, readable by a machine, tangibly embodying a program of instructions executable by the machine to perform a method of reporting hard disk drive failure in a computer system, the method comprising: 
+<claim-text>detecting a failure of a particular one of a plurality of hard disk drives of the computer system; </claim-text>
+<claim-text>reporting the failure of the particular one of the plurality of hard disk drives to a CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>forwarding a message by an LRA (Local Response Agent) to a PMP (Platform Management Provider) via the CIMOM (Conceptual Information Model Object Manager); </claim-text>
+<claim-text>sending a command from the PMP to an SMC (Server Management Controller) driver; </claim-text>
+<claim-text>sending a command from the SMC driver to an SMC (Server Management Controller); </claim-text>
+<claim-text>sending a command from the SMC to an HSC (Hot-Swap Controller; and </claim-text>
+<claim-text>activating a display by the HSC, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the failure of a particular hard disk drive is detected by a SCSI (Small Computer System Interface) provider. </claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. The device of <dependent-claim-reference depends_on="CLM-00033">claim 37</dependent-claim-reference>, wherein sending a command from the PMP to the SMC driver comprises sending the command to a PMAL (Platform Management Extraction Layer) which in turn sends the command to the SMC driver. </claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. A computer system comprising: 
+<claim-text>a plurality of hard disk drives; </claim-text>
+<claim-text>a SCSI (Small Computer System Interface) provider operatively connected to the plurality of hard disk drives, the SCSI provider to detect a failure of a particular one of the plurality of hard disk drives; </claim-text>
+<claim-text>a CIMOM (Conceptual Information Model Object Manager) operatively connected to the SCSI provider; </claim-text>
+<claim-text>an LRA (Local Response Agent) operatively connected to the CIMOM: </claim-text>
+<claim-text>a PMP (Platform Management Provider) operatively connected to the CIMOM; </claim-text>
+<claim-text>a SMC (Server Management Controller) operatively connected to the PMP via a SMC driver; and </claim-text>
+<claim-text>a display operatively connected to the SMC; </claim-text>
+<claim-text>wherein, upon the detection of a failure of a particular hard disk drive, the SCSI provider reports the failure to the CIMOM which in turn forwards the message by the LRA to the PMP which in turn sends a command to the SMC via the SMC driver to activate the display, the display reporting the failure of the particular hard disk drive to a user. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00044">claim 42</dependent-claim-reference>, wherein the display comprises a plurality of LEDs (Light Emitting Diodes). </claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00044">claim 42</dependent-claim-reference>, wherein the plurality of hard disk drives comprises a RAID (Redundant Array of Inexpensive Drives) array. </claim-text>
+</claim>
+<claim id="CLM-00045">
+<claim-text><highlight><bold>45</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00044">claim 42</dependent-claim-reference>, further comprising a PMAL (Platform Management Extraction Layer), disposed between the PMP and the SMC driver, to send a command from the PMP to the SMC driver.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005367A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005367A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005367A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005367A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

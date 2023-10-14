@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005006A1-20030102-D00000.TIF SYSTEM "US20030005006A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005006A1-20030102-D00001.TIF SYSTEM "US20030005006A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005006A1-20030102-D00002.TIF SYSTEM "US20030005006A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005006A1-20030102-D00003.TIF SYSTEM "US20030005006A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005006</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09815033</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010322</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F001/02</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>708</class>
+<subclass>277000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Fast system and method for producing a logarithmic signal approximation with variable precision</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Manjirnath</given-name>
+<family-name>Chatterjee</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sunnyvale</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>MOTOROLA INC</name-1>
+<name-2></name-2>
+<address>
+<address-1>600 NORTH US HIGHWAY 45</address-1>
+<city>LIBERTYVILLE</city>
+<state>IL</state>
+<postalcode>60048-5343</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method for producing an output logarithmic digital signal from an input digital signal having a plurality of bit values in which the output logarithmic signal has a precision defined by a parameter is described. The system (<highlight><bold>45</bold></highlight>) includes a search circuit (<highlight><bold>50</bold></highlight>), an interpolation circuit (<highlight><bold>55</bold></highlight>) in coupled with the search circuit, a shift circuit (<highlight><bold>60</bold></highlight>) in coupled with the interpolation circuit and a combiner (<highlight><bold>65</bold></highlight>) that produces an output logarithmic digital signal (<highlight><bold>90</bold></highlight>) from a received search circuit output (<highlight><bold>75</bold></highlight>) and a received shift circuit output (<highlight><bold>88</bold></highlight>). </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This invention generally relates to computational systems and methods, and more particularly, to systems and methods that perform numerical computations such as speech recognition systems. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The need for systems capable of performing optimized logarithm computations exists in many mathematical and engineering fields. Unfortunately, at present, systems that perform logarithmic calculations fall into three categories. The first is floating point implementations of logarithms, the second is table-ized fixed-point implementations, and the third is straight integer implementations. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> In the first category (floating-point implementations) floating point numbers are utilized to represent the inputs and outputs of the system. Floating-point logarithms systems are usually implemented employing a math co-processor with some form of power series or Newton-Raphson method of convergence. As a result, this category of systems requires complex circuitry and substantial processing time to obtain a final value. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Tabularized fixed-point representation systems provide a scaled integer representation of the true logarithm value. In other words, log(x) would be represented as &lsquo;y&rsquo; multiplied by log(x) where &lsquo;y&rsquo; is a fixed scaling factor to preserve precision. These systems draw intermediate values of the logarithm from a table. The table contains the value of log(x) to the appropriate scale at compile time. These types of systems require the creation and manipulation of a table of values and can require substantial memory space (as a result of storing intermediate values in the table) to obtain a final value. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The last category is integer truncation of the logarithm value. Systems in this category return the value of the highest bit in the argument (x). While useful for search applications where precision is not required, the lack of precision in this type of systems means that all bits on the right of the decimal place are lost. Therefore, there is a need for a system and method that produce logarithmic values with run-time specified precision quickly without utilizing tables and/or multiplications. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The summary of the invention, as well as the following detailed description of this invention, as defined in the claims, is better understood when read in conjunction with the accompanying figures. The following figures are included by way of example, and not by way of limitation with regard to the claimed invention and are not necessarily drawn to scale. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a functional block diagram for the system in accordance with the invention. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is another functional block diagram for the system in accordance with the invention. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart illustrating the process performed by the systems described in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> and <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is another function block diagram for the system utilizing an Application Specific Integrated Chip (ASIC) or Digital Signal Processor (DSP). </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT(S) </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The present invention is a system and method for producing an output logarithmic value with run-time specific precision without utilizing tables and/or multiplications. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In accordance with the invention, a system for producing an output logarithmic digital signal from an input digital signal having a plurality of bit values wherein the output logarithmic signal has a precision defined by a parameter is described. The system comprises a means for finding the bit position of the highest bit value of the input digital signal and a means for determining an offset from the position of the highest bit value and the parameter. The system also includes a means for interpolating a shifted interpolation value from the input signal using the parameter and an adder for adding the offset, precision shifted interpolation value and bit position. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Also in accordance with the invention, a method for producing an output logarithmic digital signal from an input digital signal having a plurality of bit values wherein the output logarithmic signal has a precision defined by a parameter is described. The method comprises the steps of finding the bit position of the highest bit value of the input digital signal and determining an offset from the position of the highest bit value and the parameter. The method also includes the steps of interpolating a shifted interpolation value from the input signal using the parameter and adding the offset, precision shifted interpolation value and bit position. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates the functional block diagram of a system <highlight><bold>10</bold></highlight>. The system <highlight><bold>10</bold></highlight> is in signal communication with an input/output &ldquo;I/O&rdquo; device <highlight><bold>15</bold></highlight>. The I/O device <highlight><bold>15</bold></highlight> may selectively be any input and output device combination including but not limited to a keyboard and a display monitor or printer. The system <highlight><bold>10</bold></highlight> includes a central processing unit &ldquo;CPU&rdquo; <highlight><bold>20</bold></highlight>, an I/O interface <highlight><bold>25</bold></highlight>, a storage device <highlight><bold>30</bold></highlight>, and a system bus <highlight><bold>35</bold></highlight>. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The CPU <highlight><bold>20</bold></highlight> may selectively be any processor capable of manipulating data from the I/O interface <highlight><bold>25</bold></highlight> and storage device <highlight><bold>30</bold></highlight>. Examples of the CPU <highlight><bold>20</bold></highlight> include but are not limited to integrated circuit processors families such as Intel 80X86, Motorola, Inc. Power PC, Digital DEC Alpha, and other similar processor from companies such as Hewitt Packard, Inc., Sun Microsystems, IBM, AMD, Cyrix and others. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The storage device <highlight><bold>30</bold></highlight> may selectively be any memory type structure such as random access memory (RAM), read-only memory (ROM), permanent storage unit (such as a hard disk), removable storage unit (such as a floppy disk, DVD, or CD-ROM), or similar type unit. The storage device <highlight><bold>30</bold></highlight> includes a control program or software <highlight><bold>40</bold></highlight>. The software <highlight><bold>40</bold></highlight> may selectively be any coded instructions that control the process of the system <highlight><bold>10</bold></highlight>. The I/O interface <highlight><bold>25</bold></highlight> and the system bus <highlight><bold>35</bold></highlight> are a conventional computer system type interface and system bus which are well known both those skilled in the art. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In operation, a user (not shown) enters input values into the system <highlight><bold>10</bold></highlight> via the I/O device <highlight><bold>15</bold></highlight>. The input values are processed by the CPU <highlight><bold>20</bold></highlight> utilizing the coded instructions in the software <highlight><bold>40</bold></highlight>. The system <highlight><bold>10</bold></highlight> then generates output values and communicates then to the user via the I/O interface <highlight><bold>25</bold></highlight> and I/O device <highlight><bold>15</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of another example of the system <highlight><bold>45</bold></highlight>. The system <highlight><bold>45</bold></highlight> comprises a search circuit <highlight><bold>50</bold></highlight>, an interpolation circuit <highlight><bold>55</bold></highlight>, a shift circuit <highlight><bold>60</bold></highlight> and a combination circuit <highlight><bold>65</bold></highlight>. It is appreciated that search circuit <highlight><bold>50</bold></highlight>, interpolation circuit <highlight><bold>55</bold></highlight>, shift circuit <highlight><bold>60</bold></highlight> and combination circuit may selectively be implemented utilizing combination digital circuitry. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The search circuit <highlight><bold>50</bold></highlight> receives a digital operand signal <highlight><bold>70</bold></highlight> (corresponding to the operand value, i.e., &lsquo;x&rsquo;, for Log<highlight><subscript>2 </subscript></highlight>(x)) from an input device such as I/O device <highlight><bold>15</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and outputs a signal <highlight><bold>75</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, corresponding to the highest binary set bit value corresponding to the digital operand signal <highlight><bold>70</bold></highlight>. The interpolation circuit <highlight><bold>55</bold></highlight> receives the signal <highlight><bold>75</bold></highlight> and computes a linear interpolation on the signal <highlight><bold>75</bold></highlight> and passes the result to the shift circuit <highlight><bold>60</bold></highlight> via signal path <highlight><bold>80</bold></highlight>. The shift circuit <highlight><bold>60</bold></highlight> receives a digital precision signal <highlight><bold>85</bold></highlight> (corresponding to the precision value &lsquo;s&rsquo;) from an input device such as I/O device <highlight><bold>15</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and the output of the interpolation circuit <highlight><bold>55</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. The shift circuit <highlight><bold>60</bold></highlight> generates a shift circuit output <highlight><bold>88</bold></highlight>, which is an offset precision shifted interpolation value, and passes it to the combination circuit <highlight><bold>65</bold></highlight>. The combination circuit <highlight><bold>65</bold></highlight> combines the shift circuit output <highlight><bold>88</bold></highlight> and the signal <highlight><bold>75</bold></highlight> from the search circuit <highlight><bold>50</bold></highlight> to produce an digital output signal <highlight><bold>90</bold></highlight> corresponding to the Log<highlight><subscript>2</subscript></highlight>(x) value that is send to an output device such as I/O device <highlight><bold>15</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates the process performed by the system <highlight><bold>10</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> that may selectively be controlled by the coded instruction in the software <highlight><bold>40</bold></highlight>. In step <highlight><bold>95</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the system <highlight><bold>10</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, begins the process. In step <highlight><bold>100</bold></highlight> the system <highlight><bold>10</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, receives an input value from the I/O device <highlight><bold>15</bold></highlight>. The input value is the operand value of the logarithm &lsqb;i.e., the &lsquo;x&rsquo; value for Log<highlight><subscript>2</subscript></highlight>(x)&rsqb; in binary form. In step <highlight><bold>105</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the system <highlight><bold>10</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, determines the integer part of the log2 computation of the operand value (i.e., &lsquo;x&rsquo;) by searching for the highest bit value of the operand value. It is appreciated by those skilled in the art that the system <highlight><bold>10</bold></highlight> may perform the search by numerous means including but not limited to performing a standard binary search or a shift and search operation. The output of <highlight><bold>105</bold></highlight> is a rough estimate for the value Log<highlight><subscript>2</subscript></highlight>(x) to integer precision over an interval of estimation. In step <highlight><bold>110</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the system <highlight><bold>10</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, computes a linear interpolation of the remaining error in the interval of estimation by performing a shift operation on the operand value that corresponds to a value equal to an approximation of the fractional portion of the log2 calculation. The system <highlight><bold>10</bold></highlight> then receives the precision value (i.e., &lsquo;s&rsquo;) from the I/O device <highlight><bold>15</bold></highlight> in step <highlight><bold>115</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. In step <highlight><bold>120</bold></highlight> the system <highlight><bold>10</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, performs a precision shift on the shifted operand value corresponding to an offset precision shifted interpolation value which maps the result fractional and integer summed log2 values to the precision range input in step <highlight><bold>115</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. The system <highlight><bold>10</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, then mathematically combines the offset precision shifted interpolation value with result of the binary search in step <highlight><bold>125</bold></highlight>. The combination is approximately equal to log2 of the value entered in step <highlight><bold>95</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. resulting in a peak error of 0.03125 which error over an internal &lsqb;2,4000&rsqb;. The system <highlight><bold>10</bold></highlight> then outputs the result of the combination to I/O device <highlight><bold>15</bold></highlight> in step <highlight><bold>130</bold></highlight> and the process ends in step <highlight><bold>135</bold></highlight>. It is appreciated that the process described is equally as descriptive of process performed by system <highlight><bold>45</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> It is also appreciated that for performance purposes with current technology, the preferred embodiment of the invention is principally implemented in dedicated circuitry. However, the functions performed by the invention may also be implemented in generalized programmable circuitry capable of generating the process steps of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. As example implementations of the process in accordance with the invention, the following pseudo-code examples are provided which may selectively be in the C programming or other equivalent programming language.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0" pgwide="1">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="273PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>/***********************************************************</entry>
+</row>
+<row>
+<entry>* Implementation of Log<highlight><subscript>2</subscript></highlight>() employing loops for binary bit search</entry>
+</row>
+<row>
+<entry>* y&equals; Log<highlight><subscript>2 </subscript></highlight>(n, numbits2scale)</entry>
+</row>
+<row>
+<entry>* get linear interpolated scaled Log<highlight><subscript>2</subscript></highlight>()</entry>
+</row>
+<row>
+<entry>* &lsquo;x&rsquo; is the number to take Log<highlight><subscript>2</subscript></highlight>(x), &lsquo;s&rsquo; is the number of bits to scale up</entry>
+</row>
+<row>
+<entry>* i.e., Log2scaled(2235,7) would return 128* Log<highlight><subscript>2</subscript></highlight>(2235)</entry>
+</row>
+<row>
+<entry>*/</entry>
+</row>
+<row>
+<entry>long Log2scaled (long x, long s)</entry>
+</row>
+<row>
+<entry>&lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="259PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>long j, v &equals; x, f &equals; 0; /* declare local variables */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>for (j &equals; 16; j &gt; 0; j &gt;&gt;&equals; 1) /* perform binary search for the highest set bit */</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="231PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>if (x &gt; ( 1 &lt;&lt; j)) &lcub;f &plus;&equals; j; x &gt;&gt;&equals; j;&rcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="259PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>/* Next line is variable precision linear interpolation with offset.</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="245PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Shifts are utilized perform multiplications by powers of two.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Multiply operations are represented by the &lsquo;&lt;&lt;&rsquo; symbol while divides are</entry>
+</row>
+<row>
+<entry></entry>
+<entry>are represented by &lsquo;&gt;&gt;&rsquo;.</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="259PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>*/</entry>
+</row>
+<row>
+<entry></entry>
+<entry>return (f &lt;&lt; s) &plus; (1 &lt;&lt; s &gt;&gt; 5) &plus; ((f &gt; s) &quest; ((v &plus; (1 &lt;&lt; f)) &gt;&gt; (f &minus; s)):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="231PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>((v &plus; (1 &lt;&lt; f)) &lt;&lt; (s &plus; f)));</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="273PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry>/***********************************************************</entry>
+</row>
+<row>
+<entry>* Implementation of Log<highlight><subscript>2</subscript></highlight>() employing if statements for binary bit search</entry>
+</row>
+<row>
+<entry>* y&equals; Log<highlight><subscript>2 </subscript></highlight>(n, numbits2scale)</entry>
+</row>
+<row>
+<entry>* get linear interpolated scaled Log<highlight><subscript>2</subscript></highlight>()</entry>
+</row>
+<row>
+<entry>* &lsquo;x&rsquo; is the number to take Log<highlight><subscript>2</subscript></highlight>(x), &lsquo;s&rsquo; is the number of bits to scale up</entry>
+</row>
+<row>
+<entry>* i.e., Log2scaled(2235,7) would return 128* Log<highlight><subscript>2</subscript></highlight>(2235)</entry>
+</row>
+<row>
+<entry>*/</entry>
+</row>
+<row>
+<entry>long Log2scaled (long x, long s)</entry>
+</row>
+<row>
+<entry>&lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="259PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>long v &equals; x, f &equals; 0; /* declare local variables */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 16)) &lcub;f &plus;&equals; 16; x &gt;&gt;&equals; 16;&rcub; /* perform binary search for highest set bit */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 8)) &lcub;f &plus;&equals; 8; x &gt;&gt;&equals; 8;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 4)) &lcub;f &plus;&equals; 4; x &gt;&gt;&equals; 4;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 2)) &lcub;f &plus;&equals; 2; x &gt;&gt;&equals;2;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 1)) &lcub;f&plus;&plus;;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>/* Next line is variable precision linear interpolation with offset.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;Shifts are utilized perform multiplications by powers of two.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;Multiply operations are represented by the &lsquo;&lt;&lt;&rsquo; symbol while</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;divides are represented by &lsquo;&gt;&gt;&rsquo;.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>*/</entry>
+</row>
+<row>
+<entry></entry>
+<entry>return (f &lt;&lt; s) &plus; (1 &lt;&lt; s &gt;&gt; 5) &plus; ((f &gt; s) &quest; ((v &plus; (1 &lt;&lt; f)) &gt;&gt; (f &plus; s)):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="231PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>((v &plus; (1 &lt;&lt; f)) &lt;&lt; (s &plus; f)));</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="273PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>&rcub;</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> While the examples illustrate the process for obtaining base 2 logarithmic values, the process is easily expanded to other common bases such as natural logarithms &ldquo;Ln(x)&rdquo; or base ten (10) logarithms &ldquo;log10(x)&rdquo; by scaling by the output of a log<highlight><subscript>2</subscript></highlight>(x) algorithm and converting it to another base. This is done by dividing the log<highlight><subscript>2</subscript></highlight>(x) result by a constant equal to log<highlight><subscript>2</subscript></highlight>(n) where n is the desired number base. As another pair of example implementations of the process utilizing the scaling factor in accordance with the invention, the following pseudo-code examples are provided which may again be selectively in the C programming or other equivalent programming language.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0" pgwide="1">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="266PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>/***********************************************************</entry>
+</row>
+<row>
+<entry>* Implementation of Log () to other bases employing loops for binary bit search</entry>
+</row>
+<row>
+<entry>* In this case the logarithmic base is chosen to be &lsquo;e&rsquo; or the natural logarithm.</entry>
+</row>
+<row>
+<entry>* y&equals; Ln (n, numbits2scale)</entry>
+</row>
+<row>
+<entry>* get linear interpolated scaled Ln()</entry>
+</row>
+<row>
+<entry>* &lsquo;x&rsquo; is the number to take Ln(x), &lsquo;s&rsquo; is the number of bits to scale up</entry>
+</row>
+<row>
+<entry>* i.e., Lnscaled(2235,7) would return 128* Ln(2235)</entry>
+</row>
+<row>
+<entry>*/</entry>
+</row>
+<row>
+<entry>long Lnscaled (long x, long s)</entry>
+</row>
+<row>
+<entry>&lcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="252PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>long j, v &equals; x, f &equals; 0; /* declare local variables */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>for (j &equals; 16; j &gt; 0; j &gt;&gt;&equals; 1) /* perform binary search for the highest set bit */</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="224PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; j)) &lcub;f &plus;&equals; j; x &gt;&gt;&equals; j;&rcub;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="252PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>/* Next line is variable precision linear interpolation with offset.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;Shifts are utilized perform multiplications by powers of two.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;Multiply operations are represented by the &lsquo;&lt;&lt;&rsquo; symbol while divides are</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;are represented by &lsquo;&gt;&gt;&rsquo;.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>*/</entry>
+</row>
+<row>
+<entry></entry>
+<entry>return (f &lt;&lt; s) &plus; (1 &lt;&lt; s &gt;&gt; 5) &plus; ((f &gt; s) &quest; ((v &plus; (1 &lt;&lt; f)) &gt;&gt; (f &minus; s)):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="224PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>((v &plus; (1 &lt;&lt; f)) &lt;&lt; (s &plus; f)));</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="252PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>/* Next line converts from Log<highlight><subscript>2 </subscript></highlight>(x) to Ln by computing log<highlight><subscript>2</subscript></highlight>(x)/log<highlight><subscript>2</subscript></highlight>(e). */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>return (v &gt;&gt; 1) &plus; (v &gt;&gt; 2) &minus; (v &gt;&gt; 4) &plus; (v &gt;&gt; 7) &minus; (v &gt;&gt; 9) &minus; (v &gt;&gt; 12) &plus; (v &gt;&gt; 15);</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="266PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>&rcub;</entry>
+</row>
+<row>
+<entry>/***********************************************************</entry>
+</row>
+<row>
+<entry>* Implementation of Log() to other bases employing if statements for binary bit search</entry>
+</row>
+<row>
+<entry>* In this case the logarithmic base is chosen to be &lsquo;e&rsquo; or the natural logarithm.</entry>
+</row>
+<row>
+<entry>* y&equals; Ln (n, numbits2scale)</entry>
+</row>
+<row>
+<entry>* get linear interpolated scaled Ln()</entry>
+</row>
+<row>
+<entry>* &lsquo;x&rsquo; is the number to take Ln(x), &lsquo;s&rsquo; is the number of bits to scale up</entry>
+</row>
+<row>
+<entry>* i.e., Lnscaled(2235,7) would return 128* Log<highlight><subscript>2</subscript></highlight>(2235)</entry>
+</row>
+<row>
+<entry>*/</entry>
+</row>
+<row>
+<entry>long Lnscaled (long x, long s)</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="252PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&lcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>long v &equals; x, f &equals; 0; /* declare local variables */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 16)) &lcub;f &plus;&equals; 16; x &gt;&gt;&equals; 16;&rcub;/* perform binary search for highest set bit */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 8)) &lcub;f &plus;&equals; 8; x &gt;&gt;&equals; 8;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 4)) &lcub;f &plus;&equals; 4; x &gt;&gt;&equals; 4;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 2)) &lcub;f &plus;&equals; 2; x &gt;&gt;&equals; 2;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>if (x &gt; (1 &lt;&lt; 1)) &lcub;f &plus;&plus;;&rcub;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>/* Next line is variable precision linear interpolation with offset.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;Shifts are utilized perform multiplications by powers of two.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;Multiply operations are represented by the &lsquo;&lt;&lt;&rsquo; symbol while divides are</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&thinsp;&thinsp;&ensp;are represented by &lsquo;&gt;&gt;&rsquo;.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>*/</entry>
+</row>
+<row>
+<entry></entry>
+<entry>return (f &lt;&lt; s) &plus; (1 &lt;&lt; s &gt;&gt; 5) &plus; ((f &gt; s) &quest; ((v &plus; (1 &lt;&lt; f)) &gt;&gt; (f &plus; s)):</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="224PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>((v &plus; (1 &lt;&lt; f)) &lt;&lt; (s &plus; f)));</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="252PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>/* Next line converts from Log<highlight><subscript>2</subscript></highlight>(x) to Ln by computing log<highlight><subscript>2</subscript></highlight>(x)/log<highlight><subscript>2</subscript></highlight>(e). */</entry>
+</row>
+<row>
+<entry></entry>
+<entry>return (v &gt;&gt; 1) &plus; (v &gt;&gt; 2) &minus; (v &gt;&gt; 4) &plus; (v &gt;&gt; 7) &minus; (v &gt;&gt; 9) &minus; (v &gt;&gt; 12) &plus; (v &gt;&gt; 15);</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="266PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>&rcub;</entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram of the system <highlight><bold>140</bold></highlight> in accordance with the invention utilizing a Digital Signal Processor (DSP) or Application Specific Integrated Circuit (ASIC) chip <highlight><bold>145</bold></highlight>. It is appreciated that the system <highlight><bold>140</bold></highlight> may be selectively implemented in software, hardware, or a combination thereof. As an example, the elements of the system <highlight><bold>140</bold></highlight> may be implemented in software <highlight><bold>150</bold></highlight> stored in a memory located in a controller unit <highlight><bold>155</bold></highlight>. The controller unit <highlight><bold>155</bold></highlight> is in signal communication with the DSP or ASIC chip <highlight><bold>145</bold></highlight> via communication link <highlight><bold>160</bold></highlight> (which may selectively be a system bus). The software <highlight><bold>150</bold></highlight> configures and drives the DSP or ASIC chip <highlight><bold>145</bold></highlight> and performs the steps described in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The software <highlight><bold>40</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, such as a computer program, comprises an ordered listing of executable instructions for implementing logical functions. The software <highlight><bold>40</bold></highlight> may selectively be embodied in any computer-readable medium for use by or in connection with an instruction execution system, apparatus, or device, such as a computer-based system, processor-containing system, or other system that may selectively fetch the instructions from the instruction execution system, apparatus, or device and execute the instructions. In the context of this document, a &ldquo;computer-readable medium&rdquo; is any means that may contain, store, communicate, propagate, or transport the program for use by or in connection with the instruction execution system, apparatus, or device. The computer readable medium may selectively be, for example but not limited to, an electronic, magnetic, optical, electromagnetic, infrared, or semiconductor system, apparatus, device, or propagation medium. More specific examples (a non-exhaustive list) of the computer-readable medium would include the following: an electrical connection (electronic) having one or more wires, a portable computer diskette (magnetic), a RAM (electronic), a read-only memory (ROM) (electronic), an erasable programmable read-only memory (EPROM or Flash memory) (electronic), an optical fiber (optical), and a portable compact disc read-only memory (CDROM) (optical). Note that the computer-readable medium may even be paper or another suitable medium upon which the program is printed, as the program can be electronically captured, via for instance optical scanning of the paper or other medium, then compiled, interpreted or otherwise processed in a suitable manner if necessary, and then stored in a computer memory. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> While the specification in the invention is described in relation to certain implementations or embodiments, many details are set forth for the purpose of illustration. Thus, the foregoing merely illustrates the principles of the invention. For example, this invention may have other specific forms without departing from its spirit or essential characteristics. The described arrangements are illustrated and not restricted. To those skilled in the art the invention is susceptible to additional implementations or embodiments and certain of the details described in this application can be varied considerably, without departing from the basic principles of the invention. It will thus be appreciated that those skilled in the art will be able to devise various arrangements that, although not explicitly described or shown herein, embody the principles of the invention. They are thus within the spirit and scope. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for producing an output logarithmic digital signal from an input digital signal having a plurality of bit values wherein the output logarithmic signal has a precision defined by a parameter, the system comprising: 
+<claim-text>a search circuit; </claim-text>
+<claim-text>an interpolation circuit in signal communication with the search circuit; </claim-text>
+<claim-text>a shift circuit in signal communication with the interpolation circuit; and </claim-text>
+<claim-text>a combiner that produces an output logarithmic digital signal from a received search circuit output and a received shift circuit output. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the interpolation circuit is a combinational logic circuit capable of calculating a linear interpolation on an output from the search circuit based on the parameter. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the search circuit is a combinational logic circuit capable of performing a standard binary search on the input digital signal. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the search circuit is a combinational logic circuit capable of performing a shift and search operation on the input digital signal. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the search circuit, interpolation circuit, shift circuit and combiner are all integrated in a signal integrated circuit. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the signal integrated circuit is application specific integrated chip. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A system for producing an output logarithmic digital signal from an input digital signal having a plurality of bit values wherein the output logarithmic signal has a precision defined by a parameter, the system comprising: 
+<claim-text>means for finding the bit position of the highest bit value of the input digital signal; </claim-text>
+<claim-text>means for determining an offset from the position of the highest bit value and the parameter; </claim-text>
+<claim-text>means for interpolating a shifted interpolation value from the input signal using the parameter; and </claim-text>
+<claim-text>an adder for adding the offset, precision shifted interpolation value and bit position. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein the interpolating means is a combinational logic circuit capable of calculating a linear interpolation on an output from the finding means based on the parameter. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the finding means is a combinational logic circuit capable of performing a standard binary search on the input digital signal. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the finding means is a combinational logic circuit capable of performing a shift and search operation on the input digital signal. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method for producing an output logarithmic digital signal from an input digital signal having a plurality of bit values wherein the output logarithmic signal has a precision defined by a parameter, the method comprising: 
+<claim-text>searching for the bit position of the highest bit value of the input digital signal; </claim-text>
+<claim-text>determining an offset from the position of the highest bit value utilizing the parameter; </claim-text>
+<claim-text>interpolating an offset precision shifted interpolation value from the input signal using the parameter; and </claim-text>
+<claim-text>adding the offset precision shifted interpolation value with the highest bit value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the step of interpolating further includes calculating a linear interpolation on the highest bit value based on the parameter. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the step of searching further includes a standard binary search on the input digital signal. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the step of searching further includes a shift and search operation on the input digital signal. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A computer program embodied on a computer-readable medium for producing an output logarithmic digital signal from an input digital signal having a plurality of bit values wherein the output logarithmic signal has a precision defined by a parameter, the computer program comprising: 
+<claim-text>logic configured for searching for the bit position of the highest bit value of the input digital signal; </claim-text>
+<claim-text>logic configured for determining an offset from the position of the highest bit value utilizing the parameter; </claim-text>
+<claim-text>logic configured for interpolating an offset precision shifted interpolation value from the input signal using the parameter; and </claim-text>
+<claim-text>logic configured for adding the offset precision shifted interpolation value with the highest bit value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the interpolating logic further includes logic configured for calculating a linear interpolation on the highest bit value based on the parameter. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the searching logic further includes logic configured to perform a standard binary search on the input digital signal. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the searching logic further includes logic configured to perform a shift and search operation on the input digital signal.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005006A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005006A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005006A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005006A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

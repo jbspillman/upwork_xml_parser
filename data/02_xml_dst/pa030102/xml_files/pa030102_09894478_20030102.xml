@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004947A1-20030102-D00000.TIF SYSTEM "US20030004947A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004947A1-20030102-D00001.TIF SYSTEM "US20030004947A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004947A1-20030102-D00002.TIF SYSTEM "US20030004947A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004947A1-20030102-D00003.TIF SYSTEM "US20030004947A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004947A1-20030102-D00004.TIF SYSTEM "US20030004947A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004947A1-20030102-D00005.TIF SYSTEM "US20030004947A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004947A1-20030102-D00006.TIF SYSTEM "US20030004947A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030004947A1-20030102-D00007.TIF SYSTEM "US20030004947A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004947</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894478</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>009000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method, system, and program for managing files in a file system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Harriet</given-name>
+<middle-name>G.</middle-name>
+<family-name>Coverston</family-name>
+</name>
+<residence>
+<residence-us>
+<city>New Brighton</city>
+<state>MN</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>Sun Microsystems, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>David W. Victor</name-1>
+<name-2>KONRAD RAYNES &amp; VICTOR LLP</name-2>
+<address>
+<address-1>315 S. Beverly Drive; Suite 210</address-1>
+<city>Beverly Hills</city>
+<state>CA</state>
+<postalcode>90212</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Provided is a method, system, and program for managing files in a file system. Data is received for a file. The data for the file is stored in a plurality of segments. An index associated with the file indicating how the file data maps to the segments. An Input/Output request is received with respect to an address in the file. The index for the file is used to determine the segment having the requested address in the file. The determined segment including data at the requested address is then accessed. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to a method, system, and program for managing files in a file system. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Many systems utilize large files located in primary storage, such as hard disk drives, that can be up to hundreds of megabytes, gigabytes, and even terabytes in size. Such very large files are often archived on some other storage, such as tape, optical storage, slower disk drives, etc. To edit or access such large files, the user stages the large file into a disk cache. The process to stage a large file into a disk cache from tape or some other slower, backup storage medium, such as optical storage, can take a considerable amount of time. Tape staging operations adversely affect performance because of the time required to stage a large file from tape to the disk cache. Moreover, the entire file must be staged from tape onto the disk cache even if the user only needs to access or update a small portion of the file. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Further, the user cannot restore a file from the backup storage that is larger than the disk cache because such a large file could not be staged into disk cache where it would be available to be accessed and modified after the file is archived onto tape. Thus, the disk cache size provides a constraint on the size of files used in the system. Although, such very large files could be accessed directly on tape, such tape direct access operations would substantially degrade performance. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The above limitations of systems utilizing very large files has become more apparent recently with the advent of multimedia files, such as videos, scientific data, and very large scale databases. Such files are likely archived to tape. Moreover the file system may have to maintain a copy of such files on tape to leave sufficient free space in the disk cache for other files and programs. In fact, in hierarchical storage management (HSM) systems, files are often migrated to tape storage when the data stored in disk cache reaches a certain threshold. HSM systems migrate files to tape to make room for further files being used in the system. Very large files are often likely candidates for migration to tape because their migration will free up more space than other files. Thus, in HSM and other storage systems, users of very large files are likely to have to stage a file from tape into the disk cache whenever they want to access or update data in the very large file. Still further, very large files that are frequently accessed remain in the disk cache, thereby reducing the available disk cache space for other application data. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> For the above reasons, there is a need in the art for an improved methodology for managing files in a file system. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Provided is a method, system, and program for managing files in a file system. Data is received for a file. The data for the file is stored in a plurality of segments. An index associated with the file indicates how the file data maps to the segments. An Input/Output request is received with respect to an address in the file. The index for the file is used to determine the segment having the requested address in the file. The determined segment including data at the requested address is then accessed. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In further implementations, the segments are stored in a primary storage. At least one of the segments in the primary storage is copied onto a secondary storage. At least one of the segments copied to the secondary storage is released, wherein space used by the released segment in the primary storage is available for use. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In further implementations, as a result of releasing one or more segments, different segments for one file are capable of being stored in the primary storage and the secondary storage. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Still further, the file data in all the segments is capable of being larger than a storage capacity of the primary storage. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Further provided is method, system, and program for managing files in a primary and secondary storage, wherein the secondary storage is comprised of a plurality of drives and storage devices capable of being mounted in the drives. Data for a file is received and stored in a plurality of segments. An index is associated with the file that indicates how file data maps to the segments. Each segment is written to one of the drives, wherein segments are written to multiple of the drives to distribute the segments across multiple storage devices. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> In additional implementations, multiple segments are written in parallel to multiple storage devices in multiple drives. Further segments on multiple storage devices are read from multiple drives to stage multiple segments in parallel into the primary storage.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Referring now to the drawings in which like reference numbers represent corresponding parts throughout: </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an illustration of a computing environment in which aspects of the invention are implemented; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a data structure for metadata in accordance with implementations of the invention; </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a relationship of a file and segments in accordance with implementations of the invention; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 4 and 5</cross-reference> illustrate logic to store file data in segments in accordance with implementations of the invention; </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 6</cross-reference><highlight><italic>a </italic></highlight>and <highlight><bold>6</bold></highlight><highlight><italic>b </italic></highlight>illustrate logic to manage I/O requests to files in the file system in accordance with implementations of the invention; and </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates an additional computing environment in which aspects of the invention are implemented.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In the following description, reference is made to the accompanying drawings which form a part hereof and which illustrate several embodiments of the present invention. It is understood that other embodiments may be utilized and structural and operational changes may be made without departing from the scope of the present invention. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a computing environment implementation of the invention. A computer <highlight><bold>2</bold></highlight>, which may comprise any computing device known in the art, including a desktop computer, mainframe, workstation, personal computer, hand held computer, palm computer, laptop computer, telephony device, network appliance, etc., includes a file system <highlight><bold>4</bold></highlight> and one or more application programs <highlight><bold>8</bold></highlight>. The file system <highlight><bold>4</bold></highlight> may comprise any file system that an operating system provides to organize and manage files known in the art, such as the file system used with the Sun Microsystems Solaris operating system, Unix file system or any other file system known in the art.** The application program <highlight><bold>8</bold></highlight> may comprise any application known in the art that creates and accesses data files in the file system <highlight><bold>4</bold></highlight>, such as a database program, word processing program, software development tool or any other application program known in the art. A network <highlight><bold>18</bold></highlight>, which may comprise any network system known in the art, such as Fibre Channel, Local Area Network (LAN), an Intranet, Wide Area Network (WAN), Storage Area Network (SAN), etc., enables communication between the computer <highlight><bold>2</bold></highlight>, primary storage <highlight><bold>10</bold></highlight>, and secondary storage <highlight><bold>12</bold></highlight>. Alternatively, the computer <highlight><bold>2</bold></highlight> may be connected to the disk cache <highlight><bold>10</bold></highlight> and tape library <highlight><bold>12</bold></highlight> via direct transmission lines or cables (not shown). Data transferred between the disk cache <highlight><bold>10</bold></highlight> and tape library <highlight><bold>12</bold></highlight> may be transferred through the file system <highlight><bold>4</bold></highlight> in the computer <highlight><bold>2</bold></highlight> or, alternatively, directly between the disk cache <highlight><bold>10</bold></highlight> and the tape library <highlight><bold>12</bold></highlight> via the network <highlight><bold>18</bold></highlight> or a direct transmission line (not shown). <footnote id="FOO-00001">SOLARIS is a trademark of Sun Microsystems, Inc.; UNIX is a registered trademark of The Open Group; SAM-FS is a trademark of LSC, Inc. </footnote></paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In the described implementations, the file system <highlight><bold>4</bold></highlight> further includes programs for managing the storage of files in the file system <highlight><bold>4</bold></highlight> in a primary storage <highlight><bold>10</bold></highlight> and secondary storage <highlight><bold>12</bold></highlight>. In certain implementations, the primary storage <highlight><bold>10</bold></highlight> comprises a disk cache or group of interconnected hard disk drives that implement a single storage space. The applications <highlight><bold>8</bold></highlight> process data stored in the primary storage <highlight><bold>10</bold></highlight>. The secondary storage <highlight><bold>12</bold></highlight> is used for maintaining one or more backup copies of files in the file system <highlight><bold>4</bold></highlight> and for expanding the overall available storage space. In certain implementations, the secondary storage <highlight><bold>12</bold></highlight> comprises a slower access and less expensive storage system than the primary storage <highlight><bold>12</bold></highlight>. For instance, the secondary storage <highlight><bold>12</bold></highlight> may comprise a tape library including one or more tape drives and numerous tape cartridges, an optical library, slower and less expensive hard disk drives, etc. In certain implementations, once a tape cartridge is mounted in a tape drive, data may be transferred between the primary <highlight><bold>10</bold></highlight> and secondary <highlight><bold>12</bold></highlight> storage. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In certain implementations, the file system <highlight><bold>4</bold></highlight> is capable of performing Hierarchical Storage Management (HSM) related functions, such as automatically archiving files in the primary storage <highlight><bold>10</bold></highlight> in the secondary storage <highlight><bold>12</bold></highlight>. Files are archived when they meet a set of archive criteria, such as age, file size, time last accessed, etc. The file system <highlight><bold>4</bold></highlight> may also perform staging operations to copy data archived on the secondary storage <highlight><bold>12</bold></highlight> to the primary storage <highlight><bold>10</bold></highlight> to make available to the applications <highlight><bold>8</bold></highlight>. The file system <highlight><bold>4</bold></highlight> may also perform release operations to free space in the primary storage <highlight><bold>10</bold></highlight> used by files archived to the secondary storage <highlight><bold>12</bold></highlight> in order to make more space available for more recent data. In certain implementations, the release operation may utilize high and low thresholds. When the used space in the primary storage <highlight><bold>10</bold></highlight> reaches a high threshold, the file system <highlight><bold>4</bold></highlight> releases files in the primary storage <highlight><bold>10</bold></highlight> that have been archived to secondary storage. The primary storage <highlight><bold>10</bold></highlight> space used by the released file is available for use to store other data. In certain implementations, the file system <highlight><bold>4</bold></highlight> stops releasing files when the used storage space is at the low threshold level. Further details of the HSM capabilities that may be included in the file system <highlight><bold>4</bold></highlight> are described in the LSC, Inc. publication entitled &ldquo;SAM-FS System Administrator&apos;s Guide&rdquo;, LSC, Inc. publication no. SG-0001, Revision 3.5.0 (1995, July, 2000) and the archiving file system described in U.S. Pat. No. 5,764,972, which publication and patent are incorporated herein by reference in its entirety. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In the described implementations, the file system <highlight><bold>4</bold></highlight> maintains metadata for each file represented in the file system <highlight><bold>4</bold></highlight>. For instance, in Unix type operating systems, a data structure referred to as the i-node maintains the file metadata. Other operating systems may maintain metadata in different formats. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates information fields maintained in file metadata <highlight><bold>50</bold></highlight>, which is maintained for each file and directory in the file system <highlight><bold>4</bold></highlight>. Below are some of the information fields that may be maintained in the file metadata <highlight><bold>50</bold></highlight> for files and directories in the file system <highlight><bold>4</bold></highlight>: </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> Access Times <highlight><bold>52</bold></highlight>: the time the file was last accessed, modified, created, etc. </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> Release on Archive <highlight><bold>54</bold></highlight>: indicates that once one or more archive copies of the file are made in the secondary storage <highlight><bold>12</bold></highlight>, the file may be subject to an immediate or delayed release operation. </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> Partial Release <highlight><bold>56</bold></highlight>: indicates that the first n bytes of the file are maintained in the primary storage <highlight><bold>10</bold></highlight> after the release operation, where n may be a user settable parameter. </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> Segment <highlight><bold>58</bold></highlight>: indicates that the file data is stored in separate segments as described herein. </paragraph>
+<paragraph id="P-0030" lvl="2"><number>&lsqb;0030&rsqb;</number> Offline <highlight><bold>60</bold></highlight>: indicates that the file is currently resident in the secondary storage <highlight><bold>12</bold></highlight> and not in the primary storage <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="2"><number>&lsqb;0031&rsqb;</number> Location <highlight><bold>62</bold></highlight>: indicates the location of the file, which may comprise an address in the primary storage and secondary storage, such as the disk or tape volume and block address therein. </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> Segment Size <highlight><bold>64</bold></highlight>: indicates the size of each segment containing the data for a file. </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> Data size <highlight><bold>66</bold></highlight>: indicates the amount of data in the segment, which may be less than the segment size. Data may be stored sequentially or the data may be stored non-consecutively in a sparse manner. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Further types of file metadata that may be included with the file metadata <highlight><bold>50</bold></highlight> are described in U.S. Pat. No. 5,764,972, which was incorporated by reference above. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> To provide for greater flexibility in managing very large files, such as files that may be hundreds of megabytes, gigabytes or terabytes, the described implementations provide an architecture to allow a single very large file to be stored in separate segments, where the file is distributed across the segments. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates how data from a file <highlight><bold>70</bold></highlight> is distributed across multiple segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>, where each segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>is of a same fixed length which may be user specified. Alternatively, the segments may have different byte lengths and/or each segment may include less data than the segment length. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> To store the file <highlight><bold>70</bold></highlight> across multiple segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>, the file <highlight><bold>70</bold></highlight> would be associated with a segment index <highlight><bold>74</bold></highlight>, shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, that includes a list of references <highlight><bold>76</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>, i.e., pointers, to segment metadata <highlight><bold>78</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>. The references <highlight><bold>76</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>are ordered in the list from first segment <highlight><bold>72</bold></highlight><highlight><italic>a </italic></highlight>to last <highlight><bold>72</bold></highlight><highlight><italic>n</italic></highlight>, thereby providing an order in which the file data maps to particular segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>associated with the file <highlight><bold>70</bold></highlight>. The segment metadata <highlight><bold>78</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>would include the same fields maintained for the file metadata <highlight><bold>50</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>). In certain implementations, the segment index <highlight><bold>74</bold></highlight> may be stored in the file <highlight><bold>70</bold></highlight> or stored in the file metadata <highlight><bold>50</bold></highlight> for the file, or stored in some alternative location and referenced through the file or file metadata <highlight><bold>50</bold></highlight>. In certain implementations, all the file <highlight><bold>70</bold></highlight> user data is stored in segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>and the actual file <highlight><bold>70</bold></highlight> does not include any user data. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> As discussed, in certain implementations, the data for the file <highlight><bold>70</bold></highlight> is distributed across segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>of equal length. In such implementations, the segment number including a specified byte offset into the file <highlight><bold>70</bold></highlight> can be determined by dividing the specified byte offset by the fixed byte length of each segment. The integer quotient resulting from this division operation comprises the segment number including the data at the specified byte offset into the file <highlight><bold>70</bold></highlight>. The segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>including the specified data is the segment whose segment reference <highlight><bold>76</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>is the jth segment reference in the segment order provided by the segment index <highlight><bold>74</bold></highlight>, where j is the determined segment number or resulting integer quotient. The relative byte offset into the determined segment j including the specified byte offset into the file <highlight><bold>70</bold></highlight> equals the specified byte offset minus the result of multiplying the segment number (i) times the segment length (k) <highlight><bold>64</bold></highlight>. The specified byte offset into the file can then be located in the primary <highlight><bold>10</bold></highlight> or secondary <highlight><bold>12</bold></highlight> storage by accessing the physical location indicated in the location field <highlight><bold>62</bold></highlight>, which provides the physical location of the start of the segment j, and then seeking the relative byte offset from the physical location of the start of the segment. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In certain implementations, the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>are not treated as files in the system because they do not have a file name and cannot exceed the fixed segment length <highlight><bold>64</bold></highlight>. Instead, the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>comprise data stored in the primary <highlight><bold>10</bold></highlight> or secondary <highlight><bold>12</bold></highlight> storage, where segment metadata maintains the information needed to access the segments on primary <highlight><bold>10</bold></highlight> or secondary <highlight><bold>12</bold></highlight> storage. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> The file system <highlight><bold>4</bold></highlight> represents the file as a single file <highlight><bold>70</bold></highlight> to the user, with the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>remaining transparent to the user. However, the user may issue commands to view the metadata <highlight><bold>50</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>) for the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n. </italic></highlight></paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Because the metadata <highlight><bold>76</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>is maintained for the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>, standard file system <highlight><bold>4</bold></highlight> I/O commands may be used to access the segment data. Thus, although the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>do not include many of the attributes of regular files, the file system <highlight><bold>4</bold></highlight> may access them as any regular file would be accessed using the segment metadata <highlight><bold>78</bold></highlight><highlight><italic>a, b . . . n. </italic></highlight></paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates logic implemented in the file system <highlight><bold>4</bold></highlight> to store a block of data to write to an address (Y) within a file <highlight><bold>70</bold></highlight> comprised of segments <highlight><bold>72</bold></highlight>, <highlight><italic>a, b . . . n </italic></highlight>in the case where each segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>is of size k. Control begins at block <highlight><bold>100</bold></highlight> with the file system <highlight><bold>4</bold></highlight> receiving a block of data to store at address (Y) within one file <highlight><bold>70</bold></highlight> that is implemented in separate segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>. A segment attribute may be associated with an entire file directory, such that any file created in that directory takes the segment attributes, including segment size, defined for the directory and the files therein. Alternatively, the segment attribute may be associated with individual files by setting the segment field <highlight><bold>58</bold></highlight> to &ldquo;on&rdquo; on a file-by-file basis. In certain implementations, when the user sets the segment attribute for a file, the user may also specify the segment length k. Previously, the file system <highlight><bold>4</bold></highlight> would have generated metadata for the file including a segment index <highlight><bold>74</bold></highlight> and set the segment field <highlight><bold>58</bold></highlight> to &ldquo;on&rdquo; for the file <highlight><bold>70</bold></highlight>. This metadata would be used to present the file <highlight><bold>70</bold></highlight> as a single file in the file system <highlight><bold>4</bold></highlight> to the user. However, actual segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>for the file <highlight><bold>70</bold></highlight> would not have been created and added to the segment index <highlight><bold>74</bold></highlight> until such additional segments are needed to store data for the file <highlight><bold>70</bold></highlight>. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> After receiving the block of data, the file system <highlight><bold>4</bold></highlight> sets (at block <highlight><bold>104</bold></highlight>) the segment i to the integer quotient of Y divided by k. The start location of the relative offset within segment i of where to begin writing would be set (at block <highlight><bold>106</bold></highlight>) to Y modulo k, or the remainder of Y divided by k. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> If (at block <highlight><bold>108</bold></highlight>) segment i does not exist, then the file system <highlight><bold>4</bold></highlight> creates (at block <highlight><bold>110</bold></highlight>) a segment data structure and segment metadata <highlight><bold>78</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>for the segment i. A reference is added (at block <highlight><bold>112</bold></highlight>) to the metadata for segment i to the segment index <highlight><bold>74</bold></highlight>. From block <highlight><bold>112</bold></highlight> or block <highlight><bold>108</bold></highlight> if segment i already exists, then the file system <highlight><bold>4</bold></highlight> uses the segment index <highlight><bold>74</bold></highlight> to access the metadata for segment i to determine (at block <highlight><bold>114</bold></highlight>) the location of segment i. If (at block <highlight><bold>116</bold></highlight>) the portion of the block of received data not yet written exceeds the length from the start location within segment i to the end of segment i, then the file system <highlight><bold>4</bold></highlight> writes (at block <highlight><bold>118</bold></highlight>) to segment i from the start location to the end of segment i received data not yet written. The segment number i is incremented (at block <highlight><bold>120</bold></highlight>) by one. If (at block <highlight><bold>122</bold></highlight>) the next segment i does not exist, then the file system performs (at block <highlight><bold>124</bold></highlight>) steps <highlight><bold>110</bold></highlight> and <highlight><bold>112</bold></highlight> to create segment i. From block <highlight><bold>124</bold></highlight> or block <highlight><bold>122</bold></highlight> if segment i already exists, then the start location is set (at block <highlight><bold>126</bold></highlight>) to the beginning of segment i, and control proceeds to block <highlight><bold>114</bold></highlight> to write data to the new segment i. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates logic implemented in a program used in conjunction with the file system <highlight><bold>4</bold></highlight> to take a very large file already existing that has an index of different sections and store the data for such an indexed file in segments. For instance, a large video file may be comprised of separate video clips, where a file index indicates the offsets in the file of each video clip. Control begins at block <highlight><bold>150</bold></highlight> upon receiving a file and an index of a file specifying file sections at offsets into the received file <highlight><bold>70</bold></highlight>. In certain implementations, a user may specify (at block <highlight><bold>152</bold></highlight>) the segment size k as greater than the largest file section to allow the file system <highlight><bold>4</bold></highlight> to store additional data in each segment. Still further, the user may specify the segment size significantly larger than the largest file section size to allow room in the segment to expand the size of one file section, e.g., add material to a video clip. Metadata is then generated (at block <highlight><bold>154</bold></highlight>) for the file along with a segment index <highlight><bold>74</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 3</cross-reference>). The segment field <highlight><bold>58</bold></highlight> would be set to &ldquo;on&rdquo;. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> For each file section i in the file index, a loop is performed at blocks <highlight><bold>156</bold></highlight> through <highlight><bold>166</bold></highlight> to store the file sections into segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>. At block <highlight><bold>158</bold></highlight>, the file system <highlight><bold>4</bold></highlight> creates a segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>and segment metadata <highlight><bold>78</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>therefor. The file system <highlight><bold>4</bold></highlight> further adds a reference to the segment metadata i created for segment i to the segment index <highlight><bold>74</bold></highlight> following the last added reference, such that the segment references <highlight><bold>76</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>are ordered in the list according to the order in which file data is written to the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>File section i from the very large file is then written (at block <highlight><bold>162</bold></highlight>) to segment i. Control then proceeds (at block <highlight><bold>166</bold></highlight>) back to block <highlight><bold>156</bold></highlight> to write the next file section to a new segment. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Once the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>are generated, they would be stored in the primary storage <highlight><bold>10</bold></highlight>. The segment metadata <highlight><bold>78</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>provides information that may be used to determine whether the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>should be archived, released, and, if released, whether a partial file is maintained on the primary storage <highlight><bold>10</bold></highlight>. The segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>may be archived and released using the same criteria that is applied to any regular file in the file system. Further, the criteria may be applied to both segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>and non-segmented files to determine which files to release. Further, segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>may be archived and released at different times, thereby only leaving less than all the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>of the file <highlight><bold>70</bold></highlight> in the primary storage <highlight><bold>10</bold></highlight>. For instance, a more recently accessed segment or file may remain in the primary storage <highlight><bold>10</bold></highlight> while a segment or file that is one of the least recently used segments and files may be marked for release. In certain implementations, if a segment is not entirely filled with valid data, only valid data from the segment in the primary storage <highlight><bold>10</bold></highlight> is archived in the secondary storage <highlight><bold>12</bold></highlight>. Further, when staging data for a segment from the secondary <highlight><bold>12</bold></highlight> to the primary <highlight><bold>10</bold></highlight> storage, only valid data is staged from the secondary storage <highlight><bold>12</bold></highlight>. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 6</cross-reference><highlight><italic>a, b </italic></highlight>illustrate logic implemented in the file system <highlight><bold>4</bold></highlight> to manage an Input/Output (I/O) request, i.e., read or write, to an address (Y) in a file in the file system <highlight><bold>4</bold></highlight>, beginning at block <highlight><bold>200</bold></highlight>. If (at block <highlight><bold>202</bold></highlight>) the file is not marked for segmentation, i.e., the segment field <highlight><bold>58</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>) is &ldquo;off&rdquo;, then the data for the file is stored in a single file and control proceeds to block <highlight><bold>204</bold></highlight> to handle the I/O request for the file in a manner known in the art. The non-segmented file may be staged from secondary <highlight><bold>12</bold></highlight> to primary <highlight><bold>10</bold></highlight> storage if the file is not in the primary storage <highlight><bold>10</bold></highlight> or if the file is a partial file and the file system <highlight><bold>4</bold></highlight> attempts to access beyond the end of the partial data, e.g., first n bytes of the file <highlight><bold>70</bold></highlight>, maintained in the partial file. In certain implementations, the file system <highlight><bold>4</bold></highlight> may make data available to I/O requests as soon as the data is staged into the memory and before the entire segment is staged. Attempts to read beyond the first n bytes in the partial file would trigger an operation to stage further segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>from the file into the primary storage <highlight><bold>10</bold></highlight>. If the file <highlight><bold>70</bold></highlight> is segmented, then the file system <highlight><bold>4</bold></highlight> sets (at block <highlight><bold>208</bold></highlight>) the segment j including the requested address (Y) to the integer quotient of Y divided by k. The segment offset, which indicates the relative byte offset into segment j including the requested address, is then set (at block <highlight><bold>210</bold></highlight>) to Y modulo k, or the remainder of Y divided by k. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> If (at block <highlight><bold>212</bold></highlight>) the segment metadata j for the segment j indicates that the segment j is not on the primary storage <highlight><bold>10</bold></highlight>, i.e., the offline field <highlight><bold>60</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>) is &ldquo;on&rdquo;, then the file system <highlight><bold>4</bold></highlight> determines (at block <highlight><bold>214</bold></highlight>) the location in secondary storage <highlight><bold>12</bold></highlight> of the segment j from the location field <highlight><bold>62</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 2</cross-reference>) in the segment j metadata. The location may specify a particular tape volume or cartridge, optical disk, slower hard disk drive, etc., and block address on such device. The file system <highlight><bold>4</bold></highlight> then stages (at block <highlight><bold>216</bold></highlight>) the segment j from the determined location in secondary storage <highlight><bold>12</bold></highlight> into the primary storage <highlight><bold>10</bold></highlight> and updates (at block <highlight><bold>218</bold></highlight>) the offline field <highlight><bold>60</bold></highlight> in the segment metadata j to indicate that the segment j is in the primary storage <highlight><bold>10</bold></highlight>. The file system <highlight><bold>4</bold></highlight> may further update the location field <highlight><bold>62</bold></highlight> to indicate the location in the primary storage <highlight><bold>10</bold></highlight> of the staged in segment j. The location field <highlight><bold>62</bold></highlight> would indicate the primary <highlight><bold>10</bold></highlight> and/or secondary <highlight><bold>12</bold></highlight> storage location where the segment j is resident. If the secondary storage <highlight><bold>12</bold></highlight> comprises a tape library, then the tape library may have to mount a tape cartridge including the requested segment. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> After the segment j is in primary storage <highlight><bold>10</bold></highlight> from blocks <highlight><bold>212</bold></highlight> or <highlight><bold>218</bold></highlight>, in whole or as a partial file, the file system <highlight><bold>4</bold></highlight> then accesses (at block <highlight><bold>224</bold></highlight>) the determined segment offset within segment j, which includes the start of the requested data. Control then proceeds to block <highlight><bold>226</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 6</cross-reference><highlight><italic>b. </italic></highlight></paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> If (at block <highlight><bold>226</bold></highlight>) during the I/O request the file system <highlight><bold>4</bold></highlight> attempts to access data beyond the end of the segment j then the file system <highlight><bold>4</bold></highlight> determines (at block <highlight><bold>228</bold></highlight>) whether the segment j comprises a partial file. If so, then the file system <highlight><bold>4</bold></highlight> stages (at block <highlight><bold>230</bold></highlight>) the remainder of the segment j from secondary storage <highlight><bold>12</bold></highlight> to the primary storage <highlight><bold>10</bold></highlight> where the I/O request can continue accessing data. Otherwise, if the segment j is not a partial file, i.e., a full segment, then the file system <highlight><bold>4</bold></highlight> determines (at block <highlight><bold>226</bold></highlight>) the next segment (i&plus;1) maintaining the next data for the file <highlight><bold>70</bold></highlight>. Control then proceeds back to block <highlight><bold>210</bold></highlight> to access the next segment. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> With the logic of <cross-reference target="DRAWINGS">FIGS. 6</cross-reference><highlight><italic>a, b</italic></highlight>, the file system <highlight><bold>4</bold></highlight> only has to maintain in the primary storage <highlight><bold>10</bold></highlight> the particular segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>including the data from the file <highlight><bold>70</bold></highlight> that is currently active, where each segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>is less in size than the file <highlight><bold>70</bold></highlight>. This increases the read and write performance because the data to read or update may be quickly accessed by going right to the segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>including the requested data. Further, maintaining segments for a file avoids the need to have to stage in the entire file <highlight><bold>70</bold></highlight> from secondary storage <highlight><bold>12</bold></highlight>, which may be a slower access device, such as a tape drive, because only the particular segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>including the requested data is staged. This further substantially improves read and write performance. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Moreover, with the described implementations, the file <highlight><bold>70</bold></highlight> size may be greater in size then the primary storage <highlight><bold>10</bold></highlight> as long as the segment <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>size is less than the primary storage <highlight><bold>10</bold></highlight>. This is possible because only the particular segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>being accessed need to remain in the primary storage <highlight><bold>10</bold></highlight>. If the primary storage <highlight><bold>10</bold></highlight> reaches the high threshold, then the file system <highlight><bold>4</bold></highlight> may begin releasing files in the primary storage <highlight><bold>10</bold></highlight> until the low threshold amount of space is available. The files released may include segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>of the file <highlight><bold>70</bold></highlight> being accessed as well as other files based on file release criteria known in the art. This release operation makes room in the primary storage <highlight><bold>10</bold></highlight> to allow access of further segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>. In this way, all the data from a file <highlight><bold>70</bold></highlight> that as a whole is larger than the primary storage <highlight><bold>10</bold></highlight> space may be accessed by staging in segments of the data that is currently being accessed and releasing older segments and other non-segments in the primary storage <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> With the described implementations, the application <highlight><bold>8</bold></highlight> continues to access the file <highlight><bold>70</bold></highlight> as a single file using the file system <highlight><bold>4</bold></highlight> file access commands. However, the file system <highlight><bold>4</bold></highlight>, transparent to the user, provides special handling for files <highlight><bold>70</bold></highlight> that have the segment attribute to manage such files <highlight><bold>70</bold></highlight> as separate segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight></paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Further implementations provide a stage ahead feature. If a stage ahead attribute is set, then the file system <highlight><bold>4</bold></highlight> would begin prefetching or staging ahead multiple segments following a segment accessed from the secondary storage <highlight><bold>12</bold></highlight>, e.g., offline. Further, when accessing data in sequential mode, the file system <highlight><bold>4</bold></highlight> would want to stage ahead to improve the performance of the sequential access. A stage ahead attribute would indicate a number of segments to stage ahead upon accessing one segment in secondary storage <highlight><bold>12</bold></highlight> to make further segments available for continued accesses to the file <highlight><bold>70</bold></highlight> data. The number of segments to stage ahead may be user settable. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Still further, in certain implementations, in releasing segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>from the primary storage <highlight><bold>10</bold></highlight>, the file system <highlight><bold>4</bold></highlight> may only save partial data for the first segment <highlight><bold>72</bold></highlight><highlight><italic>a</italic></highlight>, and all remaining segments <highlight><bold>72</bold></highlight><highlight><italic>b . . . n </italic></highlight>are subject to full release from the primary storage <highlight><bold>10</bold></highlight>. In this way, partial data is only maintained for the first segment <highlight><bold>72</bold></highlight><highlight><italic>a. </italic></highlight></paragraph>
+</section>
+<section>
+<heading lvl="1">Striping Segments Across Tape Drives </heading>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates an additional implementation where the secondary storage <highlight><bold>312</bold></highlight> is comprised of a plurality of tape drives <highlight><bold>314</bold></highlight><highlight><italic>a, b, c, d</italic></highlight>, where each tape drive can read and write data to tape cartridges <highlight><bold>316</bold></highlight><highlight><italic>a, b, c, d</italic></highlight>. <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates how the file system <highlight><bold>8</bold></highlight> may alternate writing segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>to the four tape cartridges <highlight><bold>312</bold></highlight><highlight><italic>a, b, c, d </italic></highlight>in parallel, such that segments <highlight><bold>1</bold></highlight>, <highlight><bold>5</bold></highlight>, <highlight><bold>9</bold></highlight>, <highlight><bold>13</bold></highlight> are written to tape cartridge <highlight><bold>314</bold></highlight><highlight><italic>a</italic></highlight>, segments <highlight><bold>2</bold></highlight>, <highlight><bold>6</bold></highlight>, <highlight><bold>10</bold></highlight>, <highlight><bold>14</bold></highlight> are written to tape cartridge <highlight><bold>314</bold></highlight><highlight><italic>b</italic></highlight>, segments <highlight><bold>3</bold></highlight>, <highlight><bold>7</bold></highlight>, <highlight><bold>11</bold></highlight>, <highlight><bold>15</bold></highlight> are written to tape cartridge <highlight><bold>314</bold></highlight><highlight><italic>c</italic></highlight>, and segments <highlight><bold>4</bold></highlight>, <highlight><bold>8</bold></highlight>, <highlight><bold>12</bold></highlight>, <highlight><bold>16</bold></highlight> are written to tape cartridge <highlight><bold>314</bold></highlight><highlight><italic>d</italic></highlight>. The segment index <highlight><bold>74</bold></highlight> includes references to segment metadata <highlight><bold>78</bold></highlight><highlight><italic>a, b . . . n</italic></highlight>, which in turn references the segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>striped across the tape cartridges <highlight><bold>314</bold></highlight><highlight><italic>a, b, c, d</italic></highlight>. In this way, a file <highlight><bold>70</bold></highlight> is distributed across multiple tape cartridges <highlight><bold>314</bold></highlight><highlight><italic>a, b, c, d</italic></highlight>. The user can set an attribute indicating some number of the available tape cartridges <highlight><bold>314</bold></highlight><highlight><italic>a, b, c</italic></highlight>, to use in the striping operation. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> This implementation improves write performance because the file system <highlight><bold>4</bold></highlight> can write in parallel multiple segments to the different tape drives <highlight><bold>312</bold></highlight><highlight><italic>a, b, c, d </italic></highlight>to increase the write process by a factor of n, where n is the number of tape drives. Moreover, a read used in conjunction with the stage ahead feature improves performance because the file system <highlight><bold>4</bold></highlight> can in parallel stage multiple segments <highlight><bold>72</bold></highlight><highlight><italic>a, b . . . n </italic></highlight>into the primary storage <highlight><bold>10</bold></highlight>. </paragraph>
+</section>
+<section>
+<heading lvl="1">Additional Implementation Details </heading>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> The technique for managing data in a file system may be implemented as a method, apparatus or article of manufacture using standard programming and/or engineering techniques to produce software, firmware, hardware, or any combination thereof. The term &ldquo;article of manufacture&rdquo; as used herein refers to code or logic implemented in hardware logic (e.g., an integrated circuit chip, Field Programmable Gate Array (FPGA), Application Specific Integrated Circuit (ASIC), etc.) or a computer readable medium (e.g., magnetic storage medium (e.g., hard disk drives, floppy disks, tape, etc.), optical storage (CD-ROMs, optical disks, etc.), volatile and non-volatile memory devices (e.g., EEPROMs, ROMs, PROMs, RAMs, DRAMs, SRAMs, firmware, programmable logic, etc.). Code in the computer readable medium is accessed and executed by a processor. The code in which preferred embodiments of the configuration discovery tool are implemented may further be accessible through a transmission media or from a file server over a network. In such cases, the article of manufacture in which the code is implemented may comprise a transmission media, such as a network transmission line, wireless transmission media, signals propagating through space, radio waves, infrared signals, etc. Of course, those skilled in the art will recognize that many modifications may be made to this configuration without departing from the scope of the present invention, and that the article of manufacture may comprise any information bearing medium known in the art. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> In the illustrations, a certain number of devices were shown. For instance, <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates one primary <highlight><bold>10</bold></highlight> and secondary <highlight><bold>12</bold></highlight> storage device and <cross-reference target="DRAWINGS">FIG. 8</cross-reference> illustrates four tape cartridges and tape drives. However, additional or fewer devices than shown may be used, e.g., more or less tape cartridges and tape drives may be included in the secondary storage <highlight><bold>12</bold></highlight>. Further, the primary <highlight><bold>10</bold></highlight> and secondary <highlight><bold>12</bold></highlight> storage may be comprised of multiple storage devices and systems. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> The described file management operations were are performed by the file system component of an operating system. In alternative implementations, certain of the operations described as performed by the file system may be performed by some other program executing in the computer <highlight><bold>2</bold></highlight>, such as an application program or middleware. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> The described implementations may be used with very large files such as video/movie applications to allow editors to access only specific parts of a video image without having to read the entire file or rearchive the entire video. Moreover, the user may work on multiple video files concurrently by only staging in the particular segments of the video files that are needed. The described implementations may also be used with other types of very large files, such as satellite image data, data collected during an experiment that generates a large amount of data, and backup programs that write very large files to tape. With the described implementations, by writing data generated as part of a large, continuous data streams to segments, completed segments may be archived and released to free up more space in the primary storage for further of the data being continually generated by the application. This allows the file system <highlight><bold>4</bold></highlight> to handle a continuous stream of data to write to a single file without reaching a point where no further data can be handled because the primary storage has become full. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> Although the described implementations concern applying the segmentation technique to very large files, the described segmentation technique may apply to files of any size, and is not limited to very large files. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> In the described implementations, the primary storage comprised a faster access storage than the secondary storage, and the storage media were different. Alternatively, the primary storage and secondary storage may have the same access speeds and be implemented on the same storage media. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The program flow logic described in the flowcharts indicated certain events occurring in a certain order. Those skilled in the art will recognize that the ordering of certain programming steps or program flow may be modified without affecting the overall operation performed by the preferred embodiment logic, and such modifications are in accordance with the preferred embodiments. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The described implementations were discussed with respect to a Unix based operating systems. However, the described implementations may apply to any operating system that provides file metadata and allows files in the system to be associated with different groups of users. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> In the described implementations, file information, such as the segment index, and other file attributes was maintained in file metadata used by the file system. Alternatively, the file attribute information and segment index may be maintained in data structures and tables other than the file metadata used by the file system. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> The foregoing description of the preferred embodiments of the invention has been presented for the purposes of illustration and description. It is not intended to be exhaustive or to limit the invention to the precise form disclosed. Many modifications and variations are possible in light of the above teaching. It is intended that the scope of the invention be limited not by this detailed description, but rather by the claims appended hereto. The above specification, examples and data provide a complete description of the manufacture and use of the composition of the invention. Since many embodiments of the invention can be made without departing from the spirit and scope of the invention, the invention resides in the claims hereinafter appended. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for managing files in a file system, comprising: 
+<claim-text>receiving data for a file; </claim-text>
+<claim-text>storing the data for the file in a plurality of segments; </claim-text>
+<claim-text>generating an index associated with the file indicating how the file data maps to the segments; </claim-text>
+<claim-text>receiving an Input/Output request with respect to an address in the file; </claim-text>
+<claim-text>using the index for the file to determine the segment including data at the requested address in the file; and </claim-text>
+<claim-text>accessing the determined segment including the data at the requested address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein data is stored in the segments by: 
+<claim-text>writing the received file data to one segment; and </claim-text>
+<claim-text>writing further received data for the file to subsequent segments if the last segment to which the received data was written has no more available space. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein each segment has a fixed byte length, wherein the index provides a segment order indicating an order in which file data is written to the segments, and wherein the index for the file is used to determine the segment including data at the requested address in the file by: 
+<claim-text>determining an offset into the file including the data at the requested address; and </claim-text>
+<claim-text>determining an integer quotient value resulting from the offset into the file divided by the fixed byte length, wherein the segment including the data at the requested address is the segment at the integer quotient value in the segment order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, further comprising: 
+<claim-text>receiving user input indicating the fixed byte length of each segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>providing a segment size that is at least greater than a byte size of a largest section within the file; and </claim-text>
+<claim-text>writing each file section to one segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>storing the segments in a primary storage; </claim-text>
+<claim-text>copying at least one of the segments in the primary storage onto a secondary storage; and </claim-text>
+<claim-text>releasing at least one of the segments copied to the secondary storage, wherein space used by the released segment in the primary storage is available for use. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein as a result of releasing one or more segments, different segments for one file are capable of being stored in the primary storage and the secondary storage. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein accessing the determined segment including the requested address further comprises: 
+<claim-text>determining whether the determined segment is available in the primary storage; and </claim-text>
+<claim-text>copying the determined segment from the secondary storage to the primary storage if the determined segment is not available in the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein releasing the segment comprises: 
+<claim-text>storing a partial version of the released segment including less than all data in the segment, wherein the segment data not in the partial version is stored in the secondary storage, wherein the partial version remains on the primary storage after the segment is released. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the partial version of the determined segment is on the primary storage and wherein accessing the determined segment including the requested address further comprises: 
+<claim-text>accessing the partial version of the determined segment on the primary storage to access the data therein; </claim-text>
+<claim-text>reaching the end of the partial version when accessing data therein; </claim-text>
+<claim-text>staging from the secondary storage to the primary storage data from the determined segment that is not in the partial version; and </claim-text>
+<claim-text>accessing the data from the determined segment staged from the secondary storage to the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the partial version is stored only for a first segment of the segments associated with the file. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising: 
+<claim-text>accessing data at the end of the segment, wherein the I/O request requires further file data after accessing the end of the segment; </claim-text>
+<claim-text>determining from the index a next segment including file data following the file data at the end of the segment data; and </claim-text>
+<claim-text>accessing the next segment in the primary storage to access the further required file data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising: 
+<claim-text>maintaining metadata for each segment that is also maintained for files in the file system; and </claim-text>
+<claim-text>using the metadata for segments and files to determine when to copy segments and files to the secondary storage and when to release segments and files in the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein segments and files in the primary storage are released according to their metadata if used space in the primary storage reaches a threshold level. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the file data in all the segments for the file is capable of being larger than a storage capacity of the primary storage. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising: 
+<claim-text>reading data from one target segment on the secondary storage; </claim-text>
+<claim-text>determining whether a stage attribute is specified indicating a number of segments to stage ahead; and </claim-text>
+<claim-text>initiating read requests to stage the number of subsequent segments following the target segment from the secondary storage to the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising: 
+<claim-text>receiving user input indicating the number of segments to stage ahead. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the segment does not have a file name and is not represented as a file in the file system. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the index is stored in the file, wherein no user data is stored in the file and all the user data is distributed in the segments. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A method for managing files in a primary and secondary storage, wherein the secondary storage is comprised of a plurality of drives and storage devices capable of being mounted on the drives, comprising: 
+<claim-text>receiving data for a file; </claim-text>
+<claim-text>storing the data for the file in a plurality of segments; </claim-text>
+<claim-text>generating an index associated with the file indicating how file data maps to segments; and </claim-text>
+<claim-text>writing each segment to one of the drives, wherein segments are written to multiple of the drives to distribute the segments across multiple storage devices. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein multiple segments are written in parallel to multiple storage devices in multiple drives. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, further comprising reading segments on multiple storage devices from multiple drives to stage multiple segments in parallel into the primary storage. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein the drives comprise tape drives and wherein the storage devices comprise tape cartridges. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A system for managing files, comprising: 
+<claim-text>a computer readable medium; </claim-text>
+<claim-text>a storage system; </claim-text>
+<claim-text>means for receiving data for a file; </claim-text>
+<claim-text>means for storing the data for the file in a plurality of segments in the storage device; </claim-text>
+<claim-text>means for generating an index in the computer readable medium associated with the file indicating how the file data maps to the segments; </claim-text>
+<claim-text>means for receiving an Input/Output request with respect to an address in the file; </claim-text>
+<claim-text>means for using the index for the file to determine the segment including data at the requested address in the file; and </claim-text>
+<claim-text>means for accessing the determined segment including the data at the requested address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the means for storing the for the file in the segments performs: 
+<claim-text>writing the received file data to one segment; and </claim-text>
+<claim-text>writing further received data for the file to subsequent segments if the last segment to which the received data was written has no more available space. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein each segment has a fixed byte length, wherein the index provides a segment order indicating an order in which file data is written to the segments, and wherein means for using the index for the file to determine the segment including data at the requested address in the file performs: 
+<claim-text>determining an offset into the file including the data at the requested address; and </claim-text>
+<claim-text>determining an integer quotient value resulting from the offset into the file divided by the fixed byte length, wherein the segment including the data at the requested address is the segment at the integer quotient value in the segment order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, further comprising: 
+<claim-text>means for receiving user input indicating the fixed byte length of each segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, further comprising: 
+<claim-text>means for providing a segment size that is at least greater than a byte size of a largest section within the file; and </claim-text>
+<claim-text>means for writing each file section to one segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the storage system comprises a primary storage, further comprising: 
+<claim-text>a secondary storage; </claim-text>
+<claim-text>means for copying at least one of the segments in the primary storage onto the secondary storage; and </claim-text>
+<claim-text>means for releasing at least one of the segments copied to the secondary storage, wherein space used by the released segment in the primary storage is available for use. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein as a result of releasing one or more segments, different segments for one file are capable of being stored in the primary storage and the secondary storage. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the means for accessing the determined segment including the requested address further performs: 
+<claim-text>determining whether the determined segment is available in the primary storage; and </claim-text>
+<claim-text>copying the determined segment from the secondary storage to the primary storage if the determined segment is not available in the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the means for releasing the segment performs: 
+<claim-text>storing a partial version of the released segment including less than all data in the segment, wherein the segment data not in the partial version is stored in the secondary storage, wherein the partial version remains on the primary storage after the segment is released. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the partial version of the determined segment is on the primary storage and wherein the means for accessing the determined segment including the requested address further performs: 
+<claim-text>accessing the partial version of the determined segment on the primary storage to access the data therein; </claim-text>
+<claim-text>reaching the end of the partial version when accessing data therein; </claim-text>
+<claim-text>staging from the secondary storage to the primary storage data from the determined segment that is not in the partial version; and </claim-text>
+<claim-text>accessing the data from the determined segment staged from the secondary storage to the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference>, wherein the partial version is stored only for a first segment of the segments associated with the file. </claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, further comprising: 
+<claim-text>means for accessing data at the end of the segment, wherein the I/O request requires further file data after accessing the end of the segment; </claim-text>
+<claim-text>means for determining from the index a next segment including file data following the file data at the end of the segment data; and </claim-text>
+<claim-text>means for accessing the next segment in the primary storage to access the further required file data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, further comprising: 
+<claim-text>means for maintaining metadata for each segment that is also maintained for files in the file system; and </claim-text>
+<claim-text>means for using the metadata for segments and files to determine when to copy segments and files to the secondary storage and when to release segments and files in the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein segments and files in the primary storage are released according to their metadata if used space in the primary storage reaches a threshold level. </claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the file data in all the segments for the file is capable of being larger than a storage capacity of the primary storage. </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, further comprising: 
+<claim-text>means for reading data from one target segment on the secondary storage; </claim-text>
+<claim-text>means for determining whether a stage attribute is specified indicating a number of segments to stage ahead; and </claim-text>
+<claim-text>means for initiating read requests to stage the number of subsequent segments following the target segment from the secondary storage to the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 39</dependent-claim-reference>, further comprising: 
+<claim-text>means for receiving user input indicating the number of segments to stage ahead. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the segment does not have a file name and is not represented as a file in the file system. </claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein the index is stored in the file, wherein no user data is stored in the file and all the user data is distributed in the segments. </claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. A system method for managing files, comprising: 
+<claim-text>a primary storage; </claim-text>
+<claim-text>a secondary storage comprised of a plurality of drives and storage devices capable of being mounted on the drives; </claim-text>
+<claim-text>means for receiving data for a file; </claim-text>
+<claim-text>means for storing the data for the file in a plurality of segments on the primary storage; </claim-text>
+<claim-text>means for generating an index associated with the file indicating how file data maps to segments; and </claim-text>
+<claim-text>means for writing each segment to one of the drives, wherein segments are written to multiple of the drives to distribute the segments across multiple storage devices. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00044">claim 43</dependent-claim-reference>, wherein multiple segments are written in parallel to multiple storage devices in multiple drives. </claim-text>
+</claim>
+<claim id="CLM-00045">
+<claim-text><highlight><bold>45</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00044">claim 43</dependent-claim-reference>, further comprising 
+<claim-text>means for reading segments on multiple storage devices from multiple drives to stage multiple segments in parallel into the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00046">
+<claim-text><highlight><bold>46</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00044">claim 43</dependent-claim-reference>, wherein the drives comprise tape drives and wherein the storage devices comprise tape cartridges. </claim-text>
+</claim>
+<claim id="CLM-00047">
+<claim-text><highlight><bold>47</bold></highlight>. An article of manufacture for managing files in a file system, comprising: 
+<claim-text>receiving data for a file; </claim-text>
+<claim-text>storing the data for the file in a plurality of segments; </claim-text>
+<claim-text>generating an index associated with the file indicating how the file data maps to the segments; </claim-text>
+<claim-text>receiving an Input/Output request with respect to an address in the file; </claim-text>
+<claim-text>using the index for the file to determine the segment including data at the requested address in the file; and </claim-text>
+<claim-text>accessing the determined segment including the data at the requested address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00048">
+<claim-text><highlight><bold>48</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 47</dependent-claim-reference>, wherein data is stored in the segments by: 
+<claim-text>writing the received file data to one segment; and </claim-text>
+<claim-text>writing further received data for the file to subsequent segments if the last segment to which the received data was written has no more available space. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00049">
+<claim-text><highlight><bold>49</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 47</dependent-claim-reference>, wherein each segment has a fixed byte length, wherein the index provides a segment order indicating an order in which file data is written to the segments, and wherein the index for the file is used to determine the segment including data at the requested address in the file by: 
+<claim-text>determining an offset into the file including the data at the requested address; and </claim-text>
+<claim-text>determining an integer quotient value resulting from the offset into the file divided by the fixed byte length, wherein the segment including the data at the requested address is the segment at the integer quotient value in the segment order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00050">
+<claim-text><highlight><bold>50</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 49</dependent-claim-reference>, further comprising: 
+<claim-text>receiving user input indicating the fixed byte length of each segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00051">
+<claim-text><highlight><bold>51</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 47</dependent-claim-reference>, further comprising: 
+<claim-text>providing a segment size that is at least greater than a byte size of a largest section within the file; and </claim-text>
+<claim-text>writing each file section to one segment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00052">
+<claim-text><highlight><bold>52</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 47</dependent-claim-reference>, further comprising: 
+<claim-text>storing the segments in a primary storage; </claim-text>
+<claim-text>copying at least one of the segments in the primary storage onto a secondary storage; and </claim-text>
+<claim-text>releasing at least one of the segments copied to the secondary storage, wherein space used by the released segment in the primary storage is available for use. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00053">
+<claim-text><highlight><bold>53</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 52</dependent-claim-reference>, wherein as a result of releasing one or more segments, different segments for one file are capable of being stored in the primary storage and the secondary storage. </claim-text>
+</claim>
+<claim id="CLM-00054">
+<claim-text><highlight><bold>54</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 52</dependent-claim-reference>, wherein accessing the determined segment including the requested address further comprises: 
+<claim-text>determining whether the determined segment is available in the primary storage; and </claim-text>
+<claim-text>copying the determined segment from the secondary storage to the primary storage if the determined segment is not available in the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00055">
+<claim-text><highlight><bold>55</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 52</dependent-claim-reference>, wherein releasing the segment comprises: 
+<claim-text>storing a partial version of the released segment including less than all data in the segment, wherein the segment data not in the partial version is stored in the secondary storage, wherein the partial version remains on the primary storage after the segment is released. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00056">
+<claim-text><highlight><bold>56</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 55</dependent-claim-reference>, wherein the partial version of the determined segment is on the primary storage and wherein accessing the determined segment including the requested address further comprises: 
+<claim-text>accessing the partial version of the determined segment on the primary storage to access the data therein; </claim-text>
+<claim-text>reaching the end of the partial version when accessing data therein; </claim-text>
+<claim-text>staging from the secondary storage to the primary storage data from the determined segment that is not in the partial version; and </claim-text>
+<claim-text>accessing the data from the determined segment staged from the secondary storage to the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00057">
+<claim-text><highlight><bold>57</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 55</dependent-claim-reference>, wherein the partial version is stored only for a first segment of the segments associated with the file. </claim-text>
+</claim>
+<claim id="CLM-00058">
+<claim-text><highlight><bold>58</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 52</dependent-claim-reference>, further comprising: 
+<claim-text>accessing data at the end of the segment, wherein the I/O request requires further file data after accessing the end of the segment; </claim-text>
+<claim-text>determining from the index a next segment including file data following the file data at the end of the segment data; and </claim-text>
+<claim-text>accessing the next segment in the primary storage to access the further required file data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00059">
+<claim-text><highlight><bold>59</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 52</dependent-claim-reference>, further comprising: 
+<claim-text>maintaining metadata for each segment that is also maintained for files in the file system; and </claim-text>
+<claim-text>using the metadata for segments and files to determine when to copy segments and files to the secondary storage and when to release segments and files in the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00060">
+<claim-text><highlight><bold>60</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 59</dependent-claim-reference>, wherein segments and files in the primary storage are released according to their metadata if used space in the primary storage reaches a threshold level. </claim-text>
+</claim>
+<claim id="CLM-00061">
+<claim-text><highlight><bold>61</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 52</dependent-claim-reference>, wherein the file data in all the segments for the file is capable of being larger than a storage capacity of the primary storage. </claim-text>
+</claim>
+<claim id="CLM-00062">
+<claim-text><highlight><bold>62</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00055">claim 52</dependent-claim-reference>, further comprising: 
+<claim-text>reading data from one target segment on the secondary storage; </claim-text>
+<claim-text>determining whether a stage attribute is specified indicating a number of segments to stage ahead; and </claim-text>
+<claim-text>initiating read requests to stage the number of subsequent segments following the target segment from the secondary storage to the primary storage. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00063">
+<claim-text><highlight><bold>63</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00066">claim 62</dependent-claim-reference>, further comprising: 
+<claim-text>receiving user input indicating the number of segments to stage ahead. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00064">
+<claim-text><highlight><bold>64</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 47</dependent-claim-reference>, wherein the segment does not have a file name and is not represented as a file in the file system. </claim-text>
+</claim>
+<claim id="CLM-00065">
+<claim-text><highlight><bold>65</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00044">claim 47</dependent-claim-reference>, wherein the index is stored in the file, wherein no user data is stored in the file and all the user data is distributed in the segments. </claim-text>
+</claim>
+<claim id="CLM-00066">
+<claim-text><highlight><bold>66</bold></highlight>. An article of manufacture for managing files in a primary and secondary storage, wherein the secondary storage is comprised of a plurality of drives and storage devices capable of being mounted on the drives, by: 
+<claim-text>receiving data for a file; </claim-text>
+<claim-text>storing the data for the file in a plurality of segments; </claim-text>
+<claim-text>generating an index associated with the file indicating how file data maps to segments; and </claim-text>
+<claim-text>writing each segment to one of the drives, wherein segments are written to multiple of the drives to distribute the segments across multiple storage devices. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00067">
+<claim-text><highlight><bold>67</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00066">claim 66</dependent-claim-reference>, wherein multiple segments are written in parallel to multiple storage devices in multiple drives. </claim-text>
+</claim>
+<claim id="CLM-00068">
+<claim-text><highlight><bold>68</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00066">claim 66</dependent-claim-reference>, further comprising reading segments on multiple storage devices from multiple drives to stage multiple segments in parallel into the primary storage. </claim-text>
+</claim>
+<claim id="CLM-00069">
+<claim-text><highlight><bold>69</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00066">claim 66</dependent-claim-reference>, wherein the drives comprise tape drives and wherein the storage devices comprise tape cartridges.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004947A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004947A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004947A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004947A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004947A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004947A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004947A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030004947A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

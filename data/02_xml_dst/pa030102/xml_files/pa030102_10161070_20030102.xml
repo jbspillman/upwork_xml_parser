@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002664A1-20030102-D00000.TIF SYSTEM "US20030002664A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002664A1-20030102-D00001.TIF SYSTEM "US20030002664A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002664A1-20030102-D00002.TIF SYSTEM "US20030002664A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002664A1-20030102-D00003.TIF SYSTEM "US20030002664A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002664</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10161070</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020531</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04K001/04</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>380</class>
+<subclass>037000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Data encryption and decryption system and method using merged ciphers</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60298027</doc-number>
+<document-date>20010613</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Satish</given-name>
+<middle-name>N.</middle-name>
+<family-name>Anand</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Chandler</city>
+<state>AZ</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>SCHWEGMAN, LUNDBERG, WOESSNER &amp; KLUTH, P.A.</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 2938</address-1>
+<city>MINNEAPOLIS</city>
+<state>MN</state>
+<postalcode>55402</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method for implementing the Triple Data Encryption Algorithm (TDEA) for the Data Encryption Standard (DES) using merger ciphers is provided which may be configured to operate in the chain block cipher (CBC) mode. Data blocks are enciphered using less computations in the critical timing path significantly reducing the time required for each round of ciphering. Two permutation function (Ef) elements (<highlight><bold>218, 220</bold></highlight>) operate separately during each ciphering round eliminating an XOR operation from the critical path. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">CROSS-REFERENCE TO RELATED APPLICATIONS </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application claims the benefit of the filing date of U.S. Application Serial No. 60/298,027 filed Jun. 13, 2001 filed under 35 U.S.C. &sect;119(e).</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates in general to the field of cryptography, in particular to block ciphering and more particularly to implementations of the Triple Data Encryption Algorithm (TDEA) for the Data Encryption Standard (DES) using merged ciphers. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Cryptography is a security mechanism for protecting information from unintended disclosure by transforming the information into a form that is unreadable to humans, and unreadable to machines that are not specially adapted to reversing the transformation back to the original information content. The cryptographic transformation can be performed on data that is to be transmitted electronically, such as an electronic mail message, and is equally useful for data that is to be securely stored, such as the account records for customers of a bank or credit company. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The transformation process performed on the original data is referred to as &ldquo;encryption&rdquo;. The process of reversing the transformation, to restore the original data, is referred to as &ldquo;decryption&rdquo;. The terms &ldquo;encipher&rdquo; and &ldquo;decipher&rdquo; are also used to describe these processes, respectively. A mechanism that can both encipher and decipher is referred to as a &ldquo;cipher&rdquo;. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Mathematical algorithms are used to describe the functioning of ciphers. The goal of a cipher is to be computationally infeasible to &ldquo;break&rdquo;-that is, it must be nearly impossible to &ldquo;guess&rdquo; or derive the original data content from any series of computations that can be performed on the transformed data, absent knowledge of how the encryption was accomplished. Use of a &ldquo;key&rdquo; during the encryption and decryption processes helps make the cipher more difficult to break. A key is a randomly-generated number factored into operation of the encryption to make the result dependent on the key. The value used for the key in effect &ldquo;personalizes&rdquo; the algorithm, so that the same algorithm used on the same input data produces a different output for each different key value. When the value of this key is unknown to the unauthorized persons, they will not be able to duplicate or to reverse the encryption. Provided that the key is kept secret, the algorithm that performs the ciphering can be made public. The key will be known to the parties intended to encrypt and decrypt the data: they can use the key to &ldquo;lock&rdquo; and &ldquo;unlock&rdquo; the data contents, whereas unauthorized persons cannot. When the same key is used for encrypting and for decrypting, the key is referred to as being &ldquo;symmetric&rdquo;. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> A cipher to be used in a computer system can be implemented in hardware, in software, or in a combination of hardware and software. A commonly used cipher is known as the Data Encryption Algorithm (&ldquo;DEA&rdquo;). A variant of the DES algorithm, known as &ldquo;Triple DES&rdquo;, was developed to increase the strength of the result over that available with DES. Triple DES uses several rounds of ciphering, with different keys for each of the rounds. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> One way to make a cipher stronger is to increase the number of rounds of ciphering performed because with each successive transformation, the resulting encryption becomes more difficult to break. It will be appreciated that the computations involved to cipher data are quite complex, and that while performing more rounds of ciphering increases the strength of the result, it also causes computation time to increase. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Because hardware-based encryption systems are typically much faster than software based encryption systems, hardware based systems are preferable, especially for dedicated ciphering operations. A hardware implementation may be a semiconductor chip, such as a DES chip implementing a complete DEA function, or in firmware in a dedicated processor. Hardware implementations usually require specialized off-the-shelf chips or custom ASICs (Application Specific Integrated Circuits) which implement the complete data encryption process. The processor in which the ASIC device is used loads in a key, sets the mode of operation, and passes the data through the encryption system. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In typical DES implementations, in each round of ciphering, a permuting function (Pf) output is XOR&apos;ed with the left input to generate the output of the cipher round. This is provided to a permuting function element (Ef) in the next round of ciphering. The output of the permuting function (Ef) is XOR&apos;ed with a key output for that round to generate the selection function (S-box) input. As those of skill in the art will appreciate, there are normally two XOR functions (gates) in the critical timing path. To improve ciphering speed, it is therefore highly desirable to reduce the time required for critical path operations, especially when many rounds of ciphering are desired for improved security. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Accordingly, what is needed is an improved method and system for ciphering. What is also needed is a method and system for encrypting and decrypting data blocks in less time that prior methods and systems. What is also needed is method and system for encrypting and decrypting data blocks utilizing less gates in the critical timing path to provide improved ciphering speed. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The invention is pointed out with particularity in the appended claims. However, a more complete understanding of the present invention may be derived by referring to the detailed description and claims when considered in connection with the figures, wherein like reference numbers refer to similar items throughout the figures and: </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a simplified functional block diagram of a system for enciphering data blocks in accordance with a preferred embodiment of the present invention; and </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a simplified functional block diagram of a cipher block portion of a system for enciphering data blocks in accordance with a preferred embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The exemplification set out herein illustrates a preferred embodiment of the invention in one form thereof, and such exemplification is not intended to be construed as limiting in any manner. </paragraph>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The present invention provides, among other things a system and method for performing enciphering and deciphering of data blocks. In accordance with the preferred embodiment, the system and method of the present invention performs the Data Encryption Algorithm (DEA) and the Triple Data Encryption Algorithm (TDEA) for the Data Encryption Standard (DES) using merger ciphers, which is described in Federal Information Processing Standard (FIPS) publication 46-3 dated Oct. 25, 1999 describes the specifications for the Data Encryption Standard (DES). In the preferred embodiment, the cipher block chaining (CBC) mode is implemented. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> In accordance with the preferred embodiment of the present invention, significant processing performance is achieved through the reduction of steps required in the critical timing path. For example, while typical DES implementations require two XOR computations in the critical path, the system and method of the present invention implement only one XOR computation in the critical timing path. Because DES requires many rounds of ciphering for each data block to be enciphered, significant performance improvement is achieved. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a simplified functional block diagram of a system for enciphering data blocks in accordance with a preferred embodiment of the present invention. System <highlight><bold>100</bold></highlight> is suitable for block encrypting and block decrypting data blocks. Although the present invention is suitable for other types of ciphering, in accordance with the preferred embodiment, system <highlight><bold>100</bold></highlight> is described herein in terms of implementing the DEA and the Triple DEA for the DES using merger ciphers which operates on 64-bit blocks of data in the cipher block chaining (CBC) mode. In general, system <highlight><bold>100</bold></highlight> operates similarly to either encrypt or decrypt data blocks. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> At node <highlight><bold>101</bold></highlight>, an input data block of 64-bits (identified as &lsquo;datain&rsquo;) is received for either enciphering or deciphering. Element <highlight><bold>102</bold></highlight> performs an exclusive &ldquo;OR&rdquo; (XOR) operation (i.e., a bit-by-bit addition modulo &ldquo;2&rdquo;) on the input data block and an output of element <highlight><bold>116</bold></highlight>. In element <highlight><bold>104</bold></highlight>, an initial permutation (IP) is performed on the 64-bit block of data to be enciphered (or deciphered as the case may be) producing initial right and initial left data blocks (R<highlight><subscript>0</subscript></highlight>, L<highlight><subscript>0</subscript></highlight>) each having 32-bits. The initial right and initial left data blocks (R<highlight><subscript>0</subscript></highlight>, L<highlight><subscript>0</subscript></highlight>) are loaded into corresponding registers (<highlight><bold>202</bold></highlight>, <highlight><bold>204</bold></highlight>). Cipher block portion <highlight><bold>200</bold></highlight> performs an iterative ciphering operation on the register values. The final right and left data blocks (R<highlight><subscript>n</subscript></highlight>, L<highlight><subscript>n</subscript></highlight>) each having, for example, 32-bits are provided in corresponding registers (<highlight><bold>202</bold></highlight>, <highlight><bold>204</bold></highlight>) and together comprise a final output data block of preferably 64-bits. In element <highlight><bold>106</bold></highlight>, a final permutation is performed providing the output data block (shown as cdata). The final permutation is preferably an inverse of the initial permutation performed by element <highlight><bold>104</bold></highlight>. The output data block is XOR&apos;ed in element <highlight><bold>108</bold></highlight> with the output from element <highlight><bold>110</bold></highlight> to produce the final output data block of system <highlight><bold>100</bold></highlight> at node <highlight><bold>109</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> When system <highlight><bold>100</bold></highlight> operates in the CBC mode for encryption, an initial value (IV) is used to modify the input data. The IV from IV register <highlight><bold>114</bold></highlight> is XOR&apos;ed with the input data in element <highlight><bold>102</bold></highlight> to generate the input data block (illustrated as &lsquo;pdata&rsquo;) for element <highlight><bold>104</bold></highlight>. During the CBC encryption mode, the output from element <highlight><bold>106</bold></highlight> (illustrated as &lsquo;cdata&rsquo;) is loaded into IV register <highlight><bold>114</bold></highlight> and is used as the initial value for the next block of data to be encrypted. Element <highlight><bold>116</bold></highlight> provides for the selection the encrypt CBC mode based on the selection signal illustrated as &lsquo;Encrypt_CBC&rsquo;. For other than CBC mode, the IV is comprised of zeroes. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> When system <highlight><bold>100</bold></highlight> operates in the CBC mode for decryption, the IV register stores the previous input data block (illustrated as &lsquo;datain&rsquo;) and element <highlight><bold>108</bold></highlight> XOR&apos;es the previous input data block with the output block. Element <highlight><bold>110</bold></highlight> provides for the selection the decrypt CBC mode based on the selection signal illustrated as &lsquo;Decrypt_CBC&rsquo;. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a simplified functional block diagram of a cipher block portion of a system for enciphering data blocks in accordance with a preferred embodiment of the present invention. Cipher block portion <highlight><bold>200</bold></highlight> of system <highlight><bold>100</bold></highlight> comprises initial cipher round block <highlight><bold>260</bold></highlight>, a plurality of cipher round blocks <highlight><bold>262</bold></highlight>, a final cipher block <highlight><bold>266</bold></highlight> and cipher output swapping block <highlight><bold>268</bold></highlight>. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates two cipher round blocks, one shown as cipher round block <highlight><bold>262</bold></highlight> and the other shown as cipher round block <highlight><bold>264</bold></highlight>. In accordance with the preferred embodiment, portion <highlight><bold>200</bold></highlight> is preferably implemented with either one, three, four, eight or sixteen cipher round blocks, each performing their cipher round operations preferably during one clock cycle. Since DES ciphering requires sixteen rounds of ciphering, one clock cycle is needed if sixteen cipher round blocks are implemented, two clock cycles are needed when eight cipher round blocks are implemented, four clock cycles are needed when four cipher round blocks are implemented, and six clock cycles are needed when three cipher round blocks are used. Cipher block portion <highlight><bold>200</bold></highlight> is fabricated with a predetermined number of cipher round blocks which remain fixed in hardware. As it can be seen, system ciphering performance is greatly enhanced with an increased number of cipher blocks at the expense of added hardware. Cipher rounds as used herein refers to the number of times the s-box (selection) function operates on the data. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Registers <highlight><bold>202</bold></highlight> and <highlight><bold>204</bold></highlight> store respectively initial right and initial left data blocks (R<highlight><subscript>0</subscript></highlight>, L<highlight><subscript>0</subscript></highlight>) each having 32-bits. Register <highlight><bold>206</bold></highlight> holds an initial key (KO) which is updated in accordance with key schedule calculations. The initial right and initial left data blocks are provided by the initial permutation function <highlight><bold>104</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>). Registers <highlight><bold>202</bold></highlight> and <highlight><bold>204</bold></highlight> are updated throughout the ciphering process and upon completion, store the enciphered right and left data blocks. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In element <highlight><bold>208</bold></highlight>, a permutation function (Ef) is performed on the right initial data block (R<highlight><bold>0</bold></highlight>) to generate a first interim data block having 48-bits. In element <highlight><bold>210</bold></highlight>, the first interim data block is XOR&apos;ed with a first key (K<highlight><bold>1</bold></highlight>)(<highlight><bold>212</bold></highlight>) of a key schedule to generate a second interim data block having 48-bits. The key schedule calculation is preferably implemented by element <highlight><bold>228</bold></highlight> in accordance with the DES standard, and is preferably done externally to cipher block portion <highlight><bold>200</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In element <highlight><bold>214</bold></highlight>, a selection function is implemented on each 6-bit block of the second interim data block producing a 4-bit data block for each of the 6-bit blocks and resulting in a third interim data block having 32-bits. In element <highlight><bold>214</bold></highlight>, a permutation function (Pf) is performed on the third interim data block to produce a fourth interim data block having 32-bits. In element <highlight><bold>216</bold></highlight>, the fourth interim data block is XOR&apos;ed with the initial left data block (L<highlight><bold>0</bold></highlight>) to produce a first right data block (R<highlight><bold>1</bold></highlight>) (<highlight><bold>230</bold></highlight>) having 32-bits. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In element <highlight><bold>220</bold></highlight>, the permutation function (Ef) is performed on the initial left data block to produce a fifth interim data block having 48-bits. In element <highlight><bold>222</bold></highlight>, the fifth interim data block is XOR&apos;ed with a second key (K<highlight><bold>2</bold></highlight>) of the key schedule to generate a sixth interim data block having 48-bits. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In element <highlight><bold>218</bold></highlight>, the permutation function (Ef) is performed on the fourth interim data block to generate a seventh interim data block. In element <highlight><bold>224</bold></highlight>, the sixth interim data block and the seventh interim data block are XOR&apos;ed to produce an eighth interim data block having 48-bits. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> It should be noted that at this point, element <highlight><bold>216</bold></highlight> produced the first right data block (R<highlight><bold>1</bold></highlight>) which is stored in right register <highlight><bold>204</bold></highlight> and is used as right input (<highlight><bold>226</bold></highlight>) for the next round of ciphering, which may be performed by the next cipher block <highlight><bold>264</bold></highlight>. It also should be noted that at this point, the initial right data block (R<highlight><bold>0</bold></highlight>) becomes the first left data block (L<highlight><bold>1</bold></highlight>) which is stored in left register <highlight><bold>202</bold></highlight>, and is used as the left input (<highlight><bold>226</bold></highlight>) for the next round of ciphering. It also should be noted that the cipher round output (<highlight><bold>230</bold></highlight>) of element <highlight><bold>224</bold></highlight> (identified as the eighth interim data block) serves as a cipher round input for the selection function (<highlight><bold>214</bold></highlight>) of the next round of ciphering to be performed by the next cipher block <highlight><bold>264</bold></highlight>. In the case where cipher block portion <highlight><bold>200</bold></highlight> includes only one cipher block <highlight><bold>262</bold></highlight>, outputs <highlight><bold>226</bold></highlight>, <highlight><bold>228</bold></highlight> and <highlight><bold>230</bold></highlight> serve as inputs to final cipher block <highlight><bold>266</bold></highlight>. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The elements illustrated in each subsequent cipher block <highlight><bold>264</bold></highlight> perform the functions described above with the input from the previous cipher block. It should be noted that each cipher block (<highlight><bold>262</bold></highlight> or <highlight><bold>264</bold></highlight>) performs a round of ciphering. For each round of ciphering, a next key (Kn) from the key schedule is used (<highlight><bold>230</bold></highlight>) where &ldquo;n&rdquo; corresponds with the cipher round. Each round of ciphering produces a left data block (Ln) and a right data block (Rn) at outputs <highlight><bold>228</bold></highlight> and <highlight><bold>226</bold></highlight> respectively. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Upon completion of performance of a number of rounds of ciphering as determined by the number of cipher blocks <highlight><bold>262</bold></highlight> and <highlight><bold>264</bold></highlight>, final cipher block <highlight><bold>266</bold></highlight> operates on the outputs of cipher block <highlight><bold>264</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Element <highlight><bold>232</bold></highlight> performs the selection function on the cipher block output of element of <highlight><bold>224</bold></highlight> (of cipher block <highlight><bold>264</bold></highlight>) referred to above as the eighth interim data block to produce a data block having 48-bits. Element <highlight><bold>232</bold></highlight> also performs the permutation function (Pf) to produce a tenth interim data block having 48-bits. Element <highlight><bold>234</bold></highlight> XOR&apos;es the tenth interim data block with the left data block (Ln) from output <highlight><bold>228</bold></highlight> to produce the next right output data block (Rn&plus;1) at output <highlight><bold>238</bold></highlight>. The prior right data block (Rn) becomes the next left output data block (Ln&plus;1) at output <highlight><bold>240</bold></highlight>. A next key (Kn&plus;1) (<highlight><bold>236</bold></highlight>) from the key schedule is stored in key register <highlight><bold>206</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The next right output data block (Rn&plus;1) and the next left output data block (Ln&plus;1) are stored in registers <highlight><bold>204</bold></highlight> and <highlight><bold>202</bold></highlight> respectively and are operated on by cipher output swapping block <highlight><bold>268</bold></highlight>. In cipher output swapping block <highlight><bold>268</bold></highlight>, the left and right outputs are swapped depending on the number of cipher rounds performed. In the preferred embodiment of the present invention that implements DES, when &ldquo;n&rdquo; is 1, 3, 8 or 16, the next right output data block (Rn&plus;1) and the next left output data block (Ln&plus;1) are swapped and stored in registers <highlight><bold>202</bold></highlight> and <highlight><bold>204</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In the DES embodiment, sixteen cipher rounds are required to be performed. During the next clock cycle cipher block portion <highlight><bold>200</bold></highlight> repeats the operations described above using the values stored in registers <highlight><bold>202</bold></highlight>, <highlight><bold>204</bold></highlight> and <highlight><bold>206</bold></highlight>. This process is repeated for a number of cycles until at least sixteen cipher rounds are completed. In a situation where there are three total cipher blocks implemented (e.g., one cipher block <highlight><bold>262</bold></highlight> and two cipher blocks <highlight><bold>264</bold></highlight>) after the six necessary cycles, final cipher block results in &ldquo;n&rdquo; equaling a number greater that 16, such as 18. In this case, the outputs L<highlight><bold>16</bold></highlight> and R<highlight><bold>16</bold></highlight> at the completion of the sixteenth cipher round are stored in registers <highlight><bold>202</bold></highlight> and <highlight><bold>204</bold></highlight>. A state machine is used to track the number of cipher rounds. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> The permutation function (Ef) is preferably in accordance with the DES standard &ldquo;E&rdquo; function which takes a block of 32-bits and yields a block of 48-bits as output. The selection (S-box) function is preferably in accordance with the DES standard which yields a four-bit block for each six-bit input block. The permutation function (Pf) is preferably in accordance with the DES standard &ldquo;P&rdquo; function which yields a 32-bit output from a 32-bit input. It should be noted that the present invention is equally applicable to other permutation and selection functions operating on and providing different bit amounts. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The key used for each round of ciphering is generated based on a key schedule using the prior value in key register <highlight><bold>206</bold></highlight>, and is preferably performed external to cipher block portion <highlight><bold>200</bold></highlight>. For DES, the key schedule uses a 56-bit key to provides a 48-bit key for each cipher block round. During encryption operations, a left key shift of either one or two bits is performed, while for decryption, a right key shift of either one or two bits is performed for each round of ciphering. The key shift signal is generated by a state machine based on the cipher round count. Key schedule calculations and preferably in accordance with DES resulting in a 48-bit key used for each round of ciphering, although other key lengths are also applicable. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> As can be seen, cipher block portion <highlight><bold>200</bold></highlight> reduces the number of XOR operations in the critical timing path. The permuting function (Ef) operates on both the left input as well as the output from the permuting function (Pf). The output of left permuting function (Ef) (<highlight><bold>220</bold></highlight>) is XOR&apos;ed (<highlight><bold>222</bold></highlight>) with the key producing an output which is stable in time much earlier than the S-box output. The critical timing path for each round of ciphering thus comprises the path through the S-box, the permuting function (Pf) and XOR gate (<highlight><bold>224</bold></highlight>), which is one less XOR gate that standard DES implementations. It should be noted that the permuting functions do not result in any gate delay and comprise only bit permutation and/or duplication. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Thus, a data encryption and decryption system and method have been described providing for significant performance increases over prior art methods and systems. A reduced computation time is achieved through reducing the number of gates in the critical path. The foregoing description of the specific embodiments will so fully reveal the general nature of the invention that others can, by applying current knowledge, readily modify and/or adapt for various applications such specific embodiments without departing from the generic concept, and therefore such adaptations and modifications should and are intended to be comprehended within the meaning and range of equivalents of the disclosed embodiments. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> It is to be understood that the phraseology or terminology employed herein is for the purpose of description and not of limitation. Accordingly, the invention is intended to embrace all such alternatives, modifications, equivalents and variations as fall within the spirit and broad scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of enciphering a left and right input data block producing a left and right output data block comprising: 
+<claim-text>performing (<highlight><bold>214</bold></highlight>) a select function and a permuter function (Pf) on a cipher round input data block (<highlight><bold>211</bold></highlight>) to produce a first interim data block; </claim-text>
+<claim-text>combining (<highlight><bold>216</bold></highlight>) the first interim data block with the left input data block to produce the right output data block; </claim-text>
+<claim-text>performing (<highlight><bold>220</bold></highlight>) a permuter function (Ef) on the left input data block to produce a second interim data block; </claim-text>
+<claim-text>combining (<highlight><bold>222</bold></highlight>) the second interim data block with a key from a key schedule to produce a third interim data block; </claim-text>
+<claim-text>performing (<highlight><bold>218</bold></highlight>) the permuter function (Ef) on the first interim data block to produce a fourth interim data block; and </claim-text>
+<claim-text>combining (<highlight><bold>224</bold></highlight>) the fourth interim data block with the third interim data block to produce a cipher round output data block (<highlight><bold>230</bold></highlight>), </claim-text>
+<claim-text>wherein the right input data block is set to be the left output data block, and the left, right and cipher round output data blocks correspond respectively with the left, right and cipher round input data blocks for use in subsequent rounds of ciphering. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein prior to a first round of ciphering, the cipher round input data block is generated by performing (<highlight><bold>208</bold></highlight>) the permuter function (Ef) on the right input data block and combining (<highlight><bold>210</bold></highlight>) a result with one of the keys (<highlight><bold>212</bold></highlight>) of the key schedule. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein upon completion of a predetermined number of rounds of ciphering, the method further comprises: 
+<claim-text>performing (<highlight><bold>232</bold></highlight>) the select function and the permuter function (Pf) of the cipher round output data block to produce a fifth interim data block (<highlight><bold>233</bold></highlight>); and </claim-text>
+<claim-text>combining (<highlight><bold>234</bold></highlight>) the fifth interim data block with the left output data block to produce a final right data block (<highlight><bold>238</bold></highlight>), </claim-text>
+<claim-text>wherein the right output data block is set to be a final left data block (<highlight><bold>240</bold></highlight>). </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further comprising, when the number of cipher rounds performed is a predetermined number: 
+<claim-text>swapping (<highlight><bold>242</bold></highlight>, <highlight><bold>244</bold></highlight>) the final left data block and the final right data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein the swapping is performed when the number of cipher rounds performed is either 1, 3, 8 or 16. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein for each subsequent round of ciphering performed, a next key (<highlight><bold>230</bold></highlight>) from the key schedule is used in combining (<highlight><bold>222</bold></highlight>) the second interim data block to produce the third interim data block. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> comprising: 
+<claim-text>performing an initial permutation (<highlight><bold>104</bold></highlight>) on an input data block to be enciphered to produce a data block consisting of the left and right input data blocks; and </claim-text>
+<claim-text>performing a final permutation (<highlight><bold>106</bold></highlight>) on a data block consisting of the final left and final right output data blocks to produce an enciphered output data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein each of the combining comprises performing a bit-by-bit addition modulo &ldquo;2&rdquo;. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the key schedule provides a 48-bit permuted selection of bits from the key for each round of ciphering. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the permuter function (Pf) yields a 32-bit output data block from a 32-bit input data block by permuting the bits of the 32-bit input data block, each bit of the 32-bit input data block being permuted to one position of the 32-bit output data block. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the permuter function (Ef) yields a 48-bit output data block from a 32-bit input data block wherein some bits of the 32-bit input data block are permuted to more than one position of the 48-bit output data block. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A system that enciphers a left and right input data block producing a left and right output data block comprising: 
+<claim-text>a select function element (<highlight><bold>214</bold></highlight>) implementing a selection function on a cipher round input data block to produce a select function output; </claim-text>
+<claim-text>a first permuter function element (<highlight><bold>211</bold></highlight>) performing a permutation function (Pf) on the select function output to produce a first interim data block; </claim-text>
+<claim-text>a first logic element (<highlight><bold>216</bold></highlight>) for combining the first interim data block with the left input data block to produce the right output data block; </claim-text>
+<claim-text>a second permuter function element (<highlight><bold>220</bold></highlight>) performing a permutation function (Ef) on the left input data block to produce a second interim data block; </claim-text>
+<claim-text>a second logic element (<highlight><bold>222</bold></highlight>) combining the second interim data block with a key from a key schedule to produce a third interim data block; </claim-text>
+<claim-text>a third permuter function element (<highlight><bold>218</bold></highlight>) performing the permutation function (Ef) on the first interim data block to produce a fourth interim data block; and </claim-text>
+<claim-text>a third logic element (<highlight><bold>224</bold></highlight>) combining the fourth interim data block with the third interim data block to produce a cipher round output data block (<highlight><bold>230</bold></highlight>), </claim-text>
+<claim-text>wherein the right input data block is set to be the left output data block, and the left, right and cipher round output data blocks correspond respectively with the left, right and cipher round input data blocks used for subsequent rounds of ciphering. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further comprising an initial cipher round block (<highlight><bold>260</bold></highlight>) that operates prior to first rounds of ciphering, the initial cipher round block comprising: 
+<claim-text>a fourth permuter function element (<highlight><bold>208</bold></highlight>) performing the permutation function (Ef) on the right input data block to produce a fourth permuted output; and </claim-text>
+<claim-text>a fourth logic element (<highlight><bold>210</bold></highlight>) combining the fourth permuted output with one of the keys (<highlight><bold>212</bold></highlight>) of the key schedule to generate the cipher round input data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further comprising a final cipher round block (<highlight><bold>266</bold></highlight>) that operates upon completion of a predetermined number of rounds of ciphering, the final cipher round block comprising: 
+<claim-text>a second select function element (<highlight><bold>232</bold></highlight>) performing the select function on the cipher round output data block; </claim-text>
+<claim-text>a fifth permuter function element (<highlight><bold>232</bold></highlight>) performing a permutation function (Pf) on an output of the second select function element to produce a fifth interim data block (<highlight><bold>233</bold></highlight>); and </claim-text>
+<claim-text>a fifth logic element (<highlight><bold>234</bold></highlight>) combining the fifth interim data block with the left output data block to produce a final right data block (<highlight><bold>238</bold></highlight>), </claim-text>
+<claim-text>wherein in the final cipher round block (<highlight><bold>266</bold></highlight>) the right output data block is set to be a final left data block (<highlight><bold>240</bold></highlight>). </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising an output swapping block for swapping the final left and right data blocks when the number of cipher rounds performed is a predetermined number. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the system is fabricated as part of an integrated circuit. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method as claimed <highlight><bold>14</bold></highlight> wherein the first, second, third, fourth and fifth logic elements perform a bit-by-bit addition modulo &ldquo;2&rdquo;. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the permuter function (Pf) yields a 32-bit output data block from a 32-bit input data block by permuting the bits of the 32-bit input data block, each bit of the 32-bit input data block being permuted to one position of the 32-bit output data block. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the permuter function (Ef) yields a 48-bit output data block from a 32-bit input data block wherein some bits of the 32-bit input data block are permuted to more than one position of the 48-bit output data block. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A method of enciphering blocks of data wherein an initial permutation (IP) is performed on a 64-bit block of data to be enciphered producing initial right and initial left data blocks (R<highlight><subscript>0</subscript></highlight>, L<highlight><subscript>0</subscript></highlight>), the method comprising: 
+<claim-text>generating (<highlight><bold>260</bold></highlight>) a cipher round input data block (<highlight><bold>211</bold></highlight>); </claim-text>
+<claim-text>performing (<highlight><bold>262</bold></highlight>, <highlight><bold>264</bold></highlight>) a predetermined number of ciphering rounds using the initial right and initial left data blocks (R<highlight><subscript>0</subscript></highlight>, L<highlight><subscript>0</subscript></highlight>) and the cipher round input data block to generate a right and left output data blocks (R<highlight><subscript>n</subscript></highlight>, L<highlight><subscript>n</subscript></highlight>) and a cipher round output data block; and </claim-text>
+<claim-text>performing (<highlight><bold>266</bold></highlight>) a final cipher round using the right and left output data blocks (R<highlight><subscript>n</subscript></highlight>, L<highlight><subscript>n</subscript></highlight>) and the cipher round output data block to generate final right and left output data blocks. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference> wherein the generating comprises: 
+<claim-text>a) performing (<highlight><bold>208</bold></highlight>) a first permutation function (Ef) on the right initial data block (R<highlight><bold>0</bold></highlight>) to generate a first interim data block; and </claim-text>
+<claim-text>b) XOR&apos;ing (<highlight><bold>210</bold></highlight>) the first interim data block with a first key (K<highlight><bold>1</bold></highlight>) of a key schedule to generate a second interim data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the performing (<highlight><bold>262</bold></highlight>, <highlight><bold>264</bold></highlight>) a predetermined number of ciphering rounds comprises: 
+<claim-text>c) implementing a selection function (<highlight><bold>214</bold></highlight>) on each 6-bit block of the second interim data block producing a 4-bit data block for each of the 6-bit blocks; </claim-text>
+<claim-text>d) performing (<highlight><bold>214</bold></highlight>) a second permutation function (Pf) on the third interim data block to produce a fourth interim data block; </claim-text>
+<claim-text>e) XOR&apos;ing (<highlight><bold>216</bold></highlight>) the fourth interim data block with the initial left data block (L<highlight><bold>0</bold></highlight>) to produce a first right data block (R<highlight><bold>1</bold></highlight>) (<highlight><bold>230</bold></highlight>); </claim-text>
+<claim-text>f) performing (<highlight><bold>220</bold></highlight>) the first permutation function (Ef) on the initial left data block to produce a fifth interim data block; </claim-text>
+<claim-text>g) XOR&apos;ing (<highlight><bold>222</bold></highlight>) the fifth interim data block with a next key of the key schedule to generate a sixth interim data block; </claim-text>
+<claim-text>h) performing (<highlight><bold>218</bold></highlight>) the first permutation function (Ef) on the fourth interim data block to generate a seventh interim data block; and </claim-text>
+<claim-text>i) XOR&apos;ing (<highlight><bold>224</bold></highlight>) the sixth interim data block and the seventh interim data block to produce an eighth interim data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein the performing (<highlight><bold>262</bold></highlight>, <highlight><bold>264</bold></highlight>) a predetermined number of ciphering rounds further comprises: j) repeating elements c) through i) wherein for each repetition: 
+<claim-text>element c) uses the eighth interim data block produced by element i) for the second interim data block; </claim-text>
+<claim-text>elements e) and f) use a prior output of element e) as the initial left data block; and </claim-text>
+<claim-text>element g) uses a next key of the key schedule to produce a right output data block, </claim-text>
+<claim-text>the right input data block being set as the left input data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein the performing (<highlight><bold>266</bold></highlight>) a final cipher round comprises: 
+<claim-text>k) performing (<highlight><bold>232</bold></highlight>) the selection function on the eighth interim data block to produce a ninth interim data block; </claim-text>
+<claim-text>l) performing (<highlight><bold>232</bold></highlight>) the second permutation function (Pf) on the ninth interim data block to produce a tenth interim data block; </claim-text>
+<claim-text>m) XOR&apos;ing (<highlight><bold>234</bold></highlight>) the tenth interim data block with the left output data block produced in element e) to produce a final right output data block, </claim-text>
+<claim-text>and wherein the right output data block is set as the left final output data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A method of enciphering blocks of data in accordance with a data encryption algorithm (DEA) wherein an initial permutation (IP) is performed on a 64-bit block of data to be enciphered producing initial right and initial left data blocks (R<highlight><subscript>0</subscript></highlight>, L<highlight><subscript>0</subscript></highlight>) each having 32-bits, the method comprising: 
+<claim-text>a) performing (<highlight><bold>208</bold></highlight>) a first permutation function (Ef) on the right initial data block (R<highlight><bold>0</bold></highlight>) to generate a first interim data block having 48-bits; </claim-text>
+<claim-text>b) XOR&apos;ing (<highlight><bold>210</bold></highlight>) the first interim data block with a first key (K<highlight><bold>1</bold></highlight>) of a key schedule to generate a second interim data block having 48-bits; </claim-text>
+<claim-text>c) implementing a selection function (<highlight><bold>214</bold></highlight>) on each 6-bit block of the second interim data block producing a 4-bit data block for each of the 6-bit blocks and resulting in a third interim data block having 32-bits; </claim-text>
+<claim-text>d) performing (<highlight><bold>214</bold></highlight>) a second permutation function (Pf) on the third interim data block to produce a fourth interim data block having 32-bits; </claim-text>
+<claim-text>e) XOR&apos;ing (<highlight><bold>216</bold></highlight>) the fourth interim data block with the initial left data block (L<highlight><bold>0</bold></highlight>) to produce a first right data block (R<highlight><bold>1</bold></highlight>) (<highlight><bold>230</bold></highlight>) having 32-bits; </claim-text>
+<claim-text>f) performing (<highlight><bold>220</bold></highlight>) the first permutation function (Ef) on the initial left data block to produce a fifth interim data block having 48-bits; </claim-text>
+<claim-text>g) XOR&apos;ing (<highlight><bold>222</bold></highlight>) the fifth interim data block with a second key (K<highlight><bold>2</bold></highlight>) of the key schedule to generate a sixth interim data block having 48-bits; </claim-text>
+<claim-text>h) performing (<highlight><bold>218</bold></highlight>) the first permutation function (Ef) on the fourth interim data block to generate a seventh interim data block; and </claim-text>
+<claim-text>i) XOR&apos;ing (<highlight><bold>224</bold></highlight>) the sixth interim data block and the seventh interim data block to produce an eighth interim data block having 48-bits, </claim-text>
+<claim-text>j) repeating elements c) through i) for each of a predetermined number of cipher rounds wherein for each repetition: 
+<claim-text>element c) uses the eighth interim data block produced by element i) for the second interim data block; </claim-text>
+<claim-text>elements e) and f) use a prior output of element e) as the initial left data block; and </claim-text>
+<claim-text>element g) uses a next key of the key schedule to produce a right output data block, and </claim-text>
+<claim-text>the right input data block is set as the left output data block, </claim-text>
+</claim-text>
+<claim-text>k) performing (<highlight><bold>232</bold></highlight>) the selection function on the eighth interim data block to produce an ninth interim data block having 32-bits; </claim-text>
+<claim-text>l) performing (<highlight><bold>232</bold></highlight>) the second permutation function (Pf) on the ninth interim data block to product a tenth interim data block having 48-bits; </claim-text>
+<claim-text>m) XOR&apos;ing (<highlight><bold>234</bold></highlight>) the tenth interim data block with the left output data block produced in element e) to produce a final right output data block, </claim-text>
+<claim-text>and wherein the right output data block is set as the left final output data block. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> further comprising n) swapping the left and right output data blocks when the predetermined number of cipher rounds is either 1, 3, 8 or 16. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein elements a) through n) are repeated until element c) is repeated at least sixteen times. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The method as claimed in <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference> further comprising performing a final permutation function (FP) <highlight><bold>106</bold></highlight> the right and left output data blocks to produce an enciphered data block.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2A</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002664A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002664A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002664A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002664A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

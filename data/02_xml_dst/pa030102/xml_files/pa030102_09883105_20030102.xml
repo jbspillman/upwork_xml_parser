@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002734A1-20030102-D00000.TIF SYSTEM "US20030002734A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002734A1-20030102-D00001.TIF SYSTEM "US20030002734A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002734A1-20030102-D00002.TIF SYSTEM "US20030002734A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002734A1-20030102-D00003.TIF SYSTEM "US20030002734A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002734A1-20030102-D00004.TIF SYSTEM "US20030002734A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002734A1-20030102-D00005.TIF SYSTEM "US20030002734A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002734</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09883105</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010615</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06K009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>G06K009/36</ipc>
+</classification-ipc-secondary>
+<classification-ipc-secondary>
+<ipc>G06K009/46</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>382</class>
+<subclass>166000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>382</class>
+<subclass>240000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Method and system for achieving coding gains in wavelet-based image codecs</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Asad</given-name>
+<family-name>Islam</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Irving</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Fehmi</given-name>
+<family-name>Chebil</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Tampere</city>
+<country-code>FI</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Nokia Mobile Phones Ltd.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>WARE FRESSOLA VAN DER SLUYS &amp;</name-1>
+<name-2>ADOLPHSON, LLP</name-2>
+<address>
+<address-1>BRADFORD GREEN BUILDING 5</address-1>
+<address-2>755 MAIN STREET, P O BOX 224</address-2>
+<city>MONROE</city>
+<state>CT</state>
+<postalcode>06468</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and system for coding a RGB image in an encoder and a decoder. In the encoder, the RGB image components are converted into YUV components. One or more of the lower bit-planes of YUV components are eliminated before the YUV components are transformed by forward wavelet transform and coded into a codestream for transmission. In the decoder, the codestream is decoded and transformed by inverse wavelet transform into a set of reconstructed YUV components. The bit-planes of these reconstructed YUV components are up-shifted so that the up-shifted YUV components are structurally equivalent to the original YUV components before they are adjusted in the encoder. However, the lower bit-planes that come into being due to the up-shifting are all set to zero. The up-shifted YUV components are then converted into the RGB component of the reconstructed image. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to wavelet-based image codecs and, more particularly, to the improvement in image coding efficiency at high or nearly-lossless bit rates. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> It is generally known in the field of image processing that reducing the number of bits representing color components in an RGB image, for example, results in a smaller image file but a degraded image. With the introduction of scalable image coding formats like the JPEG2000, it has become possible to send and receive only a fraction of the image file and still reconstruct a high-quality image at the receiving end. The part that is dropped from the image usually contains information that describes the high-frequency components present in the image. That is, details that the human visual system (HVS) is not very sensitive to. However, dropping out all the details results in a blurry image. Thus, both reducing the color information in the original image and leaving out the details in the coded image result in an image of lower quality. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> JPEG stands for Joint Photographic Experts Group. In 1988 this committee adopted its first standard, known as the JPEG baseline, which is based on discrete cosine transform (DCT) and on Huffman coding. In 1996, a call for proposals to advance a standardized image-coding system for the new millennium was issued and many algorithms were proposed. Presently, a new standard, named JPEG2000 has been finalized. This new standard provides low bit-rate operation, with rate-distortion and subjective image quality performance superior to existing standards, without sacrificing performance at other points in the rate-distortion spectrum. And more importantly, JPEG 2000 allows extraction of different resolutions, pixel fidelities, region of interest, multiple components, and more, all from a single compressed bitstream. This allows an application to manipulate, store or transmit only the essential information for any target device from any JPEG 2000 compressed source image. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> JPEG2000 uses wavelets as the basis for its coding scheme. With wavelet-based coding, most of the image information is coded in the earlier stages of compression, giving good reconstruction at low rates. However, at high rates, a lot more data is used to refine the image to its original form and significant amounts of system resources, such as bandwidth and computational power, are used for coding an image. System resources can be very costly in certain environments, such as the mobile wireless terminal where both bandwidth and computational power are at a premium. Furthermore, the rate of improvement in image quality at high rates is insignificant when a large amount of data is needed for the purpose. Moreover, the HVS is not able to appreciably discern the difference in image quality at high rates. For example, it can be hard to differentiate between two images at 40 dB and 50 dB, when, in fact, they can be quite different in their respective coded file sizes. If the HVS does not have the ability to detect very subtle changes in an image, then it is inefficient and perhaps unnecessary to spend any coding resources on data that corresponds to such changes. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In prior art, coding efficiency is improved by an operation called &ldquo;thinning&rdquo;. As disclosed in EP 1 022 912 A2 (Sugimori), the quantity of data after the irreversible color transform is reduced by removing some of the image pixels. This operation results in degradation of the spatial resolution of the image. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> There is a need for pre-processing the image data such that only the significant parts of the image data are retained for coding while the insignificant parts are removed. This is based on the fact that the HVS does not have the ability to detect very subtle changes in an image. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> It is advantageous and desirable to provide a method of image coding where the degradation of the spatial resolution of the image can be avoided while reducing the quantity of the data to be compressed and coded. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It is a primary objective of the present invention to provide a method and system for coding an image using a wavelet-based image coding scheme to achieve gains at high or nearly lossless rates. At high and nearly lossless rates, most wavelet based image coding schemes code data that does not contribute significantly to the visual improvement of image quality. Thus, the objective of the present invention can be achieved by eliminating the data that does not affect the image quality as perceived by a human observer. In particular, the elimination of insignificant data from an image is carried out before wavelet transformation and compression, thereby increasing the coding efficiency and reducing computation complexity. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The present invention improves prior art solutions by considerably reducing the amount of data present in an image for encoding and transmission while maintaining the visual quality of the image. The advantage can be appreciated particularly in nearly-lossless applications where the compressed file size is substantially reduced without sacrificing the visual image quality. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> To achieve the aforementioned objective, the present invention reduces the color information in all pixels in an unequal manner, after the irreversible color transformation. More specifically, the present invention removes insignificant data from the image source by eliminating one or more lower bit planes of an image in the YUV color space. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Accordingly, the first aspect of the present invention is a method of encoding an image, wherein the image is separated into a plurality of first color components of a first color space, and the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a number of more-significant bit-planes and a first number of less-significant bit-planes. The encoding method comprises the steps of: </paragraph>
+<paragraph id="P-0012" lvl="2"><number>&lsqb;0012&rsqb;</number> adjusting the second color components into adjusted second color components by changing the first number of less-significant bit-planes of at least one of the second color components to a second number smaller than the first number; </paragraph>
+<paragraph id="P-0013" lvl="2"><number>&lsqb;0013&rsqb;</number> transforming the adjusted second color components based on a forward wavelet transformation for providing transformed image data; and </paragraph>
+<paragraph id="P-0014" lvl="2"><number>&lsqb;0014&rsqb;</number> coding the transformed image data for forming a bitstream indicative of the transformed image data. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> According to the present invention, the first color space is an RGB color space and the second color space is a YUV color space. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Preferably, the second color components include one luminance component and two chrominance components and the first number is 2, and wherein the second number of bit-planes in the luminance component is 0 and the second number of bit planes in the chrominance components is 1. Furthermore, the number of the more-significant bit-planes is 6. Thus, among the second color components, the total number of bit-planes of the luminance component is 6 and the total number of bit-planes of either one of the chrominance components is 7. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> However, it is possible that the first number of 1 and the second number of any of the components is 0. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Preferably, the number of more-significant bit-planes is 6. However, it is possible that the number of more-significant bit-planes is more or less than 6, or equal to 0. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Preferably, the reducing step is achieved by bit-shifting. However, it is possible that the reducing step is achieved through a look-up table. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> According to the second aspect of the present invention, an apparatus for encoding an image separated into a plurality of first color components of a first color space, wherein the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a number of more-significant bit-planes and a first number of less-significant bit-planes, said apparatus comprising: </paragraph>
+<paragraph id="P-0021" lvl="2"><number>&lsqb;0021&rsqb;</number> means, responsive to the second color components, for adjusting from at least one of the second color components the first number of bit-planes to a second number smaller than the first number for providing adjusted second color components; </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> means for transforming the adjusted color components into transformed image data based on a forward wavelet transformation for providing a signal indicative of the transformed image data, and </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> means, responsive to the signal, for coding the transformed image data and forming a bitstream indicative of the coded transformed image data. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Preferably, the adjusting means comprises a bit-shifter or a bit-shifting software program for effecting the bit-plane reduction. Alternatively, the adjusting comprises a look-up table for effecting the bit-plane reduction. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> According to the present invention, the second number of each of the second color components is predetermined and stored in the encoder for the adjusting means to provide the adjusted second color components based on the stored second number. Alternatively, the second number is conveyed to the encoder. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> According to the third aspect of the present invention, a software program for use in an encoder having transform means and coding means for processing image data indicative of an image into a bitstream, wherein the image is separated into a plurality of first color components of a first color space, and the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a number of more-significant bit-planes and a first number of less-significant bit-planes, said software program comprising the steps of: </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> adjusting, from at least one of the second color components, the first number of bit-planes to a second number smaller than the first number for providing adjusted second color components; </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> providing the adjusted second color components to the transform means so as to allow the transform means to transform the adjusted second color components based on a forward wavelet transformation into transformed image data, and the coding means to form the bitstream based on the transformed image data. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Preferably, the adjusting step is based on bit-shifting. Alternatively, the adjusting step is based on a look-up table. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> According to the fourth aspect of the present invention, an apparatus for decoding a bitstream having coded data indicative of an image into a reconstructed image, wherein </paragraph>
+<paragraph id="P-0031" lvl="2"><number>&lsqb;0031&rsqb;</number> the image is separated into a plurality of first color components of a first color space; </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a first number of more-significant bit-planes and a second number of less-significant bit-planes; </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> the second color components are adjusted into adjusted color components by changing, from at least one of the second color components, the second number of bit-planes to a corresponding third number smaller than the second number for providing adjusted second color components in the second color space; </paragraph>
+<paragraph id="P-0034" lvl="2"><number>&lsqb;0034&rsqb;</number> the adjusted color components are transformed into transformed image data based on a forward wavelet transformation; and </paragraph>
+<paragraph id="P-0035" lvl="2"><number>&lsqb;0035&rsqb;</number> the transformed data is coded into the bitstream having the coded data, said apparatus comprising: </paragraph>
+<paragraph id="P-0036" lvl="3"><number>&lsqb;0036&rsqb;</number> means, responsive to the bitstream, for decoding the coded data for providing reconstructed transformed data; </paragraph>
+<paragraph id="P-0037" lvl="3"><number>&lsqb;0037&rsqb;</number> means for processing the reconstructed transformed data based on an inverse wavelet transformation for providing first reconstructed color components in the second color space; </paragraph>
+<paragraph id="P-0038" lvl="3"><number>&lsqb;0038&rsqb;</number> means for changing the first reconstructed color components into second reconstructed color components in the second color space, such that each of the second reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> According to present invention, the apparatus may comprises means for converting the second reconstructed color components in the second color space into third reconstructed color components in the first color space for forming the reconstructed image, wherein each of the third reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> According to the present invention, the corresponding third number of said at least one of the second color components is predetermined, said apparatus further comprising means for obtaining said corresponding third number so as to allow the changing means to change the first reconstructed color components into the second reconstructed color components based on the obtained third number. Alternatively, the corresponding third number of said at least one of the second color components is included in the bitstream so as to allow the changing means to change the first reconstructed color components into the second reconstructed color components based on the included third number. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> According to the present invention, each of the first reconstructed color components is corresponding to one of the second color components, and each of the first reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the third number of less-significant bit-planes of the corresponding one of the second color components. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> According to the fifth aspect of the present invention, a software program for use in an apparatus for processing a bitstream having coded data indicative of an image into a reconstructed image, wherein </paragraph>
+<paragraph id="P-0043" lvl="2"><number>&lsqb;0043&rsqb;</number> the image is separated into a plurality of first color components of a first color space; </paragraph>
+<paragraph id="P-0044" lvl="2"><number>&lsqb;0044&rsqb;</number> the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a first number of more-significant bit-planes and a second number of less-significant bit-planes; </paragraph>
+<paragraph id="P-0045" lvl="2"><number>&lsqb;0045&rsqb;</number> the second color components are adjusted into adjusted second color components by changing, from at least one of the second color components, the second number of bit-planes to a corresponding third number smaller than the second number for providing adjusted second color components in the second color space; </paragraph>
+<paragraph id="P-0046" lvl="2"><number>&lsqb;0046&rsqb;</number> the adjusted color components are transformed into transformed image data based on a forward wavelet transformation; and </paragraph>
+<paragraph id="P-0047" lvl="2"><number>&lsqb;0047&rsqb;</number> the transformed data is coded into the bitstream having the coded data, said apparatus comprising: </paragraph>
+<paragraph id="P-0048" lvl="3"><number>&lsqb;0048&rsqb;</number> means, responsive to the bitstream, for decoding the coded data for providing reconstructed transformed data; </paragraph>
+<paragraph id="P-0049" lvl="3"><number>&lsqb;0049&rsqb;</number> means for processing the reconstructed transformed data based on an inverse wavelet transformation for providing first reconstructed color components in the second color space, each of the first reconstructed color components corresponding to one of the second color components, wherein each of the first reconstructed color components has a number of more-significant bit-planes equal to the first number, and a fourth number of less-significant number of bit-planes equal to the corresponding third number; said software program comprising the steps of: </paragraph>
+<paragraph id="P-0050" lvl="4"><number>&lsqb;0050&rsqb;</number> changing the first reconstructed color components into second reconstructed color components in the second color space, effectively adding a number of bit-planes to at least one of the first reconstructed color components corresponding to said at least one of the second color components such that each of the second reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number; and </paragraph>
+<paragraph id="P-0051" lvl="4"><number>&lsqb;0051&rsqb;</number> setting pixel values of the added bit-planes to zero. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Preferably, the changing step is based on bit-shifting. Alternatively, the changing step is achieved through a look-up table. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> According to the sixth aspect of the present invention, a system for coding an image into a bitstream and decoding the bitstream into a reconstructed image, wherein the image is separated into a plurality of first color components of a first color space, and the first color components are converted into a plurality of second color components of a second space different from the first color space, wherein each of the second color components has a first number of more-significant bit-planes and a second number of less-significant bit planes, said system comprising: </paragraph>
+<paragraph id="P-0054" lvl="2"><number>&lsqb;0054&rsqb;</number> means, responsive to the second color components, for adjusting at least one of the second color components the second number of bit-planes to a corresponding third number smaller than the second number for providing adjusted second color components in the second color space; </paragraph>
+<paragraph id="P-0055" lvl="2"><number>&lsqb;0055&rsqb;</number> means for transforming the adjusted second color components into transformed image data based on a forward wavelet transformation for providing a signal indicative of the transformed image data; </paragraph>
+<paragraph id="P-0056" lvl="2"><number>&lsqb;0056&rsqb;</number> means, responsive to the signal, for coding the transformed image data and forming a bitstream having coded information indicated of the coded transformed image data; </paragraph>
+<paragraph id="P-0057" lvl="2"><number>&lsqb;0057&rsqb;</number> means, responsive to the bitstream, for decoding the coded information for providing reconstructed transformed data; </paragraph>
+<paragraph id="P-0058" lvl="2"><number>&lsqb;0058&rsqb;</number> means for processing the reconstructed transformed data based on an inverse wavelet transformation for providing first reconstructed color components in the second color space; and </paragraph>
+<paragraph id="P-0059" lvl="2"><number>&lsqb;0059&rsqb;</number> means for changing the first reconstructed color components into second reconstructed color components in the second color space indicative of the reconstructed image, such that each of the second reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Optionally, the system comprises means for converting the second reconstructed color components in the second space into third reconstructed color components in the first color space for forming the reconstructed image. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> The present invention will become apparent upon reading the description taken in conjunction with FIGS. <highlight><bold>1</bold></highlight> to <highlight><bold>3</bold></highlight><highlight><italic>b. </italic></highlight></paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a system for coding an image, which includes an encoder and decoder, according to the present invention. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>a </italic></highlight>is a diagrammatic representation illustrating a bit-shifter or a bit-shifting software for down-shifting bit-planes, according to the present invention. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>b </italic></highlight>is a diagrammatic representation illustrating a bit-shifter or a bit-shifting software for up-shifting bit-planes, according to the present invention. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a </italic></highlight>is a diagrammatic representation illustrating a look-up table for effecting bit-plane down-shifting, according to the present invention. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>b </italic></highlight>is a diagrammatic representation illustrating a look-up table for effecting bit-plane up-shifting, according to the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> The least-significant bits (LSB&apos;s) of an image usually do not significantly affect the visual quality of images. By eliminating one or two of the LSB&apos;s, substantial coding gains can be achieved. According the JPEG2000 coding operations, the most-significant bits (MSB&apos;s) are coded first. By the time the LSB&apos;s are coded, most of the image information has already been sent. Thus, very little information is added by the LSB&apos;s to refine the image. On the other hand, the cost of adding this information to the compressed bit-stream is high. It is desirable and advantageous to reduce or eliminate this added information regarding the LSB&apos;s if the reduction of image quality is not visually obvious. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> It has been observed in many different color images that the chroma (U,V) components have most of their values concentrated around the zero value (or around 128 when the values are translated by 128 to make all non-negative and the in range of (0, 255)). The distribution is approximately Laplacian. In the bit range of (0, 255), the U,V components are mostly in the range of 16 and 160. However, it seems possible to use 7-bits for a complete representation of a typical chroma image. In a lumina image, it seems possible to use only 6-bits for a complete representation. An experiment has been conducted using a color image in the YUV format, wherein the lower bit planes of the color components are suppressed by the following simple code, applied to every pixel value in the image:</paragraph>
+<paragraph lvl="0"><in-line-formula>image_data&equals;(image_data&gt;&gt;<highlight><italic>k</italic></highlight>)&lt;&lt;<highlight><italic>k</italic></highlight>&emsp;&emsp;(1)</in-line-formula></paragraph>
+<paragraph id="P-0069" lvl="7"><number>&lsqb;0069&rsqb;</number> where k&equals;1 or 2 depending on the number of LSB&apos;s to be suppressed. In those suppressed LSB&apos;s, the bit values are set to zero. Without encoding and decoding, the suppressed image is shown on a display. It is observed that the visual quality is not appreciably affected when one LSB in the UV components is suppressed and one or two LSB&apos;s in the Y component are suppressed. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> When the actual images that are JPEG2000 coded are similarly suppressed, the only code changes that are required at the encoder and the decoder are, respectively:</paragraph>
+<paragraph lvl="0"><in-line-formula>image_data&gt;&gt;&equals;<highlight><italic>k</italic></highlight>&emsp;&emsp;(2)</in-line-formula></paragraph>
+<paragraph id="P-0071" lvl="7"><number>&lsqb;0071&rsqb;</number> and</paragraph>
+<paragraph lvl="0"><in-line-formula>image_data&lt;&lt;&equals;<highlight><italic>k,</italic></highlight>&emsp;&emsp;(3)</in-line-formula></paragraph>
+<paragraph id="P-0072" lvl="7"><number>&lsqb;0072&rsqb;</number> where k&equals;1 or 2. The bit-shifting in the encoder, according to Eq.2, is carried out before the forward wavelet transform. The bit-shifting in the decoder, according to Eq.3, is carried out after the inverse wavelet transform. The lossless file sizes for different values of k are shown in Table I (lossless rate&equals;8.00 bpp). The image quality of the images that are JPEG2000 coded and LSB suppressed is not appreciably affected when one or two LSB&apos;s in the Y component are suppressed while only one LSB in the U,V components is suppressed. From Table I, it can be seen that the reduction in the lossless file size is significant.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 1</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Lossless file sizes for different values of suppressed LSB&apos;s</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="70PT" align="center"/>
+<colspec colname="2" colwidth="84PT" align="center"/>
+<colspec colname="3" colwidth="63PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>Y LSB suppressed</entry>
+<entry>U, V LSB suppressed</entry>
+<entry>Filesize (in bytes)</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>0</entry>
+<entry>0</entry>
+<entry>16,789</entry>
+</row>
+<row>
+<entry>1</entry>
+<entry>0</entry>
+<entry>13,978</entry>
+</row>
+<row>
+<entry>1</entry>
+<entry>1</entry>
+<entry>12,976</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>0</entry>
+<entry>11,861</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>1</entry>
+<entry>10,700</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> Thus, the encoding process of the present invention includes a step of reducing the number of bit-planes in the YUV components prior to decorrelation. In the decoding process of the present invention, a step of increasing the number of the bit-planes in the reconstructed YUV components is used to restore the color bit-depth of the YUV image prior to converting the YUV image to an RGB image. The image coding system <highlight><bold>1</bold></highlight>, including an encoder <highlight><bold>2</bold></highlight> and a decoder <highlight><bold>4</bold></highlight>, for coding an image, according to the coding method of the present invention, is shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the input image <highlight><bold>100</bold></highlight> is a digital image that can be separated into three color (R, G, B) planes. The RGB image <highlight><bold>100</bold></highlight> is conveyed to an RGB/YUV converter <highlight><bold>10</bold></highlight> for color conversion. In particular, the RGB/YUV converter <highlight><bold>10</bold></highlight> is used to perform forward component transformation of the irreversible color transform (ICT) type on the RGB image <highlight><bold>100</bold></highlight> into a YUV image <highlight><bold>110</bold></highlight> in the YUV color space. The ICT is achieved by:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Y</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;0.299<highlight><italic>I</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&plus;0.587<highlight><italic>I</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&plus;0.114<highlight><italic>I</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)</in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Y</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;&minus;0.1687<highlight><italic>I</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&minus;0.3321<highlight><italic>I</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&plus;0.5<highlight><italic>I</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>X,y</italic></highlight>)&emsp;&emsp;(4)</in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Y</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;0.5<highlight><italic>I</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&minus;0.41869<highlight><italic>I</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&plus;0.0.081<highlight><italic>I</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)</in-line-formula></paragraph>
+<paragraph id="P-0075" lvl="7"><number>&lsqb;0075&rsqb;</number> where I<highlight><subscript>0</subscript></highlight>, I<highlight><subscript>1</subscript></highlight>, I<highlight><subscript>2 </subscript></highlight>are the input image components or red, green and blue, respectively, and Y<highlight><subscript>0</subscript></highlight>, Y<highlight><subscript>1</subscript></highlight>, Y<highlight><subscript>2 </subscript></highlight>are the luminance, or Y component and chrominance or U, Y components. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> At this stage, each of the Y, U and V components of the YUV image <highlight><bold>110</bold></highlight> has the same number of bit-planes (typically 8). A bit-plane down-shifting module <highlight><bold>20</bold></highlight> is used to remove one or more lower bit-planes of each component. The bit-plane down-shifting module <highlight><bold>20</bold></highlight> uses a software program or bit-shifter <highlight><bold>22</bold></highlight> to successively downshift every bit-plane in the Y, U and V components of the YUV image <highlight><bold>110</bold></highlight> by k<highlight><subscript>1 </subscript></highlight>bit(s), k<highlight><subscript>2 </subscript></highlight>bit(s) and k<highlight><subscript>3 </subscript></highlight>bit(s), respectively, according to Equation 2. It should be noted that in this image data truncation process, the lower k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>LSB&apos;s of the Y, U and V components are not set to zero. They are completely eliminated from the remaining encoding process. Thus, all the higher MSB&apos;s are shifted down an appropriate number of bits. Accordingly, if k&equals;1, a component having a color depth of 8 bit-planes become a reduced component of 7 bit-planes with the least-significant bit-plane removed. Similarly, if k&equals;2, an 8-bit color component becomes a 6-bit color component, with two of the less-significant bit-planes removed. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> Preferably, k<highlight><subscript>1 </subscript></highlight>is equal to 2 while k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>are equal to 1. This means that, after image data truncation, the number of bit-planes for Y component is 6, the number of bit-planes for the U and V components is 7. Alternatively, all k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>can be equal to 1. Since one or more entire bit-planes are completely eliminated by the bit-plane down-shifting module <highlight><bold>20</bold></highlight>, this results in a substantial reduction in the image data to encode. This is especially true in the case of the lowest one or two bit-planes, which contain information corresponding to most or all pixels in the image, in contrast to higher bit planes, which contain information corresponding to a relatively small number of high energy pixels in the image. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> In the encoder <highlight><bold>2</bold></highlight>, according to the present invention, the data elimination step is carried out before the image data undergoes the forward wavelet transformation. After this data elimination, the encoder <highlight><bold>2</bold></highlight> processes and encodes the image in the same way as it would a regular image. As shown, the image data containing the reduced components, which is denoted by reference numeral <highlight><bold>120</bold></highlight>, is conveyed to a forward wavelet transformation module <highlight><bold>30</bold></highlight>. The reduced image data <highlight><bold>120</bold></highlight> may be subjected to tiling before or after forward wavelet transform. Tiling and forward wavelet transform are known in the art. In the tiling process, the image components are divided into tiles, or rectangular arrays of points on a reference grid registered with and offset from the reference grid origin and defined by a width and a height. The tiling of an image creates tile-components that can be extracted or decoded independently of each other, because the tile components relate to the same portion of each of the components that make up the image. The tile-components are decomposed into different decomposition levels using the forward wavelet transform. These decomposition levels contain a number of subbands, which consist of coefficients that describe the horizontal and vertical spatial frequency characteristics of the original tile component. The decomposition type allowed is of a dyadic form, and the coefficients provide frequency information about a local area of an image. As such, a small number of coefficients can completely describe a single sample. Moreover, the individual subbands of a tile-component are divided into blocks as the compressed data is processed into a codestream. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> The coefficients resulting from the forward wavelet transformation process are herein referred to as the transformed image data and denoted by reference numeral <highlight><bold>130</bold></highlight>. The transformed image data <highlight><bold>130</bold></highlight> is then encoded and compressed in an encoding module <highlight><bold>40</bold></highlight> and formed into a codestream <highlight><bold>140</bold></highlight>. The encoding module <highlight><bold>40</bold></highlight> typically includes a forward quantization module, a coding module and codestream former. The forward quantization process, the coding process and the codestream forming are known in the art. As shown, the codestream <highlight><bold>140</bold></highlight> can be stored in a storage means <highlight><bold>8</bold></highlight> for future use, or transmitted to the decoder <highlight><bold>4</bold></highlight> for reconstructing the image. </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> In the image reconstruction process, the decoding module <highlight><bold>50</bold></highlight> reads the codestream <highlight><bold>140</bold></highlight> and performs inverse quantization on the read image data into reconstructed transformed data <highlight><bold>150</bold></highlight>. After inverse wavelet transformation, the reconstructed transformed data <highlight><bold>150</bold></highlight> is converted to image data in the YUV color space, or a reconstructed YUV image <highlight><bold>160</bold></highlight>. The decoding process and the inverse wavelet transform are known in the art. The reconstructed image <highlight><bold>160</bold></highlight> is a reconstruction of the image <highlight><bold>120</bold></highlight>, which is the result of the bit-plane down-shifting operation (Eq.2) carried out the down-shifting module <highlight><bold>20</bold></highlight>. In order to complete the decoding process, the reconstructed image <highlight><bold>160</bold></highlight> must be bit-shifted back to the original color depth. As shown, a bit-shifter or software program <highlight><bold>72</bold></highlight> in the bit-plane upshifting module <highlight><bold>70</bold></highlight> is used in this bit-shifting process. Using the algorithm as shown in Eq.3, the higher MSB&apos;s of the Y, U and V components in the reconstructed image <highlight><bold>160</bold></highlight> are successively up-shifted by k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>bits, respectively, to the original place in the bit-plane structure. The k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>lower LSB&apos;s of the Y, U, V components that come into being to zero. For example, if the numbers of the bit-planes of the Y, U and V components of the image <highlight><bold>120</bold></highlight> are 6, 7 and 7, respectively, reduced from 8, then the numbers of the bit-planes of the Y, U and V component of the image <highlight><bold>160</bold></highlight> are also 6, 7 and 7. In that case, the bit-plane up-shifting module <highlight><bold>70</bold></highlight> effectively adds two lowest LSB&apos;s to the Y component, and one LSB each to the U and V components. After this bit-shifting operation, the number of the bit-planes in the Y, U, V components in the restored YUV image <highlight><bold>170</bold></highlight> is 8. The restored YUV image <highlight><bold>170</bold></highlight> is conveyed to a YUV/RGB converter <highlight><bold>80</bold></highlight> for inverse component transform. The inversion component transform is shown in Eq.5.</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>I</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;<highlight><italic>Y</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&plus;1,402<highlight><italic>Y</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)</in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>I</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,</italic></highlight>6)&equals;<highlight><italic>Y</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&minus;0,34413<highlight><italic>Y</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&minus;0,71414 <highlight><italic>Y</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&emsp;&emsp;(5)</in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>I</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;<highlight><italic>Y</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)&plus;1,772<highlight><italic>Y</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)</in-line-formula></paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> The result is an RGB image <highlight><bold>180</bold></highlight>. It should be noted that, because the information in the LSB&apos;s that is eliminated by the bit-plane down-shifting module <highlight><bold>20</bold></highlight> cannot be recovered in the decoding process, exact construction of image is not possible. However, the visual degradation is usually negligible and may not even be detectable in most cases, while the savings in bandwidth and computational power are substantial. </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> In an image coding system wherein the k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>values for truncating/restoring the YUV components are predetermined, the corresponding values can be pre-set and stored in a storage <highlight><bold>22</bold></highlight> in the down-shifting module <highlight><bold>20</bold></highlight>, and in a storage <highlight><bold>72</bold></highlight> in the up-shifting module <highlight><bold>70</bold></highlight> for carrying out the downshifting and upshifting operations. However, if the k value is a variable, which is allowed to change according to applications, then the corresponding value k can be sent by the encoder <highlight><bold>2</bold></highlight> to the decoder <highlight><bold>4</bold></highlight> as part of the codestream <highlight><bold>140</bold></highlight>, so that the decoder can decode the image correctly. Alternatively, the k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>are conveyed to the encoder <highlight><bold>2</bold></highlight> as indicated by arrow <highlight><bold>115</bold></highlight>, and to the decoder <highlight><bold>4</bold></highlight> as indicated by arrow <highlight><bold>165</bold></highlight>. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>a </italic></highlight>illustrates the down-shifting of the three color components <highlight><bold>110</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>110</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>110</bold></highlight><highlight><subscript>3 </subscript></highlight>of a YUV image <highlight><bold>110</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>), according to Eq.2. Originally, each color component has 8 bit-planes with the most-significant bit-plane (MSB) being bit-plane No. <highlight><bold>1</bold></highlight> and the least-significant bit-plane (LSB) being bit-plane No. <highlight><bold>8</bold></highlight>. With k<highlight><subscript>1</subscript></highlight>&equals;2, k<highlight><subscript>2</subscript></highlight>&equals;1, and k<highlight><subscript>3</subscript></highlight>&equals;1, the color components <highlight><bold>110</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>110</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>110</bold></highlight><highlight><subscript>3 </subscript></highlight>are changed by the bit-shifter or software program <highlight><bold>22</bold></highlight> into a set of reduced color components <highlight><bold>120</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>120</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>120</bold></highlight><highlight><subscript>3 </subscript></highlight>of a YUV image <highlight><bold>120</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>). Each of the reduced color components <highlight><bold>120</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>120</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>120</bold></highlight><highlight><subscript>3 </subscript></highlight>has 6, 7 and 7 bit-planes, respectively. The least-significant bit-planes of the reduced color components are bit-planes No. <highlight><bold>6</bold></highlight>, <highlight><bold>7</bold></highlight> and <highlight><bold>7</bold></highlight>, respectively. If each of the color components <highlight><bold>110</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>110</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>110</bold></highlight><highlight><subscript>3 </subscript></highlight>is expressed as having 6 more-significant bit-planes and 2 less-significant bit-planes, then the number of the more-significant bit-planes is not changed in the bit-shifting operation. The more-significant bit-planes are just downshifted by 2 bits, 1 bit and 1 bit, respectively. Of the less-significant bit-planes, two are eliminated from color component <highlight><bold>110</bold></highlight><highlight><subscript>1</subscript></highlight>, and one each from <highlight><bold>110</bold></highlight><highlight><subscript>2</subscript></highlight>, <highlight><bold>110</bold></highlight><highlight><subscript>3 </subscript></highlight>by the bit-shifting operation of Eq.2. </paragraph>
+<paragraph id="P-0084" lvl="0"><number>&lsqb;0084&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference><highlight><italic>b </italic></highlight>illustrates the up-shifting of the three color components <highlight><bold>160</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>160</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>160</bold></highlight><highlight><subscript>3 </subscript></highlight>of a YUV image <highlight><bold>160</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>), according to Eq.3. With k<highlight><subscript>1</subscript></highlight>&equals;2, k<highlight><subscript>2</subscript></highlight>&equals;1, and k<highlight><subscript>3</subscript></highlight>&equals;1, the color components <highlight><bold>160</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>160</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>160</bold></highlight><highlight><subscript>3 </subscript></highlight>are changed by a bit-shifter or software program <highlight><bold>72</bold></highlight> to a set of color components <highlight><bold>170</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>170</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>170</bold></highlight><highlight><subscript>3 </subscript></highlight>of a YUV image <highlight><bold>170</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>). Each of the color components <highlight><bold>160</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>160</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>160</bold></highlight><highlight><subscript>3 </subscript></highlight>has 6, 7 and 7 bit-planes, respectively, before bit-shifting. After bit-shifting, each of the color components <highlight><bold>170</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>170</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>170</bold></highlight><highlight><subscript>3 </subscript></highlight>has 8-bits. However, the pixel values in the last two less-significant bit-planes (No. <highlight><bold>7</bold></highlight> and No. <highlight><bold>8</bold></highlight>) in the color component <highlight><bold>170</bold></highlight>, and the least-significant bit-plane (No. <highlight><bold>8</bold></highlight>) of the color components <highlight><bold>170</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>170</bold></highlight><highlight><subscript>3 </subscript></highlight>are set to zero. Again, if each of the color components <highlight><bold>170</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>170</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>170</bold></highlight><highlight><subscript>3 </subscript></highlight>is expressed as having 6 more-significant bit-planes and 2 less-significant bit-planes, then the more-significant bit-planes are identical to those of the color components <highlight><bold>110</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>110</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>110</bold></highlight><highlight><subscript>3</subscript></highlight>. However, one or two of the less-significant bit-planes in the color components <highlight><bold>110</bold></highlight><highlight><subscript>1</subscript></highlight>, <highlight><bold>110</bold></highlight><highlight><subscript>2</subscript></highlight>, and <highlight><bold>110</bold></highlight><highlight><subscript>3 </subscript></highlight>are lost in the coding and encoding processes. </paragraph>
+<paragraph id="P-0085" lvl="0"><number>&lsqb;0085&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>a </italic></highlight>illustrates a look-up table <highlight><bold>23</bold></highlight>, instead of the bit-shifter or software program <highlight><bold>22</bold></highlight>, being used to effect down-shifting. <cross-reference target="DRAWINGS">FIG. 3</cross-reference><highlight><italic>b </italic></highlight>illustrates a look-up table <highlight><bold>73</bold></highlight>, instead of the bit-shifter or software program <highlight><bold>72</bold></highlight>, being used to effect up-shifting. </paragraph>
+<paragraph id="P-0086" lvl="0"><number>&lsqb;0086&rsqb;</number> As mentioned above, the preferred k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>values for bit-shifting according to Eq.2 and Eq.3 are 2, 1 and 1. Alternatively, k<highlight><subscript>1</subscript></highlight>, k<highlight><subscript>2 </subscript></highlight>and k<highlight><subscript>3 </subscript></highlight>can all be 1. However, these k values can be greater or smaller depending on the availability of the bandwidth and computational power, and the required image quality. </paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number> Thus, although the invention has been described with respect to a preferred embodiment thereof, it will be understood by those skilled in the art that the foregoing and various other changes, omissions and deviations in the form and detail thereof may be made without departing from the spirit and scope of this invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of encoding an image separated into a plurality of first color components of a first color space, wherein the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a number of more-significant bit-planes and a first number of less-significant bit-planes, said encoding method comprising the steps of: 
+<claim-text>adjusting the second color components by changing the first number of less-significant bit-planes of at least one of the second color components to a second number smaller than the first number; </claim-text>
+<claim-text>transforming the adjusted second color components based on a forward wavelet transformation for providing transformed image data; and </claim-text>
+<claim-text>coding the transformed image data for forming a bitstream indicative of the transformed image data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first number is 1 and the second number is 0. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first and second numbers are predetermined. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the second color components include one luminance component and two chrominance components and the first number is 2, and wherein the second number of bit-planes in the luminance component is 0 and the second number of bit planes in the chrominance components is 1. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the number of the more-significant bit-planes is 6. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the number of the more-significant bit-planes is 0. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the adjusted second color components include one luminance component having 6 or 7 bit-planes and two chrominance components each having 7 bit-planes. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the adjusting step is achieved by bit-shifting. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the adjusting step is achieved through a look-up table. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first color space is an RGB space and the second color space is a YUV color space. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The encoding method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the second color space is based on a representation comprising a luminance component and at least one color difference component. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. An apparatus for encoding an image separated into a plurality of first color components of a first color space, wherein the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a number of more-significant bit-planes and a first number of less-significant bit-planes, said apparatus comprising: 
+<claim-text>means, responsive to the second color components, for adjusting from at least one of the second color components the first number of bit-planes to a second number smaller than the first number for providing adjusted second color components; </claim-text>
+<claim-text>means for transforming the adjusted color components into transformed image data based on a forward wavelet transformation for providing a signal indicative of the transformed image data, and </claim-text>
+<claim-text>means, responsive to the signal, for coding the transformed image data and forming a bitstream indicative of the coded transformed image data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the adjusting means comprises a bit-shifter for effecting the bit-plane reduction. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the adjusting means comprises a bit-shifting software program for effecting the bit-plane reduction. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the adjusting means comprises a look-up table for effecting the bit-plane reduction. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the second number of each of the second color components is predetermined, said apparatus further comprising means for storing the pre-determined second numbers and the adjusting means providing the second color components based on the stored second number. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further comprising means for obtaining the second number of each of the second color components so as to allow the adjusting means to adjust the second color components to the adjusted second color components. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the first color space is an RGB color space and the second color space is a YUV color space. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A software program for use in an encoder having transform means and coding means for processing image data indicative of an image into a bitstream, wherein the image is separated into a plurality of first color components of a first color space, and the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a plurality of more-significant bit-planes and a first number of less-significant bit-planes, said software program comprising the steps of: 
+<claim-text>adjusting, from at least one of the second color components, the first number of bit-planes to a second number smaller than the first number for providing adjusted second color components; </claim-text>
+<claim-text>providing the adjusted second color components to the transform means so as to allow the transform means to transform the adjusted second color components based on a forward wavelet transformation into transformed image data, and the coding means to form the bitstream indicative of the transformed image data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The software program of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the adjusting step is based on bit-shifting. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The software program of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the adjusting step is based on a look-up table. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. An apparatus for processing a bitstream having coded data indicative of an image into a reconstructed image, wherein 
+<claim-text>the image is separated into a plurality of first color components of a first color space; </claim-text>
+<claim-text>the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a first number of more-significant bit-planes and a second number of less-significant bit-planes; </claim-text>
+<claim-text>the second color components are adjusted into adjusted second color components by changing, from at least one of the second color components, the second number of bit-planes to a corresponding third number smaller than the second number for providing adjusted second color components in the second color space; </claim-text>
+<claim-text>the adjusted color components are transformed into transformed image data based on a forward wavelet transformation; and </claim-text>
+<claim-text>the transformed data is coded into the bitstream having the coded data, said apparatus comprising: 
+<claim-text>means, responsive to the bitstream, for decoding the coded data for providing reconstructed transformed data; </claim-text>
+<claim-text>means for processing the reconstructed transformed data based on an inverse wavelet transformation for providing first reconstructed color components in the second color space; </claim-text>
+<claim-text>means for changing the first reconstructed color components into second reconstructed color components in the second color space, such that each of the second reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further comprising means for converting the second reconstructed color components in the second color space into third reconstructed color components in the first color space for forming the reconstructed image, wherein each of the third reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the first color space is an RGB color space and the second color space is a YUV space. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the corresponding third number of said at least one of the second color components is predetermined, said apparatus further comprising means for obtaining said corresponding third number so as to allow the changing means to change the first reconstructed color components into the second reconstructed color components based on the obtained third number. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the corresponding third number of said at least one of the second color components is included in the bitstream so as to allow the changing means to change the first reconstructed color components into the second reconstructed color components based on the included third number. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein each of the first reconstructed color components is corresponding to one of the second color components, and each of the first reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the third number of less-significant bit-planes of the corresponding one of the second color components. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A software program for use in an apparatus for processing a bitstream having coded data indicative of an image into a reconstructed image, wherein 
+<claim-text>the image is separated into a plurality of first color components of a first color space; </claim-text>
+<claim-text>the first color components are converted into a plurality of second color components of a second color space different from the first color space, each of the second color components having a first number of more-significant bit-planes and a second number of less-significant bit-planes; </claim-text>
+<claim-text>the second color components are adjusted into adjusted second color components by changing, from at least one of the second color components, the second number of bit-planes to a corresponding third number smaller than the second number for providing adjusted second color components in the second color space; </claim-text>
+<claim-text>the adjusted color components are transformed into transformed image data based on a forward wavelet transformation; and </claim-text>
+<claim-text>the transformed data is coded into the bitstream having the coded data, said apparatus comprising: 
+<claim-text>means, responsive to the bitstream, for decoding the coded data for providing reconstructed transformed data; </claim-text>
+<claim-text>means for processing the reconstructed transformed data based on an inverse wavelet transformation for providing first reconstructed color components in the second color space, each of the first reconstructed color components corresponding to one of the second color components, wherein each of the first reconstructed color components has a number of more-significant bit-planes equal to the first number, and a fourth number of less-significant number of bit-planes equal to the corresponding third number; said software program comprising the steps of: 
+<claim-text>changing the first reconstructed color components into second reconstructed color components in the second color space, effectively adding a number of bit-planes to at least one of the first reconstructed color components corresponding to said at least one of the second color components such that each of the second reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number; and </claim-text>
+<claim-text>setting pixel values of the added bit-planes to zero. </claim-text>
+</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The software program of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein the changing step is based on bit-shifting. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The software program of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein the changing step is achieved through a look-up table. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. A system for coding an image into a bitstream and decoding the bitstream into a reconstructed image, wherein the image is separated into a plurality of first color components of a first color space, and the first color components are converted into a plurality of second color components of a second space different from the first color space, wherein each of the second color components has a first number of more-significant bit-planes and a second number of less-significant bit planes, said system comprising: 
+<claim-text>means, responsive to the second color components, for adjusting at least one of the second color components the second number of bit-planes to a corresponding third number smaller than the second number for providing adjusted second color components in the second color space; </claim-text>
+<claim-text>means for transforming the adjusted second color components into transformed image data based on a forward wavelet transformation for providing a signal indicative of the transformed image data; </claim-text>
+<claim-text>means, responsive to the signal, for coding the transformed image data and forming a bitstream having coded information indicated of the coded transformed image data; </claim-text>
+<claim-text>means, responsive to the bitstream, for decoding the coded information for providing reconstructed transformed data; </claim-text>
+<claim-text>means for processing the reconstructed transformed data based on an inverse wavelet transformation for providing first reconstructed color components in the second color space; and </claim-text>
+<claim-text>means for changing the first reconstructed color components into second reconstructed color components in the second color space indicative of the reconstructed image, such that each of the second reconstructed color components has a number of more-significant bit-planes equal to the first number, and a number of less-significant bit-planes equal to the second number. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, further comprising means for converting the second reconstructed color components in the second space into third reconstructed color components in the first color space for forming the reconstructed image. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein each of the first reconstructed color components is corresponding to one of the second color components, and wherein each of the first reconstructed color components has a number of less-significant bit-planes equal to the third number of less-significant bit-planes of the corresponding one of the second color components. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00033">claim 31</dependent-claim-reference>, wherein the first color space is an RGB color space, and the second color space is a YUV color space.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002734A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002734A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002734A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002734A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002734A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002734A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

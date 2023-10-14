@@ -1,0 +1,652 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005146A1-20030102-D00000.TIF SYSTEM "US20030005146A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005146A1-20030102-D00001.TIF SYSTEM "US20030005146A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005146A1-20030102-D00002.TIF SYSTEM "US20030005146A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005146A1-20030102-D00003.TIF SYSTEM "US20030005146A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005146A1-20030102-D00004.TIF SYSTEM "US20030005146A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005146A1-20030102-D00005.TIF SYSTEM "US20030005146A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005146</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09884797</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010618</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F015/173</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>238000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>240000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Content addressable memory array having flexible priority support</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Michael</given-name>
+<middle-name>J.</middle-name>
+<family-name>Miller</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Saratoga</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Mark</given-name>
+<family-name>Baumann</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Campbell</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Integrated Device Technology, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>BEVER, HOFFMAN &amp; HARMS, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>2099 GATEWAY PLACE</address-1>
+<address-2>SUITE 320</address-2>
+<city>SAN JOSE</city>
+<state>CA</state>
+<postalcode>95110</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method for processing addresses having variable prefix lengths, including (1) applying an input address to a plurality of CAM blocks; (2) assigning different sets of CAM blocks to store prefixes of different lengths; (3) generating a hit signal and an index signal with each of the CAM blocks in response to the input address; (4) programming a plurality of routing values; (5) routing the hit signals to a priority encoder in an order determined by the routing values; (6) generating an output hit signal with the priority encoder in response to the hit signals; (7) selecting one of the routing values as an index routing value in response to the output hit signal; and (8) routing one of the index signals as an output index value in response to the index routing value. Circuitry for implementing the method is also provided. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to content addressable memory (CAM) arrays. More specifically, the present invention relates to CAM arrays having a longest prefix match capability. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Discussion of Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Conventional Internet protocol (IP) addresses include Class A, Class B and Class C addresses, each having a length of 32-bits. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating Class A IP address <highlight><bold>101</bold></highlight>, Class B IP address <highlight><bold>102</bold></highlight> and Class C IP address <highlight><bold>103</bold></highlight>. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Class A addresses, such as Class A address <highlight><bold>101</bold></highlight>, are identified by a logic &ldquo;0&rdquo; bit at bit location &lsqb;0&rsqb; (i.e., the most significant bit location). The next seven bits of Class A address <highlight><bold>101</bold></highlight> (i.e., bits &lsqb;1:7&rsqb;), along with the first bit (i.e., bit &lsqb;0&rsqb;), define a network address, and the last 24 bits of Class A address <highlight><bold>101</bold></highlight> (i.e., bits &lsqb;8:31&rsqb;) define a host address within the network. The set of Class A addresses are therefore capable of defining <highlight><bold>128</bold></highlight> networks, each having <highlight><bold>224</bold></highlight> hosts. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Similarly, Class B addresses, such as Class B address <highlight><bold>102</bold></highlight>, are identified by logic &ldquo;10&rdquo; bits at bit locations &lsqb;0:1&rsqb; (i.e., the two most significant bit locations). The next 14 bits of Class B address <highlight><bold>102</bold></highlight> (i.e., bits &lsqb;2:15&rsqb;), along with the first two bits (i.e., bits &lsqb;0:1&rsqb;), define a network address, and the last 16 bits of Class B address <highlight><bold>102</bold></highlight> (i.e., bits &lsqb;16:31&rsqb;) define a host address. The set of Class B addresses are therefore capable of defining 2<highlight><superscript>14 </superscript></highlight>networks, each having 2<highlight><superscript>16 </superscript></highlight>hosts. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Finally, Class C addresses, such as Class C address <highlight><bold>103</bold></highlight>, are identified by logic &ldquo;110&rdquo; bits at bit locations &lsqb;0:2&rsqb; (i.e., the three most significant bit locations). The next 21 bits of Class C address (i.e., bits &lsqb;3:23&rsqb;), along with the first three bits (i.e., bits &lsqb;0:2&rsqb;), define a network address, and the last 8 bits of Class C address (i.e., bits &lsqb;24:3&rsqb;) define a host address. The set of Class C addresses are therefore capable of defining <highlight><bold>221</bold></highlight> networks, each having <highlight><bold>256</bold></highlight> hosts. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Growth of the Internet has resulted in a shortage of Class A, Class B and Class C IP addresses. This shortage of IP addresses, in turn, has resulted in routing difficulties. In response, Classless Inter-Domain Routing (CIDR) has been developed to help relieve these routing difficulties. CIDR allows for the flexible allocation of network and host addresses within a 32-bit IP address. For example, CIDR allows the network address, which is hereinafter referred to as a &ldquo;prefix&rdquo;, to be defined by the first N bits of the 32-bit IP address, where N is an integer less than 32. The host address is then defined by the last M bits of the 32-bit IP address, wherein M is equal to 32 minus N. The most common values of N are in the range of 13 to 27, inclusive. CIDR advantageously expands the number of IP addresses available within a 32-bit field, and allows for improved allocation of IP addresses. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> CIDR addresses are processed using a &ldquo;longest prefix match&rdquo; algorithm, which is typically implemented using a content addressable memory (CAM) array. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of a conventional router <highlight><bold>20</bold></highlight> used to process CIDR addresses. As described below, router <highlight><bold>20</bold></highlight> implements a longest prefix match algorithm. Router <highlight><bold>20</bold></highlight> includes input port <highlight><bold>201</bold></highlight>, CAM array <highlight><bold>202</bold></highlight>, priority encoder <highlight><bold>230</bold></highlight>, SRAM array <highlight><bold>240</bold></highlight>, output switch <highlight><bold>250</bold></highlight> and output ports <highlight><bold>261</bold></highlight>-<highlight><bold>264</bold></highlight>. CAM array <highlight><bold>202</bold></highlight> is logically divided into CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight>. Each of CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> is dedicated to store prefixes of a predetermined length. For example, CAM sub-array <highlight><bold>228</bold></highlight> is configured to store 28-bit prefixes, CAM sub-array <highlight><bold>225</bold></highlight> is configured to store 25-bit prefixes, and CAM sub-array <highlight><bold>208</bold></highlight> is configured to store 8-bit prefixes. Within CAM array <highlight><bold>202</bold></highlight>, longer prefixes are assigned a higher priority than shorter prefixes. CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> are arranged in order of priority, from highest-priority CAM sub-array <highlight><bold>228</bold></highlight>, which stores 28-bit prefixes, to lowest-priority CAM sub-array <highlight><bold>208</bold></highlight>, which stores 8-bit prefixes. Within each of CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight>, the prefixes are arranged in order from highest priority to lowest priority. Thus, the first entry of CAM sub-array <highlight><bold>228</bold></highlight> stores the highest priority 28-bit prefix and the last entry of CAM sub-array <highlight><bold>228</bold></highlight> will store the lowest priority 28-bit prefix. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> An input packet (PACKET<highlight><subscript>IN</subscript></highlight>) that includes a 32-bit CIDR address (CIDR&lsqb;31:0&rsqb;) is applied to input port <highlight><bold>201</bold></highlight>. In response, input port <highlight><bold>201</bold></highlight> provides the CIDR&lsqb;31:0&rsqb; address to CAM array <highlight><bold>202</bold></highlight>. In response, CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> will assert match signals for each prefix that matches the corresponding bits of the applied address CIDR&lsqb;31:0&rsqb;. These match signals are provided to priority encoder <highlight><bold>230</bold></highlight>. In response, priority encoder <highlight><bold>230</bold></highlight> provides an INDEX signal representative of the asserted match signal having the highest priority. The INDEX signal is used as an address to access a corresponding entry of SRAM array <highlight><bold>240</bold></highlight>. The entry retrieved from SRAM <highlight><bold>240</bold></highlight> includes an output port number, which is provided to output switch <highlight><bold>250</bold></highlight>. In response, output switch <highlight><bold>250</bold></highlight> routes selected portions of the input packet to one of the output ports <highlight><bold>661</bold></highlight>-<highlight><bold>664</bold></highlight> as an output packet (PACKET<highlight><subscript>OUT</subscript></highlight>). Although only four output ports <highlight><bold>261</bold></highlight>-<highlight><bold>264</bold></highlight> are illustrated, it is understood that router 20 typically includes many more output ports. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> CAM array <highlight><bold>202</bold></highlight>, which has a finite capacity, is initially allocated to implement CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> having fixed, predetermined sizes. For example, each of CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> may be allocated to include 4 k (4096) entries. This allocation is intended to provide extra capacity in each CAM sub-array to allow for the addition of new prefixes. For example, each of CAM sub-arrays <highlight><bold>213</bold></highlight>-<highlight><bold>227</bold></highlight> may initially be programmed to store about 3 k prefixes. In this example, each of CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> includes an unused capacity of about 1 k entries, which is allocated to allow for the addition of new prefixes in the future. However, by allocating each of CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> in this manner, one quarter of the available capacity (and layout area) of CAM array <highlight><bold>202</bold></highlight> is initially unused. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Moreover, the unused capacity of CAM sub-arrays <highlight><bold>208</bold></highlight>-<highlight><bold>228</bold></highlight> may be improperly allocated in view of the actual prefixes subsequently added to CAM array <highlight><bold>202</bold></highlight>. For example, a relatively large number (i.e., &gt;1 k) of additional 27-bit prefixes may need to be added to CAM sub-array <highlight><bold>227</bold></highlight>, while zero additional 8-bit CIDR prefixes may need to be added to CAM sub-array <highlight><bold>208</bold></highlight>. In this case, CAM sub-array <highlight><bold>227</bold></highlight> would have insufficient capacity, while CAM sub-array <highlight><bold>213</bold></highlight> would have extra capacity. As a result, CAM array <highlight><bold>202</bold></highlight> would have to be completely re-allocated. Such re-allocation is time consuming and inefficient. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In addition, SRAM array <highlight><bold>240</bold></highlight> is initially allocated in the same manner as CAM array <highlight><bold>202</bold></highlight>. As a result, SRAM array <highlight><bold>240</bold></highlight> must be re-allocated whenever CAM array <highlight><bold>202</bold></highlight> is re-allocated. Again, such re-allocation is time consuming and inefficient. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> It would therefore be desirable to have an improved router look-up table for more efficiently implementing longest prefix match comparisons. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Accordingly, the present invention provides an improved router look-up table for processing addresses (such as CIDR addresses) having variable prefix lengths. In one embodiment, the router look-up table includes a plurality of CAM blocks, each configured to provide a hit signal and an index signal in response to an applied address. Different sets of one or more CAM blocks are assigned to store prefixes having different lengths. For example, a first set of one or more of the CAM blocks is assigned to store prefixes having a first length, and a second set of one or more CAM blocks is assigned to store prefixes having a second length, different than the first length. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> A cross-point switch is also provided. In one embodiment, the cross-point switch includes a set of multiplexers, with one multiplexer being provided for each of the CAM blocks. Each multiplexer is coupled to receive the hit signals from all of the CAM blocks. Thus, each multiplexer is capable of routing any one of the hit signals. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Each of the multiplexers routes one of the hit signals in response to a corresponding routing value stored in a corresponding a storage element. The routing values are user-programmable, such that a user can control the manner in which the first set of multiplexers routes the hit signals. In general, the routing values are selected such that the hit signals are routed in order of highest priority hit signals to lowest priority hit signals. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> A priority encoder is coupled to receive the hit signals routed by the multiplexers. In response, the priority encoder provides an output hit signal that corresponds with the asserted hit signal having the highest priority. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A first multiplexer is configured to route one of the routing values from the storage elements as an index control value in response to the output hit signal. A second multiplexer is configured to route one of the index signals from the CAM blocks as an output index value in response to the index control signal. The output index signal corresponds with the highest priority matching prefix in the CAM blocks. The output index signal and the output hit signal are provided as output signals of the router look-up table. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Because the user can control the manner in which the hit signals and index signals are routed, the CAM blocks can be flexibly allocated to store prefixes having different lengths. Thus, it is not necessary for all prefixes having the same length to be stored in adjacent CAM blocks. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Another embodiment includes a method for processing CIDR addresses having variable prefix lengths. This method includes (1) applying a CIDR address to a plurality of CAM blocks; (2) assigning different sets of CAM blocks to store prefixes of different lengths; (3) generating a hit signal and an index signal with each of the CAM blocks in response to the CIDR address; (4) routing the hit signals to a priority encoder in an order determined by user-programmed routing values; (5) generating an output hit signal with the priority encoder in response to the hit signals; (6) selecting one of the routing values as an index routing signal in response to the output hit signal; and (7) routing one of the index signals as an output index signal in response to the index routing signal. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In yet another embodiment, prefixes are stored in the CAM blocks according to priority chains exhibited by the prefixes. A priority chain exists for a group of prefixes having different lengths if a common input address results in a hit for each of the prefixes in the group. In this embodiment, each prefix in a priority chain is stored in a different CAM block, in an order determined by the priority (lengths) of the prefixes. Different priority chains may extend through the same CAM blocks, such that each CAM block can store prefixes having different lengths. In this manner, a relatively large number of prefixes can be stored in a relatively small number of CAM blocks. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The present invention will be more fully understood in view of the following description and drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of conventional Class A, B and C IP addresses. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of a conventional router look-up table for implementing a longest prefix match operation. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of a CAM system that is configured to implement a longest prefix match or classification operation in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram of a router look-up table that includes the CAM system of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> and an SRAM array in accordance with one embodiment of the present invention. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a block diagram illustrating a set of four prefixes P<highlight><bold>1</bold></highlight>-P<highlight><bold>4</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram illustrating the manner in which CAM blocks store the prefixes P<highlight><bold>1</bold></highlight>-P<highlight><bold>4</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 5</cross-reference> in accordance with another embodiment of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of a CAM system <highlight><bold>30</bold></highlight>, which is configured to implement longest prefix match operations (or other classification operations) in accordance with one embodiment of the present invention. CAM system <highlight><bold>30</bold></highlight> includes CAM array <highlight><bold>31</bold></highlight> and encoding logic <highlight><bold>32</bold></highlight>. CAM array <highlight><bold>31</bold></highlight> includes CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>, and encoding logic <highlight><bold>32</bold></highlight> includes multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>319</bold></highlight>, priority encoder <highlight><bold>320</bold></highlight>, and register <highlight><bold>350</bold></highlight>. Each of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> includes an array of CAM cells and a priority encoder (not shown). Other numbers of CAM blocks can be used in other embodiments. In the described embodiment, each of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> has a capacity of 4 k entries. However, CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> can have other capacities, including dissimilar capacities, in other embodiments. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Each of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> in CAM array <highlight><bold>31</bold></highlight> is coupled to receive an input address, such as a CIDR address (CIDR&lsqb;35:0&rsqb;) from an input register (not shown). CIDR&lsqb;35:0&rsqb; address includes a 32-bit CIDR address and a 4-bit incoming port number. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Each of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> stores data structures having a predetermined priority. In the described example, each of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> stores CIDR prefixes having a predetermined prefix length. In the present example, CAM block <highlight><bold>300</bold></highlight> stores 28-bit prefixes, CAM block <highlight><bold>301</bold></highlight> stores 27-bit prefixes, CAM block <highlight><bold>302</bold></highlight> stores 26-bit prefixes and CAM block <highlight><bold>303</bold></highlight> stores 25-bit prefixes. In the described example, CAM blocks <highlight><bold>304</bold></highlight>-<highlight><bold>307</bold></highlight> are not initially designated to store prefixes of any particular length. As described below, CAM blocks <highlight><bold>304</bold></highlight>-<highlight><bold>307</bold></highlight> are subsequently assigned to store prefixes of particular lengths in response to the requirements of the router look-up table. For example, if more than 4 k 27-bit prefixes are required, then one (or more) of CAM blocks <highlight><bold>304</bold></highlight>-<highlight><bold>307</bold></highlight> can be assigned to store additional 27-bit prefixes. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> provide corresponding hit signals HIT<highlight><subscript>0</subscript></highlight>-HIT<highlight><subscript>7 </subscript></highlight>and corresponding index signals IDX<highlight><subscript>0</subscript></highlight>-IDX<highlight><subscript>7 </subscript></highlight>in response to the CIDR&lsqb;35:0&rsqb; address signal. The HIT<highlight><subscript>0</subscript></highlight>-HIT<highlight><subscript>7 </subscript></highlight>signals are 1-bit signals that are asserted if any hit occurs in corresponding CAM arrays <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>, respectively. The IDX<highlight><subscript>0</subscript></highlight>-IDX<highlight><subscript>7 </subscript></highlight>signals are 12-bit signals that identify the highest priority entries in CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>, respectively, that result in a match when compared with the CIDR&lsqb;35:0&rsqb; signal. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Each of the HIT<highlight><subscript>0</subscript></highlight>-HIT<highlight><subscript>7 </subscript></highlight>signals is provided to each of multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>317</bold></highlight>. Multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>317</bold></highlight> form a cross-point switch that is controlled by 3-bit routing values A-H, respectively, which are stored in user-programmable register <highlight><bold>350</bold></highlight>. Each of multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>317</bold></highlight> routes one of the applied hit signals HIT<highlight><subscript>0</subscript></highlight>-HIT<highlight><subscript>7 </subscript></highlight>in response to the corresponding routing value. The hit signals routed by multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>317</bold></highlight> are labeled as hit signals HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>H</subscript></highlight>, respectively. In general, each of the routing values A-H is selected to have a unique 3-bit value when all of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> are in use. The user of CAM system <highlight><bold>30</bold></highlight> selects routing values A-H in a manner that is described below. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Table 1 defines the manner in which each of multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>317</bold></highlight> routes the HIT<highlight><subscript>0</subscript></highlight>-HIT<highlight><subscript>7 </subscript></highlight>signals in response to a corresponding routing value.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="35PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="center"/>
+<colspec colname="2" colwidth="119PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>ROUTING VALUE</entry>
+<entry>MUX OUTPUT</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>000</entry>
+<entry>HIT<highlight><subscript>0</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>001</entry>
+<entry>HIT<highlight><subscript>1</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>010</entry>
+<entry>HIT<highlight><subscript>2</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>011</entry>
+<entry>HIT<highlight><subscript>3</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>100</entry>
+<entry>HIT<highlight><subscript>4</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>101</entry>
+<entry>HIT<highlight><subscript>5</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>110</entry>
+<entry>HIT<highlight><subscript>6</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>111</entry>
+<entry>HIT<highlight><subscript>7</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Priority encoder <highlight><bold>320</bold></highlight> is coupled to receive the HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>H </subscript></highlight>signals passed by multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>317</bold></highlight>. In response, priority encoder <highlight><bold>320</bold></highlight> provides a 3-bit output signal, HIT&lsqb;2:0&rsqb;, which identifies the asserted hit signal having the highest priority. The routing values A-H are selected such that the HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>H </subscript></highlight>signals are arranged in order from highest priority to lowest priority. That is, the HIT<highlight><subscript>A </subscript></highlight>signal is provided by the CAM block having the highest priority, the HIT<highlight><subscript>B </subscript></highlight>signal is provided by the CAM block having the second highest priority, and the HIT<highlight><subscript>H </subscript></highlight>signal is provided by the CAM block having the lowest priority. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Table 2 below defines the HIT&lsqb;2:0&rsqb; signal provided by priority encoder <highlight><bold>320</bold></highlight> in response to the hit signals HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>H</subscript></highlight>. Note that the symbol &ldquo;x&rdquo; indicates a &ldquo;don&apos;t care&rdquo; value in Table  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="49PT" align="left"/>
+<colspec colname="1" colwidth="42PT" align="center"/>
+<colspec colname="2" colwidth="126PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 2</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>H</subscript></highlight></entry>
+<entry>HIT &lsqb;2:0&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>1xxx xxxx</entry>
+<entry>000</entry>
+</row>
+<row>
+<entry></entry>
+<entry>01xx xxxx</entry>
+<entry>001</entry>
+</row>
+<row>
+<entry></entry>
+<entry>001x xxxx</entry>
+<entry>010</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0001 xxxx</entry>
+<entry>011</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0000 1xxx</entry>
+<entry>100</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0000 01xx</entry>
+<entry>101</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0000 001x</entry>
+<entry>110</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0000 0001</entry>
+<entry>111</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> The HIT&lsqb;2:0&rsqb; signal is provided to the control terminals of multiplexer <highlight><bold>319</bold></highlight>. The input terminals of multiplexer <highlight><bold>319</bold></highlight> are coupled to receive routing values A-H from register <highlight><bold>350</bold></highlight>. Multiplexer <highlight><bold>319</bold></highlight> routes one of the routing values A-H from register <highlight><bold>350</bold></highlight> to multiplexer <highlight><bold>318</bold></highlight> as the 3-bit index routing value IRV&lsqb;2:0&rsqb; in response to the HIT&lsqb;2:0&rsqb; signal provided by priority encoder <highlight><bold>320</bold></highlight>. Table 3 below defines the manner in which routing values are passed by multiplexer <highlight><bold>319</bold></highlight> in response to the HIT&lsqb;2:0&rsqb; signal.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="28PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="center"/>
+<colspec colname="2" colwidth="154PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 3</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>HIT &lsqb;2:0&rsqb;</entry>
+<entry>ROUTING VALUE PASSED</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>000</entry>
+<entry>A</entry>
+</row>
+<row>
+<entry></entry>
+<entry>001</entry>
+<entry>B</entry>
+</row>
+<row>
+<entry></entry>
+<entry>010</entry>
+<entry>C</entry>
+</row>
+<row>
+<entry></entry>
+<entry>011</entry>
+<entry>D</entry>
+</row>
+<row>
+<entry></entry>
+<entry>100</entry>
+<entry>E</entry>
+</row>
+<row>
+<entry></entry>
+<entry>101</entry>
+<entry>F</entry>
+</row>
+<row>
+<entry></entry>
+<entry>110</entry>
+<entry>G</entry>
+</row>
+<row>
+<entry></entry>
+<entry>111</entry>
+<entry>H</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Thus, multiplexer <highlight><bold>319</bold></highlight> is controlled to pass the routing value responsible for routing the highest priority asserted hit signal to priority encoder <highlight><bold>320</bold></highlight>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The input terminals of multiplexer <highlight><bold>318</bold></highlight> are coupled to receive the index signals IDX<highlight><subscript>0</subscript></highlight>-IDX<highlight><subscript>7 </subscript></highlight>from CAM arrays <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>, and the control terminals of multiplexer <highlight><bold>318</bold></highlight> are coupled to receive the index routing value IRV&lsqb;2:0&rsqb;. Multiplexer <highlight><bold>318</bold></highlight> passes one of the index signals IDX<highlight><subscript>0</subscript></highlight>-IDX<highlight><subscript>7 </subscript></highlight>as the 12-bit output index signal INDEX&lsqb;11:0&rsqb; in response to the index routing value IRV&lsqb;2:0&rsqb;. Table 4 below defines the manner in which index signals IDX<highlight><subscript>0</subscript></highlight>-IDX<highlight><subscript>7 </subscript></highlight>are routed by multiplexer <highlight><bold>318</bold></highlight> in response to the index routing value IRV.  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="42PT" align="left"/>
+<colspec colname="1" colwidth="35PT" align="center"/>
+<colspec colname="2" colwidth="140PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center">TABLE 4</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>IRV &lsqb;2:0&rsqb;</entry>
+<entry>INDEX &lsqb;11:0&rsqb;</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>000</entry>
+<entry>IDX<highlight><subscript>0</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>001</entry>
+<entry>IDX<highlight><subscript>1</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>010</entry>
+<entry>IDX<highlight><subscript>2</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>011</entry>
+<entry>IDX<highlight><subscript>3</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>100</entry>
+<entry>IDX<highlight><subscript>4</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>101</entry>
+<entry>IDX<highlight><subscript>5</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>110</entry>
+<entry>IDX<highlight><subscript>6</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>111</entry>
+<entry>IDX<highlight><subscript>7</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> In this manner, multiplexer <highlight><bold>318</bold></highlight> is controlled to pass the index signal associated with the highest priority asserted hit signal. The output index signal INDEX&lsqb;11:0&rsqb; and the index routing value IRV&lsqb;2:0&rsqb; signal are provided as the output index signal INDEX&lsqb;14:0&rsqb; of CAM system <highlight><bold>30</bold></highlight>. The INDEX&lsqb;14:0&rsqb; signal is used to generate a next-hop routing address in a manner known to those of ordinary skill in the art. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> CAM system <highlight><bold>30</bold></highlight> operates in the following manner in accordance with one embodiment of the present invention. CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>303</bold></highlight> are programmed to store 28-bit, 27-bit, 26-bit and 25-bit CIDR prefixes, respectively. Mask registers (not shown) in CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>303</bold></highlight> are programmed such that bit locations in CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>303</bold></highlight> that do not store relevant prefix information are treated as &ldquo;don&apos;t care&rdquo; locations. CAM blocks <highlight><bold>304</bold></highlight>-<highlight><bold>307</bold></highlight> do not initially store any CIDR prefixes. Rather, these CAM blocks <highlight><bold>304</bold></highlight>-<highlight><bold>307</bold></highlight> are programmed to store a default value that will not result in the assertion of hit signals HIT<highlight><subscript>4</subscript></highlight>-HIT<highlight><subscript>7</subscript></highlight>, regardless of the value of the CIDR&lsqb;35:0&rsqb; signal. As described in more detail below, CAM blocks <highlight><bold>304</bold></highlight>-<highlight><bold>307</bold></highlight> provide extra storage capacity if CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>303</bold></highlight> become full. It is important to note that the present example is not intended to be limiting. It is understood that CAM system <highlight><bold>30</bold></highlight> can be allocated in many other ways. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> In a longest prefix match operation, longer prefixes have a higher priority than shorter prefixes. Thus, the HIT<highlight><subscript>0 </subscript></highlight>and IDX<highlight><subscript>0 </subscript></highlight>signals (28-bit prefix match) have the highest priority, followed in order by the HIT<highlight><subscript>1 </subscript></highlight>and IDX<highlight><subscript>1 </subscript></highlight>signals (27-bit prefix match), the HIT<highlight><subscript>2 </subscript></highlight>and IDX<highlight><subscript>2 </subscript></highlight>signals (26-bit prefix match) and the HIT<highlight><subscript>3 </subscript></highlight>and IDX<highlight><subscript>3 </subscript></highlight>signals (25-bit prefix match). The user of CAM system <highlight><bold>30</bold></highlight> must therefore program routing values A-D in register <highlight><bold>350</bold></highlight> in response to these priorities. The user therefore programs routing values A, B, C and D to have values of &ldquo;000&rdquo;, &ldquo;001&rdquo;, &ldquo;010&rdquo;, and &ldquo;011&rdquo;, such that the HIT<highlight><subscript>0</subscript></highlight>, HIT<highlight><subscript>1</subscript></highlight>, HIT<highlight><subscript>2 </subscript></highlight>and HIT<highlight><subscript>3 </subscript></highlight>signals are routed as the HIT<highlight><subscript>A</subscript></highlight>, HIT<highlight><subscript>B</subscript></highlight>, HIT<highlight><subscript>C </subscript></highlight>and HIT<highlight><subscript>D </subscript></highlight>signals, respectively (Table 1). Routing values E, F, G and H are each programmed to a default value of &ldquo;111&rdquo;. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> A first CIDR&lsqb;35:0&rsqb; address is subsequently applied to CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>. In the described example, the first CIDR address matches a 27-bit prefix stored in row <highlight><bold>215</bold></highlight> of CAM block <highlight><bold>301</bold></highlight> and a 26-bit prefix stored in row <highlight><bold>2</bold></highlight> of CAM block <highlight><bold>302</bold></highlight>. Thus, the HIT<highlight><subscript>1 </subscript></highlight>and HIT<highlight><subscript>2 </subscript></highlight>signals are asserted high (and the HIT<highlight><subscript>0 </subscript></highlight>and HIT<highlight><subscript>3</subscript></highlight>-HIT<highlight><subscript>7 </subscript></highlight>signals are de-asserted low). The IDX<highlight><subscript>1 </subscript></highlight>and IDX<highlight><subscript>2 </subscript></highlight>signals have values of &ldquo;0000 1101 0111&rdquo; (i.e., <highlight><bold>215</bold></highlight>) and &ldquo;0000 0000 0010&rdquo; (i.e., <highlight><bold>2</bold></highlight>), respectively. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Multiplexers <highlight><bold>310</bold></highlight>-<highlight><bold>313</bold></highlight> route the HIT<highlight><subscript>0</subscript></highlight>-HIT<highlight><subscript>3 </subscript></highlight>signals as the HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>D </subscript></highlight>signals, respectively, in response to the routing signals A-D. Multiplexers <highlight><bold>314</bold></highlight>-<highlight><bold>317</bold></highlight> route the HIT<highlight><subscript>7 </subscript></highlight>signal in response to the routing signals E-H. The HIT<highlight><subscript>B </subscript></highlight>signal is the highest priority asserted hit signal provided to priority encoder <highlight><bold>320</bold></highlight>. As a result, priority encoder <highlight><bold>320</bold></highlight> provides a HIT&lsqb;2:0&rsqb; signal having a value of &ldquo;001&rdquo; (Table 2). </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In response to the HIT&lsqb;2:0&rsqb; signal having a value of &ldquo;001&rdquo;, multiplexer <highlight><bold>319</bold></highlight> passes the routing value B (i.e., &ldquo;001&rdquo;) as the index routing value IRV&lsqb;2:0&rsqb; (Table 3). This index routing value IRV&lsqb;2:0&rsqb; is provided to the control terminal of multiplexer <highlight><bold>318</bold></highlight>. In response, multiplexer <highlight><bold>318</bold></highlight> routes the index value IDX<highlight><subscript>1 </subscript></highlight>as the output index signal INDEX&lsqb;11:0&rsqb; (Table 4). This index signal INDEX&lsqb;11:0&rsqb; and the index routing value signal IRV&lsqb;2:0&rsqb; are provided as the output index signal INDEX&lsqb;14:0&rsqb;. The INDEX&lsqb;14:0&rsqb; signal identifies the highest priority CAM block that experienced a hit condition (i.e., CAM block <highlight><bold>301</bold></highlight>), and the highest priority address in that CAM block that experienced a hit condition (i.e., row <highlight><bold>215</bold></highlight>). </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> In the present example, additional CIDR addresses are added to the system, thereby requiring that additional 27-bit prefixes be stored in CAM system <highlight><bold>30</bold></highlight>. In the described example, 27-bit prefixes are added to CAM block <highlight><bold>301</bold></highlight> until this block is full. Additional 27-bit prefixes are then stored in CAM block <highlight><bold>304</bold></highlight>. Advantageously, the original contents of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>303</bold></highlight> do not need to be re-written or moved. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> The routing values stored in register <highlight><bold>350</bold></highlight> must be revised in consideration of the storage of 27-bit prefixes in CAM block <highlight><bold>304</bold></highlight>. Because CAM block <highlight><bold>300</bold></highlight> continues to store the only 28-bit prefixes, this CAM block <highlight><bold>300</bold></highlight> retains the highest priority. As a result, routing value A remains at value of &ldquo;000&rdquo;, such that the HIT<highlight><subscript>0 </subscript></highlight>signal continues to be routed as the HIT<highlight><subscript>A </subscript></highlight>signal. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> Because CAM block <highlight><bold>301</bold></highlight> continues to store 27-bit prefixes, this CAM block <highlight><bold>301</bold></highlight> retains the second highest priority. Consequently, routing value B remains at a value of &ldquo;001&rdquo;, such that the HIT<highlight><subscript>1 </subscript></highlight>signal continues to be routed as the HIT<highlight><subscript>B </subscript></highlight>signal. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> However, CAM block <highlight><bold>304</bold></highlight> now stores 27-bit prefixes, thereby giving the HIT<highlight><subscript>4 </subscript></highlight>and IDX<highlight><subscript>4 </subscript></highlight>signals provided by this CAM block the third highest priority. Consequently, within register <highlight><bold>350</bold></highlight>, routing value C (which controls multiplexer <highlight><bold>312</bold></highlight>) is programmed to have a value of &ldquo;100&rdquo;, such that the HIT<highlight><subscript>4 </subscript></highlight>signal is now routed as the HIT<highlight><subscript>C </subscript></highlight>signal. This configuration effectively gives CAM block <highlight><bold>304</bold></highlight> the third highest priority. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Because CAM block <highlight><bold>302</bold></highlight> continues to store 26-bit prefixes, this CAM block <highlight><bold>302</bold></highlight> now has the fourth highest priority. Consequently, within register <highlight><bold>350</bold></highlight>, routing value D (which controls multiplexer <highlight><bold>313</bold></highlight>) is programmed to have a value of &ldquo;010&rdquo;, such that the HIT<highlight><subscript>2 </subscript></highlight>signal is now routed as the HIT<highlight><subscript>D </subscript></highlight>signal. This configuration effectively gives CAM block <highlight><bold>302</bold></highlight> the fourth highest priority. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> Similarly, because CAM block <highlight><bold>303</bold></highlight> continues to store 25-bit prefixes, this CAM block <highlight><bold>303</bold></highlight> now has the fifth highest priority. Consequently, within register <highlight><bold>350</bold></highlight>, routing value E (which controls multiplexer <highlight><bold>314</bold></highlight>) is programmed to have a value of &ldquo;011&rdquo;, such that the HIT<highlight><subscript>3 </subscript></highlight>signal is now routed as the HIT<highlight><subscript>E </subscript></highlight>signal. This configuration effectively gives CAM block <highlight><bold>303</bold></highlight> the fifth highest priority. Because CAM blocks <highlight><bold>305</bold></highlight>-<highlight><bold>307</bold></highlight> remain unused, routing values F-H each remain at a value of &ldquo;111&rdquo;. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> Under this configuration, hit conditions in CAM array <highlight><bold>304</bold></highlight> will have priority over hit conditions in CAM arrays <highlight><bold>302</bold></highlight> and <highlight><bold>303</bold></highlight>. For example, assume a second address CIDR&lsqb;35:01 applied to CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> matches a 27-bit prefix stored in row <highlight><bold>124</bold></highlight> of CAM block <highlight><bold>304</bold></highlight>, a 26-bit prefix stored in row <highlight><bold>27</bold></highlight> of CAM block <highlight><bold>302</bold></highlight> and a 25-bit prefix stored in row <highlight><bold>1532</bold></highlight> of CAM block <highlight><bold>303</bold></highlight>. In this case, the HIT<highlight><subscript>2</subscript></highlight>, HIT<highlight><subscript>3 </subscript></highlight>and HIT<highlight><subscript>4 </subscript></highlight>signals are asserted high (and the HIT<highlight><subscript>0</subscript></highlight>-HIT<highlight><subscript>1 </subscript></highlight>and HIT<highlight><subscript>5</subscript></highlight>-HIT<highlight><subscript>7 </subscript></highlight>signals are de-asserted low). </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Multiplexers <highlight><bold>310</bold></highlight> and <highlight><bold>311</bold></highlight> route the logic low HIT<highlight><subscript>0 </subscript></highlight>and HIT<highlight><subscript>S </subscript></highlight>signals as the HIT<highlight><subscript>A </subscript></highlight>and HIT<highlight><subscript>B </subscript></highlight>signals, respectively, in response to the routing values A and B. Multiplexers <highlight><bold>312</bold></highlight>, <highlight><bold>313</bold></highlight> and <highlight><bold>314</bold></highlight> route the logic high HIT<highlight><subscript>4</subscript></highlight>, HIT<highlight><subscript>2 </subscript></highlight>and HIT<highlight><subscript>3 </subscript></highlight>signals signal as the HIT<highlight><subscript>C</subscript></highlight>, HIT<highlight><subscript>D</subscript></highlight>, and HIT<highlight><subscript>E </subscript></highlight>signals, respectively, in response to the new routing values C, D and E, respectively. Thus, the HIT<highlight><subscript>C</subscript></highlight>, HIT<highlight><subscript>D </subscript></highlight>and HIT<highlight><subscript>E </subscript></highlight>signals, which are associated with 27-bit, 26-bit and 25-bit prefixes, respectively, are effectively shifted and provided to priority encoder <highlight><bold>320</bold></highlight> in the appropriate order. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> The HIT<highlight><subscript>C </subscript></highlight>signal has the highest priority of the asserted hit signals, thereby causing priority encoder <highlight><bold>320</bold></highlight> to provide a HIT&lsqb;2:0&rsqb; having a value of &ldquo;010&rdquo; (Table 2). In response to this HIT&lsqb;2:0&rsqb; signal, multiplexer <highlight><bold>319</bold></highlight> passes routing value C (i.e., &ldquo;100&rdquo;) as the index routing value IRV&lsqb;2.0&rsqb; (Table 3). In response to this index routing value IRV(2:0&rsqb;, multiplexer <highlight><bold>318</bold></highlight> properly passes the index signal IDX<highlight><subscript>4 </subscript></highlight>(Table 4). As a result, the IRV&lsqb;2:0&rsqb; signal (i.e., &ldquo;100&rdquo;) and the index signal IDX<highlight><subscript>4 </subscript></highlight>(i.e., &ldquo;000 0111 1100&rdquo;) are routed as the output index signal INDEX&lsqb;14:0&rsqb;. The appropriateness of passing the IRV&lsqb;2:0&rsqb; signal, rather than the HIT&lsqb;2:0&rsqb; signal, is discussed below. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram illustrating a router look-up table 40, which includes CAM system <highlight><bold>30</bold></highlight> coupled to an SRAM array <highlight><bold>41</bold></highlight>. SRAM array <highlight><bold>41</bold></highlight> is coupled to receive the INDEX&lsqb;14:0&rsqb; signal provided by encoding logic <highlight><bold>32</bold></highlight>. SRAM array <highlight><bold>41</bold></highlight> includes a plurality of SRAM blocks <highlight><bold>400</bold></highlight>-<highlight><bold>407</bold></highlight>. Each of the SRAM blocks <highlight><bold>400</bold></highlight>-<highlight><bold>407</bold></highlight> corresponds with one of the CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>. In the described embodiment, there is a direct correspondence between SRAM blocks <highlight><bold>400</bold></highlight>-<highlight><bold>407</bold></highlight> and CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>, respectively. Thus, SRAM block <highlight><bold>400</bold></highlight> stores entries corresponding to the CIDR prefixes stored in CAM block <highlight><bold>300</bold></highlight>, and SRAM block <highlight><bold>407</bold></highlight> stores entries corresponding to the CIDR prefixes stored in CAM block <highlight><bold>307</bold></highlight>. Each entry in CAM array <highlight><bold>31</bold></highlight> has a corresponding entry in SRAM array <highlight><bold>41</bold></highlight>. More specifically, each of the entries in CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> has a corresponding entry in SRAM blocks <highlight><bold>400</bold></highlight>-<highlight><bold>407</bold></highlight>, respectively. In other embodiments, a correspondence other than a one-to-one correspondence can be provided between CAM blocks and SRAM blocks. For example, one SRAM block can be provided for every two CAM blocks. In yet other embodiments, there may be no SRAM requirement. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> The correspondence between CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> and SRAM blocks <highlight><bold>400</bold></highlight>-<highlight><bold>407</bold></highlight> is selected before the prefix lengths are selected for all of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>. Encoding logic <highlight><bold>32</bold></highlight> is therefore configured to ensure that the INDEX&lsqb;14:0&rsqb; signal accesses the appropriate SRAM block, regardless of the prefix length assignments in CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>. To accomplish this, encoding logic <highlight><bold>32</bold></highlight> routes the internal routing value IRV&lsqb;2:0&rsqb; (rather than the HIT&lsqb;2:0&rsqb; signal) as part of the INDEX&lsqb;14:0&rsqb; signal, thereby identifying the physical location of the CAM array <highlight><bold>31</bold></highlight> to SRAM array <highlight><bold>41</bold></highlight>, rather than the logical location of the CAM block to SRAM array <highlight><bold>41</bold></highlight>. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Thus, in the present example, the highest priority hit occurs in CAM block <highlight><bold>304</bold></highlight>, which is physically located at position four (i.e., &ldquo;100&rdquo;) in CAM array <highlight><bold>31</bold></highlight>. However, because CAM block <highlight><bold>304</bold></highlight> stores 27-bit CIDR prefixes, CAM block <highlight><bold>304</bold></highlight> is logically located at position three (i.e., &ldquo;011&rdquo;) in CAM array. Note that these positions assume that CAM block <highlight><bold>300</bold></highlight> is physically (and logically) located at position zero (i.e., &ldquo;000&rdquo;). In the present example, the HIT&lsqb;2:0&rsqb; signal identifies the logical location of CAM block <highlight><bold>304</bold></highlight> (i.e., &ldquo;011&rdquo;), but the IRV&lsqb;2:0&rsqb; signal identifies the physical location of CAM block <highlight><bold>304</bold></highlight>. Thus, by passing the IRV&lsqb;2:0&rsqb; signal as part of the INDEX&lsqb;14:0&rsqb; signal, the INDEX&lsqb;14:0&rsqb; signal properly accesses SRAM block <highlight><bold>404</bold></highlight> in SRAM array <highlight><bold>41</bold></highlight>. Thus, modifying the logical address of a CAM block has no effect on the INDEX&lsqb;14:0&rsqb; signal. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Continuing the present example, additional CIDR addresses can be added to the system, thereby requiring additional 28-bit prefixes and 25-bit prefixes to be stored in CAM system <highlight><bold>30</bold></highlight>. In the described example, 28-bit prefixes are added to CAM block <highlight><bold>300</bold></highlight> until this block is full, and 25-bit prefixes are added to CAM block <highlight><bold>303</bold></highlight> until this block is full. Additional 28-bit prefixes are stored in CAM block <highlight><bold>305</bold></highlight>, and additional 25-bit prefixes are stored in CAM block <highlight><bold>306</bold></highlight>. In this case, the previous contents of CAM blocks <highlight><bold>301</bold></highlight>-<highlight><bold>304</bold></highlight> do not need to be re-written or moved. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> Again, the routing values stored in register <highlight><bold>350</bold></highlight> must be revised in consideration of the storage of 28-bit prefixes in CAM block <highlight><bold>305</bold></highlight> and 25-bit prefixes in CAM block <highlight><bold>306</bold></highlight>. Because CAM block <highlight><bold>300</bold></highlight> continues to store 28-bit prefixes, this CAM block <highlight><bold>300</bold></highlight> retains the highest priority. As a result, routing value A remains at value of &ldquo;000&rdquo;, such that the HIT<highlight><subscript>0 </subscript></highlight>signal continues to be routed as the HIT<highlight><subscript>A </subscript></highlight>signal. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> However, CAM block <highlight><bold>305</bold></highlight> now stores 28-bit prefixes, thereby giving the HIT<highlight><subscript>5 </subscript></highlight>and IDX<highlight><subscript>5 </subscript></highlight>signals provided by this CAM block the second highest priority. Consequently, routing value B is programmed to have a value of &ldquo;101&rdquo;, such that the HIT<highlight><subscript>5 </subscript></highlight>signal is now routed as the HIT<highlight><subscript>B </subscript></highlight>signal. This configuration effectively gives CAM block <highlight><bold>305</bold></highlight> the second highest priority. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> CAM blocks <highlight><bold>301</bold></highlight> and <highlight><bold>304</bold></highlight> continue to store 27-bit prefixes, thereby giving the HIT<highlight><subscript>1 </subscript></highlight>and IDX<highlight><subscript>1 </subscript></highlight>signals and the HIT<highlight><subscript>4 </subscript></highlight>and IDX<highlight><subscript>4 </subscript></highlight>signals provided by CAM block <highlight><bold>301</bold></highlight> and <highlight><bold>304</bold></highlight>, respectively, the third and fourth highest priorities. Consequently, routing values C and D are programmed to have values of &ldquo;001&rdquo; and &ldquo;100&rdquo;, respectively, such that the HIT<highlight><subscript>1 </subscript></highlight>and HIT<highlight><subscript>4 </subscript></highlight>signals are now routed as the HIT<highlight><subscript>C </subscript></highlight>and HIT<highlight><subscript>D </subscript></highlight>signals. This configuration effectively gives CAM blocks <highlight><bold>301</bold></highlight> and <highlight><bold>304</bold></highlight> the third and fourth highest priorities. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> CAM block <highlight><bold>302</bold></highlight> continues to store 26-bit prefixes, thereby giving the HIT<highlight><subscript>2 </subscript></highlight>and IDX<highlight><subscript>2 </subscript></highlight>signals provided by CAM block <highlight><bold>302</bold></highlight> the fifth highest priority. Consequently, routing value E is programmed to have a value of &ldquo;010&rdquo;, such that the HIT<highlight><subscript>2 </subscript></highlight>signal is now routed as the HIT<highlight><subscript>E </subscript></highlight>signal. This configuration effectively gives CAM block <highlight><bold>302</bold></highlight> the fifth highest priority. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> Finally, CAM blocks <highlight><bold>303</bold></highlight> and <highlight><bold>306</bold></highlight> now store 25-bit prefixes, thereby giving the HIT<highlight><subscript>3 </subscript></highlight>and IDX<highlight><subscript>3 </subscript></highlight>signals and the HIT<highlight><subscript>6 </subscript></highlight>and IDX<highlight><subscript>6 </subscript></highlight>signals provided by CAM blocks <highlight><bold>303</bold></highlight> and <highlight><bold>306</bold></highlight>, respectively, the sixth and seventh highest priorities. Consequently, routing values F and G are programmed to have values of &ldquo;011&rdquo; and &ldquo;110&rdquo;, respectively, such that the HIT<highlight><subscript>3 </subscript></highlight>and HIT<highlight><subscript>6 </subscript></highlight>signals are now routed as the HIT<highlight><subscript>F </subscript></highlight>and HIT<highlight><subscript>G </subscript></highlight>signals, respectively. This configuration effectively gives CAM blocks <highlight><bold>303</bold></highlight> and <highlight><bold>306</bold></highlight> the sixth and seventh highest priorities. In this manner, the HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>G </subscript></highlight>signals are provided to priority encoder <highlight><bold>320</bold></highlight> in an appropriate order. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> Continuing further with the present example, additional CIDR addresses may be added to the system, thereby requiring that additional 27-bit prefixes be stored in CAM system <highlight><bold>30</bold></highlight>. In the described example, 27-bit prefixes are added to CAM block <highlight><bold>304</bold></highlight> until this block is full. Additional 27-bit prefixes are then stored in CAM block <highlight><bold>307</bold></highlight>. Again, the present contents of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>306</bold></highlight> do not need to be re-written or moved. However, the routing values stored by register <highlight><bold>350</bold></highlight> must be modified in consideration of the storage of 27-bit prefixes in CAM block <highlight><bold>307</bold></highlight>. More specifically, routing values A, B, C, D, E, F, G and H are given values of &ldquo;000&rdquo;, &ldquo;101&rdquo;, &ldquo;001&rdquo;, &ldquo;100&rdquo;, &ldquo;111&rdquo;, &ldquo;010&rdquo;, &ldquo;011&rdquo; and &ldquo;110&rdquo;, respectively. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> As a result, the HIT<highlight><subscript>0 </subscript></highlight>and HIT<highlight><subscript>5 </subscript></highlight>signals, which correspond with 28-bit prefixes, are routed as the HIT<highlight><subscript>A </subscript></highlight>and HIT<highlight><subscript>B </subscript></highlight>signals, respectively. The HIT<highlight><subscript>1</subscript></highlight>, HIT<highlight><subscript>4 </subscript></highlight>and HIT<highlight><subscript>7 </subscript></highlight>signals, which correspond with 27-bit prefixes, are routed as the HIT<highlight><subscript>C</subscript></highlight>, HIT<highlight><subscript>D </subscript></highlight>and HIT<highlight><subscript>E </subscript></highlight>signals, respectively. The HIT<highlight><subscript>2 </subscript></highlight>signal, which corresponds with 26-bit prefixes, is routed as the HIT<highlight><subscript>F </subscript></highlight>signal. The HIT<highlight><subscript>3 </subscript></highlight>and HIT<highlight><subscript>6 </subscript></highlight>signals, which correspond with 25-bit prefixes, are routed as the HIT<highlight><subscript>G </subscript></highlight>and HIT<highlight><subscript>H </subscript></highlight>signals, respectively. Thus, the HIT<highlight><subscript>A</subscript></highlight>-HIT<highlight><subscript>H </subscript></highlight>signals are provided to priority encoder <highlight><bold>320</bold></highlight> in an appropriate order. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> CAM system <highlight><bold>30</bold></highlight> provides great flexibility in the allocation of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight>. Although the examples described above start with four of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>303</bold></highlight> designated for storing CIDR prefixes, this allocation can be different in other embodiments. For example, six of the eight CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> may be dedicated for storing CIDR prefixes of six different lengths, with two CAM blocks being dedicated to store additional CIDR prefixes. Moreover, although sequential CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>303</bold></highlight> have been described as storing CIDR prefixes having sequential lengths (i.e., 28-bits, 27-bits, 26-bits, 25-bits), this is not necessary. For example, CAM blocks <highlight><bold>307</bold></highlight>, <highlight><bold>305</bold></highlight>, <highlight><bold>303</bold></highlight> and <highlight><bold>301</bold></highlight> could be initially assigned to store 28-bit prefixes, 27-bit prefixes, 26-bit prefixes and 25-bit prefixes, respectively. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> Furthermore, although CAM system <highlight><bold>30</bold></highlight> has been described as having eight CAM blocks, it is understood that the present invention can be implemented with other numbers of CAM blocks. For example, to implement a CAM system capable of processing CIDR addresses having prefix lengths from 28-bits to 8-bits, at least 21 main CAM blocks plus the desired number of spare CAM blocks are required. In a particular embodiment, 32 CAM blocks are used to implement a router look-up table in accordance with the present disclosure. In yet another embodiment, the CAM blocks can have different capacities. Thus, larger CAM blocks can be used to store CIDR addresses for the more popular (numerous) prefix lengths. Similarly, the spare CAM blocks may have a smaller capacity than one or more of the non-spare CAM blocks. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> In other embodiments, the CAM blocks can be configured to operate in response to addresses of different lengths. For example, in the above-described embodiments, CAM system <highlight><bold>30</bold></highlight> is configured to operate in response to standard IPv4 addresses having a width of 36-bits (i.e., CIDR&lsqb;35:0&rsqb;). In another embodiment, for example, CAM system <highlight><bold>30</bold></highlight> can be expanded to operate in response to standard IPv6 addresses having a width of 144-bits. The present invention is applicable to process set of addresses having variable length prefixes (not only CIDR addresses). The manner of expanding CAM system <highlight><bold>30</bold></highlight> would be apparent to one of ordinary skill in the art. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> In yet another embodiment of the present invention, the priority of the entries in CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> are not determined by prefix length, but rather, by other characteristics of the entries. Thus, entries having different prefix lengths may be stored in the same CAM block, as long as an input address does not result in multiple hits in the same CAM block. The following example will clarify this embodiment. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a block diagram illustrating four prefixes P<highlight><bold>1</bold></highlight>-P<highlight><bold>4</bold></highlight>, which are to be stored in CAM system <highlight><bold>30</bold></highlight> in accordance with the present embodiment. The first prefix P<highlight><bold>1</bold></highlight> has a prefix length of 8-bits (with 24 &ldquo;don&apos;t care&rdquo; bits). The first 8-bits of the first prefix P<highlight><bold>1</bold></highlight> have a decimal value of &ldquo;10&rdquo;, such that the first prefix Pi can be represented as &ldquo;10/8&rdquo; (i.e., decimal value of 10 in the 8 most significant bit locations). </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> The second prefix P<highlight><bold>2</bold></highlight> has a prefix length of 15-bits (with 17 &ldquo;don&apos;t care&rdquo; bits). The first 8-bits of the second prefix P<highlight><bold>2</bold></highlight> have a decimal value of &ldquo;10&rdquo; and the second 8-bits of the second prefix P<highlight><bold>2</bold></highlight> have a decimal value of &ldquo;64&rdquo; such that the second prefix P<highlight><bold>2</bold></highlight> can be represented as &ldquo;10.64/15&rdquo; (i.e., decimal values of 10 and 64 at the 15 most significant bit locations.) </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> The third prefix P<highlight><bold>3</bold></highlight> has a prefix length of 29-bits (with 3 &ldquo;don&apos;t care&rdquo; bits). The first 8-bits of the third prefix P<highlight><bold>3</bold></highlight> have a decimal value of &ldquo;10&rdquo;, the second 8-bits of the third prefix P<highlight><bold>3</bold></highlight> have a decimal value of &ldquo;1&rdquo;, the third 8-bits of the third prefix P<highlight><bold>3</bold></highlight> have a decimal value of &ldquo;1&rdquo; and the fourth 8-bits of the third prefix P<highlight><bold>3</bold></highlight> have a decimal value of &ldquo;128&rdquo;, such that the third prefix P<highlight><bold>3</bold></highlight> can be represented as &ldquo;10.1.1.128/29&rdquo; (i.e., decimal values of 10, 1, 1 and 128 at the 29 most significant bit locations.) </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> The fourth prefix P<highlight><bold>4</bold></highlight> has a prefix length of 31-bits (with 1 &ldquo;don&apos;t care&rdquo; bit). The first 8-bits of the fourth prefix P<highlight><bold>4</bold></highlight> have a decimal value of &ldquo;10&rdquo;, the second 8-bits of the fourth prefix P<highlight><bold>4</bold></highlight> have a decimal value of &ldquo;1&rdquo;, the third 8-bits of the fourth prefix P<highlight><bold>4</bold></highlight> have a decimal value of &ldquo;1&rdquo; and the fourth 8-bits of the fourth prefix P<highlight><bold>4</bold></highlight> have a decimal value of &ldquo;130&rdquo;, such that the fourth prefix P<highlight><bold>4</bold></highlight> can be represented as &ldquo;10.1.1.130/31&rdquo; (i.e., decimal values of 10, 1, 1 and 130 at the 31 most significant bit locations.) </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> In the first embodiment described above, each of prefixes P<highlight><bold>1</bold></highlight>-P<highlight><bold>4</bold></highlight> would be stored in a separate CAM block because each of these prefixes has a different length. However, this configuration may be more restrictive than is necessary. The present embodiment provides another approach for configuring CAM system <highlight><bold>30</bold></highlight>. </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> The prefixes P<highlight><bold>1</bold></highlight>-P<highlight><bold>4</bold></highlight> are first analyzed to determine which prefixes share the same priority chain. A group of prefixes share the same priority chain if a common input address results in a hit in each prefix in the group. Thus, an input address of &ldquo;10.1.1.130&rdquo; will result in a hit with the fourth prefix P<highlight><bold>4</bold></highlight>, the third prefix P<highlight><bold>3</bold></highlight> and the first prefix P<highlight><bold>1</bold></highlight>, but not with the second prefix P<highlight><bold>2</bold></highlight>. Thus, the fourth prefix P<highlight><bold>4</bold></highlight>, the third prefix P<highlight><bold>3</bold></highlight> and the first prefix P<highlight><bold>1</bold></highlight> are in a first priority chain. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> Furthermore, an input address of &ldquo;10.64.0.0&rdquo; will result in a hit with the second prefix P<highlight><bold>2</bold></highlight> and the first prefix P<highlight><bold>1</bold></highlight>, but not with the third prefix P<highlight><bold>3</bold></highlight> or the fourth prefix P<highlight><bold>4</bold></highlight>. Thus, the second prefix P<highlight><bold>2</bold></highlight> and the first prefix P<highlight><bold>1</bold></highlight> are in a second priority chain, different than the first priority chain. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> Both the first and second priority chains must be retained in the configuration of CAM system <highlight><bold>30</bold></highlight>. Thus, as dictated by the first priority chain, the fourth prefix P<highlight><bold>4</bold></highlight> must have a higher priority than the third prefix P<highlight><bold>3</bold></highlight>, which in turn, must have a higher priority than the first prefix P<highlight><bold>1</bold></highlight>. As dictated by the second priority chain, the second prefix P<highlight><bold>2</bold></highlight> must have a higher priority than the first prefix Pi. However, the second prefix P<highlight><bold>2</bold></highlight> has no ordering constraint with respect to the third prefix P<highlight><bold>3</bold></highlight> or the fourth prefix P<highlight><bold>4</bold></highlight> (because, the second prefix P<highlight><bold>2</bold></highlight> is not in a priority chain with either the third prefix P<highlight><bold>3</bold></highlight> or the fourth prefix P<highlight><bold>4</bold></highlight>). </paragraph>
+<paragraph id="P-0080" lvl="0"><number>&lsqb;0080&rsqb;</number> Each prefix in a priority chain is stored in a different CAM block in accordance with the present embodiment. That is, the prefixes in a priority chain are stored in a &ldquo;per block&rdquo; configuration. Thus, prefixes P<highlight><bold>1</bold></highlight>-P<highlight><bold>4</bold></highlight> may be stored in CAM system <highlight><bold>30</bold></highlight> in the following manner, which is illustrated in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. The fourth prefix P<highlight><bold>4</bold></highlight> having the highest priority in the first priority chain, may be stored in CAM block <highlight><bold>300</bold></highlight>. The third prefix P<highlight><bold>3</bold></highlight>, which has a lower priority than the fourth prefix P<highlight><bold>4</bold></highlight> in the first priority chain, may be stored in CAM block <highlight><bold>301</bold></highlight>. The first prefix P<highlight><bold>1</bold></highlight>, which has a lower priority than the third prefix P<highlight><bold>3</bold></highlight> in the first priority chain, may be stored in CAM block <highlight><bold>302</bold></highlight>. The routing values A, B, and C are selected such that CAM block <highlight><bold>300</bold></highlight> has the highest priority, followed in order of priority by CAM blocks <highlight><bold>301</bold></highlight> and <highlight><bold>302</bold></highlight>. </paragraph>
+<paragraph id="P-0081" lvl="0"><number>&lsqb;0081&rsqb;</number> The second prefix P<highlight><bold>2</bold></highlight>, which has a higher priority than the first prefix P<highlight><bold>1</bold></highlight> in the second prefix chain, but no relative priority with respect to the third prefix P<highlight><bold>3</bold></highlight> or the fourth prefix P<highlight><bold>4</bold></highlight> in the first prefix chain, may be stored in either CAM block <highlight><bold>300</bold></highlight> (with fourth prefix P<highlight><bold>4</bold></highlight>) or CAM block <highlight><bold>301</bold></highlight> (with third prefix P<highlight><bold>3</bold></highlight>). </paragraph>
+<paragraph id="P-0082" lvl="0"><number>&lsqb;0082&rsqb;</number> In this manner, any one of CAM blocks <highlight><bold>300</bold></highlight>-<highlight><bold>307</bold></highlight> may store prefixes having different lengths, as long as these prefixes are not located in the same priority chain. Advantageously, this embodiment allows a relatively large number of prefixes to be stored in a relatively small number of CAM blocks. </paragraph>
+<paragraph id="P-0083" lvl="0"><number>&lsqb;0083&rsqb;</number> Although the invention has been described in connection with several embodiments, it is understood that this invention is not limited to the embodiments disclosed, but is capable of various modifications, which would be apparent to a person skilled in the art. Thus, the invention is limited only by the following claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for processing addresses having variable prefix lengths, the system comprising: 
+<claim-text>a plurality of content addressable memory (CAM) blocks, each configured to provide a hit signal and an index signal in response to an applied address; </claim-text>
+<claim-text>a plurality of programmable storage elements configured to store a plurality of routing values; </claim-text>
+<claim-text>a configurable switching circuit coupled to receive the hit signals from the CAM blocks and the routing values from the programmable storage elements, wherein the configurable switching circuit routes the hit signals in a first order in response to the routing values; </claim-text>
+<claim-text>a priority encoder coupled to receive the hit signals routed by the configurable switching circuit, the priority encoder being configured to provide an output hit signal representative of an asserted hit signal having a highest priority in the first order; </claim-text>
+<claim-text>a first multiplexer configured to route one of the routing values from the programmable storage elements as an index routing value in response to the output hit signal; and </claim-text>
+<claim-text>a second multiplexer configured to route an index signal from one of the CAM blocks as an output index value in response to the index routing value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising a static random access memory (SRAM) array, wherein the index routing value and the output index value are provided to access the SRAM array. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the SRAM array includes a plurality of SRAM blocks corresponding with the CAM blocks. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the configurable switching circuit comprises a plurality of multiplexers, each corresponding with one of the CAM blocks, and each being coupled to receive all of the hit signals from the CAM blocks. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein each of the programmable storage elements is coupled to a corresponding one of the multiplexers, wherein each of the multiplexers routes one of the hit signals in response to the routing value stored in the corresponding programmable storage element. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein one or more of the CAM blocks is designated to store only prefixes having a first length, and one or more of the CAM blocks is designated to store only prefixes having a second length, different than the first length. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein one or more of the CAM blocks stores is designated to store only prefixes having a third length, different than the first and second lengths. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein one or more of the CAM blocks are initially designated as spare CAM blocks that do not store prefixes unless one of the other CAM blocks becomes full. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the asserted hit signal having the highest priority and the output index value originate in the same CAM block. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the system includes thirty-two CAM blocks. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the addresses are Classless Inter-Domain Routing (CIDR) addresses. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein a first set of the CAM blocks is designated to store a set of prefixes of a first priority chain, wherein each of the CAM blocks in the first set is designated to store a corresponding one of the prefixes of the first priority chain. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein a second set of the CAM blocks is designated to store a set of prefixes of a second priority chain, wherein each of the CAM blocks in the second set is designated to store a corresponding one of the prefixes of the second priority chain. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the first set of the CAM blocks and the second set of the CAM blocks share a common CAM block. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the common CAM block stores prefixes having different lengths. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method for processing addresses having variable prefix lengths, the method comprising: 
+<claim-text>storing prefixes having a first length in a first set of one or more content addressable memory (CAM) blocks; </claim-text>
+<claim-text>storing prefixes having a second length in a second set of one or more CAM blocks, the second length being different than the first length; </claim-text>
+<claim-text>receiving an input address with the first and second sets of CAM blocks; </claim-text>
+<claim-text>generating a hit signal and an index signal with each of the CAM blocks in the first and second sets of CAM blocks in response to the input address; </claim-text>
+<claim-text>storing a plurality of routing values in a programmable register; </claim-text>
+<claim-text>routing the hit signal generated by each of the CAM blocks to a priority encoder in an order determined by the routing values; </claim-text>
+<claim-text>generating an output hit signal with the priority encoder in response to the hit signals; </claim-text>
+<claim-text>routing one of the routing values as an index routing value in response to the output hit signal; and </claim-text>
+<claim-text>routing one of the index signals as an output index value in response to the index routing value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising using the index routing value and the output index value to address a memory array. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising selecting the routing values such that the hit signals associated with the first set of CAM blocks are routed consecutively to the priority encoder, and the hit signals associated with the second set of CAM blocks are routed consecutively to the priority encoder. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the output hit signal is representative of an asserted hit signal having a highest priority. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the asserted hit signal having the highest priority and the output index value originate in the same CAM block. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising initially designating one or more CAM blocks as spare CAM blocks that do not store prefixes unless another CAM block becomes full. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the input address is a Classless Inter-Domain Routing (CIDR) address. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising: 
+<claim-text>storing prefixes having a third length, different than the first and second lengths, in a third set of one or more CAM blocks. </claim-text>
+<claim-text>receiving the input address with the third set of CAM blocks; and </claim-text>
+<claim-text>generating a hit signal and an index signal with each of the CAM blocks in the third set of CAM blocks in response to the input address. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A method for processing addresses having variable prefix lengths, the method comprising: 
+<claim-text>analyzing the addresses to identify a first priority chain having a first plurality of prefixes, and a second priority chain having a second plurality of prefixes; </claim-text>
+<claim-text>storing the prefixes of the first priority chain in a first set of CAM blocks, wherein each of the CAM blocks in the first set of CAM blocks stores one and only one of the prefixes of the first priority chain; </claim-text>
+<claim-text>storing the prefixes of the second priority chain in a second set of CAM blocks, wherein each of the CAM blocks in the second set of CAM blocks stores one and only one of the prefixes of the second priority chain, and wherein the first set of CAM blocks shares at least one CAM block with the second set of CAM blocks; </claim-text>
+<claim-text>receiving an input address with the first and second sets of CAM blocks; </claim-text>
+<claim-text>generating a hit signal and an index signal with each of the CAM blocks in the first and second sets of CAM blocks in response to the input address; </claim-text>
+<claim-text>storing a plurality of routing values in a programmable register; </claim-text>
+<claim-text>routing the hit signal generated by each of the CAM blocks to a priority encoder in an order determined by the routing values; </claim-text>
+<claim-text>generating an output hit signal with the priority encoder in response to the hit signals; </claim-text>
+<claim-text>routing one of the routing values as an index routing value in response to the output hit signal; and </claim-text>
+<claim-text>routing one of the index signals as an output index value in response to the index routing value.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005146A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005146A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005146A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005146A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005146A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005146A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

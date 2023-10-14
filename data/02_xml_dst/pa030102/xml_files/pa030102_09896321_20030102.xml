@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005306A1-20030102-D00000.TIF SYSTEM "US20030005306A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005306A1-20030102-D00001.TIF SYSTEM "US20030005306A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005306A1-20030102-D00002.TIF SYSTEM "US20030005306A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005306A1-20030102-D00003.TIF SYSTEM "US20030005306A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005306A1-20030102-D00004.TIF SYSTEM "US20030005306A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005306A1-20030102-D00005.TIF SYSTEM "US20030005306A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005306A1-20030102-D00006.TIF SYSTEM "US20030005306A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030005306A1-20030102-D00007.TIF SYSTEM "US20030005306A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005306</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896321</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>713</class>
+<subclass>181000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Message digest based data synchronization</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Preston</given-name>
+<middle-name>J.</middle-name>
+<family-name>Hunt</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Narayan</given-name>
+<middle-name>R.</middle-name>
+<family-name>Manepally</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Beaverton</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY, SOKOLOFF, TAYLOR &amp; ZAFMAN LLP</name-1>
+<name-2>Seventh Floor</name-2>
+<address>
+<address-1>12400 Wilshire Boulevard</address-1>
+<city>Los Angeles</city>
+<state>CA</state>
+<postalcode>90025-1026</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and apparatus are described for data synchronization between a client and a repository. According to one embodiment, data synchronization between a client and a repository is performed based on the results of a comparison between message digests associated with files stored on the client and a database of message digests stored on the repository. The message digests generated on the client uniquely identify the content of files stored on the client. This unique identification of the contents of the files on the client is accomplished by performing a cryptographic hash of the contents of the individual files. The database of message digests stored on the repository contains message digests from clients that are stored in the database at the time of data synchronization. By comparing message digests generated on the client with those stored on the repository, the need for data synchronization may be efficiently determined. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates generally to the field of computer networks. More particularly, the invention relates to synchronizing data between a client and a data repository based on a message digest. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> On a computer network, such as the Internet, users may want to store or archive data from one device on another device. For example, a user may wish to store copies of content on a server for distribution and use by others. In other applications users may wish to distribute and store copies of content on particular servers of the network, such as those located at the edge of the network. In still other applications a user may wish to backup content on the user&apos;s machine to a server for storage. In any of these applications, the users are likely to periodically refresh the content of the archive. That is, the client, or user&apos;s machine should be periodically synchronized with the server or archive repository to assure that the content matches. However, when performing this synchronization, it is not efficient to copy content that already matches. Only files that have been changed, added, or deleted should be copied. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Previous methods of preventing the unnecessary copying of content in such a situation have included comparing file size, file name, and file date of files on the client or user&apos;s machine with the file size, file name, and file date of files archived on the server. These methods provide for a fast determination since simply comparing file names, file sizes, and file dates can be performed very quickly. For example, a file compare based on these attributes would require transferring on the order of 10<highlight><superscript>1 </superscript></highlight>to 10<highlight><superscript>2 </superscript></highlight>bytes. However, these methods may not be able to properly determine which files should be synchronized. First of all, file name, file size, and file date are not indicative of the contents of the file. Two files may have the same name, size and date but have different content. Secondly, these attributes can be easily changed. A change in the name, size or date of one copy of a file stored on a client but no corresponding change of the matching attribute of a copy of the file stored in a repository will result in a false determination that the files are different. Similarly, a change of file name, size, or date for a file stored on a client, such that these attributes now coincidentally match those of a file in a repository may result in a false determination that the files are the same. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Another method of preventing the unnecessary copying of content when synchronizing a client with a repository involves comparing the actual content of the files. In this case, the contents of files stored on a client are directly compared with the contents of files archived in the repository. If the contents of a file are found to be different between the client and repository, that file will be copied. However, depending on the number and size of the files involved this method may take a considerable amount of time and waste available network bandwidth. For example, a comparison of the contents of a 10 GB file would require transferring on the order of 10<highlight><superscript>10 </superscript></highlight>bytes for the one file. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The appended claims set forth the features of the invention with particularity. The invention, together with its advantages, may be best understood from the following detailed description taken in conjunction with the accompanying drawings of which: </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a typical computer system upon which embodiments of the present invention may be implemented; </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram illustrating a conceptual view of message digest based data synchronization according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart illustrating a high-level view of message digest based data synchronization processing according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart illustrating message digest generation according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart illustrating a data synchronization process according to one embodiment of the present invention; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flowchart illustrating a synchronization verification process according to one embodiment of the present invention; and </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a flowchart illustrating a process for calculating a single message digest for multiple files. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> A method and apparatus are described for data synchronization between a client and a repository. According to one embodiment of the present invention, data synchronization between a client and a repository is performed based on the results of a comparison between message digests associated with files stored on the client and a database of message digests stored on the repository. The message digests generated on the client uniquely identify the content of files stored on the client. This unique identification of the contents of the files on the client is accomplished by performing a cryptographic hash of the contents of the individual files. The database of message digests stored on the repository contains message digests from clients that are stored in the database at the time of data synchronization. The need for data synchronization between the client and repository may be efficiently determined based on a comparison of the message digests generated on the client and corresponding message digests from the database of message digests on the repository. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In the following description, for the purposes of explanation, numerous specific details are set forth in order to provide a thorough understanding of the present invention. It will be apparent, however, to one skilled in the art that the present invention may be practiced without some of these specific details. In other instances, well-known structures and devices are shown in block diagram form. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Throughout the following discussion, the terms &ldquo;message digest&rdquo;, &ldquo;digest&rdquo;, &ldquo;cryptographic hash&rdquo;, and &ldquo;hash&rdquo; are all used interchangeably. These terms all refer to a message digest that can be defined as the representation of the contents of a file in the form of a single string of digits created using a one-way hash function. That is, a file of arbitrary length is operated upon by a one-way hash function that generates a message digest of fixed length that uniquely identifies the contents of that file. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The present invention includes various processes, which will be described below. The present invention may be performed by hardware components or may be embodied in machine-executable instructions, which may be used to cause a general-purpose or special-purpose processor or logic circuits programmed with the instructions to perform the processes. Alternatively, the processes may be performed by a combination of hardware and software. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The present invention may be provided as a computer program product which may include a machine-readable medium having stored thereon instructions which may be used to program a computer (or other electronic devices) to perform a process according to the present invention. The machine-readable medium may include, but is not limited to, floppy diskettes, optical disks, CD-ROMs, and magneto-optical disks, ROMs, RAMs, EPROMs, EEPROMs, magnetic or optical cards, flash memory, or other type of media/machine-readable medium suitable for storing electronic instructions. Moreover, the present invention may also be downloaded as a computer program product, wherein the program may be transferred from a remote computer to a requesting computer by way of data signals embodied in a carrier wave or other propagation medium via a communication link (e.g., a modem or network connection). </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a typical computer system upon which one embodiment of the present invention may be implemented. Computer system <highlight><bold>100</bold></highlight> comprises a bus or other communication means <highlight><bold>101</bold></highlight> for communicating information, and a processing means such as processor <highlight><bold>102</bold></highlight> coupled with bus <highlight><bold>101</bold></highlight> for processing information. Computer system <highlight><bold>100</bold></highlight> further comprises a random access memory (RAM) or other dynamic storage device <highlight><bold>104</bold></highlight> (referred to as main memory), coupled to bus <highlight><bold>101</bold></highlight> for storing information and instructions to be executed by processor <highlight><bold>102</bold></highlight>. Main memory <highlight><bold>104</bold></highlight> also may be used for storing temporary variables or other intermediate information during execution of instructions by processor <highlight><bold>102</bold></highlight>. Computer system <highlight><bold>100</bold></highlight> also comprises a read only memory (ROM) and/or other static storage device <highlight><bold>106</bold></highlight> coupled to bus <highlight><bold>101</bold></highlight> for storing static information and instructions for processor <highlight><bold>102</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> A data storage device <highlight><bold>107</bold></highlight> such as a magnetic disk or optical disc and its corresponding drive may also be coupled to computer system <highlight><bold>100</bold></highlight> for storing information and instructions. Computer system <highlight><bold>100</bold></highlight> can also be coupled via bus <highlight><bold>101</bold></highlight> to a display device <highlight><bold>121</bold></highlight>, such as a cathode ray tube (CRT) or Liquid Crystal Display (LCD), for displaying information to an end user. Typically, an alphanumeric input device <highlight><bold>122</bold></highlight>, including alphanumeric and other keys, maybe coupled to bus <highlight><bold>101</bold></highlight> for communicating information and/or command selections to processor <highlight><bold>102</bold></highlight>. Another type of user input device is cursor control <highlight><bold>123</bold></highlight>, such as a mouse, a trackball, or cursor direction keys for communicating direction information and command selections to processor <highlight><bold>102</bold></highlight> and for controlling cursor movement on display <highlight><bold>121</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A communication device <highlight><bold>125</bold></highlight> is also coupled to bus <highlight><bold>101</bold></highlight>. The communication device <highlight><bold>125</bold></highlight> may include a modem, a network interface card, or other well known interface devices, such as those used for coupling to Ethernet, token ring, or other types of physical attachment for purposes of providing a communication link to support a local or wide area network, for example. In this manner, the computer system <highlight><bold>100</bold></highlight> may be coupled to a number of clients and/or servers via a conventional network infrastructure, such as a company&apos;s Intranet and/or the Internet, for example. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> It is appreciated that a lesser or more equipped computer system than the example described above may be desirable for certain implementations. Therefore, the configuration of computer system <highlight><bold>100</bold></highlight> will vary from implementation to implementation depending upon numerous factors, such as price constraints, performance requirements, technological improvements, and/or other circumstances. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> It should be noted that, while the steps described herein may be performed under the control of a programmed processor, such as processor <highlight><bold>102</bold></highlight>, in alternative embodiments, the steps may be fully or partially implemented by any programmable or hardcoded logic, such as Field Programmable Gate Arrays (FPGAs), TTL logic, or Application Specific Integrated Circuits (ASICs), for example. Additionally, the method of the present invention may be performed by any combination of programmed general purpose computer components and/or custom hardware components. Therefore, nothing disclosed herein should be construed as limiting the present invention to a particular embodiment wherein the recited steps are performed by a specific combination of hardware components. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> As stated above, users of computers connected to a network may want to store or archive data from one device on another device. When information is cached in such a manner, the users are likely to periodically refresh the content of the archive. That is, the client, or user&apos;s machine should be periodically synchronized with the server or archive repository to assure that the content matches. However, when performing this synchronization, it is not efficient to copy content that is already up-to-date, e.g., already matches. Only files that have been changed, added, or otherwise modified on the client should be copied. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Previous methods that have sought to prevent the unnecessary copying of content in such a situation have included comparing file size, file name, file date, and contents of files on the client or user&apos;s machine with the file size, file name, file date, and contents of files archived on the server or using binary bit comparisons of the file contents. However, these methods may not be able to properly determine which files should be synchronized or, depending on the number and size of the files involved, may take a considerable amount of time to perform and waste network bandwidth. For example, a file compare based on attributes such as file size, file name, and file date would require transferring on the order of 10<highlight><superscript>1 </superscript></highlight>to 10<highlight><superscript>2 </superscript></highlight>bytes for each file. However, a comparison of the contents of a 10 GB file would require transferring on the order of 10<highlight><superscript>10 </superscript></highlight>bytes for the one file. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> According to one embodiment of the present invention, data synchronization between a client and a repository is performed based on message digests associated with files stored on the client and a database of corresponding message digests stored on the repository. The message digests stored on the client uniquely identify the content of individual files stored on the client. This unique identification of the contents of the files on the client is accomplished by performing a cryptographic hash of the contents. The database of message digests stored on the repository contains message digests associated with files on various clients and are stored in the database at the time of data synchronization. Data synchronization between the client and repository is then based on a comparison of the message digests stored on the client and corresponding message digests from the database of message digests on the repository. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram illustrating a conceptual view of message digest based data synchronization according to one embodiment of the present invention. In this example, a client <highlight><bold>205</bold></highlight> is connected to a repository <highlight><bold>210</bold></highlight> via a network (not shown). Files <highlight><bold>215</bold></highlight> stored on the client <highlight><bold>205</bold></highlight> may be cached <highlight><bold>235</bold></highlight> on the repository <highlight><bold>210</bold></highlight>. All files <highlight><bold>215</bold></highlight> stored on the client <highlight><bold>205</bold></highlight> that are to be cached on the repository <highlight><bold>210</bold></highlight> are cataloged <highlight><bold>240</bold></highlight> in a message digest <highlight><bold>220</bold></highlight> stored on the client <highlight><bold>205</bold></highlight>. In some applications, not all files on the client <highlight><bold>205</bold></highlight> will be cached on the repository <highlight><bold>210</bold></highlight>. That is, in some cases the files <highlight><bold>215</bold></highlight> to be cached may comprise a subset of all files on the client <highlight><bold>205</bold></highlight>. This subset may be defined in various manners. For example, the subset may be only those files stored in specific directories on the client. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> According to one embodiment of the present invention, the message digest <highlight><bold>220</bold></highlight> is originally generated on the client <highlight><bold>205</bold></highlight> when the first cache operation is performed. Later, message digests <highlight><bold>220</bold></highlight> will be generated when synchronization operations are performed. The message digest <highlight><bold>220</bold></highlight> provides a unique identifier based on the contents of each file <highlight><bold>215</bold></highlight> stored on the client <highlight><bold>205</bold></highlight> that should be cached on the repository <highlight><bold>210</bold></highlight>. According to one embodiment of the present invention, the message digest is generated using a cryptographic hash function such as the well-known Message Digest 5 (MD5) algorithm or Secure Hash Algorithm (SHA) wherein the contents of the file are hashed to generate the message digest. That is, a cryptographic hash function generates a unique &ldquo;fingerprint&rdquo; identifying the contents of each file <highlight><bold>215</bold></highlight> on the client <highlight><bold>205</bold></highlight> that is to be cached on the repository <highlight><bold>210</bold></highlight>. By using a cryptographic hash function a relatively short but highly unique identifier, in the form of a message digest, is generated based on the contents of the file. For example, a 160 bit cryptographic hash of a file has a probability of an accidental match of 1:2<highlight><superscript>160</superscript></highlight>. Additionally, such a hash would provide a short, 20 byte long identifier for a file of any size thereby allowing for very quick comparisons. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> When files <highlight><bold>215</bold></highlight> from the client <highlight><bold>205</bold></highlight> are initially cached <highlight><bold>250</bold></highlight> on the repository <highlight><bold>210</bold></highlight>, the message digest <highlight><bold>220</bold></highlight> from the client <highlight><bold>205</bold></highlight> is copied to the database of message digests <highlight><bold>230</bold></highlight> stored on the repository <highlight><bold>210</bold></highlight>. Later, when the client <highlight><bold>205</bold></highlight> and repository <highlight><bold>210</bold></highlight> are synchronized, the message digest <highlight><bold>220</bold></highlight> generated on the client is compared to the database of message digests <highlight><bold>230</bold></highlight> stored on the repository <highlight><bold>210</bold></highlight>. Only those files that have a digest that does not match the corresponding digest stored in the database of message digests will be copied to the repository. In this manner, the determination of which files to copy is based on an efficient comparison of relatively short, highly unique identifiers. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart illustrating a high-level view of message digest based data synchronization processing according to one embodiment of the present invention. Initially, at processing block <highlight><bold>305</bold></highlight>, a message digest is generated on the client. Details of message digest generation will be discussed in greater detail below with reference to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. Next, at processing block <highlight><bold>310</bold></highlight>, the client and repository are synchronized. Details of the synchronization process will be discussed in greater detail below with reference to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. Finally, at processing block <highlight><bold>315</bold></highlight>, the content of the repository is verified. Details of the verification process will be discussed in greater detail below with reference to <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart illustrating message digest generation according to one embodiment of the present invention. First, at processing block <highlight><bold>405</bold></highlight>, a file to be cached on the repository is loaded. Next, at processing block <highlight><bold>410</bold></highlight>, a unique message digest is generated for each file on the client to be cached on the repository. As explained above, the message digest can be generated using a cryptographic hash function such as the well-known Message Digest 5 (MD5) algorithm or Secure Hash Algorithm (SHA). In either case, the contents of the file are hashed to generate the unique message digest identifying the contents of the file. Finally, at processing block <highlight><bold>415</bold></highlight>, the message digest is output either to be saved in a file on the client or to be compared to a message digest from the database of message digests on the repository as will be described in more detail below. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart illustrating a data synchronization process according to one embodiment of the present invention. In general, synchronization involves comparing message digests from the client to corresponding message digests from the database of message digests from the repository and copying those files whose message digests do not match. First, at processing block <highlight><bold>505</bold></highlight>, the message digest corresponding to the current file is generated on the client and the corresponding entry in the database of message digests is read from the repository. The message digest from the client and the corresponding entry from the database of message digests from the repository are then compared at decision block <highlight><bold>510</bold></highlight>. If the message digest and the database match at decision block <highlight><bold>510</bold></highlight>, no further processing is required for the current file. If, at decision block <highlight><bold>510</bold></highlight>, the message digest and the database do not match, the files corresponding to the non-matching elements of the message digest are copied or marked for later copying to the repository at processing block <highlight><bold>515</bold></highlight> and the database of message digests on the repository is updated at processing block <highlight><bold>520</bold></highlight> by copying the message digest from the client to the database of message digests on the repository. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flowchart illustrating a synchronization verification process according to one embodiment of the present invention. First, at processing block <highlight><bold>605</bold></highlight>, cryptographic hashes of the contents of the message digest stored on the client and the corresponding entry in the database of message digests stored on the repository are generated. These hashes are then compared at decision block <highlight><bold>610</bold></highlight>. If the hashes do not match, the synchronization process, as described above with reference to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, is repeated at processing block <highlight><bold>615</bold></highlight>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> That is, message digests are generated for all files on the client that will be cached on the repository. A message digest is then generated for the list of these message digests. This message digest uniquely represents the contents of all files on the client to be cached on the repository. Another message digest is generated for the contents of the database of message digests stored on the repository. These two message digests art then compared to verify the contents of the repository. In alternative embodiments, this method may be performed prior data synchronization to determine whether synchronization is needed. By generating a message digest for a list of message digests of all files on the client and a message digest for the contents of the database of message digests on the repository, the contents of the client and repository can be compared quickly by simply comparing the two message digests. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a flowchart illustrating a process for calculating a single message digest for multiple files. First, at processing block <highlight><bold>705</bold></highlight>, a file is loaded. At processing block <highlight><bold>710</bold></highlight>, a message digest is calculated for the file. This process can be the same as that described above with reference to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. This process is repeated for each file to be cached on the repository. At decision block <highlight><bold>715</bold></highlight>, after a message digest has been generated for all files to be cached on the repository, processing continues at processing block <highlight><bold>720</bold></highlight> where all message digests for the individual files are combined into a single file. This can be achieved by simply writing the individual message digests to a new file. Alternatively, the message digests can be written to a file as soon as they are generated at processing block <highlight><bold>710</bold></highlight>. Continuing at processing block <highlight><bold>725</bold></highlight>, a message digest is generated for the file containing the message digests for the individual files. Again, this process can be the same as that described with reference to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. Finally, at processing block <highlight><bold>730</bold></highlight>, the new message digest for the multiple files can be output either to be saved in a file on the client or to be compared to a similar message digest calculated from the database of message digests on the repository. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>generating a message digests on a client connected with a network wherein said message digests uniquely identify contents of files stored on the client; </claim-text>
+<claim-text>synchronizing contents of said client with a repository connected with the network based on contents of the message digests on the client and corresponding entries in a database of message digests stored on the repository; and </claim-text>
+<claim-text>verifying that the contents of the repository match the contents of the client. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising storing the message digests on the client after generating the message digests. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising generating new message digests for all files on the client to be cached on the repository prior to data synchronization. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said files stored on the client comprise a subset of all files stored on the client. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said subset comprises only files stored in specified directories. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said generating message digests comprises generating a cryptographic hash for each file to be synchronized. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said cryptographic hash comprises 128 to 160 bits. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said synchronizing contents of said client with a repository comprises: 
+<claim-text>generating a first message digest for a file stored on the client; </claim-text>
+<claim-text>reading a second message digest from the database of message digests from the repository corresponding to the first message digest; </claim-text>
+<claim-text>comparing the first message digest to the second message digest; </claim-text>
+<claim-text>determining whether contents of the client match contents of the repository based on said comparing the first message digest to the second message digest; </claim-text>
+<claim-text>copying files from the client to the repository if the files are not found on the repository or do not match the files found on the repository; and </claim-text>
+<claim-text>updating the database of message digests on the repository by copying the message digest from the client to the database on the repository. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said verifying that the contents of the repository match the contents of the client comprises: 
+<claim-text>generating a first cryptographic hash from a list of message digests for all files on the client to be cached on the repository; </claim-text>
+<claim-text>generating a second cryptographic hash from the contents of the database of message digests from the repository; </claim-text>
+<claim-text>comparing the first and second cryptographic hash; and </claim-text>
+<claim-text>repeating client and repository synchronization if the first and second cryptographic hashes do not match. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A system comprising: 
+<claim-text>a repository server connected with a network, to function as a data repository on behalf of a client; and </claim-text>
+<claim-text>the client connected with said repository server via the network, wherein said client 
+<claim-text>generates a plurality of message digests that each uniquely identify the content of a corresponding file stored on the client, </claim-text>
+<claim-text>synchronizes contents of said client with files stored in the repository server based on contents of the message digests on the client and a database of message digests stored on the repository, and </claim-text>
+<claim-text>verifies whether the contents of the repository match the contents of the client. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said generating a plurality of message digests comprises performing a cryptographic hash for each file to be synchronized. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said cryptographic hash comprises 128 to 160 bits. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said client: 
+<claim-text>reads a first message digest generated on the client; </claim-text>
+<claim-text>reads a second message digest from the database of message digests from the repository corresponding to the first message digest; </claim-text>
+<claim-text>compares the first message digest to the second message digest; </claim-text>
+<claim-text>determines whether contents of the client match contents of the repository based on said comparing the first message digest to the second message digest; </claim-text>
+<claim-text>copies files from the client to the repository if the files are not found on the repository or do not match the files found on the repository; and </claim-text>
+<claim-text>updates the database of message digests on the repository by copying the message digest from the client to the database on the repository. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said client: 
+<claim-text>generates a first cryptographic hash from the message digest on the client; </claim-text>
+<claim-text>generates a second cryptographic hash from the database of message digests from the repository; </claim-text>
+<claim-text>compares the first and second cryptographic hash; and </claim-text>
+<claim-text>repeats client and repository synchronization if the first and second cryptographic hashes do not match. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A system comprising: 
+<claim-text>a client connected with a repository server via a network, wherein said client generates a plurality of message digests that each uniquely identify the content of a corresponding file stored on the client; and </claim-text>
+<claim-text>the repository server connected with the network, to function as a data repository on behalf of the client, wherein said repository server 
+<claim-text>synchronizes contents of said client with files stored in the repository server based on contents of the message digests on the client and a database of message digests stored on the repository, and </claim-text>
+<claim-text>verifies whether the contents of the repository match the contents of the client. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said generating a plurality of message digests comprises performing a cryptographic hash for each file to be synchronized. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein said cryptographic hash comprises 128 to 160 bits. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said repository server: 
+<claim-text>reads a first message digest generated on the client; </claim-text>
+<claim-text>reads a second message digest from the database of message digests from the repository corresponding to the first message digest; </claim-text>
+<claim-text>compares the first message digest to the second message digest; </claim-text>
+<claim-text>determines whether contents of the client match contents of the repository based on said comparing the first message digest to the second message digest; </claim-text>
+<claim-text>copies files from the client to the repository if the files are not found on the repository or do not match the files found on the repository; and </claim-text>
+<claim-text>updates the database of message digests on the repository by copying the message digest from the client to the database on the repository. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said repository server: 
+<claim-text>generates a first cryptographic hash from the message digest on the client; </claim-text>
+<claim-text>generates a second cryptographic hash from the database of message digests from the repository; </claim-text>
+<claim-text>compares the first and second cryptographic hash; and </claim-text>
+<claim-text>repeats client and repository synchronization if the first and second cryptographic hashes do not match. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A machine-readable medium having stored thereon data representing sequences of instructions, said sequences of instructions which, when executed by a processor, cause said processor to: 
+<claim-text>generate message digests on a client connected with a network wherein said message digests uniquely identify contents of files stored on the client; </claim-text>
+<claim-text>synchronize contents of said client with a repository connected with the network based on contents of the message digests on the client and corresponding entries in a database of message digests stored on the repository; and </claim-text>
+<claim-text>verify that the contents of the repository match the contents of the client. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said client stores the message digests on the client after generating the message digests. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein said client generates new message digests for all files on the client to be cached on the repository prior to data synchronization. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said files stored on the client comprise a subset of all files stored on the client. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein said subset comprises only files stored in specified directories. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said client generates a cryptographic hash for each file to be synchronized; </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein said cryptographic hash comprises 128 to 160 bits. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said client: 
+<claim-text>generates a first message digest for a file stored on the client; </claim-text>
+<claim-text>reads a second message digest from the database of message digests from the repository corresponding to the first message digest; </claim-text>
+<claim-text>compares the first message digest to the second message digest; </claim-text>
+<claim-text>determines whether contents of the client match contents of the repository; </claim-text>
+<claim-text>copies files from the client to the repository if the files are not found on the repository or do not match the files found on the repository; and </claim-text>
+<claim-text>updates the database of message digests on the repository by copying the message digest from the client to the database on the repository. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The machine-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said client: 
+<claim-text>generates a first cryptographic hash from a list of message digests for all files on the client to be cached on the repository; </claim-text>
+<claim-text>generates a second cryptographic hash from the contents of the database of message digests from the repository; </claim-text>
+<claim-text>compares the first and second cryptographic hash; and </claim-text>
+<claim-text>repeats client and repository synchronization if the first and second cryptographic hashes do not match.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005306A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005306A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005306A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005306A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005306A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005306A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005306A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030005306A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

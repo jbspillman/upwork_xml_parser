@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005091A1-20030102-D00000.TIF SYSTEM "US20030005091A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005091A1-20030102-D00001.TIF SYSTEM "US20030005091A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005091A1-20030102-D00002.TIF SYSTEM "US20030005091A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005091A1-20030102-D00003.TIF SYSTEM "US20030005091A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005091A1-20030102-D00004.TIF SYSTEM "US20030005091A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005091A1-20030102-D00005.TIF SYSTEM "US20030005091A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005091A1-20030102-D00006.TIF SYSTEM "US20030005091A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005091</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896591</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F015/177</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>220000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>223000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>224000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Method and apparatus for improved monitoring in a distributed computing system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Lorin</given-name>
+<middle-name>Evan</middle-name>
+<family-name>Ullmann</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Jason</given-name>
+<family-name>Benfield</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Julianne</given-name>
+<family-name>Yarsa</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Oliver</given-name>
+<middle-name>Yehung</middle-name>
+<family-name>Hsu</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+</address>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Anne Vachon Dougherty</name-1>
+<name-2></name-2>
+<address>
+<address-1>3173 Cedar Road</address-1>
+<city>Yorktown Heights</city>
+<state>NY</state>
+<postalcode>10598</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method having multiple instances of polling engines at IP drivers, wherein the multiple polling engines are monitoring to discover the same network scope. The polling engines&apos; polling intervals are staggered so that the polling communications do not unnecessarily clog the network and so that an apparent response time can be realized in the aggregate results of multiple instance polling. Unique IDs are used to differentiate which engine&apos;s status data is being used at any given time, should follow-up be required. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This invention relates to distributed computing systems and more particularly to a system and method for providing fault tolerance in status and discovery monitoring without unduly burdening the system. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Distributed data processing networks may have thousands of nodes, or endpoints, which are geographically dispersed. In such a distributed computing network, the computing environment is optimally managed in a distributed manner with a plurality of computing locations running distributed kernels services (DKS). The managed environment can be logically separated into a series of loosely connected managed regions in which each region has its own management server for managing local resources. The management servers coordinate activities across the network and permit remote site management and operation. Local resources within one region can be exported for the use of other regions in a variety of manners. A detailed discussion of distributed network services can be found in co-pending patent application Ser. No. 09/738,307 filed on Dec. 15, 2000, entitled &ldquo;METHOD AND SYSTEM FOR MANAGEMENT OF RESOURCE LEASES IN AN APPLICATION FRAMEWORK SYSTEM&rdquo;, the teachings of which are herein incorporated by reference. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Realistically, distributed networks can comprise millions of machines (each of which may have a plurality of endpoints) that can be managed by thousands of control machines. As set forth in co-pending U.S. patent application Ser. No. 09/740,088 filed Dec. 18, 2000 and entitled &ldquo;Method and Apparatus for Defining Scope and for Ensuring Finite Growth of Scaled Distributed Applications&rdquo;, the teachings of which are hereby incorporated by reference, the distributed control machines run Internet Protocol (IP) Driver Discovery/Monitor Scanners which poll the endpoints and gather and store status data, which is then made available to other machines and applications. Such a distributed networked system must be efficient or else the status communications alone will suffocate the network. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> A network discovery engine for a distributed network comprises at least one IP DRIVER. For vast networks, a plurality of distributed IP drivers are preferably, with each performing status and other communications for a subset of the network&apos;s resources. As discussed in the aforementioned patent applications, carefully defining a driver&apos;s scope assures that status communications are not duplicative. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> While duplication of status and discovery monitoring has been avoided, there is still a need to provide fault tolerance in a distributed scalable application environment. Synchronously managing a single resource in parallel is problematic since a simple redundant discovery/status update is not desirable due to bandwidth, memory and storage limitations in a vast network. In addition, a stand-alone application, such as Netview, which gathers both status and discovery over several different machines can not provide aggregate status from other machines. Furthermore, such a stand-alone application can only provide status at a status interval which is equal to or greater than its longest network call code path. Therefore, if, for example, ping status takes 5 minutes, then the shortest interval that can be promised to customers is 5 minutes (a value which will vary greatly in proportion to the number of endpoints that are being managed). </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> It is desirable and an object of the present invention, therefore, to provide a system and method having an improved apparent response time for a network monitor to deliver status and discovery information. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> It is another object of the invention to provide a system and method whereby polling latency for the network can be minimized without adversely affecting bandwidth and storage. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It is still another object of the present invention to provide a system and method whereby aggregate status from different network machines can be provided at regular, low latency intervals. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Yet another object of the present invention is to provide a system and method for optimizing polling intervals for a plurality of polling devices to meet quality of service objectives for polling output. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The foregoing and other objectives are realized by the present invention which provides a system and method having multiple instances of polling engines at IP drivers, wherein the multiple polling engines are monitoring to discover the same network scope. The polling engines&apos; polling intervals are staggered so that the polling communications do not unnecessarily clog the network and so that an apparent response time can be realized in the aggregate results of multiple instance polling. Unique IDs are used to differentiate which engine&apos;s status data is being used at any given time, should follow-up be required. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The invention will now be described in greater detail with specific reference to the appended drawings wherein: </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> provides a schematic representation of a distributed network in which the present invention may be implemented; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> provides a schematic representation of the server components which are used for implementing the present invention; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> provides a more detailed schematic block diagram of the components of an IP DRIVER for use in the present invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> provides a block diagram showing the graphical user interface (GUI) for configuring the concurrent staggered poll engine (CSPE) in accordance with the present invention; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart depicting a process for configuring IP drivers with coextensive scope as per the present invention; and </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flowchart depicting a process for implementing monitoring in accordance with the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The present invention can be implemented in any network with multiple servers and a plurality of endpoints; and is particularly advantageous for vast networks having hundreds of thousands of endpoints and links therebetween. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> provides a schematic illustration of a network for implementing the present invention. Among the plurality of servers, <highlight><bold>101</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>101</bold></highlight><highlight><italic>n </italic></highlight>as illustrated, at least one of the servers, <highlight><bold>101</bold></highlight><highlight><italic>a </italic></highlight>in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, which already has distributed kernel services (DKS) is designated as one of the control servers for the purposes of implementing the invention. A network has many endpoints, with endpoint being defined, for example, as one Network Interface Card (NIC) with one MAC address, IP Address. The control server <highlight><bold>101</bold></highlight><highlight><italic>a </italic></highlight>in accordance with the present invention has the components illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> in addition to the distributed kernel services, for providing a method including the steps of: discovering the network topology and physical scope for network devices; regularly updating the status of endpoints using the physical network topology; updating the network topology based on discovery of changes to the network topology; and, providing status input in accordance with a predefined interval. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the server <highlight><bold>200</bold></highlight> includes the already-available DKS core services at component <highlight><bold>201</bold></highlight>, which services include the object request broker (ORB) <highlight><bold>211</bold></highlight>, service manager <highlight><bold>221</bold></highlight>, and the Administrator Configuration Database <highlight><bold>231</bold></highlight>, among other standard DKS services. The DKS Internet Protocol Object Persistence (IPOP) Manager <highlight><bold>203</bold></highlight> provides the functionality for gathering network data, as is detailed in the co-pending patent application entitled &ldquo;METHOD AND SYSTEM FOR MANAGEMENT OF RESOURCE LEASES IN AN APPLICATION FRAMEWORK SYSTEM&rdquo;, Serial No. 09/738,307, filed on Dec. 15, 2000, the teachings of which are incorporated by reference herein (Docket AUS9-2000-0699). </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In accordance with the functionality of the DKS IPOP, endpoint data are gathered for use by the DKS Scope Manager <highlight><bold>204</bold></highlight>, the functions of which are further detailed below. A Network Objects database <highlight><bold>213</bold></highlight> is provided at the DKS IPOP Manager <highlight><bold>203</bold></highlight> for storing the information which has been gathered regarding network objects. The DKS IPOP also includes a Physical Network Topology Database <highlight><bold>223</bold></highlight>. The Physical Network Topology Database will receive input from the inventive Concurrent Staggered Poll Engine (CSPE) which is further detailed below. The CSPE comprises a distributed polling engine made up of a plurality of IP Drivers, such as <highlight><bold>202</bold></highlight>, which are, as a service of DKS, provided to discover the physical network and to continually update the status thereof. As detailed in the aforementioned patent application, the topology/polling engine can discover the endpoints, the links between endpoints, and the routes comprising a plurality of links, and provide a topology map. Regularly updating the status and topology information will provide a most accurate account of the present conditions in the network. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As depicted in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the distributed Internet Protocol (IP) Driver Subsystem <highlight><bold>300</bold></highlight> contains a plurality of components, including one or more IP Drivers <highlight><bold>302</bold></highlight> (<highlight><bold>202</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). Every IP Driver manages its own &ldquo;scope&rdquo;, described in greater detail below. Each IP Driver is assigned to a topology manager within Topology Service <highlight><bold>304</bold></highlight>, which can serve more than one IP Driver. Topology Service <highlight><bold>304</bold></highlight> stores topology information obtained from the discovery controller <highlight><bold>306</bold></highlight> of CSPE <highlight><bold>350</bold></highlight>. A copy of the topology information may additionally be stored at each local server DKS IPOP (see: storage location <highlight><bold>223</bold></highlight> of DKS IPOP <highlight><bold>203</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 2</cross-reference> for maintaining attributes of discovered IP objects). The information stored within the Topology Server may include graphs, arcs, and the relationships between nodes as determined by IP Mapper <highlight><bold>308</bold></highlight>. Users can be provided with a GUI (not shown) to navigate the topology, stored within a database at the Topology Service <highlight><bold>304</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Discovery controller <highlight><bold>306</bold></highlight> of CSPE <highlight><bold>350</bold></highlight> detects IP objects in Physical IP networks <highlight><bold>314</bold></highlight> and the monitor controller <highlight><bold>316</bold></highlight> monitors the IP objects. A persistent repository, such as IPOP database <highlight><bold>223</bold></highlight>, is updated to contain information about the discovered and monitored IP objects. Given the duplicated scope of discovery for the CSPEs at the distributed locations, the IPOP database will be updated at more frequent intervals from other IP Drivers. The IP Driver <highlight><bold>302</bold></highlight> may use temporary IP data storage component <highlight><bold>318</bold></highlight> and IP data cache component <highlight><bold>320</bold></highlight>, as necessary, for caching IP objects or for storing IP objects in persistent repository <highlight><bold>223</bold></highlight>, respectively. As discovery controller <highlight><bold>306</bold></highlight> and monitor controller <highlight><bold>316</bold></highlight> of component <highlight><bold>350</bold></highlight> perform detection and monitoring functions, events can be written to network event manager application <highlight><bold>322</bold></highlight> to alert network administrators of certain occurrences within the network, such as the discovery of duplicate IP addresses or invalid network masks. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> External applications/users <highlight><bold>324</bold></highlight> can be other users, such as network administrators at management consoles, or applications that use IP Driver GUI interfaces <highlight><bold>326</bold></highlight> to configure IP Driver <highlight><bold>302</bold></highlight>, manage/unmanage IP objects, and manipulate objects in the persistent repository <highlight><bold>223</bold></highlight>. Configuration services <highlight><bold>328</bold></highlight> provide configuration information to IP Driver <highlight><bold>302</bold></highlight>. IP Driver controller <highlight><bold>330</bold></highlight> serves as the central control of all other IP Driver components. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> A network discovery engine is a distributed collection of IP Drivers that are used to ensure that operations on IP objects by gateways can scale to a large installation and can provide fault-tolerant operation with dynamic start/stop or reconfiguration of each IP Driver. The IPOP Service manages discovered IP objects. To do so, the IPOP Service uses a distributed system of IPOP <highlight><bold>203</bold></highlight> with IPOP databases <highlight><bold>223</bold></highlight> in order to efficiently service query requests by a gateway to determine routing, identity, and a variety of details about an endpoint. The IPOP Service also services queries by the Topology Service in order to display a physical network or map to a logical network, which may be a subnet (or a supernet) of a physical network that is defined programmatically by the Scope Manager, as detailed below. IPOP fault tolerance is also achieved by distribution of IPOP data and the IPOP Service among many endpoint Object Request Brokers (ORBs). </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> As taught in the co-pending patent application, one or more IP Drivers can be deployed to provide distribution of IP discovery and promote scalability of IP Driver subsystem services in large networks where a single IP Driver subsystem is not sufficient to discover and monitor all IP objects. However, where the prior approach provided that each IP discovery Driver would perform discovery and monitoring on a collection of IP resources within the driver&apos;s exclusive &ldquo;physical scope&rdquo;, the present invention expands a driver&apos;s scope so that multiple IP Drivers monitor/discover the same scope. A driver&apos;s physical scope is the set of IP subnets for which the driver is responsible to perform discovery and monitoring. In the past, network administrators would generally partition their networks into as many physical scopes as were needed to provide distributed discovery and satisfactory performance. Under the present invention, the performance issue is addressed by the staggering of monitoring intervals among multiple IP Drivers having the same scope. Once the scope is defined for each instance of an IP Driver, and the polling interval established with staggered polling so that no two IP Drivers are polling the same endpoint at the same time, each IP Driver will perform its monitoring on its own timetable with its own polling interval. Results of polling, however, will be available far more frequently than any one polling interval, since multiple IP Drivers are providing results at staggered intervals. Therefore, at any given time, a most recent version of polling results will be available. As an example, if a quality of service (QOS) objective is to provide updated status every minute, and the latency for one monitoring cycle is five (5) minutes, then utilizing five (5) IP Drivers in parallel configuration with each IP Driver having coextensive scope will provide updated polling results every minute. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> As taught in the referenced co-pending patent application, a user interface can be provided, such as an administrator console, to write scope information into the Configuration Service. <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a graphical user interface provided for use by a system administrator for configuring IP Drivers with coextensive scope as per the present invention. When a system adminstrator wishes to configure the distributed concurrent staggered poll engine (CSPE), the two critical variables are the IP Driver scope and the QOS polling interval. In order to define the scope, the GUI provides a &ldquo;DiscoveryPhysicalNetworkButton&rdquo; which will consult a previously-created topology map to assist in developing the scope information for the IP Drivers. Given the topology, the number of IP Drivers within the mapped network, and the location of those IP Drivers (using the referenced ORB IDs), a system administrator can establish the scope for the IP Drivers as well as the polling interval among the CSPEs that will effectively meet the QOS objectives for updated polling results. The GUI may access CSPE-quantifying software for calculating scope and interval values to be recommended to the system adminstrator, or can provide a &ldquo;manual override&rdquo; option for a system administrator to alter the recommended configuration of the monitoring system. For example, the system administrator may choose to override the value of the recommended number of IP Drivers, for example to adjust the number upward in order to exceed performance objectives. Efficient polling will be best achieved with polling of small scope groups of endpoints, so that one objective of the configuration process will be to minimize the scope. The system adminstrator may also choose to override the recommendations for the locations of instances of the CSPE due to specific latency problems or load considerations at one or more particular IP Drivers. It is to be noted that while all CSPE instances will be monitoring the same endpoints, the latency associated with one IP DRIVER versus the latency associated with another IP Driver can differ greatly based on location, load, etc. Therefore, the override option is available to the system administrator. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart depicting a process for configuring IP Drivers with coextensive scope as per the present invention. At step <highlight><bold>501</bold></highlight>, the maximum number of devices is determined. The &ldquo;maximum number&rdquo; may represent the exact number of devices presently in the network based on an ongoing dynamic discovery process, or may, for scaleability reasons, represent an expected maximum (i.e., a theoretical limit of the network). Next, at step <highlight><bold>502</bold></highlight>, the network link speeds between polling engines and devices are calculated to determine an expected polling latency between devices. While actual network link speeds may be stored for links between existing endpoints and existing IP Drivers, some estimating may be desired if one wishes to design toward an expanded network. It is here to be noted that instantiation of more CSPEs can be implemented later to provide for network expansion or to dynamically adjust to changing network speed or congestion. At step <highlight><bold>503</bold></highlight>, the value of the quality of service (QOS) objective (e.g., polling updates every one minute) is obtained. Once the number of devices, link speeds, and QOS objective are available, a recommended number of needed IP Drivers can be calculated. As set forth in the example above, if a one minute update interval is the QOS objective, then the utilization of 5 IP Drivers each having an expected 5 minute polling latency and operating in staggered fashion at substantially regular start intervals should realize the objective. Once the number of IP Drivers has been calculated at <highlight><bold>504</bold></highlight>, the stagger poll interval is established at <highlight><bold>505</bold></highlight> along with the poll time interval for each IP Driver. The coextensive scope is then verified at <highlight><bold>506</bold></highlight> to assure that no endpoints will be missed in the polling process; and, finally, the IP Drivers are configured at <highlight><bold>507</bold></highlight> with their scope and polling time intervals. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flowchart depicting a process for implementing network monitoring in accordance with the present invention. As the CSPE at each IP Driver begins at <highlight><bold>601</bold></highlight>, it first checks to determine if the time is equal to its &ldquo;start to monitor&rdquo; time (i.e., if a designated interval has elapsed) at <highlight><bold>603</bold></highlight>. If it is time to begin monitoring, the polling engine starts to loop through all of the endpoints in its defined scope at <highlight><bold>605</bold></highlight>. For each endpoint, the CSPE records the endpoint status at <highlight><bold>607</bold></highlight>. If all endpoints have been polled, as determined at <highlight><bold>609</bold></highlight>, then the polling results are sent to the IPOP (<highlight><bold>203</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>) at <highlight><bold>610</bold></highlight> and the CSPE returns to await the start of its polling interval again at <highlight><bold>603</bold></highlight>. If not all endpoints have been polled, the CSPE returns to steps <highlight><bold>605</bold></highlight> and <highlight><bold>607</bold></highlight> until a determination is made at <highlight><bold>609</bold></highlight> that all endpoints have been polled. It is to be noted that the distributed polling engine could provide continual input to the IPOP or could have each IP Driver provide its complete polling results upon completion of polling. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> As detailed in the aforementioned co-pending patent application, an IP Driver gets its physical scope configuration information from the Configuration Service. The system administrator with CSPE defines the scopes per distributed IP Driver and stores that information at the Configuration Services for use by the IP Drivers. The scope of the physical network was used by the IP Driver in order to decide whether or not, upon discovery, to add an endpoint to its topology. The physical scope configuration information was previously stored using the following format: </paragraph>
+<paragraph id="P-0030" lvl="1"><number>&lsqb;0030&rsqb;</number> ScopeID&equals;driverID,anchorname,subnetAddress:subnetMask&lsqb;:privateNetworkID:privateNetworkName:subnetPriority&rsqb;&lsqb;, SubnetAddress:subnetMask:privateNetworkID:privateNetworkName:subnetPriority&rsqb;&rsqb;</paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> A difference with the present invention is that the term &ldquo;scope&rdquo; has been extended to include two aspects: parallel scope and unique scope. The parallel scope is the monitoring scope, which the unique scope refers to actual scope of control. In addition, a difference with the present invention is that network objects describing both the physical and logical network will now be duplicated in IPOP. IPOP will be able to distinguish between records, however, due to the fact that uniqueness in maintained through the use of scopeID, IP address and Net address. For any updated set of polling results, the IPOP can readily determine the identity of the polling engine which provided the results. The appearance of a single polling entity is maintained for the &ldquo;outside&rdquo; world given the fact that all devices/endpoints within the given scope have been polled during the updated time interval. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The invention has been described with reference to several specific embodiments. One having skill in the relevant art will recognize that modifications may be made without departing from the spirit and scope of the invention as set forth in the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">Having thus described our invention, what we claim as new and desire to secure by Letters Patent is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for configuring a distributed endpoint monitoring engine comprising a plurality of discovery engines in a distributed computing system comprising the steps of: 
+<claim-text>determining the maximum number of endpoints in said distributed computing system; </claim-text>
+<claim-text>determining an expected polling latency between endpoints; </claim-text>
+<claim-text>retrieving the value of the desired polling update interval; </claim-text>
+<claim-text>calculating a recommended number of discovery engines needed to provide the desired polling update interval based on the number of endpoints, the expected polling latency and the desired polling update interval; and </claim-text>
+<claim-text>configuring the distributed engine based on said recommended number of discovery engines. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said configuring said distributed engine comprises the steps of: 
+<claim-text>selecting a chosen number of discovery engines; and </claim-text>
+<claim-text>establishing a poll time interval for each of the chosen engines. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> further comprising establishing a staggered schedule for activating each of said chosen engines. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising identifying a coextensive monitoring scope for each of said chosen engines. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> further comprising verifying that all endpoints are encompassed by said coextensive monitoring scope. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> further comprising communicating said coextensive monitoring scope and said poll time interval to each of said chosen engines. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said determining the maximum number comprises dynamic discovery of the actual number of endpoints. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said determining the maximum number comprises estimating an expected maximum. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said determining the expected polling latency is based on at least one of actual link speed, theoretical link speed, actual endpoint speed and theoretical endpoint speed. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method for implementing distributed endpoint monitoring in a distributed network comprising the steps of: 
+<claim-text>determining a coextensive monitoring scope for each of a plurality of distributed discovery engines; </claim-text>
+<claim-text>determining a poll time interval for each of said plurality of distributed discovery engines; </claim-text>
+<claim-text>configuring each of said plurality of distributed discovery engines with said coextensive monitoring scope and poll time interval; </claim-text>
+<claim-text>establishing a staggered schedule for starting each of said plurality of distributed discovery engines; and </claim-text>
+<claim-text>implementing said staggered schedule. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> further comprising each of said plurality of distributed discovery engines monitoring said coextensive monitoring scope over its poll time interval. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein each of said plurality of distributed discovery engines communicates monitoring results to a central database. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein said determining a coextensive scope comprises the steps of: 
+<claim-text>determining the maximum number of endpoints in said distributed computing system; </claim-text>
+<claim-text>determining an expected polling latency between endpoints; </claim-text>
+<claim-text>retrieving the value of the desired polling update interval; </claim-text>
+<claim-text>calculating a recommended number of discovery engines needed to provide the desired polling update interval based on the number of endpoints, the expected polling latency and the desired polling update interval; and </claim-text>
+<claim-text>configuring the distributed engine based on said recommended number of discovery engines. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A program storage device readable by machine tangibly embodying a program of instructions executable by the machine to perform method steps for configuring a distributed endpoint monitoring system comprising a plurality of distributed discovery engines, said method comprising the steps of: 
+<claim-text>determining the maximum number of endpoints in said distributed computing system; </claim-text>
+<claim-text>determining an expected polling latency between endpoints based on network link speeds; </claim-text>
+<claim-text>retrieving the value of the desired polling update interval; </claim-text>
+<claim-text>calculating the number of distributed discovery engines needed to provide the desired polling update interval based on the number of endpoints, the expected polling latency and the desired polling update interval; and </claim-text>
+<claim-text>establishing a poll time interval for each of the distributed discovery engines. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The program storage device of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein said method further comprises establishing a staggered schedule for activating each of said distributed discovery engines. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The program storage device of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein said method further comprises identifying a coextensive monitoring scope for each of said distributed discovery engines. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The program storage device of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein said method further comprises verifying that all endpoints are encompassed by said coextensive monitoring scope. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The program storage device of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein said method further comprises communicating said coextensive monitoring scope and said poll time interval to each of said distributed discovery engines. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The program storage device of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein said determining the maximum number comprises estimating an expected maximum. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A program storage device readable by machine tangibly embodying a program of instructions executable by the machine to perform method steps for monitoring network endpoints in a distributed network, wherein said method comprises the steps of: 
+<claim-text>determining a coextensive monitoring scope for each of a plurality of distributed discovery engines; </claim-text>
+<claim-text>determining a poll time interval for each of said plurality of distributed discovery engines; </claim-text>
+<claim-text>configuring each of said plurality of distributed discovery engines with said coextensive monitoring scope and poll time interval; </claim-text>
+<claim-text>establishing a staggered schedule for starting each of said plurality of distributed discovery engines; and </claim-text>
+<claim-text>implementing said staggered schedule. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The program storage device of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference> wherein said method further comprises each of said plurality of distributed discovery engines monitoring said coextensive monitoring scope over its poll time interval. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The program storage device of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein each of said plurality of distributed discovery engines communicates monitoring results to a central database. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A network monitoring system for a plurality of endpoints in a distributed computing system comprising: 
+<claim-text>a plurality of distributed discovery engines each configured to monitor the same plurality of endpoints during a predetermined poll time interval, to produce a poll output, and to provide the poll output to a central repository; and </claim-text>
+<claim-text>a central repository for receiving said poll output. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> further comprising at least one concurrent polling engine component for identifying the plurality of endpoints for monitoring. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> wherein said at least one concurrent polling engine component is additionally adapted to establish a plurality of poll time intervals for said plurality of distributed discovery engines. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> wherein said at least one concurrent polling engine component is adapted to create a staggered polling schedule comprising said plurality of poll time intervals. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. In a distributed computing system comprising a plurality of endpoints and at least two system locations, an improved monitoring system comprising a distributed concurrent staggered polling engine distributed at said at least two system locations.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005091A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005091A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005091A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005091A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005091A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005091A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005091A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005308A1-20030102-D00000.TIF SYSTEM "US20030005308A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005308A1-20030102-D00001.TIF SYSTEM "US20030005308A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005308A1-20030102-D00002.TIF SYSTEM "US20030005308A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005308A1-20030102-D00003.TIF SYSTEM "US20030005308A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005308A1-20030102-D00004.TIF SYSTEM "US20030005308A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005308</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09681737</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010530</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>713</class>
+<subclass>185000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and system for globally restricting client access to a secured web site</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Paul</given-name>
+<middle-name>L.</middle-name>
+<family-name>Rathbun</family-name>
+</name>
+<residence>
+<residence-us>
+<city>West Bloomfield</city>
+<state>MI</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Michael</given-name>
+<middle-name>Joseph</middle-name>
+<family-name>Konopka</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Livonia</city>
+<state>MI</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Matthew</given-name>
+<middle-name>Todd</middle-name>
+<family-name>Kromer</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Fredericksburg</city>
+<state>VA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>BROOKS &amp; KUSHMAN P.C./FGTI</name-1>
+<name-2></name-2>
+<address>
+<address-1>1000 TOWN CENTER</address-1>
+<address-2>22ND FLOOR</address-2>
+<city>SOUTHFIELD</city>
+<state>MI</state>
+<postalcode>48075</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and system are provided for restricting client access to a web site. A first web server receives a client login and, in response, allocates a cookie to the client containing an access credential having at least one client role-based attribute. A second web server hosts the secured web site, the web site having an associated security file containing at least one client role-based access privilege. In response to the client&apos;s HTTP request at the second server, the cookie is retrieved, decoded and the access credential is compared to the at least one client role-based access privilege. If the access credential has at least one role-based attribute in common with the at least one client role-based access privilege, the client is granted access to the site. Alternately, a site owner defines a token access credential attribute and security file privilege for hierarchal group access to the secured web site. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates generally to restricting access to a web site via single client logon and, more particularly, to a method and system for globally restricting client access to a secured web site based on role-based access credential attributes specific to the client. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Background Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Today, many corporate entities rely extensively on web-based applications and informational resources to carry out their critical business activities. For example, a single manufacturing company may rely internally on web-based accounting, personnel, inventory and production applications. Externally, the company may purchase from and sell to hundreds of distributed suppliers communicating and executing purchase orders via the manufacturer&apos;s web-based purchasing and selling application. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> To maintain an adequate level of integrity, business critical applications must be secured by competent access authorization validation solutions. Conventionally, each site developer creates his or her own solution to meet the security needs of the site or application owner. No standard security mechanism exists for globally defining access to web sites and web-based applications. Site or application owners that wish to restrict client access in any manner have to define, assign and manage unique passwords for every potential client user. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> From the client users&apos; perspective, password management is overwhelming as well. Most client users have to remember a unique password and login ID for each of the secured applications they utilize in their everyday business activities. As companies continue to streamline and secure business information on a web-based platform, the number of login IDs and passwords the average employee must remember increases. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> To alleviate the site owners&apos; burden of managing passwords and corresponding site access authorizations, site owners need a method and system for globally defining access among groups of clients having the application in common. For example, the administrator of a corporate purchasing application should be able to globally authorize all purchasing department employees or external suppliers to access his application. This global role-based authorization eliminates the need of defining, assigning and managing unique passwords for every potential client user. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> To alleviate the client user&apos;s burden of remembering an overwhelming number of user IDs and corresponding passwords, the method and system should allow authorized clients to access the secured sites and applications utilizing a cookie-based access credential in lieu of a conventional user name and password login. Such a solution would require a client to authenticate him or herself via single logon to a security server transparent to the server hosting the secured application. Preferably, the security server allocates the corporate role-based access credentials to clients based on synchronized databases of pre-existing client passwords (e.g., Microsoft Outlook, Windows NT and LDAP-compliant directories, etc.). </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF INVENTION </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A system is provided for globally restricting client access to a secured web site. The system comprises a first and a second web server. The first web server is configured to receive a client login and return a cookie to the client containing an access credential wherein the access credential contains at least one role-based attribute specific to the client. The second web server hosts a secured web site having an associated security expression containing at least one role-based access privilege for the web site. The second web server is configured to receive the cookie containing the access credential in response to an HTTP request from the client and, if the access credential contains a role-based attribute in common with the security expression, grant the client access to the secured web site. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> A method is provided for globally restricting client access to a secured web site. The method comprises receiving a client login at a first web server, returning a cookie to the client containing an access credential wherein the access credential contains at least one role-based attribute specific to the client, receiving the cookie from the client in response to an HTTP request at a second web server wherein the second web server hosts a secured web site having an associated security expression containing at least one role-based access privilege, and, if the access credential contains a role-based attribute in common with the security expression, granting the client access to the secured web site.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF DRAWINGS </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block flow diagram illustrating a preferred method for carrying out the present invention; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates the environment in which the present invention operates; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block flow diagram illustrating the secured server response to a client login; and </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a tree diagram illustrating a hierarchal relationship among example token attributes in accord with the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The present invention comprises a method and system for controlling access to a plurality of secured web sites or web-based applications via single client logon. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an overview block flow diagram illustrating a preferred method for carrying out the invention. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a system for restricting access to a web site or application in accord with the present invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference>, a site owner <highlight><bold>40</bold></highlight> publishes a web site <highlight><bold>42</bold></highlight> (or web-based application) to a hosting server <highlight><bold>44</bold></highlight> as described in block <highlight><bold>10</bold></highlight>. To define which clients <highlight><bold>46</bold></highlight> are entitled to access the site, the site owner defines a security file <highlight><bold>50</bold></highlight> for the web site, as described in block <highlight><bold>12</bold></highlight>. Security expression definition is discussed in more detail infra. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> To access the secured site <highlight><bold>42</bold></highlight>, a client <highlight><bold>46</bold></highlight> presents the hosting server <highlight><bold>44</bold></highlight> with an HTTP request as described in block <highlight><bold>14</bold></highlight>. In response to the HTTP request, the hosting server <highlight><bold>44</bold></highlight> retrieves a cookie from the client containing an encoded access credential <highlight><bold>52</bold></highlight>. If the client is accessing the secured site for the first time, the hosting computer will be unable to retrieve the necessary cookie as indicated by arrow <highlight><bold>16</bold></highlight> and will automatically redirect the client to a security server <highlight><bold>48</bold></highlight> as described in block <highlight><bold>18</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Upon redirect to the security server <highlight><bold>48</bold></highlight>, the client <highlight><bold>46</bold></highlight> is presented with a conventional login request <highlight><bold>49</bold></highlight> comprising a user name and password as described in block <highlight><bold>20</bold></highlight>. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block flow diagram illustrating the security server response to the client login. After receiving the client&apos;s user name and password, the security server queries a user name cache <highlight><bold>60</bold></highlight> for a user name matching the user name input by the client. If no match is found within the user name cache as indicated by arrow <highlight><bold>62</bold></highlight>, the security server queries a user name database <highlight><bold>64</bold></highlight> for a user name matching the user name input by the client. If no match is found within the user name database, the client is denied access to the secured site <highlight><bold>42</bold></highlight> as described in block <highlight><bold>65</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> If a user name match is found within the user name database <highlight><bold>64</bold></highlight>, the user name cache <highlight><bold>60</bold></highlight> is updated and the security server queries a password cache <highlight><bold>68</bold></highlight> for a password matching the password input by the client. If no match is found within the password cache as indicated by arrow <highlight><bold>70</bold></highlight>, the security server queries a password database <highlight><bold>72</bold></highlight> for a password matching the password input by the client. If no match is found within the password database, the client is denied access to the secured site <highlight><bold>42</bold></highlight> as described in block <highlight><bold>76</bold></highlight>. If a match is found within the password database <highlight><bold>72</bold></highlight>, the password cache <highlight><bold>68</bold></highlight> is updated to include the client&apos;s password as described in block <highlight><bold>74</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In accord with a preferred embodiment of the present invention, the password database <highlight><bold>72</bold></highlight> provides password synchronization among a plurality of password repositories (e.g., Microsoft Outlook, Microsoft Windows NT and lightweight directory access protocol-compliant directories (LDAP), etc.). </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Referring again to <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference>, clients having a valid user name and password are each granted a cookie containing a unique encoded access credential <highlight><bold>52</bold></highlight> as described in block <highlight><bold>78</bold></highlight>. In accord with the preferred embodiment of the present invention, each access credential <highlight><bold>52</bold></highlight> comprises at least one attribute. Generally, access credential attributes can be divided into three categories: time-sensitive, corporate role-based, and token-based. Time sensitive access credential attributes comprise issue date and expiration date (e.g., ten hours from issue date). Corporate role-based access credential attributes comprise issuer, user identification, Internet protocol (IP) address, group name, department name, organization code, employee type, management role, organization name, common name, division abbreviation, building code, building city, building state, building country and authorization type. Token-based access credential attributes are discussed in more detail infra. A hash algorithm (e.g., RSA Security MD5) is used to provide integrity for the present invention. Authenticity for the present invention is provided using a public key algorithm (e.g., the RSA security RSA public key algorithm). The security server <highlight><bold>48</bold></highlight> contains the private key and the corresponding public key is contained within the hosting server <highlight><bold>44</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> After receiving a valid cookie containing an encoded access credential <highlight><bold>52</bold></highlight> from the security server <highlight><bold>48</bold></highlight>, the client <highlight><bold>46</bold></highlight> is automatically redirected to the hosting server <highlight><bold>44</bold></highlight> as described in block <highlight><bold>22</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In response to the redirected HTTP request at the secured site <highlight><bold>42</bold></highlight>, the hosting server <highlight><bold>44</bold></highlight> retrieves the cookie containing the encoded access credential, distills the encoded access credential and decodes the access credential as described in block <highlight><bold>24</bold></highlight>. Next, the decoded access credential is compared to the security file <highlight><bold>50</bold></highlight> having to determine whether the client is authorized to access the secured site as described in blocks <highlight><bold>28</bold></highlight> and <highlight><bold>30</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> For each site <highlight><bold>42</bold></highlight> hosted on the hosting server <highlight><bold>44</bold></highlight>, the corresponding site owner <highlight><bold>40</bold></highlight> defines a security file containing various parameters and rules that define which users are authorized to access the secured site or application. Authorization is accomplished via a standard agent for NSAPI &amp; ISAPI installed on the hosting server and granularity is to the directory level. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> On the UNIX platform, the name of the security file is &ldquo;.wslauth&rdquo; On the Windows NT platform, the name of the security file is &ldquo;auth.wsl&rdquo;. The standard syntax for the security expression within the security file is: security&equals;&ldquo;security expression&rdquo;. Table 1 contains security file syntax in accord with the present invention. Table 2 defines special characters for defining security expressions in accord with the present invention. Table 3 contains security files having example security file expressions.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 1</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Security File Syntax</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="98PT" align="left"/>
+<colspec colname="2" colwidth="98PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Security File Syntax</entry>
+<entry>Access Privileges</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;off&rdquo; or</entry>
+<entry>all users (disables access</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;none&rdquo;</entry>
+<entry>control)</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;attribute:value&rdquo;</entry>
+<entry>users matching the attribute</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>value</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;attribute&excl;value&rdquo;</entry>
+<entry>users not matching the</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>attribute value</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;$:token&rdquo;</entry>
+<entry>users possessing the token,</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>discussed infra</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number>  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 2</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Special Characters</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="63PT" align="left"/>
+<colspec colname="3" colwidth="77PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Character</entry>
+<entry>Name</entry>
+<entry>Meaning</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>&verbar;</entry>
+<entry>pipe</entry>
+<entry>or</entry>
+</row>
+<row>
+<entry></entry>
+<entry>,</entry>
+<entry>comma</entry>
+<entry>and</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&excl;</entry>
+<entry>exclamation</entry>
+<entry>not equal</entry>
+</row>
+<row>
+<entry></entry>
+<entry>:</entry>
+<entry>colon</entry>
+<entry>equal</entry>
+</row>
+<row>
+<entry></entry>
+<entry>*</entry>
+<entry>asterisk</entry>
+<entry>wildcard matches 0</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>or more characters</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&quest;</entry>
+<entry>question</entry>
+<entry>wildcard matches</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>exactly one</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>character</entry>
+</row>
+<row>
+<entry></entry>
+<entry>()</entry>
+<entry>parenthesis</entry>
+<entry>for grouping</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>conditionals</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number>  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 3</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Security Files with Example Security Expressions</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="98PT" align="left"/>
+<colspec colname="2" colwidth="105PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Security File</entry>
+<entry>Access Privileges</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;empcode:F&verbar;empc</entry>
+<entry>All users having an F, A or J</entry>
+</row>
+<row>
+<entry></entry>
+<entry>ode:A&verbar;empcode:J&rdquo;</entry>
+<entry>&ldquo;employee code&rdquo; access</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>credential attribute</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;user:prathbun&verbar;</entry>
+<entry>P. Rathbun and M. Kromer, as</entry>
+</row>
+<row>
+<entry></entry>
+<entry>user:mkromer&rdquo;</entry>
+<entry>identified by the user attribute</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>within their respective &ldquo;user&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>access credential attributes</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;$:dearborn.wsl</entry>
+<entry>All users that have the</entry>
+</row>
+<row>
+<entry></entry>
+<entry>.example&rdquo;</entry>
+<entry>dearborn.wsl.example &ldquo;token&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>access credential attribute</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;$:dearborn.wsl</entry>
+<entry>All users that have the</entry>
+</row>
+<row>
+<entry></entry>
+<entry>.example&verbar;user:prathbun&rdquo;</entry>
+<entry>dearborn.wsl.exemple &ldquo;token&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>access credential attribute or</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>P. Rathbun, as identified by his</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>&ldquo;user&rdquo; access credential</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>attribute</entry>
+</row>
+<row>
+<entry></entry>
+<entry>security &equals; &ldquo;mmrole:Y&rdquo;</entry>
+<entry>All users that possess the</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>&ldquo;management role&rdquo; access</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>credential attribute</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Unlike role-based access credential attributes (e.g., group name, department name, organization code, etc.), the &ldquo;token&rdquo; access credential attribute <highlight><bold>45</bold></highlight> allows a site owner <highlight><bold>40</bold></highlight> to locally allocate site access to particular users/clients <highlight><bold>46</bold></highlight> or groups of users/clients as indicated by arrow <highlight><bold>47</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> In accord with a preferred embodiment of the present invention, tokens are defined in a compounded format following an inverted group relationship. <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates an example hierarchal relationship <highlight><bold>80</bold></highlight> between tokens. According to the example, a user <highlight><bold>80</bold></highlight> with &ldquo;admin&rdquo; permission for the &ldquo;jpost&rdquo; application <highlight><bold>84</bold></highlight> on the &ldquo;dearborn&rdquo; server <highlight><bold>86</bold></highlight> is allocated a &ldquo;dearborn.jpost.admin&rdquo; token <highlight><bold>87</bold></highlight>. Similarly, a user with access to the &ldquo;bookshelf&rdquo; application <highlight><bold>88</bold></highlight> on the &ldquo;acd&rdquo;server <highlight><bold>90</bold></highlight> is allocated an &ldquo;acd.bookshelf&rdquo; token <highlight><bold>92</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Special tokens called token-administrating tokens allow a site owner <highlight><bold>40</bold></highlight> to allocate tokens having access permission re-granting capability. Token-administrating tokens have a &ldquo;/create&rdquo; or &ldquo;/grant&rdquo; suffix. The &ldquo;/create&rdquo; context allows a user in possession of the token to create a new administrator, or to generate a new token having the same prefix as the token-administrating token. The &ldquo;/grant&rdquo; context allows a user in possession of the token to grant a token containing identical access privileges to another user. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Table 4 contains a variety of token users each in possession of a unique token-administrating token.  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="1" align="center">TABLE 4</entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Token-Administrating Tokens</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="56PT" align="left"/>
+<colspec colname="2" colwidth="70PT" align="left"/>
+<colspec colname="3" colwidth="77PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>Token User</entry>
+<entry>Token Syntax</entry>
+<entry>Explanation</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Web Site</entry>
+<entry>*./create</entry>
+<entry>Can create any new</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Administrator</entry>
+<entry></entry>
+<entry>token for another</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>user that ends</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>with a &ldquo;.&rdquo;, a</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>&ldquo;./create&rdquo; or a</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>&ldquo;./grant&rdquo;.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Application</entry>
+<entry>application.*.crea</entry>
+<entry>Can create any new</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Administrator</entry>
+<entry>te</entry>
+<entry>token for another</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>user that begins</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>with</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>&ldquo;application.&rdquo; and</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>ends with a &ldquo;.&rdquo;, a</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>&ldquo;./create&rdquo; or a</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>&ldquo;./grant&rdquo;.</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Application</entry>
+<entry>application.user./</entry>
+<entry>Can grant</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Administrator</entry>
+<entry>grant</entry>
+<entry>&ldquo;application.user&rdquo;</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>permission to any</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>user.</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Notably, a plurality of sites or applications <highlight><bold>42</bold></highlight>, each having a unique site owner <highlight><bold>40</bold></highlight> and corresponding security file <highlight><bold>50</bold></highlight> may be hosted on the hosting server <highlight><bold>44</bold></highlight>. In an alternate embodiment, a plurality of hosting servers <highlight><bold>44</bold></highlight> each host at least one Web site or application <highlight><bold>42</bold></highlight> having a unique site owner <highlight><bold>40</bold></highlight> and corresponding security file <highlight><bold>50</bold></highlight>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> While the best mode for carrying out the invention has been described in detail, those familiar with the art to which this invention relates will recognize various alternative designs and embodiments for practicing the invention as defined by the following claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for globally restricting client access to a secured web site comprising: 
+<claim-text>a first web server configured to: 
+<claim-text>receive a client login; and </claim-text>
+<claim-text>return a cookie to the client containing an access credential wherein the access credential contains at least one role-based attribute specific to the client; and </claim-text>
+</claim-text>
+<claim-text>a second web server hosting a secured web site having an associated security expression wherein the security expression contains at least one role-based access privilege for the web site, the second web server configured to: 
+<claim-text>receive the cookie containing the access credential in response to an HTTP request from the client; and </claim-text>
+<claim-text>if the access credential contains a role-based attribute in common with the security expression, grant the client access to the secured web site. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the access credential and security expression additionally contain a token attribute for locally defined access to the secured web site. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein the token attribute contains permission re-granting capability. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the access credential is digitally signed. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein role based attributes are assigned to the client based on the client&apos;s login password. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the first web server is additionally configured to synchronize client passwords among more than one password repository. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the web site contains a web-based application. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the access credential expires after a predefined period of time. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the access credential is encoded. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method for globally restricting client access to a secured web site comprising: 
+<claim-text>receiving a client login at a first web server; </claim-text>
+<claim-text>returning a cookie to the client containing an access credential wherein the access credential contains at least one role-based attribute specific to the client; </claim-text>
+<claim-text>receiving the cookie containing the access credential from the client in response to an HTTP request at a second web server wherein the second web server hosts a secured web site having an associated security expression containing at least one role-based access privilege; and </claim-text>
+<claim-text>if the access credential contains a role-based attribute in common with the security expression, granting the client access to the secured web site. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the access credential and security expression additionally contain a token attribute for locally defined access to the secured web site. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the token attribute contains permission re-granting capability. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the access credential is digitally signed. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein role based attributes are assigned to the client based on the client&apos;s login password. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the first web server is configured to synchronize client passwords among more than one password repository. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the web site contains a web-based application. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the access credential expires after a predefined period of time. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the access credential is encoded.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005308A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005308A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005308A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005308A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005308A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

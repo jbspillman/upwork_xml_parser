@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005087A1-20030102-D00000.TIF SYSTEM "US20030005087A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005087A1-20030102-D00001.TIF SYSTEM "US20030005087A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005087A1-20030102-D00002.TIF SYSTEM "US20030005087A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005087</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09864591</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010524</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>220000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Server side sampling of databases</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Jeffrey</given-name>
+<middle-name>R.</middle-name>
+<family-name>Bernhardt</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Woodinville</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Ilya</given-name>
+<family-name>Vinarsky</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Bellevue</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Microsoft Corporation</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>WATTS, HOFFMANN, FISHER &amp; HEINKE CO., L.P.A.</name-1>
+<name-2>Ste. 1750</name-2>
+<address>
+<address-1>1100 Superior Ave.</address-1>
+<city>Cleveland</city>
+<state>OH</state>
+<postalcode>44114</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method for use with a data mining application for a large database having a large number of records. A selection attribute is chosen from one of a plurality of attributes contained by records within the database. Records are scanned in the database and a randomizing function is applied to the selection attribute of each record to create a randomized record value. A selection criteria is then applied to identify records for inclusion within a subset of records (smaller than the original data set) by comparing the randomized record value of each record with the selection criteria. The subset of records having a randomized record value satisfying the selection criteria approximates the entire database but takes up less memory and can be evaluated or scanned much more quickly. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention concerns data mining, which is the automated analysis of large databases to extract useful information such as models or predictors from data stored in the database. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND ART </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Commercial databases have become a source of information for users in decision making of various types. It is useful, for example, in predicting consumers future buying habits to have access to data concerning their past buying behavior. As the size of these databases has grown, extracting useful information can become very difficult. An entire field known as data mining has emerged to enable users to access and interpret the data contained in large databases. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> In many data mining problems, a goal is to make a rational decision given the information contained in a large amount of data. Presenting a visual depiction of the data for a human to enable he or she to make such decisions is one such problem. Automatically making many decisions is another. The large corpus of data can be the records of all customers&apos; transactions in a grocery store chain with automated registers or an online bookstore having a huge inventory. Other examples might constitute records of all news stories read by the viewers on an online news site. The news site administrator might want to predict what stories would interest the viewer given what he or she has already read, and what advertisements to place on a web page given the advertisements the user has already clicked and the stories he or she has read. Or the store manager might want to know what customers in which demographic categories buy which items. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Although many algorithms for such problems are known and widely used (for example, Decision Trees and K-Means Clustering), they take too much time if trained on too much data. It has been observed that under certain circumstances, however, it may not be necessary to use an entire database (which can have many millions of records) to create a useful model or predictor. Instead a sample of a few tens of thousands of records might accurately represent the much larger data set of the entire database. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> U.S. Pat. No. 6,012,058 to Fayyad et al., which issued Jan. 4, 2000 discloses one data mining process for clustering data. The disclosure of this patent is incorporated herein by reference. This patent discloses a clustering process that extracts sufficient statistics concerning a large database to produce a data clustering model that takes up far less memory than the entire database. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Popular database management systems such as Microsoft SQL Server or those from Oracle support the SQL query language and its most popular extensions. Using such a system, it is desirable to be able to quickly identify random subset of the data in a large database and run a data mining algorithm on the subset instead of the whole data set. The total time needed to model the data can be much smaller than the time it would take to run the analysis on the original (large) data set. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The invention allows a database management system to identify a subset of records within a database for purposes of representing that database. As an example, if the database has a million records, one can produce a subset of the database having only 10,000 records that for some purposes approximates the entire database. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In accordance with the invention a selection attribute is chosen from one of a plurality of attributes contained by records within the database. Records are scanned in the database and a randomizing function is applied to the selection attribute of each record to create a randomized record value. A selection criteria is then applied to identify records for inclusion within a subset of records (smaller than the original data set) by comparing the randomized record value of each record with the selection criteria. The subset of records having a randomized record value satisfying the selection criteria approximates the entire database but of course takes up less memory and can be evaluated or scanned much more quickly. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> An ability to maintain the smaller data set in rapid access memory of a computer, for example, allows the data to be evaluated much more quickly. Also the smaller data set can be transmitted either through a local area network (LAN) or a wide area network (WAN) much more quickly. This means a server could apply the randomizing function and transmit a subset of data to a remotely located client that made a request for data. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In accordance with an exemplary embodiment of the invention the process of randomizing an attribute to provide a randomized record value is performed using an SQL statement that includes a randomizing function. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The invention will become better understood from the following detailed description of one exemplary embodiment of the invention when reviewed in conjunction with the drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a depiction of a representative computing device for use in practicing the invention; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a representative depiction of a client/server computer architecture for use in data mining; and </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart illustrating steps performed in extracting a subset of records from a database of records during practice of an exemplary embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">EXEMPLARY EMBODIMENT FOR PRACTICING THE INVENTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an example of a suitable client/server system <highlight><bold>10</bold></highlight> for use with an exemplary embodiment of the invention. The system <highlight><bold>10</bold></highlight> is only one example of a suitable operating environment for practice of the invention. The system includes a number of client computing devices <highlight><bold>12</bold></highlight> coupled by means of a network <highlight><bold>14</bold></highlight> to a server computer <highlight><bold>16</bold></highlight>. The server <highlight><bold>16</bold></highlight> in turn is coupled to a database <highlight><bold>18</bold></highlight> which is maintained on a possible large number of distributed storage devices for storing data records. The data records are maintained in tables that contain multiple number of records having multiple attributes or fields. Relations between tables are maintained by a database management system (DBMS) that executes on the server computer <highlight><bold>16</bold></highlight>. The database management system is responsible for adding deleting and updating records in the database tables and also is responsible for maintaining the relational integrity of the data. Furthermore, the database management system can execute queries and send snapshots of data resulting from those queries to a client computer <highlight><bold>12</bold></highlight> that has need of a subset of data from the database <highlight><bold>18</bold></highlight>. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Data from the database <highlight><bold>18</bold></highlight> is typically stored in the form of a table. If the data is &ldquo;tabular&rdquo;, each row consists of a unique column called &ldquo;case id&rdquo; (which is the primary key in database terminology) and other columns with various attributes of the data. For example,  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="1" colwidth="56PT" align="center"/>
+<colspec colname="2" colwidth="56PT" align="left"/>
+<colspec colname="3" colwidth="56PT" align="center"/>
+<colspec colname="4" colwidth="49PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Case</entry>
+<entry></entry>
+<entry></entry>
+<entry>Favorite</entry>
+</row>
+<row>
+<entry>Id</entry>
+<entry>Name</entry>
+<entry>Age</entry>
+<entry>Author</entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="1" colwidth="56PT" align="center"/>
+<colspec colname="2" colwidth="56PT" align="left"/>
+<colspec colname="3" colwidth="56PT" align="char" char="."/>
+<colspec colname="4" colwidth="49PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>100</entry>
+<entry>Karlsson-on-the-</entry>
+<entry>8</entry>
+<entry>Astrid</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Roof</entry>
+<entry></entry>
+<entry>Lindgren</entry>
+</row>
+<row>
+<entry>101</entry>
+<entry>Pippi</entry>
+<entry>9</entry>
+<entry>Astrid</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Longstocking</entry>
+<entry></entry>
+<entry>Lindgren</entry>
+</row>
+<row>
+<entry>102</entry>
+<entry>Winnie the Pooh</entry>
+<entry>6</entry>
+<entry>Alan</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Milne</entry>
+</row>
+<row>
+<entry>103</entry>
+<entry>Peter Pan</entry>
+<entry>12</entry>
+<entry>J M Barrie</entry>
+</row>
+<row>
+<entry>104</entry>
+<entry>James Bond</entry>
+<entry>30</entry>
+<entry>Ian</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Fleming</entry>
+</row>
+<row>
+<entry>105</entry>
+<entry>Bilbo Baggins</entry>
+<entry>120</entry>
+<entry>J R R</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Tolkien</entry>
+</row>
+<row>
+<entry>106</entry>
+<entry>Big Totoro</entry>
+<entry>50</entry>
+<entry>Miyazaki</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Hayao</entry>
+</row>
+<row>
+<entry>107</entry>
+<entry>Middle Totoro</entry>
+<entry>100</entry>
+<entry>Miyazaki</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Hayao</entry>
+</row>
+<row>
+<entry>108</entry>
+<entry>Little Totoro</entry>
+<entry>200</entry>
+<entry>Miyazaki</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Hayao</entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0017" lvl="7"><number>&lsqb;0017&rsqb;</number> If the data is &ldquo;transactional&rdquo;, each row consists of columns called &ldquo;case id&rdquo; and &ldquo;attribute id&rdquo;, and possibly other information related to the transaction&mdash;the quantity of products bought, the time the viewer clicked on an advertisement. For example,  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="70PT" align="center"/>
+<colspec colname="2" colwidth="63PT" align="left"/>
+<colspec colname="3" colwidth="84PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Case</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>Id</entry>
+<entry>Product Id</entry>
+<entry>Quantity</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="70PT" align="center"/>
+<colspec colname="2" colwidth="63PT" align="left"/>
+<colspec colname="3" colwidth="84PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry>100</entry>
+<entry>Propeller Pants</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry>100</entry>
+<entry>Machine Oil 100 ml</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Can</entry>
+</row>
+<row>
+<entry>101</entry>
+<entry>Hay, 40 lb pack</entry>
+<entry>100</entry>
+</row>
+<row>
+<entry>106</entry>
+<entry>Toothpaste Tube</entry>
+<entry>1000</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0018" lvl="7"><number>&lsqb;0018&rsqb;</number> Note that in a &ldquo;transactional&rdquo; table, the case id alone is not the primary key of the table in database terminology&mdash;the pair &lcub;case id, product id&rcub; forms the primary key. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The present invention also applies to data that is neither &ldquo;tabular&rdquo; nor &ldquo;transactional&rdquo; but a mixture&mdash;it can be represented as a SQL join of two tables, one of which is tabular, and the other transactional. For example:  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="1" colwidth="28PT" align="center"/>
+<colspec colname="2" colwidth="56PT" align="left"/>
+<colspec colname="3" colwidth="35PT" align="center"/>
+<colspec colname="4" colwidth="56PT" align="left"/>
+<colspec colname="5" colwidth="42PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Case</entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>Id</entry>
+<entry>Name</entry>
+<entry>Age</entry>
+<entry>Product Id</entry>
+<entry>Quantity</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="5">
+<colspec colname="1" colwidth="28PT" align="char" char="."/>
+<colspec colname="2" colwidth="56PT" align="left"/>
+<colspec colname="3" colwidth="35PT" align="char" char="."/>
+<colspec colname="4" colwidth="56PT" align="left"/>
+<colspec colname="5" colwidth="42PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry>100</entry>
+<entry>Karlsson-on-the-</entry>
+<entry>8</entry>
+<entry>Propeller Pants</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Roof</entry>
+</row>
+<row>
+<entry>100</entry>
+<entry>Karlsson-on-the-</entry>
+<entry>8</entry>
+<entry>Machine Oil</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Roof</entry>
+<entry></entry>
+<entry>100 ml Can</entry>
+</row>
+<row>
+<entry>101</entry>
+<entry>Pippi</entry>
+<entry>9</entry>
+<entry>Hay, 40 lb pack</entry>
+<entry>100</entry>
+</row>
+<row>
+<entry></entry>
+<entry>Longstocking</entry>
+</row>
+<row>
+<entry>106</entry>
+<entry>Big Totoro</entry>
+<entry>50</entry>
+<entry>Toothpaste</entry>
+<entry>1000</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>Tube</entry>
+</row>
+<row><entry namest="1" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In a &ldquo;mixed&rdquo; table, just like in a &ldquo;transactional&rdquo; table, the case id alone is also not the primary key of the table in database terminology&mdash;the pair &lcub;case id, product id&rcub; forms this primary key. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> One goal of the invention is to identify a certain fraction of cases or records from a much larger data set. A case or a record is chosen either completely or not at all. In the above joined table example, the sample or subset of records should include the record of Karlsson&apos;s purchase of propeller pants and machine oil, or no record at all, but not an anomaly where only a part of the record is included. The cases included in the sample should be more or less evenly distributed throughout the table, and the total number of cases in the sample should be approximately equal to a desired number. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a sequence of steps for identifying a subset of records within the database <highlight><bold>18</bold></highlight> for purposes of representing that database. One wishing to characterize the database chooses <highlight><bold>100</bold></highlight> a selection attribute from one of a plurality of attributes contained in records within the database <highlight><bold>18</bold></highlight>. Each of the records is then evaluated in turn by scanning the records from the database. During the scanning process a record is obtained and a randomizing function applied <highlight><bold>102</bold></highlight> to the attribute chosen at the step <highlight><bold>100</bold></highlight>. The process next determines <highlight><bold>104</bold></highlight> if a selection criteria has been satisfied. If the selection criteria is satisfied the record is added <highlight><bold>106</bold></highlight> to a subset of records that have been identified as satisfying the selection criteria. A test <highlight><bold>110</bold></highlight> determines if all records have been evaluated. If they have not, a branch <highlight><bold>112</bold></highlight> is taken to get another record from the database <highlight><bold>18</bold></highlight>. When all the records in the database have been evaluated, the process is complete and a subset of records satisfying the selection criteria has been identified. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Consider a set of records for example where the record&apos;s case id is an integer (has standard SQL type INTEGER, SMALLINT or NUMERIC, or Microsoft SQL Server 7 type INT, SMALLINT or DECIMAL). Other attribute types are also possible and are considered later. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Suppose also that the database management system running on the server <highlight><bold>16</bold></highlight> supports an extension to the SQL-92 standard, a RAND function that takes an integer argument and returns a uniformly distributed random number, such that the result depends on the argument deterministically. Microsoft SQL Server 7 has such a function. Such a function makes it possible to perform the following steps: </paragraph>
+<paragraph id="P-0025" lvl="2"><number>&lsqb;0025&rsqb;</number> 1. Find the number of distinct cases in the table through a SQL query such as SELECT COUNT(DISTINCT CID) FROM TAB where CID is the name of the case id column, and TAB is the name of the table. </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> 2. Calculate the fraction of the table in the sample by dividing the desired number of cases in the sample by the result of the first step. For example, if one wishes to run a data mining algorithm on a sample of 50000 cases, and the table has 1000000 (one million) cases or records, the desired fraction is 0.05. </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> 3. Create a view on the table using this SQL query: SELECT * FROM TAB WHERE RAND(CID&circ; 1234)&lt;0.05 where CID is the name of the case id column, TAB is the name of the table, 0.05 is the fraction calculated in the second step, and 1234 is the value of a parameter, introduced so that two queries with different parameters would yield different samples. (In the above expression, the &lsquo;&circ; &rsquo; symbol causes SQL server to perform a bitwise Exclusive OR operation between its operands) </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> 4. Run the data mining algorithm or analysis on the view obtained during the third step. This view has a smaller data subset than the original table. </paragraph>
+<paragraph id="P-0029" lvl="7"><number>&lsqb;0029&rsqb;</number> This procedure clearly satisfies the first criterion (a case is chosen either completely or not at all). It would also satisfy the second and the third criteria (the cases should be distributed more or less evenly; the number of cases in the sample is approximately the desired total) if function RAND depended on its argument truly randomly. However, this is not the case with Microsoft SQL version 7. For example, RAND(1)&equals;0.713592, RAND(2)&equals;0.713611, RAND(3)&equals;0.713629 etc. (rounded to 6 significant digits). To work around this feature the exemplary embodiment of the invention modifies the selection expression to make it more complicated. The following expression works well with Microsoft SQL Server 7: </paragraph>
+<paragraph id="P-0030" lvl="2"><number>&lsqb;0030&rsqb;</number> RAND(1000000000*RAND(CID&circ; 1234))&lt;0.05 where the rest of the SQL query is as above. </paragraph>
+<paragraph id="P-0031" lvl="7"><number>&lsqb;0031&rsqb;</number> Note that the SELECT statements in both step 1 and 3 will take time linear in the size of the table, and will be particularly fast if the table is sorted by case id, or has an index on it. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Now consider a table where the case id is not an integer, but a binary string with a maximum length. Typically, only a few bits of the case id change from one case to the next. Under these circumstances, this expression works well with Microsoft SQL Server 7 if the maximum string length is 16 (or an equivalent expression with other database management systems): </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> RAND(1000000000*RAND(CAST(SUBSTRING(CID,1,4) AS INTEGER)&circ; CAST(SUBSTRING(CID,5,4) AS INTEGER)&circ; CAST(SUBSTRING(CID,9,4) AS INTEGER)&circ; CAST(SUBSTRING(CID,13,4) AS INTEGER)&circ; 1234))&lt;0.05 where everything is as above. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Now consider the case of a table where the case id is an SBCS or a DBCS character string (SQL-92 types CHAR and VARCHAR) or a Unicode character string (SQL-92 types NCHAR and NCHAR VARYING) with a maximum length. In this case, the same selection expression can be used as when the case id is binary, except the case id has to be cast to the binary type. For example, it would have to be used if the case id in our sample tables was the name of the fairy-tale character rather than an integer. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The most general selection expression, independent of the type of the case id, in the dialect of SQL supported by Microsoft SQL Server 7 depends on the properties of function NEWID, which returns a unique 16-byte binary string (more precisely, a value of type UNIQUEIDENTIFIER that can be converted to a 16-byte binary string without loss of information) every time it is called. </paragraph>
+<paragraph id="P-0036" lvl="2"><number>&lsqb;0036&rsqb;</number> CID IN (SELECT CID FROM (SELECT Q2.CID, RAND(1000000000*RAND( CAST(SUBSTRING(CAST(Q2.G AS BINARY),1,4) AS INTEGER)&circ; CAST(SUBSTRING(CAST(Q2.G AS BINARY),5,4) AS INTEGER)&circ; CAST(SUBSTRING(CAST(Q2.G AS BINARY),9,4) AS INTEGER)&circ; CAST(SUBSTRING(CAST(Q2.G AS BINARY),13,4) AS INTEGER)&circ; 1234)) P FROM (SELECT CID, NEWID() G FROM TAB Q3 GROUP BY Q3.CID) Q2) Q1 WHERE Q1.P&lt;0.05) </paragraph>
+<paragraph id="P-0037" lvl="7"><number>&lsqb;0037&rsqb;</number> This is the most general expression; however, it is also the slowest. The simpler expressions above are preferably used when the type of a case id is known to be an integer, a binary string, or a character string. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> It is possible to rewrite the above queries in a number of ways, as the SQL language permits, but the above is the most efficient if the database management system implements the SQL language in a reasonable way. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Computer System </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> With reference to <cross-reference target="DRAWINGS">FIG. 1</cross-reference> an exemplary embodiment of the invention is practiced using a general purpose computing device <highlight><bold>20</bold></highlight>. Such a computing device is used to implement both the client <highlight><bold>12</bold></highlight> and the server <highlight><bold>16</bold></highlight> depicted in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. The device <highlight><bold>20</bold></highlight> includes one or more processing units <highlight><bold>21</bold></highlight>, a system memory <highlight><bold>22</bold></highlight>, and a system bus <highlight><bold>23</bold></highlight> that couples various system components including the system memory to the processing unit <highlight><bold>21</bold></highlight>. The system bus <highlight><bold>23</bold></highlight> may be any of several types of bus structures including a memory bus or memory controller, a peripheral bus, and a local bus using any of a variety of bus architectures. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The system memory includes read only memory (ROM) <highlight><bold>24</bold></highlight> and random access memory (RAM) <highlight><bold>25</bold></highlight>. A basic input/output system <highlight><bold>26</bold></highlight> (BIOS), containing the basic routines that helps to transfer information between elements within the computer <highlight><bold>20</bold></highlight>, such as during start-up, is stored in ROM <highlight><bold>24</bold></highlight>. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The computer <highlight><bold>20</bold></highlight> further includes a hard disk drive <highlight><bold>27</bold></highlight> for reading from and writing to a hard disk, not shown, a magnetic disk drive <highlight><bold>28</bold></highlight> for reading from or writing to a removable magnetic disk <highlight><bold>29</bold></highlight>, and an optical disk drive <highlight><bold>30</bold></highlight> for reading from or writing to a removable optical disk <highlight><bold>31</bold></highlight> such as a CD ROM or other optical media. The hard disk drive <highlight><bold>27</bold></highlight>, magnetic disk drive <highlight><bold>28</bold></highlight>, and optical disk drive <highlight><bold>30</bold></highlight> are connected to the system bus <highlight><bold>23</bold></highlight> by a hard disk drive interface <highlight><bold>32</bold></highlight>, a magnetic disk drive interface <highlight><bold>33</bold></highlight>, and an optical drive interface <highlight><bold>34</bold></highlight>, respectively. The drives and their associated computer-readable media provide nonvolatile storage of computer readable instructions, data structures, program modules and other data for the computer <highlight><bold>20</bold></highlight>. Although the exemplary environment described herein employs a hard disk, a removable magnetic disk <highlight><bold>29</bold></highlight> and a removable optical disk <highlight><bold>31</bold></highlight>, it should be appreciated by those skilled in the art that other types of computer readable media which can store data that is accessible by a computer, such as magnetic cassettes, flash memory cards, digital video disks, Bernoulli cartridges, random access memories (RAMs), read only memories (ROM), and the like, may also be used in the exemplary operating environment. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> A number of program modules may be stored on the hard disk, magnetic disk <highlight><bold>29</bold></highlight>, optical disk <highlight><bold>31</bold></highlight>, ROM <highlight><bold>24</bold></highlight> or RAM <highlight><bold>25</bold></highlight>, including an operating system <highlight><bold>35</bold></highlight>, one or more application programs <highlight><bold>36</bold></highlight>, other program modules <highlight><bold>37</bold></highlight>, and program data <highlight><bold>38</bold></highlight>. A user may enter commands and information into the computer <highlight><bold>20</bold></highlight> through input devices such as a keyboard <highlight><bold>40</bold></highlight> and pointing device <highlight><bold>42</bold></highlight>. Other input devices (not shown) may include a microphone, joystick, game pad, satellite dish, scanner, or the like. These and other input devices are often connected to the processing unit <highlight><bold>21</bold></highlight> through a serial port interface <highlight><bold>46</bold></highlight> that is coupled to the system bus, but may be connected by other interfaces, such as a parallel port, game port or a universal serial bus (USB). A monitor <highlight><bold>47</bold></highlight> or other type of display device is also connected to the system bus <highlight><bold>23</bold></highlight> via an interface, such as a video adapter <highlight><bold>48</bold></highlight>. In addition to the monitor, personal computers typically include other peripheral output devices (not shown), such as speakers and printers. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> The computer <highlight><bold>20</bold></highlight> may operate in a networked environment using logical connections to one or more remote computers, such as a remote computer <highlight><bold>49</bold></highlight>. The remote computer <highlight><bold>49</bold></highlight> may be another personal computer, a server, a router, a network PC, a peer device or other common network node, and typically includes many or all of the elements described above relative to the computer <highlight><bold>20</bold></highlight>, although only a memory storage device <highlight><bold>50</bold></highlight> has been illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The logical connections depicted in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> include a local area network (LAN) <highlight><bold>51</bold></highlight> and a wide area network (WAN) <highlight><bold>52</bold></highlight>. Such networking environments are commonplace in offices, enterprise-wide computer networks, intranets and the Internet. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> When used in a LAN networking environment, the computer <highlight><bold>20</bold></highlight> is connected to the local network <highlight><bold>51</bold></highlight> through a network interface or adapter <highlight><bold>53</bold></highlight>. When used in a WAN networking environment, the computer <highlight><bold>20</bold></highlight> typically includes a modem <highlight><bold>54</bold></highlight> or other means for establishing communications over the wide area network <highlight><bold>52</bold></highlight>, such as the Internet. The modem <highlight><bold>54</bold></highlight>, which may be internal or external, is connected to the system bus <highlight><bold>23</bold></highlight> via the serial port interface <highlight><bold>46</bold></highlight>. In a networked environment, program modules depicted relative to the computer <highlight><bold>20</bold></highlight>, or portions thereof, may be stored in the remote memory storage device. It will be appreciated that the network connections shown are exemplary and other means of establishing a communications link between the computers may be used. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> While the exemplary embodiment of the invention has been described with a degree of particularity, it is the intent that the invention include all modifications and alterations from the disclosed design falling within the spirit or scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of identifying a subset of records within a database for purposes of representing said database comprising: 
+<claim-text>a) choosing a selection attribute from one of a plurality of attributes contained in records within the database; </claim-text>
+<claim-text>b) scanning records in the database and applying a randomizing function to the selection attribute of each record to create a randomized record value; and </claim-text>
+<claim-text>c) applying a selection criteria to identify records for inclusion within a subset of records by comparing the randomized record value of each record with the selection criteria. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selection attribute contains a numeric value and additionally comprising scaling the numeric value with a factor before applying the randomizing function. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the selection attribute contains a text string that is used as an input parameter to the randomizing function. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the scanning of records and applying the selection criteria is implemented by an SQL statement that includes a randomizing function. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the subset of records that represent the database are transmitted from a server computer to a client computer by means of a network. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> additionally the client performs a data mining analysis on the subset of data that is transmitted to said client by means of the network. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. Client/Server computer apparatus comprising: 
+<claim-text>one or more client computers coupled to a network and including communications instructions for requesting a data set by means of the network; and </claim-text>
+<claim-text>a server computer coupled to the network and having access to a database having a number of records, said server computer including instructions for sending a dataset made up of a subset of the records in the database to a client computer via the network; </claim-text>
+<claim-text>said server computer including instructions for scanning records in the database, applying a randomizing function to a specified record attribute of each record in the database to produce a randomized record value, and comparing the randomized record value with a selection criteria to determine whether to include a record in the subset of records from the database for transmission via the network to the client. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The Client/Server computer apparatus of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein the client determines the selection criteria and transmits said selection criteria to the server for use in building the subset of records from the database. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The Client/Server apparatus of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> additionally comprising an SQL language interpreter for converting requests from a client to an SQL statement including a randomizing function. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A computer readable medium including instructions for identifying a subset of records within a database for purposes of representing said database, said computer readable medium comprising instructions for: 
+<claim-text>a) choosing a selection attribute from one of a plurality of attributes contained by records with the database; </claim-text>
+<claim-text>b) scanning records in the database and applying a randomizing function to the selection attribute of each record to create a randomized record value; and </claim-text>
+<claim-text>c) applying a selection criteria to identify records for inclusion within a subset of records by comparing the randomized record value of each record with the selection criteria. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the selection attribute contains a numeric value and additionally comprising instructions for scaling the numeric value with a factor before applying the randomizing function. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the selection attribute contains a text string that is used by said instructions as an input parameter to the randomizing function. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the scanning of records and applying the selection criteria are performed by instructions that implement an SQL statement that includes a randomizing function. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the instructions transmit a subset of records that represent the database from a server computer to a client computer by means of a network. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> additionally comprising instructions for performing a data mining analysis on the subset of data that is transmitted to the client by means of the network.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005087A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005087A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005087A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

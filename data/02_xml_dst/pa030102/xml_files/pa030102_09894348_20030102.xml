@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004921A1-20030102-D00000.TIF SYSTEM "US20030004921A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004921A1-20030102-D00001.TIF SYSTEM "US20030004921A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004921A1-20030102-D00002.TIF SYSTEM "US20030004921A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004921A1-20030102-D00003.TIF SYSTEM "US20030004921A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004921A1-20030102-D00004.TIF SYSTEM "US20030004921A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004921A1-20030102-D00005.TIF SYSTEM "US20030004921A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004921A1-20030102-D00006.TIF SYSTEM "US20030004921A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004921</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894348</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>001000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Parallel lookups that keep order</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Jacob</given-name>
+<middle-name>J.</middle-name>
+<family-name>Schroeder</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Lyngby</city>
+<country-code>DK</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Pillsbury Winthrop LLP</name-1>
+<name-2>Intellectual Property Group</name-2>
+<address>
+<address-1>Suite 2800</address-1>
+<address-2>725 South Figueroa Street</address-2>
+<city>Los Angeles</city>
+<state>CA</state>
+<postalcode>90017-5406</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A key lookup system to look up keys associated with a plurality of frames of data includes a key source device that provides source keys to the system. A memory stores data keys and data associated therewith. A plurality of lookup engines searches for the data keys in the memory that are identical to the source keys. A Content Addressable Memory (CAM) stores a copy of a source key being searched for by one of the plurality of lookup engines. A CAM check device to determine whether a key identical to the source key is located in the CAM. A key insertion device copies the source key into the CAM and into one of the plurality of lookup engines if the key identical to the source key is not found in the CAM. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention generally relates to retrieval of data records. More specifically, the present invention relates to a system, method and apparatus for performing parallel lookups of data records each associated with a frame in a stream of frames, where the lookups keep the order of frames accessing the same data records. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Discussion of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In networking applications, frames of data are sent through a network. The frames may contain data and reference additional data. Networking applications often utilize Transmission Control Protocol (TCP) to transmit and receive the frames. Frames are packets of information that may be transferred on a network, such as a computer network. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> A single device in a TCP protocol implementation can have many &ldquo;conversations&rdquo; (TCP connections) with other devices occurring simultaneously. When a device on the network receives a frame, a conversation-identifier is extracted from IP (Internet Protocol) and TCP headers in the frame. The conversation-identifier may be a &ldquo;key.&rdquo; A key is piece or data, or code, that references a section of data. For example, a frame may be sent with the key &ldquo;1010&rdquo;. The key &ldquo;1010&rdquo; may reference a &ldquo;status record&rdquo; for one of the TCP conversations, for example, in a memory. The status record is used by the TCP protocol to process the frame. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> There are several methods in the art for locating a key in a memory. For example, a hash-based method has been used. In a hash-based method, there are a set number of look-up engines. Each lookup engine may be a separate program, or a subroutine in a program, for example, that searches for keys in a memory. Many systems in the art utilize more than one lookup engine to search for keys in the memory. The systems typically allocate keys to one of the plurality of lookup engines based upon certain calculations. For example, the hashing method creates a hash value for each key and, based upon the hash value, assigns the key to one of the lookup engines. An exemplary hash-based embodiment may include two lookup engines, A and B, and use keys comprised of four digits. The hash function may be set to sum the digits of the key and send all keys with even-number hash values to lookup engine A and all keys with odd-number hash values to lookup engine B. For example, the sum of the digits in the key &ldquo;1010&rdquo; yields an even number, and would therefore be assigned to lookup engine A. The sum of the digits of key &ldquo;1011&rdquo; yields an odd number, and would therefore be assigned to lookup engine B. However, a hash-based method is inefficient in a situation where two keys yield the same even (or odd) hash value. In such a situation, one of the lookup engines remains idle while the second key waits until the lookup engine for even hash values locates the first key. Then, the second key may be allocated to the even hash value lookup engine. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Another method for finding keys utilizes a distribution calculation in link aggregation. The distribution calculation in link aggregation is similar to the hash-based method, except that keys for frames are distributed to a number of network links, rather than to a number of lookup engines. The distribution calculation suffers from shortcomings similar to those of the hash-based method, because the system once again searches for the keys based upon the results of a calculation. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The order of processing of frames may matter, for example, in situations where two frames have the same key, and therefore access the same set of data in the memory. If the data is subject to change by virtue of it being accessed, then the first frame must be processed before the second frame is processed. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The order of processing of frames may also matter if a routing protocol is being used that requires frames to be processed in the order in which they are received. An additional reason why the order of processing of the frames may matter is because TCP processing of frames is faster/better when frames for a given conversation are processed by a device in the same order in which that they were generated by the other device. Usually the network does not reorder frames, so by processing frames in the order they are received, they are thereby usually processed in the order they were generated. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In many embodiments in the art, lookups typically take a constant amount of time. The lookups ordinarily complete in the order in which they were initiated, so no specific action has to be taken to ensure the order. However, a problem with this type of lookup is that the usable lookup engines are limited because they always have to use the same low number of memory access to perform the lookup. In another method where the order matters, lookups may take a variable amount of time. However, in the current state of the art, such lookups are performed one-at-a-time. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Accordingly, the systems in the prior art are inefficient in looking up frames where the order of the lookups matters. Prior systems either utilize multiple lookups engines that each search for a set length of time, or search for a variable length of time using one lookup engine at a time. Therefore, systems in the prior art cannot perform multiple lookups for variable lengths of time simultaneously.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a key in a frame of data according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a general overview of a parallel lookup system according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an overview of a system according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a flow chart showing how a system acquires data for each frame from a key in memory according to an embodiment of the present invention; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates processing that occurs while a lookup engine searches for a key according to an embodiment of the present invention; and </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates data processing that occurs when a key is found in memory according to an embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> An embodiment of the present invention processes a series of frames of data. The embodiment extracts a key from each frame and utilizes a series of lookup engines to search for the keys in a memory. Such an embodiment allocates keys in an improved manner among a plurality of lookup engines, and keeps the order of frames having the same key. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a key in a frame of data according to an embodiment of the present invention. A frame <highlight><bold>100</bold></highlight> is a packet of information that is transferred on a network, such as a computer network. In networking applications, devices on the network often transmit data with other devices on the network, or with other device on the Internet, for example, via Transmission Control Protocol (TCP). Frames <highlight><bold>100</bold></highlight> may contain data and reference additional data. Networking applications often utilize Transmission Control Protocol (TCP) to transmit and receive frames <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A single TCP protocol implementation can have many &ldquo;conversations&rdquo; (TCP connections) simultaneously occurring. When a device on the network receives a frame <highlight><bold>100</bold></highlight>, a conversation-identifier is extracted from IP (Internet Protocol) and TCP headers in the frame <highlight><bold>100</bold></highlight>. The conversation-identifier may be a &ldquo;key&rdquo; <highlight><bold>110</bold></highlight>. A key <highlight><bold>110</bold></highlight> is piece or data, or code, that references a section of data. For example, a frame <highlight><bold>100</bold></highlight> may be sent with the key &ldquo;1010&rdquo;. The key <highlight><bold>110</bold></highlight> &ldquo;1010&rdquo; may reference a &ldquo;status record&rdquo; for one of the TCP conversations, for example, in a memory. The status record is used by the TCP protocol to process the frame <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the frame <highlight><bold>100</bold></highlight> includes a first data <highlight><bold>105</bold></highlight>. The first data <highlight><bold>105</bold></highlight> may include a text file, a record, or the like. The frame <highlight><bold>100</bold></highlight> also includes a key <highlight><bold>110</bold></highlight>. The key <highlight><bold>110</bold></highlight> is piece of data, or code, that references a section of data separate from the frame <highlight><bold>100</bold></highlight>. The key <highlight><bold>110</bold></highlight> may be a number, such as the binary number &ldquo;1001&rdquo;. The key <highlight><bold>110</bold></highlight> could also be a number representing an American Standard Code for Information Interchange (ASCII) code. A memory <highlight><bold>115</bold></highlight>, which may be a Random Access Memory (RAM), for example, includes a plurality of data. The memory <highlight><bold>115</bold></highlight> may be utilized to store keys <highlight><bold>110</bold></highlight> and data associated therewith. The memory <highlight><bold>115</bold></highlight> includes a second data <highlight><bold>120</bold></highlight> portion that is associated with a key <highlight><bold>110</bold></highlight> that is identical to the key <highlight><bold>110</bold></highlight> in the frame <highlight><bold>100</bold></highlight>. The second data portion <highlight><bold>120</bold></highlight> may include settings or an Internet destination location, or may include a status record for a TCP connection, for example. At some point, the second data portion <highlight><bold>120</bold></highlight> may be retrieved and used to process the frame <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The frame <highlight><bold>100</bold></highlight> has a key <highlight><bold>110</bold></highlight> associated therewith. As mentioned above, the key <highlight><bold>110</bold></highlight> is a field in a record that holds unique data that identifies that record from all the other records in the file or database. As an identifier, each key <highlight><bold>110</bold></highlight> value must be unique in each record. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The key <highlight><bold>110</bold></highlight> may be utilized, for example, to look up a status record for a TCP connection, or a HyperText Transport Protocol (HTTP) address and a port number, for example. The key <highlight><bold>110</bold></highlight> may be sent from a device as part of the frame <highlight><bold>100</bold></highlight>. The key <highlight><bold>110</bold></highlight> may then be used to locate the status of a TCP connection or an HTTP address and port for the frame <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a general overview of a parallel lookup system according to an embodiment of the present invention. A frame acquisition device <highlight><bold>200</bold></highlight> is utilized to acquire a frame <highlight><bold>100</bold></highlight> from a source. The source may be a frame stream. A key extraction device <highlight><bold>202</bold></highlight> acquires a key <highlight><bold>110</bold></highlight> from the frame <highlight><bold>100</bold></highlight>. The key <highlight><bold>110</bold></highlight> is utilized to locate associated data in a memory <highlight><bold>115</bold></highlight>. The system may include a Content Addressable Memory (CAM) <highlight><bold>210</bold></highlight>. A CAM <highlight><bold>210</bold></highlight> is a type of memory in which data may be accessed by searching for part of the data in the memory. Whereas data may be located in a Random Access Memory (RAM), for example, by searching for a logical address in the RAM, data in a CAM <highlight><bold>210</bold></highlight> may be located by searching for a known part of the data. A CAM check device <highlight><bold>205</bold></highlight> checks the CAM <highlight><bold>210</bold></highlight> to determine whether the key <highlight><bold>110</bold></highlight> is located in the CAM <highlight><bold>210</bold></highlight>. The CAM <highlight><bold>210</bold></highlight> is utilized to store keys <highlight><bold>110</bold></highlight> for data being looked up, or searched for, in the separate memory <highlight><bold>115</bold></highlight>. The memory <highlight><bold>115</bold></highlight> holds data associated with the keys <highlight><bold>110</bold></highlight>. If an identical key <highlight><bold>110</bold></highlight> is not already in the CAM check device <highlight><bold>210</bold></highlight>, then this means that the system is not already searching for the same key <highlight><bold>110</bold></highlight> in the memory <highlight><bold>115</bold></highlight>. In other words, more than one frame <highlight><bold>100</bold></highlight> may include the same key <highlight><bold>110</bold></highlight>. In such an instance, the key <highlight><bold>110</bold></highlight> is then placed in the CAM <highlight><bold>210</bold></highlight> and the system sends a copy of the key to a look-up engine device <highlight><bold>230</bold></highlight>. An embodiment of the look-up engine device <highlight><bold>230</bold></highlight> includes a plurality of look-up engines. Each look-up engine has a function of searching for the key <highlight><bold>110</bold></highlight> and the data associated therewith in the memory <highlight><bold>115</bold></highlight>. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an overview of a system according to an embodiment of the present invention. As illustrated, the system processes a series of frames <highlight><bold>100</bold></highlight> acquired from a frame stream. The embodiment includes a key extraction device <highlight><bold>202</bold></highlight>, which serves to extract a key <highlight><bold>110</bold></highlight> from each frame <highlight><bold>100</bold></highlight> of the frame stream. The CAM <highlight><bold>210</bold></highlight> is utilized to hold keys <highlight><bold>110</bold></highlight> for frames <highlight><bold>100</bold></highlight> extracted from the frame stream. After a key <highlight><bold>110</bold></highlight> is extracted from a frame <highlight><bold>100</bold></highlight> in the frame stream, the CAM check device <highlight><bold>205</bold></highlight> determines whether the key <highlight><bold>110</bold></highlight> is located in the CAM <highlight><bold>210</bold></highlight>. If it is, then the system is already searching for the same key <highlight><bold>110</bold></highlight> for a different frame <highlight><bold>100</bold></highlight>. In such a situation, the system waits to place the key <highlight><bold>110</bold></highlight> into the CAM <highlight><bold>210</bold></highlight> until the identical key <highlight><bold>110</bold></highlight> in the CAM <highlight><bold>210</bold></highlight> has been removed. If the system extracts a key <highlight><bold>110</bold></highlight> F from a first frame <highlight><bold>100</bold></highlight>, and inserts the key <highlight><bold>110</bold></highlight> into the CAM <highlight><bold>210</bold></highlight> and into one of the lookup engines, the system must wait until key <highlight><bold>110</bold></highlight> F has been found and removed from the CAM <highlight><bold>210</bold></highlight> before the same key <highlight><bold>110</bold></highlight> F can be located for a later frame. In other words, the system must search for key <highlight><bold>110</bold></highlight> F and process the frame <highlight><bold>100</bold></highlight> associated therewith before the later frame <highlight><bold>100</bold></highlight> having the same key <highlight><bold>110</bold></highlight> can be processed. In such a situation, the &ldquo;order&rdquo; in which the frames are processed is said to matter. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The order may matter, for example, because the system may change the data stored in the memory <highlight><bold>115</bold></highlight> that is associated with key <highlight><bold>110</bold></highlight> F after key <highlight><bold>110</bold></highlight> F is found. For example, the data referenced by key <highlight><bold>110</bold></highlight> F may include a status record for a TCP connection. If frame <highlight><bold>100</bold></highlight> one and frame <highlight><bold>100</bold></highlight> two both have key <highlight><bold>110</bold></highlight> F, frame <highlight><bold>100</bold></highlight> one may be processed with the status record referenced by key <highlight><bold>110</bold></highlight> F. The status record may then be updated and stored back in the memory <highlight><bold>115</bold></highlight>. Then, when key <highlight><bold>110</bold></highlight> two is processed, the status record processed for frame <highlight><bold>100</bold></highlight> two may contain information different than that processed for frame <highlight><bold>100</bold></highlight> one. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Another reason why the order of processing of the frames may matter is because TCP processing of frames is faster/better when frames for a given conversation are processed in the same order in which that they were generated by the other computer. Usually the network does not reorder frames, so by processing frames in the order they are received, they are thereby usually processed in the order they were generated. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The order of processing of the frames may also matter because some routing protocols require that frames be processed in the same order in which they are received. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> An additional reason why the order of processing of frames may matter is because a computer usually processes frames in the order they have arrived and a chip utilizing TCP to transfer data is supposed to behave as a computer on the network. Although most protocols that are used today that frames can be processed out of order, future protocols may require it. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> If the key <highlight><bold>110</bold></highlight> is not in the CAM <highlight><bold>210</bold></highlight>, then a key insertion device <highlight><bold>310</bold></highlight> inserts the key <highlight><bold>110</bold></highlight> into the CAM <highlight><bold>210</bold></highlight>. A copy of the key <highlight><bold>110</bold></highlight> is then placed in an unused lookup engine of the lookup engine device <highlight><bold>230</bold></highlight>. An embodiment of the look-up engine device <highlight><bold>230</bold></highlight> includes a plurality of look-up engines. Each look-up engine has a function of searching in the memory <highlight><bold>115</bold></highlight> for the key <highlight><bold>110</bold></highlight> and the data associated therewith. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In the embodiment shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, two of the lookup engines are searching for keys <highlight><bold>110</bold></highlight> in the memory. A first lookup engine <highlight><bold>315</bold></highlight> is searching for a first key <highlight><bold>300</bold></highlight> &ldquo;22334455&rdquo;, and a second lookup engine <highlight><bold>320</bold></highlight> is searching for a second key <highlight><bold>305</bold></highlight> &ldquo;98765432&rdquo; in the memory <highlight><bold>115</bold></highlight>. A third lookup engine <highlight><bold>325</bold></highlight> and a fourth lookup engine <highlight><bold>330</bold></highlight> are currently idle. The CAM <highlight><bold>210</bold></highlight> holds copies of each of the keys <highlight><bold>110</bold></highlight> being searched. More specifically, the CAM <highlight><bold>210</bold></highlight> holds the first key <highlight><bold>300</bold></highlight> &ldquo;22334455&rdquo; and the second key <highlight><bold>305</bold></highlight> &ldquo;98765432&rdquo;. If a key <highlight><bold>110</bold></highlight> is subsequently extracted from a frame <highlight><bold>100</bold></highlight> that is different than the first key <highlight><bold>300</bold></highlight> and the second key <highlight><bold>305</bold></highlight>, the system places that key <highlight><bold>110</bold></highlight> in the CAM <highlight><bold>210</bold></highlight> and sends a copy of the key <highlight><bold>110</bold></highlight> to the lookup engine device <highlight><bold>230</bold></highlight>, and the key is placed in an idle lookup engine, here, either the third lookup engine <highlight><bold>325</bold></highlight> or the fourth lookup engine <highlight><bold>330</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In the embodiment illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, parallel lookups may be simultaneously performed. In other words, more than one of the lookup engines may search for a key <highlight><bold>110</bold></highlight> in the memory <highlight><bold>115</bold></highlight> at a given time. In the embodiment, each of the lookup engines may take a different amount of time to locate a key <highlight><bold>110</bold></highlight>. More specifically, the first lookup engine <highlight><bold>315</bold></highlight> may take a longer time to locate the first key <highlight><bold>300</bold></highlight> than the second lookup engine <highlight><bold>320</bold></highlight> takes to locate the second key <highlight><bold>305</bold></highlight>. The speed at which the entire system looks up keys <highlight><bold>110</bold></highlight> may be scaled independently of processing or memory speed and latency by adding more lookup engines. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a process by which frames of data are received, and keys <highlight><bold>110</bold></highlight> are extracted therefrom and it is determined whether the keys <highlight><bold>110</bold></highlight> are already currently being searched for. The first step in the process is to initialize <highlight><bold>400</bold></highlight> a counter x. Next, frame F(x) is received <highlight><bold>405</bold></highlight> from the frame stream. A key <highlight><bold>110</bold></highlight> K(x) is extracted <highlight><bold>410</bold></highlight> from frame <highlight><bold>100</bold></highlight> F(x). As mentioned above, the key <highlight><bold>110</bold></highlight> is a piece of data, or a code, or the like, associated with the frame <highlight><bold>1100</bold></highlight>. The key <highlight><bold>110</bold></highlight> is associated with data stored in the memory <highlight><bold>115</bold></highlight>. For example, a frame <highlight><bold>100</bold></highlight> may contain a personal file for &ldquo;Joe&rdquo;. The frame <highlight><bold>100</bold></highlight> may have a key <highlight><bold>110</bold></highlight> such as the number &ldquo;1010&rdquo;. The memory <highlight><bold>115</bold></highlight> may have data associated with &ldquo;Joe&rdquo;, such as the status for a TCP connection, for example. When the frame <highlight><bold>100</bold></highlight> is received, the key <highlight><bold>110</bold></highlight> &ldquo;1010&rdquo; is extracted from the frame <highlight><bold>100</bold></highlight>. Next, the process searches for the key <highlight><bold>110</bold></highlight> &ldquo;1010&rdquo; in the memory <highlight><bold>115</bold></highlight>. When the key <highlight><bold>110</bold></highlight> is found, data associated therewith is taken and utilized to process the frame <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> After key <highlight><bold>110</bold></highlight> K(x) has been extracted, the system determines <highlight><bold>415</bold></highlight> whether key <highlight><bold>110</bold></highlight> K(x) is in the CAM <highlight><bold>210</bold></highlight>. If it is, the system is currently processing an earlier frame <highlight><bold>100</bold></highlight> having the same key <highlight><bold>110</bold></highlight>. In such an instance, the system waits until the earlier key <highlight><bold>110</bold></highlight> K(x) has been removed from the CAM <highlight><bold>210</bold></highlight> before beginning a search for key <highlight><bold>110</bold></highlight> K(x) or any later frames <highlight><bold>100</bold></highlight> in the frame stream. If key <highlight><bold>110</bold></highlight> K(x) is in the frame <highlight><bold>100</bold></highlight>, then the processing remains at step <highlight><bold>415</bold></highlight> until key <highlight><bold>110</bold></highlight> K(x) is out of the CAM <highlight><bold>210</bold></highlight>. If key <highlight><bold>110</bold></highlight> K(x) is not in the CAM <highlight><bold>210</bold></highlight>, then the system can begin searching for key <highlight><bold>110</bold></highlight> K(x). Next, the system inserts <highlight><bold>420</bold></highlight> key <highlight><bold>110</bold></highlight> K(x) into the CAM <highlight><bold>210</bold></highlight>. Key <highlight><bold>110</bold></highlight> K(x) remains in the CAM <highlight><bold>210</bold></highlight> until key <highlight><bold>110</bold></highlight> K(x) is located in the memory <highlight><bold>115</bold></highlight>. In such an instance, as discussed above, the &ldquo;order&rdquo; of the frames is said to matter. At step <highlight><bold>425</bold></highlight>, the processing sends key <highlight><bold>110</bold></highlight> K(x) to a lookup engine. The processing then increments <highlight><bold>430</bold></highlight> counter x. Finally, the processing jumps to step <highlight><bold>405</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates processing that occurs while a lookup engine searches for a key <highlight><bold>110</bold></highlight> according to an embodiment of the present invention. After the lookup engine has acquired the key <highlight><bold>110</bold></highlight> K(x), the lookup engine searches <highlight><bold>500</bold></highlight> for key <highlight><bold>110</bold></highlight> K(x) in the memory <highlight><bold>115</bold></highlight>. Next, the system determines <highlight><bold>505</bold></highlight> whether the lookup engine has found key <highlight><bold>110</bold></highlight> K(x). If key <highlight><bold>110</bold></highlight> K(x) has been located, then the processing advances to step <highlight><bold>510</bold></highlight>. However, if the key <highlight><bold>110</bold></highlight> has not been found, processing jumps back to step <highlight><bold>500</bold></highlight>. At step <highlight><bold>510</bold></highlight>, the system processes data for the key <highlight><bold>110</bold></highlight>. More specifically, the system extracts the data associated with the key <highlight><bold>110</bold></highlight> from the memory <highlight><bold>115</bold></highlight>. Next, key <highlight><bold>110</bold></highlight> K(x) is removed <highlight><bold>515</bold></highlight> from the lookup engine. Finally, key <highlight><bold>110</bold></highlight> K(x) is removed <highlight><bold>520</bold></highlight> from the CAM <highlight><bold>210</bold></highlight>. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates data processing that occurs when a key is found in memory according to an embodiment of the present invention. First, the key <highlight><bold>110</bold></highlight> K(x) is located <highlight><bold>600</bold></highlight> in the memory <highlight><bold>115</bold></highlight>. Next, the system acquires <highlight><bold>605</bold></highlight> the data associated with key <highlight><bold>110</bold></highlight> K(x). Finally, the system takes the data and uses it to process <highlight><bold>610</bold></highlight> frame <highlight><bold>100</bold></highlight> F(x). In an embodiment, the data may be, for example, a status record for a TCP connection. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> While the description above refers to particular embodiments of the present invention, it will be understood that many modifications may be made without departing from the spirit thereof. The accompanying claims are intended to cover such modifications as would fall within the true scope and spirit of the present invention. The presently disclosed embodiments are therefore to be considered in all respects as illustrative and not restrictive, the scope of the invention being indicated by the appended claims, rather than the foregoing description, and all changes which come within the meaning and range of equivalency of the claims are therefore intended to be embraced therein. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A key lookup system to look up keys associated with a plurality of frames of data, comprising: 
+<claim-text>a key source device to provide source keys to the system; </claim-text>
+<claim-text>a memory to store data keys and data associated therewith; </claim-text>
+<claim-text>a plurality of lookup engines to search for the data keys in the memory that are identical to the source keys; </claim-text>
+<claim-text>a Content Addressable Memory (CAM) to store a copy of a source key being searched for by one of the plurality of lookup engines; </claim-text>
+<claim-text>a CAM check device to determine whether a key identical to the source key is located in the CAM; and </claim-text>
+<claim-text>a key insertion device to copy the source key into the CAM and into one of the plurality of lookup engines if the key identical to the source key is not found in the CAM. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The key lookup system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the key source device extracts each source key from each of the plurality of frames of data. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The key lookup system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein a frame extraction device extracts each of the plurality of frames of data from a stream of frames. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The key lookup system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the memory is a second CAM. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The key lookup system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein a data extraction device extracts data associated with one of the data keys in the memory after the one of the data keys has been found by one of the plurality of lookup engines. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The key lookup system of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein a key removal device removes the key from the CAM that is identical to the one of the data keys found by one of the plurality of lookup engines. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method of finding keys associated with a plurality of frames of data, comprising: 
+<claim-text>inputting source keys; </claim-text>
+<claim-text>searching for data keys in a memory that are identical to the source keys, with a plurality of lookup engines; </claim-text>
+<claim-text>storing, in a Content Addressable Memory (CAM), a copy of a source key being searched for by the plurality of lookup engines; </claim-text>
+<claim-text>determining whether a key identical to the source key is located in the CAM, wherein if the key identical to the source key is not found in the CAM, the source key is copied into the CAM and into one of the plurality of lookup engines. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further including extracting each source key from each of the plurality of frames of data. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further including extracting each of the plurality of frames of data from a stream of frames. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the memory is a second CAM. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further including extracting data associated with one of the data keys in the memory after the one of data keys has been found by one of the plurality of lookup engines. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The key lookup system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further including removing the key from the CAM that is identical to the one of the data keys found by one of the plurality of lookup engines. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A key searching device to find, in a memory, keys associated with each of a plurality of frames of data, comprising: 
+<claim-text>a computer-readable medium; and </claim-text>
+<claim-text>a computer-readable program code, stored on the computer-readable medium, having instructions to input source keys; </claim-text>
+<claim-text>utilize a plurality of lookup engines to search for data keys in a memory that are identical to the source keys; </claim-text>
+<claim-text>store, in a Content Addressable Memory (CAM), a copy of a source key being searched for by the plurality of lookup engines; </claim-text>
+<claim-text>determine whether a key identical to a source key is located in the CAM, wherein if a key identical to the source key is not found in the CAM, the source key is copied into the CAM and into one of the plurality of lookup engines. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The key searching device of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the code further includes instructions to extract the source key from each of the plurality of frames of data. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The key searching device of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the code further includes instructions to extract each of the plurality of frames of data from a stream of frames. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The key searching device of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the code further includes instructions to use a second CAM as the memory. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The key searching device of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the code further includes instructions to extract data associated with one of the data keys in the memory after the one of the data keys has been found by one of the plurality of lookup engines. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The key searching device of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the code further includes instructions to remove the key from the CAM that is identical to the one of the data keys found by one of the plurality of lookup engines.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004921A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004921A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004921A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004921A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004921A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004921A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004921A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004980A1-20030102-D00000.TIF SYSTEM "US20030004980A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004980A1-20030102-D00001.TIF SYSTEM "US20030004980A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004980A1-20030102-D00002.TIF SYSTEM "US20030004980A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004980A1-20030102-D00003.TIF SYSTEM "US20030004980A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004980A1-20030102-D00004.TIF SYSTEM "US20030004980A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004980A1-20030102-D00005.TIF SYSTEM "US20030004980A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004980</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892931</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>204000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Preferential caching of uncopied logical volumes in a peer-to-peer virtual tape server</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Gregory</given-name>
+<middle-name>Tad</middle-name>
+<family-name>Kishi</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Oro Valley</city>
+<state>AZ</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Mark</given-name>
+<middle-name>Allan</middle-name>
+<family-name>Norman</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Tucson</city>
+<state>AZ</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Jonathan</given-name>
+<middle-name>Wayne</middle-name>
+<family-name>Peake</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Tucson</city>
+<state>AZ</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>William</given-name>
+<middle-name>Henry</middle-name>
+<family-name>Travis</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Tucson</city>
+<state>AZ</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>David W. Victor</name-1>
+<name-2>KONRAD RAYNES &amp; VICTOR LLP</name-2>
+<address>
+<address-1>315 S. Beverly Drive; Suite 210</address-1>
+<city>Beverly Hills</city>
+<state>CA</state>
+<postalcode>90212</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Disclosed is a system, method, and an article of manufacture for preferentially keeping an uncopied data set in one of two storage devices in a peer-to-peer environment when data needs to be removed from the storage devices. Each time a data set is modified or newly created, flags are used to denote whether the data set needs to be copied from one storage device to the other. The preferred embodiments modify the timestamp for each uncopied data set by adding a period of time, and thus give preference to the uncopied data set when the data from the storage device is removed based on the least recently used as denoted by timestamp of each data set. Once the data set is copied, the timestamp is set back to normal by subtracting the same period of time added on when the data set was flagged as needing to be copied. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to a system, method, and program for copying data from one virtual tape server to another virtual tape server in a peer-to-peer environment. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In prior art virtual tape storage systems, hard disk drive storage is used to emulate tape drives and tape cartridges. In this way, host systems performing input/output (I/O) operations with respect to tape are in fact performing I/O operations with respect to a set of hard disk drives emulating the tape storage. In the prior art International Business Machines (IBM) Magstar Virtual Tape Server, one or more virtual tape servers (&ldquo;VTS&rdquo;) are each integrated with a tape library comprising numerous tape cartridges and tape drives, and have a direct access storage device (DASD) comprised of numerous interconnected hard disk drives. The operation of the virtual tape server is transparent to the host. The host makes a request to access a tape volume. The virtual tape server intercepts the tape requests and accesses the volume in the DASD. If the volume is not in the DASD, then the virtual tape server recalls the volume from the tape drive to the DASD. The virtual tape server can respond to host requests for volumes in tape cartridges from DASD substantially faster than responding to requests for data from a tape drive. Thus, the DASD functions as a tape volume cache for volumes in the tape cartridge library. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Two virtual tape servers can be combined to create a peer-to-peer virtual tape server. In a peer-to-peer virtual tape server, two virtual tape servers, each integrated with a separate tape library, can provide access and storage for the same data volumes (i.e. peer-to-peer environment). By providing two virtual tape server subsystems and two libraries, if an operation to recall a file from one virtual tape server subsystem and tape library fails, then the file may still be recalled from the other virtual tape server subsystem and tape library. This redundant architecture provides greater data and tape availability and improved data shadowing in the event a tape or VTS in one subsystem is damaged. Therefore, when a host system writes to the storage device, the data will be saved on both virtual tape servers. However, rather than writing to both virtual tape servers simultaneously, which would be a drain on system resources, a virtual tape controller connecting the two virtual tape servers will write the logical volume to one of the virtual tape servers when the host closes the logical volume. An example of a virtual tape controller is the IBM AX0 Virtual Tape Controller (&ldquo;AX0 VTC&rdquo;) which acts as an intelligent switch between the two virtual tape servers and transparently connects the host computers with the virtual tape servers. Then, the logical volume is copied by the virtual tape controller from one virtual tape server to the other virtual tape server. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The synchronization process between the virtual tape servers can occur immediately or be deferred based on user preferences. Often a host user will set the backup process to occur at a later time companies that operate on a cyclical basis. For example, a Wall Street firm may desire higher peak host input/output performance during trading hours (and not have the backup process slow down their computers), and chose to defer the backup process between the two virtual tape servers until the trading day has ended. In addition, the IBM Peer-to Peer Virtual Tape Server would operate in deferred mode if one of the VTS subsystems fail. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In operating a virtual tape server, especially one that has a lot of host write activity, space in the VTS DASD cache needs to be continually made available for newly written volumes. However, when operating in deferred mode, if too much data is stored in the DASD before the copy operation is performed, uncopied data may be deleted before being copied to the other virtual tape server, where the oldest data is erased first regardless of whether the data was copied or not. In such cases, the only copy of the data will exist on a physical tape in the tape library, however, backing up the other virtual tape server from a tape drive causes large delays in the backup process. The penalty for a tape drive recall is slightly over a factor of ten in copy throughput. This factor of ten penalty is so severe on the IBM Peer-to-Peer Virtual Tape Server, that if all the logical volumes were on tape, the copy process could never &ldquo;catch-up&rdquo; to the host. Thus, there is a need in the art for improved mechanisms for backing up data from one virtual tape server to another in the deferred mode. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Provided is a method, system, and an article of manufacture for maintaining data in two storage devices, wherein the data is comprised of a plurality of data sets. A flag is maintained for each data set indicating whether the data set has been copied to the other storage device. In addition, a timestamp is maintained for each data set. Each time a data set is modified or newly created, the data set is flagged as an uncopied data set using the flag associated with the data set. The preferred embodiments modify the timestamp for each uncopied data set by adding a period of time, and thus give preference because when space is needed in the storage device, the data set with the oldest timestamp will be deleted first. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In further embodiments, once the uncopied data set is copied from one storage device to the other storage device, the flag of the newly copied data set is changed to indicate that the data set has been copied. The timestamp for the newly copied data set is then set back to normal by subtracting the same period of time added on when the data set was flagged as needing to be copied. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In still further embodiments, the step of initializing the copy operation from one storage device to the other storage device comprises placing the flag of each data set into a flatfile, reviewing the flag of each data set from the flatfile and searching the flatfile to locate an uncopied data set. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> An advantage to the preferred embodiments is that uncopied data sets will be given preference to be retained in the cache over copied data sets without forcing any conditions that would in themselves cause a storage device to fail because a data set could not be copied from the storage device.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Referring now to the drawings in which like reference numbers represent corresponding parts throughout: </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a computing environment in which preferred embodiments are implemented; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a token database record used to access data in accordance with preferred embodiments of the present invention; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates logic to preferentially cache uncopied volumes in the DASD cache in accordance with preferred embodiments of the present invention; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates logic to copy a volume from one virtual tape server to the other in peer-to-peer environment in accordance with preferred embodiments of the present invention; and </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates logic in the special microcode to initialize the virtual tape servers in accordance with preferred embodiments of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In the following description, reference is made to the accompanying drawings which form a part hereof and which illustrate several embodiments of the present invention. It is understood that other embodiments may be utilized and structural and operational changes may be made without departing from the scope of the present invention. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a peer-to-peer computing environment utilizing two virtual tape servers. Additional virtual tape servers can be used by a system, but for purposes of illustration, a single peer-to-peer arrangement is shown. A plurality of host computers <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>(two host computers <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>are shown for illustration purposes) connect to a virtual tape controller <highlight><bold>4</bold></highlight> (&ldquo;VTC&rdquo;). The host computers <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>may connect to the VTC <highlight><bold>4</bold></highlight> through a channel, such as the Enterprise System Connection (ESCON)** channel. In the peer-to-peer environment, the virtual tape controller <highlight><bold>4</bold></highlight> is transparent to the host computers <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>(i.e. the host system acts as if the host computers <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>are writing to a single virtual tape server). The virtual tape controller <highlight><bold>4</bold></highlight> then routes I/O requests from the hosts <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>to one of the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><bold>6</bold></highlight><highlight><italic>b</italic></highlight>. The virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>and <highlight><bold>6</bold></highlight><highlight><italic>b </italic></highlight>control access to direct access storage devices (DASD) <highlight><bold>8</bold></highlight><highlight><italic>a </italic></highlight>and <highlight><bold>8</bold></highlight><highlight><italic>b </italic></highlight>and tape libraries <highlight><bold>10</bold></highlight><highlight><italic>a </italic></highlight>and <highlight><bold>10</bold></highlight><highlight><italic>b</italic></highlight>, respectively. <footnote id="FOO-00001">**AIX, ESCON, Magstar, and RS/6000 are registered trademarks of IBM. </footnote></paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Each DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>comprises numerous interconnected hard disk drives. Each tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>comprises numerous tape cartridges which may be mechanically loaded into tape drives that the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>may access. The hosts may include an operating system such as the IBM OS/390 operating system, or any other operating system known in the art. The virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><bold>6</bold></highlight><highlight><italic>b </italic></highlight>may comprise a server system including software to emulate a tape library, such as the IBM Magstar Virtual Tape Server. For instance, the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>and the virtual tape controller <highlight><bold>4</bold></highlight> may be implemented in separate computers comprising an IBM RS/6000 processor, the IBM AIX operating system, and the IBM ADSTAR Distributed Management (ADSM) software or Tivoli Storage Manager, to perform the data movement operations among the hosts <highlight><bold>2</bold></highlight><highlight><italic>a, b</italic></highlight>, DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>, and tape libraries <highlight><bold>10</bold></highlight><highlight><italic>a, b</italic></highlight>.** The tape library may comprise an IBM Magstar Tape Library, such as the Magstar 3494 Tape Library, or any other tape library system known in the art. <footnote id="FOO-00002">**AIX, ESCON, Magstar, and RS/6000 are registered trademarks of IBM. </footnote></paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>provide a tape volume cache, which extends the performance benefits of disk cache to access the volumes in the tape libraries <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>and improves performance by allowing host I/O requests to the tape libraries <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>to be serviced from the DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>. The virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>appear to the hosts <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>as tape drives including tape data volumes. The hosts <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>view the virtual tape volumes as actual tape volumes and issue tape management commands, such as mount, and otherwise address the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>as a tape control unit. Further details of the virtual tape server technology in which preferred embodiments are implemented are described in the IBM publication &ldquo;Enhanced IBM Magstar Virtual Tape Server: Implementation Guide.&rdquo; IBM document no. SG24-2229-02 (Copyright IBM, April, 1999), which publication is incorporated herein by reference in its entirety. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Volumes maintained in tape cartridges in the tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>are logical volumes. A copy of the logical volume can also reside in the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>associated with the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b</italic></highlight>. A host <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>accesses the data on a logical volume from the resident copy on the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>. If the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>resident copy is updated by a host <highlight><bold>2</bold></highlight><highlight><italic>a, b</italic></highlight>, the logical volume is scheduled to be copied from the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>to the tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>when the volume is closed by the host <highlight><bold>2</bold></highlight><highlight><italic>a, b</italic></highlight>. Further, after the DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>space usage reaches a threshold amount, the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>removes logical volumes that have been copied to the tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>from the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>to make room for other logical volumes. Once a logical volume has been removed from the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>, it is no longer accessible by a host. If a host <highlight><bold>2</bold></highlight><highlight><italic>a, b </italic></highlight>requests a volume that only resides in tape, then the volume must be recalled and copied from a tape in the tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>to the DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>. Recall operations can take several minutes and may include mechanical operations concerning the use of a robotic arm to access tape cartridges from the storage cells and insert into a tape drive, mounting the tape cartridge, rewinding the tape, etc. In preferred embodiments, the tape libraries <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>include the same data volumes, thus shadowing each other. However, each virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>behaves independently, and each may cache different volumes in DASD. For instance, the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>may have different volumes resident in their associated DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>as a result of different schedules or algorithms that determine which volumes to remove. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> As long as a logical volume is still resident in the DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>, it can be accessed again by a host regardless of whether it has been copied to the tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>or not. By allowing a volume to be mounted and accessed from DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>, delay times associated with rewinding the tape, robotic arm movement, and load time for the mounts are avoided because the operations are performed with respect to hard disk drives that do not have the delay times associated with tape access mechanisms. Performing a virtual mount of a logical volume resident in DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>is referred to as a cache hit. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Each virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>includes a database of tokens or records for every logical volume in the tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b </italic></highlight>to manage the volumes in the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b</italic></highlight>. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates the fields or data maintained in each volume token <highlight><bold>50</bold></highlight>. The volume ID <highlight><bold>52</bold></highlight> indicates the identity of the volume. A location field <highlight><bold>54</bold></highlight> indicates whether the volume is in the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>of the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>or only in the tape library <highlight><bold>10</bold></highlight><highlight><italic>a, b</italic></highlight>. The location field <highlight><bold>54</bold></highlight> would indicate that a volume is in the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>even if it scheduled for destage. A copy flag <highlight><bold>56</bold></highlight> indicates whether the data has been copied to the other virtual tape server in the peer-to-peer environment. The copy flag <highlight><bold>56</bold></highlight> is set &ldquo;on&rdquo; for a logical volume in one virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>if the other virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>b </italic></highlight>needs to copy the logical volume to its DASD <highlight><bold>8</bold></highlight><highlight><italic>b</italic></highlight>. After a logical volume has been copied from one virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a</italic></highlight>, the copy flag <highlight><bold>56</bold></highlight> is set &ldquo;off&rdquo; again. A data level <highlight><bold>58</bold></highlight> indicates the number of times the file has been updated. Every time data is updated to a logical volume, the level field <highlight><bold>58</bold></highlight> is incremented indicating the number of times a volume in a particular DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>has been updated. The logical volume in the DASDs <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>having the highest data level includes the most recent version of the update. For this reason, the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>including the most recent version of the data, i.e., having the highest level, will be selected when performing I/O operations with respect to the volume. A timestamp <highlight><bold>62</bold></highlight> records the last time the logical volume was accessed by the host computers <highlight><bold>2</bold></highlight><highlight><italic>a, b. </italic></highlight></paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates logic implemented in the controller <highlight><bold>4</bold></highlight> and the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>to preferentially cache uncopied logical volumes in the DASD <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>according to the preferred embodiments. Typically, each virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>tracks the usage of logical volumes by the host <highlight><bold>2</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b</italic></highlight>. Whenever a logical volume is first modified after being mounted by the host computer <highlight><bold>2</bold></highlight><highlight><italic>a, b</italic></highlight>, the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>updates the data level <highlight><bold>58</bold></highlight>. Whenever a logical volume is closed by the host computer, the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>adds it to its cache list. The virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>uses this cache list to manage the volumes in its DASD cache <highlight><bold>8</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>(i.e. determine whether the volume should be destaged). The virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>determines which volumes are kept in the cache the longest using a cache management algorithm such as Least Recently Used (&ldquo;LRU&rdquo;). This algorithm is based upon the timestamp <highlight><bold>62</bold></highlight> of the last access of the logical volume. Volumes with the oldest timestamps are deleted from the DASD cache <highlight><bold>8</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>first whenever space is needed in the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b</italic></highlight>. This ensures that least recently used volumes are deleted from DASD cache <highlight><bold>8</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b</italic></highlight>, before the more recently accessed volumes. Since most data retrievals occur within <highlight><bold>24</bold></highlight> hours of when that volume was created, the LRU algorithm is generally effective in &ldquo;immediate&rdquo; mode, but can still cause unwanted delays in the &ldquo;deferred mode&rdquo; as explained above. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Control begins at block <highlight><bold>100</bold></highlight>, when a host computer <highlight><bold>2</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>causes a logical volume to be mounted by the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b</italic></highlight>. The host issues an I/O operation to the virtual tape controller <highlight><bold>4</bold></highlight> at block <highlight><bold>102</bold></highlight>. At block <highlight><bold>104</bold></highlight>, the virtual tape controller <highlight><bold>4</bold></highlight> determines whether the I/O operation is a read, write or volume close operation. If it is a read or write operation, the virtual tape controller <highlight><bold>4</bold></highlight>, at block <highlight><bold>106</bold></highlight>, further determines whether the operation is a write operation. If the operation is simply a read operation, the virtual tape controller <highlight><bold>4</bold></highlight> continues to monitor the host&apos;s I/O activities. If the operation is a write operation, the virtual tape controller <highlight><bold>4</bold></highlight>, at block <highlight><bold>108</bold></highlight> determines whether the copy flag <highlight><bold>56</bold></highlight> is &ldquo;on&rdquo; in the volume&apos;s token <highlight><bold>50</bold></highlight>. If the copy flag <highlight><bold>56</bold></highlight> is &ldquo;not on,&rdquo; the virtual tape controller <highlight><bold>4</bold></highlight> turns the flag &ldquo;on&rdquo; and also increments the data level <highlight><bold>58</bold></highlight>. The virtual tape controller <highlight><bold>4</bold></highlight> then waits for the next host I/O operation. By verifying that a copy flag is turned on after every write operation, the virtual tape controller <highlight><bold>4</bold></highlight> ensures that a newly written volume is marked for copying. If, at block <highlight><bold>104</bold></highlight>, the I/O operation was a volume close, the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b</italic></highlight>, at block <highlight><bold>112</bold></highlight>, determines if the copy flag is &ldquo;on.&rdquo; If the copy flag is &ldquo;on,&rdquo; the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b</italic></highlight>, at block <highlight><bold>114</bold></highlight>, modifies the timestamp associated with the logical volume by adding forty-eight (48) hours to the timestamp used by the LRU calculation (i.e. timestamp <highlight><bold>62</bold></highlight> in the token and/or the timestamp in the virtual tape server&apos;s file system). This operation makes the uncopied volume appear &ldquo;newer&rdquo; than all the other volumes in the DASD cache <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>. At block <highlight><bold>116</bold></highlight>, the volume is closed in the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b</italic></highlight>. Because the timestamp of the volume makes it appear newer, it is preferentially cached by the LRU algorithm in deleting volumes from the DASD cache <highlight><bold>8</bold></highlight><highlight><italic>a, b</italic></highlight>. In alternative embodiments, modification to the timestamp can be performed by other means such as special queues or the time increment used can be different than 48 hours. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates logic implemented in the controller <highlight><bold>4</bold></highlight> to copy a volume from one virtual tape server to the other in peer-to-peer environment. Control begins at block <highlight><bold>150</bold></highlight> when the synchronization operation between the peer-to-peer virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>are performed in deferred mode. At block <highlight><bold>152</bold></highlight>, virtual tape controller <highlight><bold>4</bold></highlight> seeks an uncopied volume (i.e. a volume where the copy flag <highlight><bold>56</bold></highlight> is &ldquo;on&rdquo;) from one of the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>and copies the volume to the other virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b</italic></highlight>. At block <highlight><bold>154</bold></highlight>, the virtual tape controller <highlight><bold>4</bold></highlight> turns the copy flag <highlight><bold>56</bold></highlight> in the token <highlight><bold>50</bold></highlight> to &ldquo;off&rdquo; indicating the volume does not need to be copied anymore. At block <highlight><bold>156</bold></highlight>, the server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>detects the copy flag <highlight><bold>56</bold></highlight> transition from on to off and reduces (at block <highlight><bold>158</bold></highlight>) the timestamp used by the cache LRU calculation for the logical volume by 48 hours. Thus, after the volume is copied, the server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>restores the volume&apos;s order in the cache to &ldquo;normal&rdquo; (i.e. the order the volume would have had if the volume had not required copying.) When the space usage in the DASD cache <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>reaches a threshold, the LRU algorithm (at block <highlight><bold>160</bold></highlight>) can then delete the volume according the order of least recently used once the volume has been copied. Therefore, using a modified timestamp gives preferences to the uncopied volumes without forcing any conditions that would in themselves cause a virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>to fail if the virtual tape controller <highlight><bold>4</bold></highlight> fails to copy the volumes such as a fixed list of &ldquo;to be copied logical volumes&rdquo; might. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates the logic implemented in the special microcode to initialize virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>of the preferred embodiment. Control begins at block <highlight><bold>200</bold></highlight> when the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a </italic></highlight>or <highlight><italic>b </italic></highlight>initializes. At block <highlight><bold>202</bold></highlight>, the virtual tape server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>builds a &ldquo;flatfile&rdquo; of all uncopied files in the DASD cache <highlight><bold>8</bold></highlight><highlight><italic>a, b </italic></highlight>by searching the token database and finding the files with the copy flag <highlight><bold>56</bold></highlight> &ldquo;on.&rdquo; At block <highlight><bold>204</bold></highlight>, the server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>scans the filesystem and determines the age of each file by looking at the timestamp associated with each file. At block <highlight><bold>206</bold></highlight>, a binary search of the flatfile determines the list of volumes that require copying. Thus, the interrogation of the copy flags <highlight><bold>56</bold></highlight> becomes a binary search of the flatfile and operated in an order of magnitude faster than interrogating the volumes one by one. If the copy flag <highlight><bold>56</bold></highlight> is &ldquo;on,&rdquo; at block <highlight><bold>208</bold></highlight>, the timestamp of the uncopied volume is altered as described above for a host written uncopied logical volume (i.e. the server <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>modifies the timestamp <highlight><bold>62</bold></highlight> associated with the logical volume by adding forty-eight (48) hours to the timestamp used by the LRU calculation.) At block <highlight><bold>210</bold></highlight>, the virtual tape servers <highlight><bold>6</bold></highlight><highlight><italic>a, b </italic></highlight>enters the cached files into a LRU table including the files with modified timestamps. At block <highlight><bold>212</bold></highlight>, the control unit is brought online. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Additional Implementation Details </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> This concludes the description of the preferred embodiments of the invention. The following describes some alternative embodiments for accomplishing the present invention. The technique for preferentially keeping uncopied files in the virtual tape servers described herein may be implemented as a method, apparatus or article of manufacture using standard programming and/or engineering techniques to produce software, firmware, hardware, or any combination thereof. The term &ldquo;article of manufacture&rdquo; as used herein refers to code or logic implemented in hardware logic (e.g., an integrated circuit chip, Field Programmable Gate Array (FPGA), Application Specific Integrated Circuit (ASIC), etc.) or a computer readable medium (e.g., magnetic storage medium (e.g., hard disk drives, floppy disks,, tape, etc.), optical storage (CD-ROMs, optical disks, etc.), volatile and non-volatile memory devices (e.g., EEPROMs, ROMs, PROMs, RAMs, DRAMs, SRAMs, firmware, programmable logic, etc.). Code in the computer readable medium is accessed and executed by a processor. The code in which preferred embodiments of the configuration discovery tool are implemented may further be accessible through a transmission media or from a file server over a network. In such cases, the article of manufacture in which the code is implemented may comprise a transmission media, such as a network transmission line, wireless transmission media, signals propagating through space, radio waves, infrared signals, etc. Of course, those skilled in the art will recognize that many modifications may be made to this configuration without departing from the scope of the present invention, and that the article of manufacture may comprise any information bearing medium known in the art. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Preferred embodiments were described with respect to the IBM virtual tape server system. However, the preferred logic could apply to any virtual storage system in which a faster storage system, including either magnetic storage or memories, is used to cache data from a slower storage system. For instance, the cache may comprise memory devices and the storage devices may comprise sets of hard disk drives whose data sets are paged into the corresponding memory sets to provide access to the data sets through the faster access cache. Moreover, although the preferred embodiments were described with respect to a peer-to-peer environment, the preferred logic could apply to other environments such as a client-server environment where copies of the same data is kept at both locations. In addition, the preferred logic could apply to a situation where a copy of the logical volume can be kept in multiple storage devices. For example, the logic can apply in a peer-to-peer-to-peer environment with three separate virtual tape servers where the same logical volume is copied to each virtual tape server. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Preferred embodiments were described with respect to recalling, mounting, and maintaining tokens for data volumes. However, any data set or unit of data storage such as files, tracks, fixed blocks, etc., could be the subject of the recalling and mounting operations. The term &ldquo;data set&rdquo; as used herein refers to any unit of data storage. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> In preferred embodiments, virtual tape controllers were used to select a virtual tape server to handle the recall or I/O access operation. In alternative embodiments, the hosts may make such a selection, or the virtual tape servers may determine which virtual tape server to use to handle the recall or access operation. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The foregoing description of the preferred embodiments of the invention has been presented for the purposes of illustration and description. It is not intended to be exhaustive or to limit the invention to the precise form disclosed. Many modifications and variations are possible in light of the above teaching. It is intended that the scope of the invention be limited not by this detailed description, but rather by the claims appended hereto. The above specification, examples and data provide a complete description of the manufacture and use of the composition of the invention. Since many embodiments of the invention can be made without departing from the spirit and scope of the invention, the invention resides in the claims hereinafter appended. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for maintaining data in two storage devices, wherein the data is comprised of a plurality of data sets, comprising: 
+<claim-text>maintaining in a first storage device a flag for each data set indicating whether the data set has been copied to a second storage device; </claim-text>
+<claim-text>maintaining a timestamp for each data set; </claim-text>
+<claim-text>flagging each data set as an uncopied data set when the data set is modified or newly created; </claim-text>
+<claim-text>modifying the timestamp for the uncopied data set by adding a period of time; and </claim-text>
+<claim-text>removing data from the first storage device based on the timestamp of each data set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>copying the uncopied data set from the first storage device to the second storage device; </claim-text>
+<claim-text>changing the flag of the uncopied data set to indicate that the data set has been copied; and </claim-text>
+<claim-text>modifying the timestamp for the uncopied data set by subtracting the period of time. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein copying the uncopied data set is performed during a process of synchronizing data on both the first and second storage devices. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first and second storage devices are in a peer-to-peer environment. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>placing the flag of each data set into a flatfile; </claim-text>
+<claim-text>reviewing the flag of each data set from the flatfile; and </claim-text>
+<claim-text>searching the flatfile to locate the uncopied data set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of removing data from the first storage device based on the timestamp of each data set comprises using a Least Recently Used algorithm. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the flag and the timestamp are maintained in a token associated with each data set. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the flag and the timestamp associated with each data set are maintained in a file system of the first and second storage devices. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first and second storage devices comprise a DASD cache. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the first and second storage devices function as a high speed cache for a third and a fourth storage library respectively. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A system for maintaining data in two storage devices, wherein the data is comprised of a plurality of data sets, comprising: 
+<claim-text>means for maintaining in a first storage device a flag for each data set indicating whether the data set has been copied to a second storage device; </claim-text>
+<claim-text>means for maintaining a timestamp for each data set; </claim-text>
+<claim-text>means for flagging each data set as an uncopied data set when the data set is modified or newly created; </claim-text>
+<claim-text>means for modifying the timestamp for the uncopied data set by adding a period of time; and </claim-text>
+<claim-text>means for removing data from the first storage device based on the timestamp of each data set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising: 
+<claim-text>means for copying the uncopied data set from the first storage device to the second storage device; </claim-text>
+<claim-text>means for changing the flag of the uncopied data set to indicate that the data set has been copied; and </claim-text>
+<claim-text>means for modifying the timestamp for the uncopied data set by subtracting the period of time. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein copying the uncopied data set is performed during a process of synchronizing data on both the first and second storage devices. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the first and second storage devices are in a peer-to-peer environment. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising: 
+<claim-text>means for placing the flag of each data set into a flat file; </claim-text>
+<claim-text>means for reviewing the flag of each data set from the flat file; and </claim-text>
+<claim-text>means for searching the flatfile to locate the uncopied data set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the step of removing data from the first storage device based on the timestamp of each data set comprises using a Least Recently Used algorithm. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the flag and the timestamp are maintained in a token associated with each data set. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the flag and the timestamp associated with each data set are maintained in a file system of the first and second storage devices. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the first and second storage devices comprise a DASD cache. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the first and second storage devices function as a high speed cache for a third and a fourth storage library respectively. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the first and second storage devices are two storage devices located in an environment with multiple interlinked storage devices maintaining the same data sets. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. An article of manufacture containing code for maintaining data in two storage devices, wherein the data is comprised of a plurality of data sets, comprising a computer usable media including at least one computer program embedded therein that is capable or causing at least one computer to perform: 
+<claim-text>maintaining in a first storage device a flag for each data set indicating whether the data set has been copied to a second storage device; </claim-text>
+<claim-text>maintaining a timestamp for each data set; </claim-text>
+<claim-text>flagging each data set as an uncopied data set when the data set is modified or newly created; </claim-text>
+<claim-text>modifying the timestamp for the uncopied data set by adding a period of time; and </claim-text>
+<claim-text>removing data from the first storage device based on the timestamp of each data set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further performing: 
+<claim-text>copying the uncopied data set from the first storage device to the second storage device; </claim-text>
+<claim-text>changing the flag of the uncopied data set to indicate that the data set has been copied; and </claim-text>
+<claim-text>modifying the timestamp for the uncopied data set by subtracting the period of time. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein copying the uncopied data set is performed during a process of synchronizing data on both the first and second storage devices. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the first and second storage devices are in a peer-to-peer environment. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further performing: 
+<claim-text>placing the flag of each data set into a flat file; </claim-text>
+<claim-text>reviewing the flag of each data set from the flat file; and </claim-text>
+<claim-text>searching the flatfile to locate the uncopied data set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the step of removing data from the first storage device based on the timestamp of each data set comprises using a Least Recently Used algorithm. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the flag and the timestamp are maintained in a token associated with each data set. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the flag and the timestamp associated with each data set are maintained in a file system of the first and second storage devices. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The article of manufacture of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the first and second storage devices comprise a DASD cache. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The article of manufacture of claim <highlight><bold>30</bold></highlight>, wherein the first and second storage devices function as a high speed cache for a third and a fourth storage library respectively.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004980A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004980A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004980A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004980A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004980A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004980A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

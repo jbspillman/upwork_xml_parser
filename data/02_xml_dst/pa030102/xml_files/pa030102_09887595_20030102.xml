@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030003889A1-20030102-M00001.NB SYSTEM "US20030003889A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030003889A1-20030102-M00001.TIF SYSTEM "US20030003889A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030003889A1-20030102-D00000.TIF SYSTEM "US20030003889A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030003889A1-20030102-D00001.TIF SYSTEM "US20030003889A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030003889A1-20030102-D00002.TIF SYSTEM "US20030003889A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030003889A1-20030102-D00003.TIF SYSTEM "US20030003889A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030003889</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09887595</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010622</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04B001/06</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>455</class>
+<subclass>266000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>455</class>
+<subclass>339000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>455</class>
+<subclass>340000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Noise dependent filter</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Yoni</given-name>
+<family-name>Perets</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Petach-Tikva</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>Intel Corporation</organization-name>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>SCHWEGMAN, LUNDBERG, WOESSNER &amp; KLUTH, P.A.</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 2938</address-1>
+<city>MINNEAPOLIS</city>
+<state>MN</state>
+<postalcode>55402</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A communication device includes a noise flattening filter having a filter response that dynamically adjusts based on the current noise spectrum in a wireless channel. The noise spectrum of the wireless channel is estimated and used to determine a noise classification for the channel. A noise flattening filter response is then selected based upon the noise classification for use in filtering signals received from the channel. The filtered signals are then delivered to an equalizer for further processing. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates generally to communication systems and, more particularly, to structures and techniques for filtering signals within such systems. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Wireless communication systems commonly employ equalizers to handle undesired channel effects from received signals. These equalizers typically assume that white Gaussian noise exists in the channel. This assumption, however, is often inaccurate. That is, in many cases, the noise in the channel derives from various different sources (e.g., co-channel noise, adjacent channel noise, thermal noise, etc.) so that the overall noise spectrum is not white. An equalizer that assumes white noise, therefore, will not produce optimal results.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a receiver system in accordance with one embodiment of the present invention; </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram illustrating a noise flattening filter in accordance with one embodiment of the present invention; </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram illustrating a noise flattening filter in accordance with another embodiment of the present invention; </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a graph illustrating a high pass filter response and a low pass filter response that can be used in a noise flattening filter in accordance with the present invention; </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a spectrum diagram illustrating the whitening of a noise spectrum for a channel having co-channel noise; and </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a spectrum diagram illustrating the whitening of a noise spectrum for a channel having adjacent channel noise. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In the following detailed description, reference is made to the accompanying drawings that show, by way of illustration, specific embodiments in which the invention may be practiced. These embodiments are described in sufficient detail to enable those skilled in the art to practice the invention. It is to be understood that the various embodiments of the invention, although different, are not necessarily mutually exclusive. For example, a particular feature, structure, or characteristic described herein in connection with one embodiment may be implemented within other embodiments without departing from the spirit and scope of the invention. In addition, it is to be understood that the location or arrangement of individual elements within each disclosed embodiment may be modified without departing from the spirit and scope of the invention. The following detailed description is, therefore, not to be taken in a limiting sense, and the scope of the present invention is defined only by the appended claims, appropriately interpreted, along with the full range of equivalents to which the claims are entitled. In the drawings, like numerals refer to the same or similar functionality throughout the several views. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The present invention relates to an adaptive noise filtration technique and apparatus for use within a wireless communication system. A noise flattening filter is provided to process a signal received from a wireless communication channel before the signal is equalized. During system operation, the transfer function of the noise flattening filter is dynamically adjusted based upon the present noise spectrum of the channel. For example, if the noise within the channel is concentrated toward the higher frequencies, a low pass filter response can be selected. Similarly, if the noise within the channel is concentrated toward the lower frequencies, a high pass filter response can be chosen. In this manner, the noise component within the received signal is &ldquo;whitened&rdquo; and the accuracy of the equalization operation is enhanced. The inventive principles can be used in any communication system using an equalization scheme that assumes white noise within a received signal (e.g., decision feedback equalization, maximum likelihood equalization, etc.). The inventive principles can be implemented in both mobile communication devices (e.g., a handheld communicator) and stationary communication devices (e.g., base station equipment). The inventive principles can also be used within communication devices utilizing software-defined radio (SDR) techniques. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a receiver system <highlight><bold>10</bold></highlight> in accordance with one embodiment of the present invention. As illustrated, the receiver system <highlight><bold>10</bold></highlight> includes: an antenna <highlight><bold>12</bold></highlight>, a receiver front end <highlight><bold>14</bold></highlight>, a channel estimation unit <highlight><bold>16</bold></highlight>, a noise estimation unit <highlight><bold>18</bold></highlight>, a noise spectrum classification unit <highlight><bold>20</bold></highlight>, a noise flattening filter <highlight><bold>22</bold></highlight>, and an equalizer <highlight><bold>24</bold></highlight>. The antenna <highlight><bold>12</bold></highlight> receives a communication signal <highlight><bold>28</bold></highlight> from a wireless communication channel. The receiver front end <highlight><bold>14</bold></highlight> processes the received communication signal <highlight><bold>28</bold></highlight> and converts it to a baseband representation R(n). The channel estimation unit <highlight><bold>16</bold></highlight> uses the received signal (either before, during, or after front end processing) to determine an estimated impulse response of the channel h&prime;(n) (where the symbol &prime; is used to signify an estimated response). The noise estimation unit <highlight><bold>18</bold></highlight> uses the baseband signal R(n) and the estimated channel response h&prime;(n) to determine an estimated noise spectrum &eegr;&prime;(n) within the channel. The noise spectrum classification unit <highlight><bold>20</bold></highlight> analyzes the estimated noise spectrum &eegr;&prime;(n) to determine a class of noise that is currently within the channel. The noise spectrum classification unit <highlight><bold>20</bold></highlight> then delivers a filter select signal to the noise flattening filter <highlight><bold>22</bold></highlight> that corresponds to the noise classification. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The noise flattening filter <highlight><bold>22</bold></highlight> has a variable filter response that changes in response to the filter select signal received from the noise spectrum classification unit <highlight><bold>20</bold></highlight>. In this manner, the response of the noise flattening filter <highlight><bold>22</bold></highlight> adapts to the present noise classification of the channel. The noise flattening filter <highlight><bold>22</bold></highlight> filters the receive signal R(n) using the selected filter response to generate a filtered signal R<highlight><subscript>f</subscript></highlight>(n) having a whitened noise component. The filtered signal R<highlight><subscript>f</subscript></highlight>(n) is then delivered to the equalizer <highlight><bold>24</bold></highlight> which extracts data from the signal using a corresponding equalization technique. Because the noise within the receive signal has been whitened, the performance of the equalizer <highlight><bold>24</bold></highlight> is enhanced. It should be appreciated that the individual blocks illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> (and in other block diagrams herein) do not necessarily correspond to discrete hardware elements. For example, one or more (or all) of the blocks may be implemented in software within a digital processing device (or within multiple digital processing devices). </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The channel estimation unit <highlight><bold>16</bold></highlight> can use any of a plurality of known techniques to perform the channel estimation. Such techniques include, for example, the Maximum Likelihood Estimator (MLE), the Least Square Estimator (LSE), the Minimum Mean Square Estimator (MMSE), the Maximum A Posteriori (MAP) Estimator, and others. The noise estimation unit <highlight><bold>18</bold></highlight>, as described above, uses the channel estimate to estimate the present noise spectrum in the channel. In one approach, for example, a linear channel model is used to perform the noise estimation. In the linear model, the receive signal R(n) is expressed as:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>R</italic></highlight>(<highlight><italic>n</italic></highlight>)&equals;<highlight><italic>S</italic></highlight>(<highlight><italic>n</italic></highlight>){circle over (&times;)}<highlight><italic>h</italic></highlight>(<highlight><italic>n</italic></highlight>)&plus;&eegr;(<highlight><italic>n</italic></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0014" lvl="7"><number>&lsqb;0014&rsqb;</number> where S(n) is the transmitted signal, h(n) is the impulse response of the channel, &eegr;(n) is the additive noise of the channel, and {circle over (&times;)} is the convolution operator. Based on this equation, the estimated noise &eegr;&prime;(n) within a linear channel can be calculated as follows:</paragraph>
+<paragraph lvl="0"><in-line-formula>&eegr;&prime;(<highlight><italic>n</italic></highlight>)&equals;<highlight><italic>R</italic></highlight>(<highlight><italic>n</italic></highlight>)&minus;<highlight><italic>S&prime;</italic></highlight>(<highlight><italic>n</italic></highlight>){circle over (&times;)}<highlight><italic>h&prime;</italic></highlight>(<highlight><italic>n</italic></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0015" lvl="7"><number>&lsqb;0015&rsqb;</number> where S&prime;(n) is the estimated transmitted signal data and h&prime;(n) is the channel estimate generated by the channel estimation unit <highlight><bold>16</bold></highlight>. In one approach, the communication signal <highlight><bold>28</bold></highlight> received from the channel includes some data that is known within the receiver <highlight><bold>10</bold></highlight>. This can include, for example, a SYNC word that is included within the transmit data. The noise estimation unit <highlight><bold>18</bold></highlight> uses this known data (e.g., the SYNC word) as S&prime;(n) in the above equation to calculate the noise estimate &eegr;&prime;(n). In another approach, a preliminary data detection operation is performed to detect data within the received signal R(n). This detected data is then used as S&prime;(n) in the above equation. It should be appreciated that other channel models (e.g., non-linear models) can alternatively be used to calculate the estimated noise &eegr;&prime;(n). The channel model used will typically depend upon the expected characteristics of the channel of interest. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The noise spectrum classification unit <highlight><bold>20</bold></highlight> analyzes the noise estimate generated by the noise estimation unit <highlight><bold>18</bold></highlight> to classify the channel noise. In one approach, the noise spectrum classification unit <highlight><bold>20</bold></highlight> selects one of a finite number of predetermined noise classifications based on its analysis. A filter select signal corresponding to the selected noise classification is then output to the noise flattening filter <highlight><bold>22</bold></highlight>. In one embodiment, the noise spectrum classification unit <highlight><bold>20</bold></highlight> classifies the channel noise based upon filtered noise power. A number of filter responses h<highlight><subscript>classi</subscript></highlight>(n) (1&lE;i&lE;K) are defined that each isolate a different region within a spectrum of interest. The filter responses are used to determine a filtered noise power for each of the spectral regions as follows:  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mrow>
+  <msub>
+    <mi>P</mi>
+    <mi>i</mi>
+  </msub>
+  <mo>=</mo>
+  <mrow>
+    <mfrac>
+      <mn>1</mn>
+      <mi>N</mi>
+    </mfrac>
+    <mo>&it;</mo>
+    <mrow>
+      <munderover>
+        <mo>&Sum;</mo>
+        <mrow>
+          <mi>n</mi>
+          <mo>=</mo>
+          <mn>1</mn>
+        </mrow>
+        <mi>N</mi>
+      </munderover>
+      <mo>&it;</mo>
+      <mstyle>
+        <mtext>&emsp;</mtext>
+      </mstyle>
+      <mo>&it;</mo>
+      <msup>
+        <mrow>
+          <mo>&LeftBracketingBar;</mo>
+          <mrow>
+            <mrow>
+              <msup>
+                <mi>&eta;</mi>
+                <mi>&prime;</mi>
+              </msup>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <mi>n</mi>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+            <mo>&CircleTimes;</mo>
+            <mrow>
+              <msub>
+                <mi>h</mi>
+                <mi>classi</mi>
+              </msub>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <mi>n</mi>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+          </mrow>
+          <mo>&RightBracketingBar;</mo>
+        </mrow>
+        <mn>2</mn>
+      </msup>
+    </mrow>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030003889A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="24.97635" file="US20030003889A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0017" lvl="7"><number>&lsqb;0017&rsqb;</number> where h<highlight><subscript>classi</subscript></highlight>(n) is the ith filter response, P<highlight><subscript>i </subscript></highlight>is the noise power corresponding to the ith filter response, and &eegr;&prime;(n) is the estimated noise spectrum. Once the filtered noise powers P<highlight><subscript>i </subscript></highlight>have been calculated, they are compared to one another to determine the appropriate noise classification. For example, assume that two filter responses (h<highlight><subscript>class1 </subscript></highlight>and h<highlight><subscript>class2</subscript></highlight>) are used (i.e., K&equals;2) to determine filtered noise powers within a system. The first filter response h<highlight><subscript>class1 </subscript></highlight>defines a low pass filter (LPF) and the second filter response h<highlight><subscript>class2 </subscript></highlight>defines a high pass filter (HPF). Two filtered noise powers (P<highlight><subscript>1 </subscript></highlight>and P<highlight><subscript>2</subscript></highlight>) are calculated using the two filter responses and a ratio of the two powers is calculated. The ratio is then used to determine the noise classification. If the ratio is greater than 10 dB, for example, a first classification can be selected. If the ratio is between 10dB and &minus;10 dB, a second noise classification can be selected. If the ratio is less than &minus;10 dB, a third noise classification can be selected. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> If the first noise classification is selected (i.e., P<highlight><subscript>1</subscript></highlight>/P<highlight><subscript>2</subscript></highlight>&gt;10dB), then the noise power in the channel is concentrated within the lower frequencies. A filter select signal is then delivered to the noise flattening filter <highlight><bold>22</bold></highlight> that selects a high pass filter response. If the third noise classification is selected (i.e., P<highlight><subscript>1</subscript></highlight>/P<highlight><subscript>2</subscript></highlight>&lt;10dB), the noise power in the channel is concentrated within the higher frequencies. A filter select signal is then delivered to the noise flattening filter <highlight><bold>22</bold></highlight> that selects a low pass filter response. If the second noise classification is selected (i.e., &minus;10dB&lE;P<highlight><subscript>1</subscript></highlight>/P<highlight><subscript>2</subscript></highlight>&lE;10dB), the noise power in the channel is relatively balanced between lower and higher frequencies and a filter select signal is delivered to the noise flattening filter <highlight><bold>22</bold></highlight> that selects a bypass filter response. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram illustrating a noise flattening filter <highlight><bold>30</bold></highlight> in accordance with one embodiment of the present invention. The noise flattening filter <highlight><bold>30</bold></highlight> can be used, for example, in the receiver system <highlight><bold>10</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. As illustrated, the noise flattening filter <highlight><bold>30</bold></highlight> includes a switch <highlight><bold>32</bold></highlight> and a bank of filters <highlight><bold>34</bold></highlight>. The bank of filters <highlight><bold>34</bold></highlight> includes a number of individual filters (i.e., FILTER A, FILTER B, etc.) that each have a unique filter response. Preferably, the filter response of each of the individual filters will correspond to a particular noise classification of the channel. The switch <highlight><bold>32</bold></highlight> is operative for directing the receive signal R(n) to one of the filters within the filter bank <highlight><bold>34</bold></highlight> based on the filter select signal received from the noise spectrum classification unit <highlight><bold>20</bold></highlight>. The selected filter processes the signal R(n) while the other filters within the filter bank <highlight><bold>34</bold></highlight> are inactive. The filtered signal R&prime;(n) is then delivered to the equalizer <highlight><bold>24</bold></highlight> for further processing. A second switch <highlight><bold>36</bold></highlight>, or similar device, may be provided at the output of the filter bank <highlight><bold>34</bold></highlight> to select the output of the appropriate filter for delivery to the equalizer <highlight><bold>24</bold></highlight>. The individual filters within the filter bank <highlight><bold>34</bold></highlight> can be any type of digital filter (e.g., finite impulse response, infinite impulse response, etc.). Preferably, the individual filters will each have a relatively short impulse response so that they do not significantly increase the complexity of the equalizer <highlight><bold>24</bold></highlight> (e.g., the complexity of the equalizer <highlight><bold>24</bold></highlight> will typically be exponentially related to the length of the impulse response of the noise flattening filter). In a preferred approach, the filter taps are calculated offline to give the best noise flatness within the filter length constraint. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram illustrating another noise flattening filter configuration <highlight><bold>40</bold></highlight> that can be used within the receiver system <highlight><bold>10</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. As shown, a single transversal filter <highlight><bold>42</bold></highlight> is used to filter the receive signal R(n). The response of the transversal filter <highlight><bold>42</bold></highlight> is dynamically adjusted during receiver operation by varying the tap weights of the filter. A memory <highlight><bold>44</bold></highlight> is provided that includes tap weight sets corresponding to a number of different filter responses. The filter select signal generated by the noise spectrum classification unit <highlight><bold>20</bold></highlight> (or a derivative thereof) is used to address the memory <highlight><bold>44</bold></highlight> so that the appropriate tap weights are applied to the transversal filter <highlight><bold>42</bold></highlight> based on the present noise classification. As before, after the receive signal has been filtered, the resulting signal is delivered to the equalizer <highlight><bold>24</bold></highlight> for further processing. It should be appreciated that many alternative noise flattening filter strategies can be used in accordance with the present invention, including adjustable filter arrangements that are implemented solely in software. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a graph illustrating two filter responses that can be used within the noise flattening filter <highlight><bold>22</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; that is, a low pass filter (LPF) response <highlight><bold>50</bold></highlight> and a high pass filter response <highlight><bold>52</bold></highlight>. Each of the filter responses <highlight><bold>50</bold></highlight>, <highlight><bold>52</bold></highlight> has a length of two. Thus, these responses will each increase the effective response length of the channel by 1. As described previously, when the noise power in the channel is concentrated within the lower frequencies, the high pass filter response <highlight><bold>52</bold></highlight> can be selected for use within the noise flattening filter <highlight><bold>22</bold></highlight>. Similarly, when the noise power in the channel is concentrated within the higher frequencies, the low pass filter response <highlight><bold>52</bold></highlight> can be selected for use within the noise flattening filter <highlight><bold>22</bold></highlight>. Because the filter lengths associated with the filter responses <highlight><bold>50</bold></highlight>,<highlight><bold>52</bold></highlight> are relatively low (i.e., 2), the noise flattening filter <highlight><bold>22</bold></highlight> will have minimal effect on the complexity of the equalizer <highlight><bold>22</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In one application, the inventive principles are used to reduce the negative effects of co-channel and adjacent channel noise within a receiver (e.g., the receiver <highlight><bold>10</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>). Co-channel noise is noise resulting from other transmissions within a frequency channel of interest. Adjacent channel noise is noise resulting from transmissions within frequency channels that are adjacent to a channel of interest. Both types of noise can seriously compromise the performance of an equalizer. <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a spectrum diagram illustrating a noise spectrum <highlight><bold>54</bold></highlight> that may exist in a wireless channel that includes co-channel noise. As shown, the noise power is concentrated within the low frequency region of the spectrum (i.e., the region about zero frequency). To whiten this noise spectrum <highlight><bold>54</bold></highlight>, a high pass filter response (e.g., filter response <highlight><bold>52</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>) is used within the noise flattening filter <highlight><bold>22</bold></highlight> to process the receive signal. With reference to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, this will result in a flattened noise spectrum <highlight><bold>56</bold></highlight>. <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a spectrum diagram illustrating a noise spectrum <highlight><bold>58</bold></highlight> that may exist in a wireless channel that includes adjacent channel noise. As shown, the noise power is concentrated within the high frequency region of the spectrum. To whiten this noise spectrum, a low pass filter response (e.g., low pass response <highlight><bold>50</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>) is used within the noise flattening filter <highlight><bold>22</bold></highlight> to process the receive signal. As shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, this will result in flattened noise spectrum <highlight><bold>60</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In a communication system implementing the Global System for Mobile Communication (GSM) standard or the Enhanced Data GSM Environment (EDGE) standard, the adjacent channel noise will typically have an offset of about 200 kHz from the frequency of interest. Thus, the low pass filter response used to whiten a noise spectrum including such adjacent channel noise would be designed based on this offset. Although the flattened noise spectrums <highlight><bold>56</bold></highlight>, <highlight><bold>60</bold></highlight> of <cross-reference target="DRAWINGS">FIGS. 5 and 6</cross-reference>, respectively, are not perfectly flat, the improvement in flatness generated by the noise flattening filter <highlight><bold>22</bold></highlight> will often have a significant impact on the performance of the equalizer <highlight><bold>24</bold></highlight>. Even better flatness can typically be achieved by using a noise flattening filter with a longer impulse response. However, as described above, a longer impulse response will typically require an increase in the complexity of the equalizer <highlight><bold>24</bold></highlight>, which may be undesirable. For a sub-optimal equalizer (e.g., a decision feedback equalizer (DFE)), the filter response may be selected based upon the equalizer algorithm. For example, when using a DFE, it is preferable to have a strong first tap in the impulse response. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> It should be appreciated that any number of different noise spectrum classifications can be used in accordance with the present invention. Each classification will preferably have a filter response associated with it that is designed to provide optimal noise flattening for that class of noise within the length constraints of the filter. In one embodiment, for example, multiple LPF responses and multiple HPF responses are provided within a noise flattening filter in addition to a bypass filter response. Many other noise flattening filter configurations can also be used. The adaptation rate of the noise flattening filter will typically depend upon the time varying nature of the noise or interference. In one embodiment, filter updates are performed on a block by block basis (i.e., the noise spectrum is classified and the noise flattening filter response potentially modified for each data block received by the system). In another embodiment, updates are performed every several blocks. Adjustable adaptation rates are also possible. For example, updates can be performed more frequently during periods when the probability of interference is higher (e.g., more frequent updates during the daytime than at nighttime). </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> There are some equalizers that are optimized for use with colored noise. In a system using such an equalizer, the noise flattening filter <highlight><bold>22</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> would be replaced by a filter that is configured to achieve the appropriate colored noise spectrum at the input of the equalizer <highlight><bold>24</bold></highlight>. Operation would otherwise be similar to that described above. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Although the present invention has been described in conjunction with certain embodiments, it is to be understood that modifications and variations may be resorted to without departing from the spirit and scope of the invention as those skilled in the art readily understand. Such modifications and variations are considered to be within the purview and scope of the invention and the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A communication device for use in a wireless communication system comprising: 
+<claim-text>a receiver front end to receive a communication signal from a wireless channel; </claim-text>
+<claim-text>a noise classification unit to determine a present noise classification for the wireless channel based on the received communication signal; </claim-text>
+<claim-text>an adjustable noise flattening filter to filter the communication signal received from the wireless channel to generate a filtered signal, said adjustable noise flattening filter having a filter response that is responsive to the noise classification determined by the noise classification unit; and </claim-text>
+<claim-text>an equalizer to process the filtered signal generated by the adjustable noise flattening filter. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, comprising: 
+<claim-text>a noise estimation unit to determine a noise estimate for the wireless channel using the received communication signal, wherein said noise classification unit uses said noise estimate to determine said present noise classification. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, comprising: 
+<claim-text>a channel estimation unit to determine an estimated channel response of the wireless channel using the received communication signal, wherein said noise estimation unit uses the estimated channel response to determine said noise estimate. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein: 
+<claim-text>said adjustable noise flattening filter includes a plurality of individual filters that each have a different filter response. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein: 
+<claim-text>said plurality of individual filters each correspond to a different noise classification. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein: 
+<claim-text>said adjustable noise flattening filter includes an input for receiving a signal to be filtered, an output for outputting a filtered signal, and a switch for selectively switching one of said plurality of individual filters into a flow path between said input and said output in response to the noise classification determined by the noise classification unit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein: 
+<claim-text>said adjustable noise flattening filter includes a single filter having a modifiable filter response. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A communication device comprising: 
+<claim-text>means for receiving a communication signal from a wireless communication channel; </claim-text>
+<claim-text>means for estimating a noise spectrum within the wireless communication channel using the communication signal; </claim-text>
+<claim-text>means for selecting a noise flattening filter response based on said noise spectrum estimated by said means for estimating; and </claim-text>
+<claim-text>means for filtering the communication signal using the filter response selected by said means for selecting. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>said means for estimating a noise spectrum uses an estimated channel response to estimate said noise spectrum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>said means for filtering includes a bank of individual filters and a switch for directing said communication signal to one of said individual filters based on a control signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>said means for selecting a noise flattening filter response includes means for calculating filtered noise powers using said noise spectrum estimated by said means for estimating. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The communication device of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>said means for selecting a noise flattening filter response includes means for selecting one of a finite number of predetermined filter responses based on said noise spectrum estimated by said means for estimating. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method for processing a communication signal comprising: 
+<claim-text>receiving a communication signal from a wireless channel; </claim-text>
+<claim-text>estimating a noise spectrum within said wireless channel using said communication signal; </claim-text>
+<claim-text>selecting one of a plurality of filter responses to filter said communication signal based on said estimated noise spectrum; and </claim-text>
+<claim-text>filtering said communication signal using said selected filter response to generate a filtered communication signal having a noise component that is flatter than a noise component of said communication signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein: 
+<claim-text>estimating a noise spectrum includes: 
+<claim-text>convolving an estimated channel response with data known to be within said communication signal to generate an estimated signal; and </claim-text>
+<claim-text>subtracting said estimated signal from the received communication signal to generate said estimated noise spectrum. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein: 
+<claim-text>selecting one of a plurality of filter responses includes: 
+<claim-text>analyzing said estimated noise spectrum to determine a noise classification for noise within the channel; and </claim-text>
+<claim-text>generating a filter select signal based upon said noise classification. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein: 
+<claim-text>filtering said communication signal includes directing said communication signal to the input of one filter within a bank of filters based on said filter select signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein: 
+<claim-text>selecting one of a plurality of filter responses includes choosing a filter response that will most effectively flatten noise within said communication signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, comprising: 
+<claim-text>applying said filtered communication signal to the input of an equalizer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein: 
+<claim-text>said plurality of filter responses includes at least one high pass filter response and at least one low pass filter response. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A computer readable medium having program instructions stored thereon for implementing a method for filtering a communication signal when executed within a digital processing device, said method comprising: 
+<claim-text>analyzing a communication signal received from a wireless communication channel to determine a class of noise in the wireless communication channel; </claim-text>
+<claim-text>selecting one of a plurality of filter responses to filter said communication signal based on said class of noise; and </claim-text>
+<claim-text>filtering said communication signal using said selected filter response. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein: 
+<claim-text>analyzing a communication signal includes estimating a noise spectrum within said channel. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein: 
+<claim-text>analyzing a communication signal includes calculating filtered noise powers using said estimated noise spectrum. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein: 
+<claim-text>analyzing a communication signal includes comparing said filtered noise powers to one another. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein: 
+<claim-text>selecting one of a plurality of filter responses includes choosing a filter response that will most effectively flatten noise within said communication signal.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030003889A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030003889A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030003889A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030003889A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

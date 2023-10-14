@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004712A1-20030102-D00000.TIF SYSTEM "US20030004712A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004712A1-20030102-D00001.TIF SYSTEM "US20030004712A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004712A1-20030102-D00002.TIF SYSTEM "US20030004712A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004712A1-20030102-D00003.TIF SYSTEM "US20030004712A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004712A1-20030102-D00004.TIF SYSTEM "US20030004712A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004712A1-20030102-D00005.TIF SYSTEM "US20030004712A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004712A1-20030102-D00006.TIF SYSTEM "US20030004712A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030004712A1-20030102-D00007.TIF SYSTEM "US20030004712A1-20030102-D00007.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004712</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10233493</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020904</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G10L019/14</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>704</class>
+<subclass>225000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for relatively noise robust speech recognition</title-of-invention>
+</technical-information>
+<continuity-data>
+<continuations>
+<continuation-of>
+<parent-child>
+<child>
+<document-id>
+<doc-number>10233493</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20020904</document-date>
+</document-id>
+</child>
+<parent>
+<document-id>
+<doc-number>09226535</doc-number>
+<document-date>19990106</document-date>
+<country-code>US</country-code>
+</document-id>
+</parent>
+<parent-status>GRANTED</parent-status>
+<parent-patent>
+<document-id>
+<doc-number>6466906</doc-number>
+<country-code>US</country-code>
+</document-id>
+</parent-patent>
+</parent-child>
+</continuation-of>
+</continuations>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Adoram</given-name>
+<family-name>Erell</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Herzlia</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Eitan, Pearl, Latzer &amp; Cohen-Zedek</name-1>
+<name-2></name-2>
+<address>
+<address-1>One Crystal Park, Suite 210</address-1>
+<address-2>2011 Crystal Drive</address-2>
+<city>Arlington</city>
+<state>VA</state>
+<postalcode>22202-3709</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A speech recognition system includes a token builder, a noise estimator, a template padder, a gain and noise adapter and a dynamic time warping (DTW) unit. The token builder produces a widened test token representing an input test utterance and at least one frame before and after the input test utterance. The noise estimator estimates noise qualities of the widened test token. The template padder pads each of a plurality of reference templates with at least one blank frame either the beginning or end of the reference template. The gain and noise adapter adapts each padded reference template with the noise and gain qualities thereby producing adapted reference templates having noise frames wherever a blank frame was originally placed and noise adapted speech where speech exists. The DTW unit performs a noise adapted DTW operation comparing the widened token with one of the noise adapted reference templates, wherein, when comparing against one of the noise frames, no duration constraints are used. The present invention includes the method performed by the system. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">REFERENCE APPLICATION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application is a continuation application of U.S. patent application Ser. No. 09/226,535 filed on Jan. 6, 1999.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to speech recognition generally and to speaker dependent recognition in the presence of noise, in particular. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Speech recognition in noisy environments is a well studied, yet difficult task. One such task is characterized by the following parameters: </paragraph>
+<paragraph id="P-0004" lvl="2"><number>&lsqb;0004&rsqb;</number> 1. The recognition is speaker dependent, where the reference templates are created from speech utterances, spoken by the user in a designated &ldquo;training session&rdquo;; </paragraph>
+<paragraph id="P-0005" lvl="2"><number>&lsqb;0005&rsqb;</number> 2. It is desired to minimize the number of training utterances to a small number (1-3), for which it is known in the art that a dynamic time warping (DTW) matching algorithm works better than a hidden marlcov model (HMM) algorithm; </paragraph>
+<paragraph id="P-0006" lvl="2"><number>&lsqb;0006&rsqb;</number> 3. The phrases to be recognized are isolated words; </paragraph>
+<paragraph id="P-0007" lvl="2"><number>&lsqb;0007&rsqb;</number> 4. The training phase is relatively noise-free, whereas the recognition needs to cope with additive environmental noise; </paragraph>
+<paragraph id="P-0008" lvl="2"><number>&lsqb;0008&rsqb;</number> 5. The environmental noise is unknown to the system prior to the instant the user pushes a push to talk (PTT) button and starts speaking; </paragraph>
+<paragraph id="P-0009" lvl="2"><number>&lsqb;0009&rsqb;</number> 6. The environmental noise has both stationary and non-stationary components; and </paragraph>
+<paragraph id="P-0010" lvl="2"><number>&lsqb;0010&rsqb;</number> 7. The system has limited fast-access memory, so that it is impossible to run DTW matching against all reference templates, in real-time and in a word-spotting manner. Therefore a two-stage processing is required, where the first stage is a voice activity detector (VAD), and the second stage is a DTW matcher. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Two difficulties imposed by the noise in the recognition phase are: </paragraph>
+<paragraph id="P-0012" lvl="2"><number>&lsqb;0012&rsqb;</number> 1. Mismatch in the acoustics between the training and recognition phases; and </paragraph>
+<paragraph id="P-0013" lvl="2"><number>&lsqb;0013&rsqb;</number> 2. Inaccurate VAD estimates of the word endpoints in the recognition phase. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> These two problems lead to recognition errors. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> There are many techniques known in the art to deal with the acoustic mismatch problem. A good review can be found in Jean-Claude Junqua and Jean-Paul Haton, <highlight><italic>Robustness in Automatic Speech Recognition</italic></highlight>, Kluwer Academic Publishers, 1996. One technique is described in U.S. Pat. No. 5,778,342 to Erell et al. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The problem of inaccurate endpoints has been less covered in the art. One solution was given in the form of relaxed-endpoint DTW and is described in the following: Lawrence Rabiner and Biing-Hwang Juang, <highlight><italic>Fundamentals of Speech Recognition</italic></highlight>, Prentice Hall, 1993; Ilan D. Shallom, Raziel Haimi-Cohen and Tal Golan, &ldquo;Dynamic Time Warping with Boundaries Constraint Relaxation&rdquo;, <highlight><italic>IEEE Conference in Israel, </italic></highlight>1989, pages 1-4; and U.S. Pat. No. 5,732,394 to Nakadai et al. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In normal DTW, a sequence of spectral parameters from the speech start to end point is stored as an input speech pattern. The DTW operation matches the unknown speech pattern with the content of each reference template and calculates a distance measure between them. This is performed using the graph of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>A, to which reference is now briefly made. The frames of the input speech pattern are placed on the X axis and those of the current reference pattern are placed on the Y axis. A path is made through the graph, starting at the lower left corner and ending at the upper right corner, where the corners are defined as the endpoints of the test and reference utterances. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> However, in the relaxed-endpoint solution, shown in <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> to which reference is now made, the DTW paths are not constrained to start or end at the exact endpoints of the test and reference utterances. Instead, paths can start or end within a given range (delta and Qmax_delta) of the corners. This method indeed eliminates some of the errors due to inaccurate endpoints. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> However, the relaxed-endpoint solutions have several disadvantages. One disadvantage is illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, to which reference is now briefly made: when there exist two vocabulary words, and one word is similar to a part of the second word (this is shown by the section marked &ldquo;match&rdquo;), the recognition system might incorrectly indicate that utterance of the first (longer) word matches the reference template of the second (shorter) word. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Other disadvantages of the relaxed-endpoint methods are specific to the method. For example, in the article by Shallom, it is necessary to normalize, for each point on the DTW grid, the DTW accumulated score by the path length, since the relaxation of the beginning point allows now for multiple paths of different lengths. The length normalization introduces an extra computation load that does not exist in standard DTW. Also, because of the normalization, the standard DTW solution for the best matching path is in fact not optimal. For example, in U.S. Pat. No. 5,732,394, there is a higher computation load since several DTW matches are performed for each pair of test and reference patterns, instead of one. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Another solution to the problem of inaccurate endpoints is given in the following articles: Tom Claes and Dirk Van Compernolle, &ldquo;SNR-Normalization for Robust Speech Recognition&rdquo;, <highlight><italic>ICASSP </italic></highlight>96, 1996, pages 331-334; Vijay Raman and Vidhya Ramanujam, &ldquo;Robustness Issues and Solutions in Speech Recognition Based Telephony Services&rdquo;, <highlight><italic>ICASSP </italic></highlight>97, 1997, pages 1523-1526; and Olli Viikki and Kari Laurila, &ldquo;Noise Robust HMM-Based Speech Recognition Using Segmental Cepstral Feature Vector Normalization&rdquo;, <highlight><italic>ESCA</italic></highlight>-<highlight><italic>NATO Workshop on Robust Speech Recognition for Unknown Communication Channels, </italic></highlight>1997, pages 107-110. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The approach in these publications is that of a single-stage HMM-based system, running in real-time on the input speech, without a VAD. To deal with the noise segments, the HMM model of the word is concatenated on both ends with HMM model of the noise, to form a composite model of the whole utterance. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The above solution has two disadvantages: (a) This solution cannot be applied to tasks that are constrained by items (2) and (7) above; and (b) the one-pass solutions lose some of their efficiency in dealing with the acoustic mismatch (problem 1) since in one-pass algorithms there is no accurate information of the noise level. This occurs because the word endpoints are not determined prior to the recognition and therefore, the noise cannot be estimated from speech-free segments. This inaccurate noise estimate leads to recognition errors. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Another prior art method that also uses concatenated noise-speech-noise models for a DTW-based system is proposed in the article by B. Patrick Landell, Robert E. Wohlford and Lawrence G. Bahler entitled &ldquo;Improved Speech Recognition in Noise&rdquo;, <highlight><italic>ICASSP </italic></highlight>86, <highlight><italic>TOKYO</italic></highlight>, 1986, pages 749-751. Again, the idea is to avoid the use of endpoints in the DTW matching by using noise-templates that are augmented to the speech templates and matching the whole utterance to the concatenated templates. Also, to efficiently combat the acoustic mismatch problem, it is assumed that, prior to the beginning of the utterance, the system has knowledge of the noise, so that the reference templates can be adapted to the noise prior to the beginning of the matching process. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> No details are given in the Landell et al. article for how the noise templates are constructed and how to implement the DTW matching against the concatenated noise-speech-noise templates. Unlike with HMM, where the method is straightforward, this is a non-trivial problem in DTW since the DTW alignment constraints are tight but yet there is no accurate knowledge of noise template duration, since it is not known when the speaker utters the word after pushing the PTT. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Also, the Landell et al. article assumes that the noise acoustic features can be estimated from past observations of the noise, from before the speaker pushed the PTT button. For Landell et al.&apos;s system, which was designed for an air force cockpit where the noise is fairly constant, this might be sufficient. However, with variable noise such as encountered during, for example, regular use of mobile phones, this past estimate can be inaccurate and can lead to recognition errors. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In all speech recognition applications, e.g., in voice-dialing by name, it is very important to reject utterances that are either not hi the vocabulary, or are so badly pronounced that they yield erroneous recognition. This is usually done by setting a threshold to the recognition score (e.g., the DTW or IMM score), i.e., the recognition result is accepted oily if the score is significant enough relative to the threshold. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> It is generally difficult to achieve efficient rejection of out-of-vocabulary or mispronounced utterances, without sacrificing also some rejection of in-vocabulary, well-pronounced utterances. The problem is difficult because of the high variability in the values of the best-match scores. Methods that are known in the alt for improving the rejection capability of HMM systems include mostly the usage of a &ldquo;general speech&rdquo; template (these are discussed in the previously mentioned article by Raman, in U.S. Pat. No. 5,732,394 and in the article by Richard C. Rose and Douglas B. Paul, &ldquo;A Hidden Markov Model Based Keyword Recognition System&rdquo;, ICASSP &apos;90, 1990, page 129. Alternatively, as discussed in the article by Herve Bourlard, Bait D&apos;hoore, and Jean-Marc Boite, &ldquo;Optimizing Recognition and Rejection Performance in Wordspotting Systems&rdquo;, ICASSP &apos;94, 1994, page 1-373, the rejection capability can be improved by using as threshold other competing candidate patterns. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Even when such score-normalization methods are efficient to the extent that the variability due to the specific utterance is minimized, there still remains a problem due to the variability in the environment. The matching between the test-utterance and the templates is always worse in noisy conditions relative to the matching in quiet conditions. This creates a problem for the rejection mechanism. Suppose that the rejection threshold on the normalization score is set to an optimal compromise between rejection of out-of-vocabulary words and misdetection of in-vocabulary words for quiet conditions. Then it might happen that in noisy conditions this compromise is not optimal. For example, the number of misdetections of in-vocabulary words will significantly increase. It may be desired in this case to relax the threshold, thereby to reduce the number of misdetections of in-vocabulary words, even at the expense of less rejection of out-of-vocabulary words. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> A solution to the problem is to adapt the threshold to the acoustic conditions, e.g., make the threshold a function of the signal to noise ratio, as in U.S. Pat. No. 5,778,342. This solution requires the estimation of the noise from speech-free waveform segments, which, in turn requires knowledge of the speech end points, which are not known to a sufficient precision. For example, if the interfering noise is a short burst that is partially overlapping with the speech, the burst may have been erroneously identified by the VAD as part of the speech. Then, the signal beyond the endpoints will not contain the noise burst, and the SNR estimator will overestimate the SNR, leading to a badly-adapted rejection threshold. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Another source of score-variability occurs in speaker dependent systems which allow the user to register either one word or two connected words. For example, in Voice Activated Dialing by name, a user may register either a first name, last name, or a full name. In the first two cases, the utterance contains one word, whereas in the second case it contains two words. It is typically the case that two-word utterances have more variability in their pronunciation (e.g. the duration of the pause in between may vary significantly), so that the DTW or HMM matching scores typically differ than the ones encountered with one-word utterances. For example, with a standard DTW system, the score is typically higher for two-word utterances. (This statement is true even through the DTW scoring normalizes the accumulated score by the DTW path length, which is longer for two-word utterances than for one-word.) This creates a problem for the rejection mechanism, since two-word utterances are rejected more than one-word utterances. This over-rejection is not &ldquo;justified&rdquo; from the performance point of view, since out-of-vocabulary two-word utterances are less likely to be accepted than one-word utterances. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The present invention will be understood and appreciated more fully from the following detailed description taken in conjunction with the appended drawings in which: </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 1A and 1B</cross-reference> and <highlight><bold>2</bold></highlight> are graphical illustrations of three different, prior art dynamic time warping (DTW) operations; </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram illustration of a speech recognizer, constructed and operative in accordance with some embodiments of the present invention; </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a graphical illustration of the energy in a test utterance, useful in understanding the operation of the present invention; </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5A</cross-reference> is a graphical illustration of a test utterance and two extra, blank frames, useful in understanding the operation of the present invention; </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5B</cross-reference> is a graphical illustration of a noise adapted version of the signal of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>A, useful in understanding the operation of the present invention; </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram illustration of a noise and peak energy estimator forming part of the system of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>; </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a graphical illustration of the noise adapted DTW operation of the present invention; and </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIGS. 8A, 8B</cross-reference> and <highlight><bold>8</bold></highlight>C are graphical illustrations of an a priori average score, SNR correction and length correction curves, useful in understanding the operation of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PRESENT INVENTION </heading>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Reference is now made to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> which illustrates the system of the present invention. The system comprises a feature extractor <highlight><bold>50</bold></highlight>, a feature buffer <highlight><bold>52</bold></highlight>, a voice activity detector (VAD) <highlight><bold>54</bold></highlight>, a template database <highlight><bold>56</bold></highlight>, two feature transformers <highlight><bold>58</bold></highlight>A and <highlight><bold>58</bold></highlight>B, a comparison unit <highlight><bold>60</bold></highlight> and a decision unit <highlight><bold>62</bold></highlight>. In accordance with a preferred embodiment of the present invention, the comparison unit <highlight><bold>60</bold></highlight> is a noise adapted, dynamic time warping (DTW) unit and the system additionally comprises a template padder <highlight><bold>64</bold></highlight>, a wide token builder <highlight><bold>66</bold></highlight>, a noise and peak energy estimator <highlight><bold>68</bold></highlight> and a gain and noise adapter <highlight><bold>70</bold></highlight>, all of which are described in more detail hereinbelow. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> In operation, the feature extractor <highlight><bold>50</bold></highlight> extracts features, such as autocorrelation coefficients or filterbank energies, of each frame of the input signal and provides these to the voice activity detector <highlight><bold>54</bold></highlight> and the buffer <highlight><bold>52</bold></highlight>. The buffer <highlight><bold>52</bold></highlight> stores the features of each frame in frame order, maintaining a history of the frames for a predetermined length of time. The voice activity detector <highlight><bold>54</bold></highlight> can be any suitable detector, such as the one in the G729B silence compression scheme dated November 1996, which can determine the frames at which speech begins and ends. These endpoints are provided to the wide token builder <highlight><bold>66</bold></highlight> which extracts a wide token from the buffer <highlight><bold>52</bold></highlight>. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, to which reference is now briefly made, illustrates the data stored in buffer <highlight><bold>52</bold></highlight>. Specifically, <cross-reference target="DRAWINGS">FIG. 4</cross-reference> graphs the first autocorrelation coefficient per frame and indicates the endpoints indicated by the voice activity detector <highlight><bold>54</bold></highlight>. A standard token is defined as the set of frames between the endpoints. In accordance with a preferred embodiment of the present invention, wide token builder <highlight><bold>66</bold></highlight> additionally takes X frames from either side of a standard token, where X is typically 8. Thus, the wide token comprises X frames before the VAD begin point through X frames after the VAD end point. The additional external frames are utilized to overcome any errors made by the voice activity detector <highlight><bold>54</bold></highlight>, in particular those errors arising from inaccurate VAD estimates of endpoints. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Referring back to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the wide token is provided both to feature transformer <highlight><bold>58</bold></highlight>A and to the noise and peak energy estimator <highlight><bold>68</bold></highlight>. The feature transformer <highlight><bold>58</bold></highlight>A transforms the features of the wide token to the cepstral features required by the DTW unit <highlight><bold>60</bold></highlight>. The transformations from one type of features to another type are well known and, therefore, will not be further discussed herein. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The noise and peak energy estimator <highlight><bold>68</bold></highlight> determines the noise structure and peak energy levels in the wide token. This is provided to the gain and noise adapter <highlight><bold>70</bold></highlight> in order to provide the noiseless templates with a noise structure and gain level similar to that found in the wide token. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> In accordance with a preferred embodiment of the present invention, the noiseless templates are padded with one blank frame oil either end prior to adapting them with the appropriate gain level and noise structure; this is performed in the template padder <highlight><bold>64</bold></highlight>. The padding and adaptation operations are shown in <cross-reference target="DRAWINGS">FIGS. 5A and 5B</cross-reference> to which reference is now briefly made. <cross-reference target="DRAWINGS">FIG. 5A</cross-reference> shows the signal <highlight><bold>71</bold></highlight> represented by a noiseless template with blank frames <highlight><bold>72</bold></highlight> (having no signal therein) on either end of signal <highlight><bold>71</bold></highlight>. After noise and gain adaptation, the clean signal <highlight><bold>71</bold></highlight> becomes noisy signal <highlight><bold>74</bold></highlight> and the blank frames <highlight><bold>72</bold></highlight> become noisy frames <highlight><bold>76</bold></highlight>. The gain level is typically also changed to match that of the wide token. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> Referring back to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the wide and noise/gain adapted templates are provided to feature transformer <highlight><bold>58</bold></highlight>B for converting to the cepstral features required by the DTW unit <highlight><bold>60</bold></highlight>. The latter compares the representation of the wide token with the representation of each wide and noise/gain adapted template and provides a score for each comparison. The result is provided to the decision unit <highlight><bold>62</bold></highlight> which then determines which comparison was the best, by some measure. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> Reference is now made to <cross-reference target="DRAWINGS">FIG. 6</cross-reference> which details the operation of an exemplary noise and peak energy estimator <highlight><bold>68</bold></highlight>. Any suitable energy and noise structure estimate can be utilized; the method shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference> assumes that tie features of each frame are autocorrelation coefficients, where the first coefficient is labeled R<highlight><subscript>0 </subscript></highlight>and indicates the energy level in the frame. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> To determine the noise structure, only the frames of the wide token having the lowest energy are considered and they are used to compute an average noise feature. To find the frames with the lowest energy, the frames are sorted by increasing energy value R<highlight><subscript>0 </subscript></highlight>(step <highlight><bold>80</bold></highlight>) and the N frames having the lowest energy values R<highlight><subscript>0 </subscript></highlight>are stored in order based on their energy values, from lowest to highest. N is typically 10. The N frames are then reviewed (step <highlight><bold>82</bold></highlight>), starting from the first one having the lowest energy value R<highlight><subscript>0 </subscript></highlight>and moving upward until reaching a frame M having an energy level which is larger than the lowest energy value by more than a predetermined factor K, such as 3 dB. Mathematically this is stated as: </paragraph>
+<paragraph lvl="0"><in-line-formula>find <highlight><italic>M </italic></highlight>for which <highlight><italic>R</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>M</italic></highlight>)&gE;<highlight><italic>KR</italic></highlight><highlight><subscript>0</subscript></highlight>&emsp;&emsp;(1) </in-line-formula></paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The noise feature is then determined (step <highlight><bold>84</bold></highlight>) from the first M&minus;1 autocorrelation vectors (i.e. of frame 1 to frame M&minus;1). For example, the M&minus;1 autocorrelation vectors can be averaged together. The noise energy R<highlight><subscript>0n </subscript></highlight>is then determined from the resultant noise feature. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> The peak energy estimation is determined in a similar manner but considering the frames with the highest energy. To find the frames with the highest energy, the frames are sorted by decreasing energy value R<highlight><subscript>0 </subscript></highlight>(step <highlight><bold>86</bold></highlight>) and the top N are then reviewed (step <highlight><bold>88</bold></highlight>), starting from the top one, R<highlight><subscript>0</subscript></highlight>(top), having the highest energy value and moving downward until reaching a frame Q having an energy level which is smaller than the highest energy value by more than a predetermined factor C, such as 0.5 dB. Mathematically this is stated as: </paragraph>
+<paragraph lvl="0"><in-line-formula>find <highlight><italic>Q </italic></highlight>for which <highlight><italic>R</italic></highlight><highlight><subscript>0</subscript></highlight>(<highlight><italic>Q</italic></highlight>)&lE;<highlight><italic>CR</italic></highlight><highlight><subscript>0</subscript></highlight>(top) </in-line-formula></paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The peak energy R<highlight><subscript>0</subscript></highlight>(peak) is then determined (step <highlight><bold>90</bold></highlight>) as the average of the top Q&minus;1 energy values R<highlight><subscript>0</subscript></highlight>. It is noted that this operation produces the test peak energy R<highlight><subscript>0t </subscript></highlight>of the widened test token. A similar operation is performed, typically off-line, for each reference template, producing the reference peak energies R<highlight><subscript>0r</subscript></highlight>. The latter are stored in template database <highlight><bold>56</bold></highlight> (<cross-reference target="DRAWINGS">FIG. 3</cross-reference>) </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> Referring back to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the gain and noise adapter <highlight><bold>70</bold></highlight> uses the noise feature and the test and reference peak energies R<highlight><subscript>0t </subscript></highlight>and R<highlight><subscript>0r</subscript></highlight>, respectively, to adapt the padded, noiseless templates. An exemplary transformation using average, not peals energy, is described in U.S. Pat. No. 5,778,342 for the case where the features are autocorrelation function (ACF). For the present invention, this transformation is: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>R&prime;</italic></highlight><highlight><subscript>r</subscript></highlight>&equals;(&lt;<highlight><italic>R</italic></highlight><highlight><subscript>0t</subscript></highlight><highlight><italic>&gt;&minus;&lt;R</italic></highlight><highlight><subscript>0n</subscript></highlight>&gt;)/&lt;<highlight><italic>R</italic></highlight><highlight><subscript>0r</subscript></highlight><highlight><italic>&gt;&times;R</italic></highlight><highlight><subscript>r</subscript></highlight><highlight><italic>&plus;&lt;R</italic></highlight><highlight><subscript>n</subscript></highlight>&gt;</in-line-formula></paragraph>
+<paragraph id="P-0054" lvl="2"><number>&lsqb;0054&rsqb;</number> where: </paragraph>
+<paragraph id="P-0055" lvl="2"><number>&lsqb;0055&rsqb;</number> R<highlight><subscript>r</subscript></highlight>&equals;Reference ACF vector &lsqb;R<highlight><subscript>0 </subscript></highlight>. . . R<highlight><subscript>10</subscript></highlight>&rsqb;</paragraph>
+<paragraph id="P-0056" lvl="2"><number>&lsqb;0056&rsqb;</number> &lt;R<highlight><subscript>n</subscript></highlight>&gt;&equals;Estimated Noise ACF vector </paragraph>
+<paragraph id="P-0057" lvl="2"><number>&lsqb;0057&rsqb;</number> &lt;R<highlight><subscript>0t</subscript></highlight>&gt;&equals;Estimated Test Peak energy </paragraph>
+<paragraph id="P-0058" lvl="2"><number>&lsqb;0058&rsqb;</number> &lt;R<highlight><subscript>0r</subscript></highlight>&gt;&equals;Estimated Reference Peak energy </paragraph>
+<paragraph id="P-0059" lvl="2"><number>&lsqb;0059&rsqb;</number> &lt;R<highlight><subscript>0t</subscript></highlight>&gt;&equals;Estimated Noise energy&equals;&lt;R<highlight><subscript>n</subscript></highlight>(0)&gt;</paragraph>
+<paragraph id="P-0060" lvl="2"><number>&lsqb;0060&rsqb;</number> R&prime;<highlight><subscript>r</subscript></highlight>&equals;Noise and Gain adapted Reference ACF vector &lsqb;R&prime;<highlight><subscript>0 </subscript></highlight>. . . R&prime;<highlight><subscript>10</subscript></highlight>&rsqb;</paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> Other transformations can be employed for where the features are filterbank energies, as is discussed in the article &ldquo;Noise Masking in a Transform Domain&rdquo;, by B. A. Mellor and A. P. Varga, ICASSP &apos;93, 1993, pp. II-87-II-90 and in U.S. Pat. No. 4,933,976. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> It will be appreciated that the above equation performs gain adaptation along with the noise adaptation, where the reference template receives a peak energy level equivalent to the test peak energy less the noise energy (R<highlight><subscript>0t</subscript></highlight>-R<highlight><subscript>0n</subscript></highlight>), normalized by the reference peak energy R<highlight><subscript>0r</subscript></highlight>. If desired, the gain adaptation can be performed separately, or not at all. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The noise adapted DTW unit <highlight><bold>60</bold></highlight> compares a widened test utterance, which includes both speech and noise from both sides, with a noise adapted template. <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, to which reference is now made, illustrates the DTW grid and a sample path. The first and last reference frames (on the Y axis) are &ldquo;noise&rdquo; frames, estimated from the low-energy frames of the test utterance and the widened token is on the X axis. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> Wherever the path compares a test token frame against a non-noise frame, the present invention performs the standard DTW operation using standard alignment constraints. However, wherever the comparison is to a reference noise frame, there are no duration constraints. This means that the path can move only horizontally to the right an unlimited number of frames or diagonally to the right one frame and up one frame. This arrangement puts no constraints on how many frames at the edges of the widened test can be aligned against the noise frames. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The score w_score for the reference template is the accumulated score of the winning path, including the noise frames, normalized by full path length, as standard in DTW. A speech score, called the Epd_Score, is the accumulated score of the portion of the winning path which refers to the speech frames only (i.e. not including the noise frames), normalized by the length of the path which only compares speech frames. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> Referring back to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the decision unit <highlight><bold>62</bold></highlight> determines the best match based on the DTW scores w_score of the whole path where the best template Best_Template is defined as the one for which the score is minimal. However, the best template may not provide a good result. Thus, the decision unit <highlight><bold>62</bold></highlight> additionally determines whether to accept or reject the result, based on the speech score Epd_Score of the best matching template, the average score to all the other templates, and on correction terms that are functions of the test utterance SNR and its length, as refined by the best template. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> The dependence on the average score to all the other templates is by way of normalization, i.e. the Epd_Score has to be significantly smaller than the average score. In that sense, the average score acts as a model of general speech, similar to that used in state of the art HMM systems. If the vocabulary of templates is large enough, the average score is a good representative of a score to a general speech template. However, in speaker dependent recognition systems with user-created vocabularies, there might be only a few words in the vocabulary and therefore, the average score to all the other templates is not a good representative of a general speech template. For this purpose, the average score is computed as a mixture of an a priori value, determined by simulations, and the actual average score. This mixture prevents the possibility of an abnormally small or large average score. The a priori average score, shown in <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> to which reference is now briefly made, is a function of a segmental SNR SegSNR, where this function is determined by simulation over a large data base. <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> shows that the a priori average score falls as the segmental SNR increases. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> The segmental SNR is the signal to noise ratio of the test utterance between the DTW-derived endpoints as determined from the match to the best template Best_Template. Specifically, the endpoints are those test-utterance frames on the DTW path to the best template Best_Template, where the path enters the first (or exits the last) reference speech frames. The segmental SNR SegSNR is the average log-energy of the test utterance between the DTW-derived endpoints less the average log-energy of the test utterance outside the endpoints. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> The accept/reject algorithm accepts the best match result if the normalized score Norm_Score is less than a threshold level Th. The normalized score is defined as the ratio of the best score Best_Score to the average score Av_Score corrected by two corrections, one for signal to noise (SNR_corr) and one for length (length_corr), as follows: </paragraph>
+<paragraph lvl="0"><in-line-formula>Norm<highlight><subscript>&mdash;Score&equals;Best</subscript></highlight><highlight><subscript>&mdash;Score/Av</subscript></highlight><highlight><subscript>&mdash;Score&minus;SNR</subscript></highlight><highlight><subscript>&mdash;corr&minus;length</subscript></highlight><highlight><subscript>&mdash;corr </subscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> The best score is the value of Epd_Score for the best template Best_Template. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> The average score is based on two values: a_priori_av_score(SegSNR) and Sum_Score. The a priori average score is selected from the a priori average score function of <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> using the segmental SNR value SegSNR and the Sum_Score is the stun of the speech score Epd_Score for the P templates of words of the vocabulary which are not the matched word of the best template. Thus, the best template and the other templates uttering the same word as the best template are not used to generate Sum_Score. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> Specifically, the average score is defined as: </paragraph>
+<paragraph lvl="0"><in-line-formula>Av<highlight><subscript>&mdash;Score</subscript></highlight>&equals;(<highlight><italic>w</italic></highlight>1(<highlight><italic>a</italic></highlight><highlight><subscript>&mdash;priori</subscript></highlight><highlight><subscript>&mdash;av</subscript></highlight><highlight><subscript>&mdash;score(SegSNR)&plus;Sum</subscript></highlight><highlight><subscript>&mdash;Score)/(</subscript></highlight><highlight><italic>w</italic></highlight>1<highlight><italic>&plus;P</italic></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0073" lvl="2"><number>&lsqb;0073&rsqb;</number> where w1 is a weight for the a_priori av_score. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> The SNR correction SNR_corr is a piecewise linear function of segmental SNR, controlled by parameters. The parameters SNR1 and SNR2 are determined experimentally from the large speech database. The parameter &ldquo;Delta Score&rdquo; is left as an adjustable parameter, to be tailored to a specific application. For example, if delta_score is set to zero, there is no SNR correction at all. In this case, the rejection of out-of-vocabulary words at noisy conditions will be as effective as in quiet conditions, at the expense of a dramatic increase in rejections of in-vocabulary words. At the other extreme, the &ldquo;Delta Score&rdquo; can be set to such a value that the rejection rate of in-vocabulary words at noisy conditions will be similar to the rate at quiet conditions, at the expense of fewer rejections of out-of-vocabulary words. The most preferable alternative is to use an intermediate value that compromises between the two contradicting demands. </paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> The length correction length colt is a piecewise linear function, shown in <cross-reference target="DRAWINGS">FIG. 8C</cross-reference> to which reference is now briefly made, of test-utterance length, controlled by parameters. The parameters are determined experimentally from the large speech database used for determining all of <cross-reference target="DRAWINGS">FIG. 8</cross-reference>. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> It will be appreciated by persons skilled in the art that the present invention is not limited by what has been particularly shown and described herein above. Rather the scope of the invention is defined by the claims that follow: </paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> What is claimed is:</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>modifying a reference template for use in speech recognition by matching a gain and a noise of the reference template according to a peak energy level and an average noise energy level of a widened token. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein modifying a reference template comprises: 
+<claim-text>modifying the reference template to provide a modified reference template having a peak energy level of substantially equivalent to the difference between the peak energy level and the average noise energy level of the widened token. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> further comprising: 
+<claim-text>providing a noise-adapted reference template by adjusting the modified reference template with noise qualities of the widened token. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein adjusting comprises: 
+<claim-text>adding the noise qualities of the widened token to a blank frame of the modified reference template; and </claim-text>
+<claim-text>adding the noise qualities of the widened token to a speech frame of the modified reference template. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further comprising: 
+<claim-text>performing a noise adapted dynamic time warping (DTW) operation including comparing the widened token to the noise adapted reference template. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. An apparatus comprising: 
+<claim-text>a peak energy estimator able to estimate a peak energy level of a reference template and a peak energy level of a widened token; and </claim-text>
+<claim-text>a gain and noise adapter able to match a gain and a noise of the reference template according to the peak energy level and an average noise energy level of the widened token. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the gain and noise adapter is able to provide a modified reference template having peak energy level substantially equivalent to the difference between the peak energy level and the average noise energy level of the widened token. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein the gain and noise adapter is able to add to the modified reference template noise qualities of the widened token. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the peak energy estimator comprises a peak energy averager to average energy levels of high energy frames of said widened token. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. An apparatus comprising: 
+<claim-text>a G729B voice activity detector to detect voice endpoints of a widened token; </claim-text>
+<claim-text>a peak energy estimator adapted to estimate a peak energy of a reference template and a peak energy of the widened token; </claim-text>
+<claim-text>a gain and noise adapter to match a gain and a noise of the reference template according to the peak energy level and an average noise energy level of the widened token; and </claim-text>
+<claim-text>a dynamic time warping (DTW) unit to compare between the widened token and the reference template. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the gain and noise adapter is able to provide a modified reference template having a peak energy level substantially equivalent to the difference between the peak energy level and the average noise energy level of the widened token. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the gain and noise adapter is able to add to the modified reference template noise qualities of the widened token. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the peak energy estimator comprises a peak energy averager to average energy levels of high energy frames of said widened token. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. An article comprising a storage medium having stored thereon instructions that when executed result in: 
+<claim-text>modifying a reference template for use in speech recognition by matching a gain and a noise of the reference template according to a peak energy level and an average noise energy level of a widened token. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the instructions when executed further result in: 
+<claim-text>providing a modified reference template having a peak energy level substantially equal to the difference between the peak energy level and the average noise energy level of the widened token. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the instructions when executed further result in: 
+<claim-text>providing a noise adapted reference template by adjusting the modified reference template with noise qualities of the widened token. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the instructions when executed further result in: 
+<claim-text>adding the noise qualities to a blank frame of the modified reference template; and </claim-text>
+<claim-text>adding the noise qualities to a speech frame of the modified reference template. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the instructions when executed further result in: 
+<claim-text>performing a noise adapted dynamic time warping (DTW) operation by comparing between the widened token and the noise adapted reference template.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004712A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004712A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004712A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004712A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004712A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004712A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004712A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030004712A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

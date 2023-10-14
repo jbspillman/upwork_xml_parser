@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004935A1-20030102-D00000.TIF SYSTEM "US20030004935A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004935A1-20030102-D00001.TIF SYSTEM "US20030004935A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004935A1-20030102-D00002.TIF SYSTEM "US20030004935A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004935</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895889</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>003000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and system for long-term update and edit control in a database system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Gerald</given-name>
+<middle-name>Johann</middle-name>
+<family-name>Wilmot</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Marina</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>James</given-name>
+<middle-name>Louis</middle-name>
+<family-name>Keesey</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sunnyvale</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Mr. Joseph A. Sawyer, Jr.</name-1>
+<name-2>SAWYER GROUP</name-2>
+<address>
+<address-1>P.O. Box 51418</address-1>
+<city>Palo Alto</city>
+<state>CA</state>
+<postalcode>94303</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Aspects for allowing long term, update and edit control in a database system are described. The aspects include providing library control functions in a database system, and utilizing the library control functions via structured query language statements to ensure data integrity of opaque data types in the database system. Provision of the library control functions further includes providing a checkout function and creating a set of update and delete triggers in correspondence with the checkout function. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to database systems, and more particularly to ensuring data integrity through long term, update and edit control in a database system. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Just as computers have become more and more prevalent in everyday life, networks of linked computers have become important in distributing information amongst computer users. Many computer systems are organized according to a client/server metaphor. Generally, in client/server computing, end users are each provided with a desktop computer or terminal known as a &ldquo;client.&rdquo; The clients are connected using a network to another computer known as a &ldquo;server&rdquo;, because its general function is to serve or fulfill requests submitted by clients. Application programs running on the clients prepare requests and transmit them to the server over the network. A &lsquo;network&rsquo; of computers can be any number of computers that are able to exchange information with one another. The computers may be arranged in any configuration and may be located in the same room or in different countries, so long as there is some way to connect them together (for example, by telephone lines or other communication systems) so they can exchange information. Just as computers may be connected together to make up a network, networks may also be connected together through tools known as bridges and gateways. These tools allow a computer in one network to exchange information with a computer in another network. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Of particular interest in today&apos;s computing environment are relational database applications. Relational DataBase Management System (RDBMS) software using a Structured Query Language (SQL) interface is well known in the art. The SQL interface has evolved into a standard language for RDBMS software and has been adopted as such by both the American Nationals Standard Organization (ANSI) and the International Standards Organization (ISO). </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In RDBMS software, all data is externally structured into tables. The SQL interface allows users to formulate relational operations on the tables either interactively, in batch files, or embedded in host languages such as C, COBOL, etc. Operators are provided in SQL that allow the user to manipulate the data, wherein each operator operates on either one or two tables and produces a new table as a result. The power of SQL lies in its ability to link information from multiple tables or views together to perform complex sets of procedures with a single statement. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The power of being able to gather, store, and relate information in database systems and then operate on that information through SQL allows for an almost limitless range of applications for such technology. Additionally, the ability to include opaque data types (e.g., character large objects (CLOBs)) along with basic data types (e.g., integers, strings, and decimals) has increased further the capabilities of database systems. With the advent of CLOBs, LOBs, and other opaque types, such as allowed through DB2IMAGE, DB2AUDIO and DB2VIDEO, a problem with ensuring data integrity of these data types has arisen. Due to their nature as more complex data, generally, access for update and edit take longer for opaque data types than for basic data types. Unfortunately, during the long term, extended periods of access, multiple users performing separate edits may diminish the ability to ensure data integrity of these data types in the database. Accordingly, a need exists for long term, update and edit control of opaque data types in a database system. The present invention addresses such a need. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Aspects for allowing long term, update and edit control in a database system are described. The aspects include providing library control functions in a database system, and utilizing the library control functions via structured query language statements to ensure data integrity of opaque data types in the database system. Provision of the library control functions further includes providing a checkout function and creating a set of update and delete triggers in correspondence with the checkout function. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Through the present invention, data integrity of opaque data types in a database system is more readily assured. The present invention advantageously employs functions that allow update and edit control to be realized for opaque data types in a straightforward and efficient manner. These functions further allow serialization of work on complex data types, including workflow document data types. These and other advantages of the aspects of the present invention will be more fully understood in conjunction with the following detailed description and accompanying drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates an overall block diagram of a computer system network in accordance with the present invention. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a diagram representation of a database system environment in accordance with the present invention. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a block flow diagram for long term, update and edit control in a database system in accordance with the present invention. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a block flow diagram for implementing the control features of the present invention in a workflow document embodiment.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The present invention relates to ensuring data integrity through long term, update and edit control in a database system. The following description is presented to enable one of ordinary skill in the art to make and use the invention and is provided in the context of a patent application and its requirements. Various modifications to the preferred embodiment and the generic principles and features described herein will be readily apparent to those skilled in the art. Thus, the present invention is not intended to be limited to the embodiment shown but is to be accorded the widest scope consistent with the principles and features described herein. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> As shown in <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> plurality of computer systems <highlight><bold>1</bold></highlight><highlight><italic>a, </italic></highlight><highlight><bold>1</bold></highlight><highlight><italic>b, </italic></highlight><highlight><bold>1</bold></highlight><highlight><italic>c </italic></highlight>is interconnected via a network <highlight><bold>2</bold></highlight> (which could be the public Internet or a private intra-corporate Intranet or wide area network). It should be appreciated that although <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a network of computer systems, this is meant as exemplary and not restrictive of the type of environment suitable for the aspects of the present invention. Thus, the aspects may also be provided within a single computing system environment. Accordingly, one (<highlight><bold>1</bold></highlight><highlight><italic>c</italic></highlight>) of the computer systems is shown expanded for further illustration. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Computer system <highlight><bold>1</bold></highlight><highlight><italic>c </italic></highlight>has a processor <highlight><bold>13</bold></highlight> for controlling the overall operation of the computer system <highlight><bold>1</bold></highlight><highlight><italic>c, </italic></highlight>a high speed cache memory <highlight><bold>12</bold></highlight>, a long-term storage device <highlight><bold>14</bold></highlight> (e.g., hard disk drive), and a database management system <highlight><bold>15</bold></highlight>, e.g., an RDBMS system, such as DB2. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In accordance with the present invention, functions are provided that allow long term, update and edit control of opaque data types. These functions are integrated into the database system <highlight><bold>15</bold></highlight> to allow access via SQL statements executed in the database system <highlight><bold>15</bold></highlight>. Preferably, these functions are provided as user-defined functions. A user-defined function (UDF) generally refers to a function that is defined to the database management system and can be referenced thereafter in SQL queries. Alternatively, the function <highlight><bold>20</bold></highlight> may be defined through standard techniques as a built-in function within a database system. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Referring to the diagrams of <cross-reference target="DRAWINGS">FIG. 2</cross-reference> and <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, in accordance with the present invention, a database system <highlight><bold>15</bold></highlight> is enabled for library control functions <highlight><bold>20</bold></highlight> for existing and new data in the database system <highlight><bold>15</bold></highlight> (step <highlight><bold>30</bold></highlight>), which creates a set of update and delete triggers. Once the database is enabled for library control functions, table/column pairs are enabled for control under the library control functions (step <highlight><bold>32</bold></highlight>). The library control functions also create a set of side tables for each selected table that contains library-controlled columns. The side tables are used for controlling update and delete access to the columns. Thus, if the selected table has an identity column, then the library control functions use the identity and column intersection as a key to identify the data cell. If the selected table does not have an identity column, then the library functions alter the user table and create an identity column. Following enablement, utilization of the library control functions occurs (step <highlight><bold>34</bold></highlight>). Thus, a user invokes the library control functions via a select statement from a client application <highlight><bold>26</bold></highlight> which will checkout (Lock) or checkin (Unlock) a cell or set of cells in a managed database table. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> By way of example, suppose an advertising firm had a table that contained images as Logos and Documents describing these logo images, where the column for the Logos and the column for the Documents were under control of the library control functions. A SQL statement for checking out the logo images and the associated document would be suitably represented by: </paragraph>
+<paragraph lvl="0"><in-line-formula>SELECT checkout(logo), checkout(document) FROM hotmedia WHERE company&equals;&lsquo;IBM&rsquo;</in-line-formula></paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In this example, the statement would create a set of entries in the control side tables for the hotmedia table for each row-column pair where the company was equal to &lsquo;IBM&rsquo;. The entries in the control side table would contain the SQL identifier (SQLID) of the user as the identity, and the column name. The column name and identity would be the primary key, which would prevent the cell from being checked out to another user. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> If the checkout is successful, then the user would be free to update the checked-out cell with new or modified data. With the control side table, a row can only be deleted if no cells are checked-out, or the only checked-out cells are checked-out to the user performing the deletion. The action of deleting the row also removes any control entries from the control side table. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Alternatively, when the user with the lock updates the item in the row, the control entry is removed from the control side table, making the item available for another user to check out (i.e., it is automatically checked-in on update). Having an item checked-out does not prevent anyone from querying the item. It only prevents changes (i.e., deletes and updates). Thus, control is achieved over updates and edits for opaque data types. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The control over update and edit of opaque data types in accordance with the present invention allows for serialization of work on complex data objects. In this manner, workflow documents are included as a type of opaque data type. Current workflow systems use dedicated connect clients that need to be connected to the workflow server in order to accomplish their tasks. The dedicated connection restricts the ability to dynamically expand the workflow system in a work environment, such as across the Internet. In order to provide a more expandable workflow system, the aspects of library control functions are combined with an XML Extender feature of DB2, as described with reference to the flow diagram of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The process starts with an XML (extensible markup language) workflow document arriving in an electronic mail queue of a system participating as a workflow system (step <highlight><bold>40</bold></highlight>). The workflow document is decomposed by the XML Extender into the IncomingQueue table of the database (step <highlight><bold>42</bold></highlight>). Triggers on the IncomingQueue table use the workflow type, key, and user-id columns of the table to determine which control table contains the control record that is associated with the request (step <highlight><bold>44</bold></highlight>). This information is used by the triggers to update the control record with the current workflow step and update a workflow data table with the incoming data (step <highlight><bold>46</bold></highlight>). The trigger also uses the state information in the control record to do a lookup in the workflow table to determine the next step in the workflow and to identify a handler for that next step (step <highlight><bold>48</bold></highlight>). Once the triggers have updated the control record, an after trigger fires a stored procedure, which checks out the workflow control record, composes an XML document using the XML Extender, and sends that to the appropriate handler for processing the next step (step <highlight><bold>50</bold></highlight>). </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Through the present invention, data integrity of opaque data types in a database system is more readily assured. The present invention advantageously employs functions that allow update and edit control to be realized for opaque data types in a straightforward and efficient manner. These functions further allow serialization of work on complex data types, including workflow document data types. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Although the present invention has been described in accordance with the embodiments shown, one of ordinary skill in the art will readily recognize that there could be variations to the embodiments and those variations would be within the spirit and scope of the present invention. Accordingly, many modifications may be made by one of ordinary skill in to the art without departing from the spirit and scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for allowing long term, update and edit control in a database system, the method comprising: 
+<claim-text>providing library control functions in a database system; and </claim-text>
+<claim-text>utilizing the library control functions via structured query language statements to ensure data integrity of opaque data types in the database system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein providing library control functions further comprises providing a checkout function. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein providing library control functions further comprises creating a set of update and delete triggers in correspondence with the checkout function. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein providing library control functions further comprises creating a set of side control tables for each selected table that contains library-controlled columns. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein utilizing the library control functions further comprises utilizing the set of side control tables to designate a primary key based on a user identity and column name of data being accessed by a user. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> further comprising utilizing the primary key as an edit control mechanism for a checked-out cell until an update occurs by the user. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein utilizing the library control functions further comprises utilizing the library control functions to control access to a workflow document. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein the workflow document further comprises a decomposed XML document. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the decomposed XML document further comprises an XML workflow document received via electronic mail. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the set of update and delete triggers streamline performance of each workflow step from the decomposed workflow document. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A system for allowing long term, update and edit control in a database system, the system comprising: 
+<claim-text>at least one computer processing device; and </claim-text>
+<claim-text>a database management system installed on the at least one computer processing device, the database management system supporting utilization of library control functions via structured query language statements to ensure data integrity of opaque data types in the database system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the database management system further supports utilization of library control functions that include a checkout function. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the database management system further supports creation of a set of update and delete triggers in correspondence with the checkout function. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the database management system further supports creation of a set of side control tables for each selected table that contains library-controlled columns. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the database management system further supports utilizing the library control functions through utilizing the set of side control tables to designate a primary key based on a user identity and column name of data being accessed by a user. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the database management system further supports utilizing the primary key as an edit control mechanism for a checked-out cell until an update occurs by the user. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the database management system further supports utilizing the library control functions to control access to a workflow document. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> wherein the workflow document further comprises a decomposed XML document. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein the decomposed XML document further comprises an XML workflow document received via electronic mail. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein the set of update and delete triggers streamline performance of each workflow step from the decomposed workflow document. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A computer readable medium containing program instructions for allowing long term, update and edit control in a database system, the program instructions comprising: 
+<claim-text>providing library control functions in a database system; and </claim-text>
+<claim-text>utilizing the library control functions via structured query language statements to ensure data integrity of opaque data types in the database system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein providing library control functions further comprises providing a checkout function and creating a set of update and delete triggers in correspondence with the checkout function. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein providing library control functions further comprises creating a set of side control tables for each selected table that contains library-controlled columns. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein utilizing the library control functions further comprises utilizing the set of side control tables to designate a primary key based on a user identity and column name of data being accessed by a user. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> further comprising utilizing the primary key as an edit control mechanism for a checked-out cell until an update occurs by the user. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein utilizing the library control functions further comprises utilizing the library control functions to control access to a workflow document. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein the workflow document further comprises a decomposed XML document. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference> wherein the decomposed XML document further comprises an XML workflow document received via electronic mail. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein the set of update and delete triggers streamline performance of each workflow step from the decomposed workflow document.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004935A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004935A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004935A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004917A1-20030102-D00000.TIF SYSTEM "US20030004917A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00001.TIF SYSTEM "US20030004917A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00002.TIF SYSTEM "US20030004917A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00003.TIF SYSTEM "US20030004917A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00004.TIF SYSTEM "US20030004917A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00005.TIF SYSTEM "US20030004917A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00006.TIF SYSTEM "US20030004917A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00007.TIF SYSTEM "US20030004917A1-20030102-D00007.TIF" NDATA TIF>
+<!ENTITY US20030004917A1-20030102-D00008.TIF SYSTEM "US20030004917A1-20030102-D00008.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004917</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892678</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>001000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and system for processing notifications</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Edward</given-name>
+<middle-name>Eric</middle-name>
+<family-name>Thomas</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Redmond</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Stephen</given-name>
+<middle-name>D.</middle-name>
+<family-name>Flanagin</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sammamish</city>
+<state>WA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Microsoft Corporation</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Merchant &amp; Gould P.C.</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. Box 2903</address-1>
+<city>Minneapolis</city>
+<state>MN</state>
+<postalcode>55402-0903</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method and system for processing notifications is described. Notifications are tagged based on a synchronization state between the sender and receiver of the notification. The receiver processes the tagged notification based on a comparison between the tagged value and the current state of its synchronization with respect to the sender of the notification. When the tagged value is current with respect to the current synchronization value and a synchronization is not in process, the notification is processed. When the tagged value is stale with respect to the current synchronization state the notification is discarded. If the notification is out-of-date with respect to the current state of synchronization the notification may be queued for later processing or discarded. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to computer software, and more particularly to processing notifications on a device. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> There are situations where users want a data store in one place to be a copy of a data store in another place. In order to propagate changes made in one store to another, synchronization methods have been developed to propagate the changes between the different stores, so that the information in the different stores correlate to each other at discrete times, or checkpoints. Another method has changes being transferred discretely at the time of change by exchanging notifications. Some devices employ both methods of keeping their data store in synchronization, but encounter problems when notification delivery is delayed and said delayed notification arrives after a synchronization of that change has already been performed. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> For example, some devices receive notifications that are not current with the current synchronization checkpoint between the devices. This may result in notifications being improperly processed. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The present invention is directed at providing a system and method for processing notifications. Briefly described, before being sent, notifications are tagged with a synchronization checkpoint index tag and processed by the receiving partner based on the tag value. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> According to one aspect of the invention, tagged notifications are processed when the value of the tag is current with respect to a current synchronization checkpoint tag value and a synchronization is not in process with the sending partner. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> According to another aspect of the invention, notifications are queued when a synchronization is in process with the sender of the notification and the tag value of the notification is compared to the desired synchronization level. The queued notifications are later processed. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> According to yet another aspect of the present invention, tagged notifications that are out-of-date may be discarded. For example, if a notification has a tag value indicating it has already been handled from a prior synchronization, it is discarded. Similarly, notifications caused by an ongoing synchronization may be ignored.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a functional block diagram of one computing device adapted to implement one embodiment of the invention; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a mobile computing device that may be used in one exemplary embodiment of the present invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram of one exemplary notification system as implemented using the computer device shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> and the mobile computing device shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is an overview flowchart illustrating the use of tagged notifications; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates a logical flow for preparing tagged notifications; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> shows a logical flow for processing tagged notifications; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates handling a notification when a synchronization is currently in process; and </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> illustrates a logical flow for processing notifications.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The present invention is directed at providing a method and system for processing notifications. Briefly described, notifications are tagged with a synchronization key indicating a synchronization state before being sent. The receiving device determines its current synchronization state with respect to the sender and compares the state to the received tagged notification. The receiving device then processes the tagged notification based on this comparison. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, an exemplary system for implementing the invention includes a computing device, such as computing device <highlight><bold>100</bold></highlight>. In a basic configuration, computing device <highlight><bold>100</bold></highlight> typically includes at least one processing unit <highlight><bold>102</bold></highlight> and system memory <highlight><bold>104</bold></highlight>. Depending on the exact configuration and type of computing device, system memory <highlight><bold>104</bold></highlight> may be volatile (such as RAM), non-volatile (such as ROM, flash memory, and the like) or some combination of the two. System memory <highlight><bold>104</bold></highlight> typically includes an operating system <highlight><bold>105</bold></highlight>, one or more program modules <highlight><bold>106</bold></highlight>, and may include program data <highlight><bold>107</bold></highlight>. This basic configuration is illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> by those components within dashed line <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Computing device <highlight><bold>100</bold></highlight> may also have additional features or functionality. For example, computing device <highlight><bold>100</bold></highlight> may also include additional data storage devices (removable and/or non-removable) such as, for example, magnetic disks, optical disks, or tape. Such additional storage is illustrated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> by removable storage <highlight><bold>109</bold></highlight> and non-removable storage <highlight><bold>110</bold></highlight>. Computer storage media may include volatile and non-volatile, removable and non-removable media implemented in any method or technology for storage of information, such as computer readable instructions, data structures, program modules or other data. System memory <highlight><bold>104</bold></highlight>, removable storage <highlight><bold>109</bold></highlight> and non-removable storage <highlight><bold>110</bold></highlight> are all examples of computer storage media. Computer storage media includes, but is not limited to, RAM, ROM, EEPROM, flash memory or other memory technology, CD-ROM, digital versatile disks (DVD) or other optical storage, magnetic cassettes, magnetic tape, magnetic disk storage or other magnetic storage devices, or any other medium which can be used to store the desired information and which can be accessed by computing device <highlight><bold>100</bold></highlight>. Any such computer storage media may be part of device <highlight><bold>100</bold></highlight>. Computing device <highlight><bold>100</bold></highlight> may also have input device(s) <highlight><bold>112</bold></highlight> such as keyboard, mouse, pen, voice input device, touch input device, etc. Output device(s) <highlight><bold>114</bold></highlight> such as a display, speakers, printer, etc. may also be included. All these devices are known in the art and need not be discussed at length here. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Computing device <highlight><bold>100</bold></highlight> also contains communications connection(s) <highlight><bold>116</bold></highlight> that allow the device to communicate with other computing devices <highlight><bold>118</bold></highlight>, such as over a network. Communications connection(s) <highlight><bold>116</bold></highlight> is an example of communication media. Communication media typically embodies computer readable instructions, data structures, program modules or other data in a modulated data signal such as a carrier wave or other transport mechanism and includes any information delivery media. The term &ldquo;modulated data signal&rdquo; means a signal that has one or more of its characteristics set or changed in such a manner as to encode information in the signal. By way of example, and not limitation, communication media includes wired media such as a wired network or direct-wired connection, and wireless media such as acoustic, RF, infrared and other wireless media. The term computer readable media as used herein includes both storage media and communication media. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a mobile computing device that may be used in one exemplary embodiment of the present invention. With reference to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, one exemplary system for implementing the invention includes a mobile computing device, such as mobile computing device <highlight><bold>200</bold></highlight>. The mobile computing device <highlight><bold>200</bold></highlight> has a processor <highlight><bold>260</bold></highlight>, a memory <highlight><bold>262</bold></highlight>, a display <highlight><bold>228</bold></highlight>, and a keypad <highlight><bold>232</bold></highlight>. The memory <highlight><bold>262</bold></highlight> generally includes both volatile memory (e.g., RAM) and non-volatile memory (e.g., ROM, Flash Memory, or the like). The mobile computing device <highlight><bold>200</bold></highlight> includes an operating system <highlight><bold>264</bold></highlight>, such as the Windows CE operating system from Microsoft Corporation or other operating system, which is resident in the memory <highlight><bold>262</bold></highlight> and executes on the processor <highlight><bold>260</bold></highlight>. The keypad <highlight><bold>232</bold></highlight> may be a push button numeric dialing pad (such as on a typical telephone), a multi-key keyboard (such as a conventional keyboard). The display <highlight><bold>228</bold></highlight> may be a liquid crystal display, or any other type of display commonly used in mobile computing devices. The display <highlight><bold>228</bold></highlight> may be touch-sensitive, and would then also act as an input device. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> One or more application programs <highlight><bold>266</bold></highlight> are loaded into memory <highlight><bold>262</bold></highlight> and run on the operating system <highlight><bold>264</bold></highlight>. Examples of application programs include phone dialer programs, email programs, scheduling programs, PIM (personal information management) programs, word processing programs, spreadsheet programs, Internet browser programs, and so forth. The mobile computing device <highlight><bold>200</bold></highlight> also includes nonvolatile storage <highlight><bold>268</bold></highlight> within the memory <highlight><bold>262</bold></highlight>. The non-volatile storage <highlight><bold>268</bold></highlight> may be used to store persistent information which should not be lost if the mobile computing device <highlight><bold>200</bold></highlight> is powered down. The applications <highlight><bold>266</bold></highlight> may use and store information in the storage <highlight><bold>268</bold></highlight>, such as e-mail or other messages used by an e-mail application, contact information used by a PIM, appointment information used by a scheduling program, documents used by a word processing application, and the like. A notification application also resides on the mobile computing device <highlight><bold>200</bold></highlight> and is programmed to process incoming notifications and send outgoing notifications that are tagged with a synchronization state. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> has a power supply <highlight><bold>270</bold></highlight>, which may be implemented as one or more batteries. The power supply <highlight><bold>270</bold></highlight> might further include an external power source, such as an AC adapter or a powered docking cradle that supplements or recharges the batteries. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> is shown with two types of external notification mechanisms: an LED <highlight><bold>240</bold></highlight> and an audio interface <highlight><bold>274</bold></highlight>. These devices may be directly coupled to the power supply <highlight><bold>270</bold></highlight> so that when activated, they remain on for a duration dictated by the notification mechanism even though the processor <highlight><bold>260</bold></highlight> and other components might shut down to conserve battery power. The LED <highlight><bold>240</bold></highlight> may be programmed to remain on indefinitely until the user takes action to indicate the powered-on status of the device. The audio interface <highlight><bold>274</bold></highlight> is used to provide audible signals to and receive audible signals from the user. For example, the audio interface <highlight><bold>274</bold></highlight> may be coupled to a speaker for providing audible output and to a microphone for receiving audible input, such as to facilitate a telephone conversation. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The mobile computing device <highlight><bold>200</bold></highlight> also includes a radio interface layer <highlight><bold>272</bold></highlight> that performs the function of transmitting and receiving communications, such as radio frequency communications. The radio interface layer <highlight><bold>272</bold></highlight> facilitates wireless connectivity between the mobile computing device <highlight><bold>200</bold></highlight> and the outside world, via a communications carrier or service provider. Transmissions to and from the radio interface layer <highlight><bold>272</bold></highlight> are conducted under control of the operating system <highlight><bold>264</bold></highlight>. In other words, communications received by the radio interface layer <highlight><bold>272</bold></highlight> may be disseminated to application programs <highlight><bold>266</bold></highlight> via the operating system <highlight><bold>264</bold></highlight>, and vice versa. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a functional block diagram generally illustrating one embodiment for a notification system <highlight><bold>300</bold></highlight> for processing notifications sent and received between a fixed computing device, such as an information server <highlight><bold>310</bold></highlight> and a mobile device <highlight><bold>320</bold></highlight>, in accordance with the present invention. In this implementation, the information server <highlight><bold>310</bold></highlight> is a computing device such as the one described above in conjunction with <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and the mobile device <highlight><bold>320</bold></highlight> is a mobile computing device such as the one described above in conjunction with <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. A notification application <highlight><bold>342</bold></highlight> performs the notification process between the information server <highlight><bold>310</bold></highlight> and the mobile device <highlight><bold>320</bold></highlight>. In the embodiment illustrated, notification applications <highlight><bold>342</bold></highlight> and <highlight><bold>344</bold></highlight> are resident on a notification server <highlight><bold>340</bold></highlight> and mobile device <highlight><bold>320</bold></highlight>. In another embodiment, the notification application <highlight><bold>342</bold></highlight> may reside on information server <highlight><bold>310</bold></highlight>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The mobile device <highlight><bold>320</bold></highlight> maintains mobile data <highlight><bold>322</bold></highlight> locally in its storage <highlight><bold>268</bold></highlight> (shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>). As mentioned earlier, the mobile data <highlight><bold>322</bold></highlight> may include e-mail or other messages used by an e-mail application, contact information used by a PIM, appointment information used by a scheduling program, and the like. The mobile device <highlight><bold>320</bold></highlight> may change the mobile data <highlight><bold>322</bold></highlight> at anytime. Once the mobile data <highlight><bold>322</bold></highlight> is changed, server data <highlight><bold>312</bold></highlight> accessible by the information server <highlight><bold>310</bold></highlight> will not reflect the mobile data <highlight><bold>322</bold></highlight> until a successful synchronization occurs. Similarly, the information server <highlight><bold>310</bold></highlight> may change the server data <highlight><bold>312</bold></highlight>, such as through any number of networked personal computers (not shown) connected to the information server <highlight><bold>310</bold></highlight>. In order for the mobile data <highlight><bold>322</bold></highlight> and the server data <highlight><bold>312</bold></highlight> to become identical (i.e., synchronized), the mobile device <highlight><bold>320</bold></highlight>initiates a synchronization session. During the synchronization session, the mobile device <highlight><bold>320</bold></highlight> and the information server <highlight><bold>310</bold></highlight> exchange change information from the last synchronization checkpoint and update their respective stores. In this embodiment, the server can also update the mobile device <highlight><bold>320</bold></highlight> as changes are made to the data store <highlight><bold>312</bold></highlight>, without the mobile device <highlight><bold>320</bold></highlight> having to connect to the Information Server <highlight><bold>310</bold></highlight> and performing a synchronization. This is done by the notification application <highlight><bold>342</bold></highlight> sending notifications <highlight><bold>326</bold></highlight> wirelessly to the device when the change occurs, the notification either containing the change information itself, or merely indication that a change has occurred and the mobile device should connect and perform a synchronization. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The notifications <highlight><bold>326</bold></highlight> are tagged with synchronization information relating to the synchronization states of mobile device <highlight><bold>320</bold></highlight> and information server <highlight><bold>310</bold></highlight> before being sent. The mobile device <highlight><bold>320</bold></highlight> processes the received notification <highlight><bold>326</bold></highlight> based on the tagged value applied to the notification. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is an overview flowchart illustrating a notification system. After a start block, the logic moves to a block <highlight><bold>410</bold></highlight> where notifications are tagged and prepared for sending to a partner (See <cross-reference target="DRAWINGS">FIG. 5</cross-reference> and related discussion). Notifications are messages sent to a device as the changes occur and are received by a device independent of any synchronization process. According to one embodiment of the present invention, a wireless device receives tagged notifications indicating a synchronization state. Moving to a block <highlight><bold>420</bold></highlight>, the tagged notification is sent to the receiving device(s). Generally, a server sends the tagged notifications to a client. Alternatively, the client may send tagged notifications to the server. The notifications may be sent to the client or server using many different methods, as is well known to those of ordinary skill in the art. At a block <highlight><bold>430</bold></highlight>, the receiving device processes the tagged notification. Generally, tagged notifications that are current with respect to the synchronization between the client and server are processed, old notifications are deleted, and future notifications are queued (See <cross-reference target="DRAWINGS">FIG. 7</cross-reference> and related discussion). The logical flow then ends. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> shows a logical flow for preparing tagged notifications according to one embodiment of the invention. Starting at a block <highlight><bold>510</bold></highlight>, a synchronization state between the devices is determined. According to one particular embodiment, a synchronization key is used to determine the current synchronization state between the device and the server. The synchronization key is a key as described in co-pending patent application, filed on the same day as this application, Ser. No. ______, originally entitled &ldquo;Method and System for Using a Sync Key,&rdquo; by Thomas et al, which is incorporated herein by reference. Briefly described, the sync key is an integer that starts at zero and is incremented with each successful synchronization with the synchronization partner. When the devices have the same sync key value the devices agree on the last synchronization checkpoint. To synchronize to another checkpoint, a device sends the sync key last sent to it by the synchronization partner. For example, if each device is at synchronization level four, and a device desires to synchronize to level five, the device sends the sync key having a value of four to the synchronization partner. According to one embodiment of the invention, the desired synchronization value is the last received synchronization key value received by the synchronization partner. When a synchronization is not being performed, the desired synchronization value will have the same value as the last successful synchronization. Moving to a block <highlight><bold>520</bold></highlight>, the notification that will be sent to the receiving partner is tagged with the current synchronization value. For example, if the last synchronization value received from the device was five and a successful response was sent to the device with that value, then the notification is tagged with a value of five. The logical flow then ends. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a logical flow for processing a tagged notification, according to an embodiment of the invention. After a start block, the logical flow moves to a block <highlight><bold>610</bold></highlight>, where a notification is received. Moving to a decision block <highlight><bold>620</bold></highlight>, a determination is made as to whether a synchronization is currently in process. When a synchronization is currently in process, the logical flow moves to a block <highlight><bold>630</bold></highlight>, at which point the processing of the notification is delayed (See <cross-reference target="DRAWINGS">FIG. 7</cross-reference> and related discussion). When a synchronization is not currently in process, the logical flow moves to a block <highlight><bold>620</bold></highlight>, where the notification is processed (See <cross-reference target="DRAWINGS">FIG. 8</cross-reference> and related discussion). The logical flow then ends. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates handling a notification when a synchronization is currently in process, according to one embodiment of the invention. After a start block, the logical flow moves to a block <highlight><bold>710</bold></highlight>, at which point the notification is queued. Transitioning to a block <highlight><bold>720</bold></highlight>, a determination is made as to whether the current synchronization is complete. Decision block <highlight><bold>730</bold></highlight> determines if the synchronization is complete. If the synchronization is complete, the logical flow returns to process the notification (See <cross-reference target="DRAWINGS">FIGS. 6 and 8</cross-reference> and related discussion). If the synchronization is not complete, the logical flow returns to determination block <highlight><bold>720</bold></highlight>. The logical flow then ends. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8</cross-reference> shows a logical flow for processing notifications. After a start block, the logical flow moves to a decision block <highlight><bold>810</bold></highlight>, where a determination is made if the tagged value is stale with respect to the current synchronization key. According to one embodiment of the invention, the tagged value is stale if the tagged value is less than the current synchronization key value. If so, the logical flow moves to a block <highlight><bold>820</bold></highlight>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> At block <highlight><bold>820</bold></highlight>, the notification is discarded, and the logical flow ends. When the tagged value is not stale with respect to the current sync key value, the logical flow moves to a decision block <highlight><bold>830</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> At decision block <highlight><bold>830</bold></highlight>, the logic determines if the tagged value is out-of-date with respect to the current sync key value. According to one embodiment of the invention, the notification is out-of-date if the tagged value is larger than the current sync key value. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> If so, the logical flow transitions to a decision block <highlight><bold>840</bold></highlight> that determines if the notification is current with respect to a lost request sync key. According to one embodiment, the tagged value is current with respect to a lost request sync key if the tagged value is equal to a lost request sync key. If the response to the last synchronization request sent by the device was not received and the synchronization key for that request is equal to the tagged value to the notification, the notification can be used and the logical flow moves to a block <highlight><bold>850</bold></highlight>. Otherwise, the logic moves to a block <highlight><bold>820</bold></highlight>, and the notification is discarded. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> When the tagged value is not out-of-date with respect to the current sync key value, the logical flow moves to a block <highlight><bold>850</bold></highlight>, where the notification is processed. According to this situation, the notification is current. A notification is current when the tag value is equal to the current sync key value. As will be appreciated, in view of the present disclosure, the above logical flow may be performed many different ways. For example, the decision as to whether discard, process, or queue the notification may be done other ways other than by a direct integer comparison. The logical flow then ends. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The above specification, examples and data provide a complete description of the manufacture and use of the composition of the invention. Since many embodiments of the invention can be made without departing from the spirit and scope of the invention, the invention resides in the claims hereinafter appended. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for processing a notification having a tag value, comprising: 
+<claim-text>(a) receiving the notification; </claim-text>
+<claim-text>(b) determining a synchronization state; and </claim-text>
+<claim-text>(c) processing the notification based on the synchronization state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein determining a synchronization state, further comprises: 
+<claim-text>(a) setting a synchronization currently in process state when a synchronization is in process; otherwise </claim-text>
+<claim-text>(b) setting a synchronization currently not in process state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein processing the notification based on the synchronization state, further comprises determining when the synchronization state is set to a state of no synchronization currently in process, and when: 
+<claim-text>(a) processing the notification when the tagged value is current with respect to the current synchronization checkpoint value; </claim-text>
+<claim-text>(b) discarding the notification when the tagged value is stale with respect to the current synchronization checkpoint value; and </claim-text>
+<claim-text>(c) handling the notification when the tagged value is out-of-date with respect to the current synchronization value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein handling the notification when the tagged value is out-of-date with respect to the current synchronization value, further comprises determining if the tagged value corresponds to a lost request key, and if so processing the notification, otherwise discarding the notification. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein processing the notification based on the synchronization state, further comprises determining when the synchronization state currently in process is set, and when: 
+<claim-text>(a) queuing the notification when the tagged value is current with respect to the desired synchronization level; </claim-text>
+<claim-text>(b) discarding the notification when the tagged value is stale with respect to the desired synchronization value or out-of-date with respect to the desired synchronization level and corresponds to the sync level of a lost sync request; and </claim-text>
+<claim-text>(c) handling the notification when the tagged value is out-of-date with respect to the desired synchronization level. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further comprising processing the notification when the synchronization not currently in process state is set. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A computer-readable medium having computer-executable instructions for processing a notification, comprising: 
+<claim-text>(a) receiving the notification; </claim-text>
+<claim-text>(b) determining a synchronization state; and </claim-text>
+<claim-text>(c) processing the notification based on the synchronization state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein determining a synchronization state, further comprises: 
+<claim-text>(a) setting a synchronization currently in process state when a synchronization is in process; otherwise </claim-text>
+<claim-text>(b) setting a synchronization currently not in process state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein processing the notification based on the synchronization state, further comprises determining when the synchronization state is set to a state of no synchronization currently in process, and when: 
+<claim-text>(a) processing the notification when a tagged value associated with the notification is current with respect to the current synchronization checkpoint value; </claim-text>
+<claim-text>(b) discarding the notification when the tagged value is stale with respect to the current synchronization checkpoint value or out-of-date with respect to the desired synchronization level and current with respect to the sync level of a lost sync request; and </claim-text>
+<claim-text>(c) handling the notification when the tagged value is out-of-date with respect to the current synchronization value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein handling the notification when the tagged value out-of-date with respect to the current synchronization value, further comprises determining if the tagged value is current with respect to the lost request key, and if so processing the notification, otherwise discarding the notification. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein processing the notification based on the synchronization state, further comprises determining when the synchronization state currently in process is set, and if so: 
+<claim-text>(a) queuing the notification when the tagged value is current with respect to the desired synchronization level; </claim-text>
+<claim-text>(b) discarding the notification when the tagged value is stale with respect to the desired synchronization value or out-of-date with respect to the desired synchronization level and current with respect to the sync level of a lost sync request; and </claim-text>
+<claim-text>(c) handling the notification when the tagged value is out-of-date with respect to the desired synchronization level. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising processing the notification when the synchronization not currently in process state is set. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A system for synchronizing data, comprising: 
+<claim-text>(a) a processor and a computer-readable medium; </claim-text>
+<claim-text>(b) an operating environment stored on the computer-readable medium and executing on the processor; </claim-text>
+<claim-text>(c) a communication connection device operating under the control of the operating environment; and </claim-text>
+<claim-text>(d) a notification device operating under the control of the operating environment and operative to perform actions, including: 
+<claim-text>(i) receiving the notification having a tagged value; </claim-text>
+<claim-text>(ii) setting a synchronization currently in process state when a synchronization is currently in process, otherwise setting a synchronization currently not in process state; and </claim-text>
+<claim-text>(iii) processing the notification based on the synchronization state. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein processing the notification based on the synchronization state, further comprises determining when the synchronization state is set to the synchronization currently not in process state, and when: 
+<claim-text>(a) processing the notification when the tagged value is current with respect to the current synchronization checkpoint value; </claim-text>
+<claim-text>(b) discarding the notification when the tagged value is stale with respect to the current synchronization checkpoint value or out-of-date with respect to the desired synchronization level and current with the lost sync request; and </claim-text>
+<claim-text>(c) handling the notification when the tagged value is out-of-date with respect to the current synchronization value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein handling the notification when the tagged value is out-of-date with respect to the current synchronization value, further comprises determining if the tagged value is current with respect to a lost request key, and if so, processing the notification, otherwise discarding the notification. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein processing the notification based on the synchronization state, further comprises determining when the synchronization state is set to the synchronization currently in process state, and when: 
+<claim-text>(a) queuing the notification when the tagged value is current with respect to desired synchronization level; </claim-text>
+<claim-text>(b) discarding the notification when the tagged value is stale with respect to the desired synchronization value; and </claim-text>
+<claim-text>(c) handling the notification when the tagged value is out-of-date with respect to the desired synchronization level. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising processing the notification when the synchronization state is set to synchronization currently not in process state.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004917A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004917A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004917A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004917A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004917A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004917A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004917A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030004917A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00008">
+<image id="EMI-D00008" file="US20030004917A1-20030102-D00008.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

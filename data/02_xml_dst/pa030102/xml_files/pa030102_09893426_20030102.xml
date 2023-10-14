@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005217A1-20030102-D00000.TIF SYSTEM "US20030005217A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005217A1-20030102-D00001.TIF SYSTEM "US20030005217A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005217A1-20030102-D00002.TIF SYSTEM "US20030005217A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005217A1-20030102-D00003.TIF SYSTEM "US20030005217A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005217A1-20030102-D00004.TIF SYSTEM "US20030005217A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005217A1-20030102-D00005.TIF SYSTEM "US20030005217A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005217A1-20030102-D00006.TIF SYSTEM "US20030005217A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005217</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09893426</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>111000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>711</class>
+<subclass>203000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>System and method for ghost offset utilization in sequential byte stream semantics</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Joon</given-name>
+<family-name>Chang</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Austin</city>
+<country-code>TX</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Amy</given-name>
+<middle-name>Yi-mei</middle-name>
+<family-name>Shi</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Joseph T. Van Leeuwen</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. Box 81641</address-1>
+<city>Austin</city>
+<state>TX</state>
+<postalcode>78708-1641</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method for releasing storage space at the beginning of a byte stream while maintaining sequential byte stream semantics is provided. A ghost offset is initialized when a file is instantiated or opened. When information is deleted at the beginning of the sequential byte stream, the ghost offset is incremented in the amount of the number of bytes being deleted. The ghost offset continues to increment while the file is opened and information is being deleted at the beginning of the data stream. The virtual offset is the ghost offset added to the real offset of a particular entry in the data stream which maintains sequential byte stream semantics. When the file is closed, storage space is released in the amount of the ghost offset. Applications are provided with virtual offsets corresponding to data locations which are converted to real offsets for accessing data in the data stream. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Technical Field </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates in general to a method and system for using a ghost offset to track the truncation of information. Still more particularly, the present invention relates to a method and system for releasing storage space while keeping sequential byte stream semantics. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Operating systems, such as the UNIX operating system, use a file system for managing files. UNIX uses a hierarchical directory structure for organizing and maintaining files. There are three types of files in the UNIX file system: (1) ordinary files, which may be executable programs, text, or other types of data used as input or produced as output from some operation; (2) directory files, which contain lists of files in directories outlined above; and (3) special files, which provide a standard method of accessing input/output devices. The UNIX operating system organizes files into directories which are stored in a hierarchical tree-type configuration. At the top of the tree is the root directory which is represented by a slash (/&rcub; character. The root directory contains one or more directories. These directories, in turn, may contain further directories containing user files and other system files. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> File system objects are viewed as sequential byte stream entities. A sequential byte stream is a series of bytes positioned next to each other. Data files consist of sequential byte streams. Directories, however, consist of a set of entries. Directory operations by applications are typically to access each entry randomly, or to access the entire directory when the application chooses to list or delete the directory. An example of an application is a word processing program or file manager program. In either case, the directory is implemented as a sequential byte stream. The position of an entry is reported to the application by an offset which specifies the distance from the start of the directory to the entry. For example, if the start of a sub-directory is twenty bytes from beginning of the start of the directory being viewed, the offset reported to the application is twenty. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> A challenge found with existing art is that it prevents the release of storage space after a deletion from the front of the file object. For a directory, entries at the front of the file object can be deleted. However, the standard sequential byte stream implementation still prevents releasing data space associated with deleted entries in that segment. If the data space for the deleted entries is released, the offset of the remaining entries decreases by the size of the preceding deleted entries and thus invalidates the offsets of the remaining entries reported to the application. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Retaining data space of deleted entries of a directory results in less efficient storage utilization. More serious challenges occur if the underlying directory implementation is based on an efficient balanced tree data structure rather than a sequential data structure. In a balanced tree data structure, deleted entries must be removed to avoid complications of tree searches complications with maintaining the balanced tree. Balanced tree data structures are used as a method for quickly searching and retrieving information. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> What is needed, therefore, is a way to release storage space at the beginning of a sequential byte stream after a deletion and still maintain sequential byte stream semantics. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> It has been discovered that providing a new mechanism called a ghost offset to maintain the semantics of the original &ldquo;offset&rdquo; of the sequential byte stream allows the release the data space associated with the deleted entries when truncation at or from the front of the directory file object. The ghost offset is used for balanced tree as well as sequential byte stream implementations. Sequential file abstraction for the application viewpoint is maintained while allowing efficient underlying implementation. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> When a file object is instantiated or opened in memory, a ghost offset, G, is associated with the file object. The ghost offset is initialized to zero, and tracks the length of a truncated segment from the front of the file object since the instantiation. Whenever the leftmost entries of the file object are deleted from the front, the data space of the deleted entries is removed from the file object and the ghost offset G is incremented by the size of the entry. The underlying implementation assigns a real offset, R, to an entry by computing its current position from the start of the actual remaining file object. For example, if the position of an entry is twenty bytes away from the beginning of the data stream, the real offset is twenty. If the first ten bytes of the data stream are released, the real offset is now ten for the same entry. The offset communicated between the application and the underlying implementation is the virtual offset, V, which is the summation of the ghost offset, G, and the real offset, R. When the application specifies an offset, V, to be instantiated or opened, the real offset is calculated by subtracting the ghost offset from the received virtual offset. When the file is closed, storage space is released at the beginning of the byte stream in the amount of G, and the ghost offset is discarded. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The foregoing is a summary and thus contains, by necessity, simplifications, generalizations, and omissions of detail; consequently, those skilled in the art will appreciate that the summary is illustrative only and is not intended to be in any way limiting. Other aspects, inventive features, and advantages of the present invention, as defined solely by the claims, will become apparent in the non-limiting detailed description set forth below. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The present invention may be better understood, and its numerous objects, features, and advantages made apparent to those skilled in the art by referencing the accompanying drawings. The use of the same reference symbols in different drawings indicates similar or identical items. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a high level diagram showing a process truncating a directory; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> is a diagram showing a ghost offset incrementing as pages are truncated; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2B</cross-reference> is a diagram showing how the ghost offset manages truncations that are not in full pages; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart showing the truncation process and the release of storage; </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart showing the front truncation process; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart showing the truncation process at an area not in the front of a data stream; and </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram of an information handling system capable of performing the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The following is intended to provide a detailed description of an example of the invention and should not be taken to be limiting of the invention itself. Rather, any number of variations may fall within the scope of the invention which is defined in the claims following the description. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a high level diagram showing an application truncating a directory. Application <highlight><bold>100</bold></highlight> sends open directory <highlight><bold>105</bold></highlight> request to file system <highlight><bold>110</bold></highlight>. The requested directory resides in non-volatile storage device <highlight><bold>160</bold></highlight>. An example of a non-volatile storage device is a disk drive or other computer operable media that retains storage values when power is removed from the device. When file system <highlight><bold>110</bold></highlight> receives the request to open the directory, calculate process <highlight><bold>120</bold></highlight> reads real offset <highlight><bold>150</bold></highlight> that corresponds with the requested directory. At the start of a file being opened, ghost offset is initialized to zero. Calculate <highlight><bold>120</bold></highlight> computes virtual offset <highlight><bold>140</bold></highlight> by adding real offset <highlight><bold>150</bold></highlight> to ghost offset <highlight><bold>130</bold></highlight>. Since the ghost offset is zero at the beginning of instantiation, virtual offset <highlight><bold>140</bold></highlight> equals real offset <highlight><bold>150</bold></highlight>. Virtual offset <highlight><bold>140</bold></highlight> is the virtual location of the beginning of the requested sequential data stream. The virtual offset is provided (step <highlight><bold>170</bold></highlight>) to application <highlight><bold>100</bold></highlight> so the application can use a pointer to the location of the requested file. Application <highlight><bold>100</bold></highlight> sends read request V&prime; (<highlight><bold>145</bold></highlight>) to file system <highlight><bold>110</bold></highlight>. In one embodiment, the application reads file information prior to truncation. In other embodiments, the application simply truncates information without reading the file information. V&prime; can be the same virtual offset (V) provided by the file system, or it can be a different virtual offset corresponding to information that is not at the beginning of sequential data stream <highlight><bold>155</bold></highlight>. File system <highlight><bold>110</bold></highlight> calculates the real offset of the requested read by subtracting the ghost offset from the V&prime; offset. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Application <highlight><bold>100</bold></highlight> can send truncate request <highlight><bold>180</bold></highlight> to file system <highlight><bold>110</bold></highlight> in order to truncate data beginning at V&prime; from sequential data stream <highlight><bold>155</bold></highlight>. File system <highlight><bold>110</bold></highlight> calculates the real offset by subtracting the ghost offset from the V&prime; offset, and truncates data stream <highlight><bold>155</bold></highlight> accordingly (step <highlight><bold>185</bold></highlight>). In this example, V&prime; is the first block of data (i.e., a directory) in sequential data stream <highlight><bold>155</bold></highlight>. In other embodiments, V&prime; could be in the middle or at the end of the sequential data stream. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> is a diagram showing a ghost offset incrementing as pages are truncated. Sequential data stream <highlight><bold>200</bold></highlight> includes n pages. P<highlight><bold>0</bold></highlight> (<highlight><bold>202</bold></highlight>) is the first page, P<highlight><bold>1</bold></highlight> (<highlight><bold>204</bold></highlight>) is the second page, P<highlight><bold>2</bold></highlight> (<highlight><bold>206</bold></highlight>) is the third page, and Pn (<highlight><bold>208</bold></highlight>) is the last page. The beginning of each page has a real offset, R, and a virtual offset, V. Real offsets are the true location of the beginning of corresponding pages. R<highlight><bold>1</bold></highlight> (<highlight><bold>212</bold></highlight>) is the real offset location of the beginning of page 1. In the top example, R<highlight><bold>1</bold></highlight> is offset by 10 bytes. R<highlight><bold>2</bold></highlight> (<highlight><bold>214</bold></highlight>) is the real offset location of the beginning of page. In the top example, R<highlight><bold>2</bold></highlight> is offset by 20. R<highlight><bold>3</bold></highlight> (<highlight><bold>216</bold></highlight>) is the real offset location of the beginning of page 3. In the top example, R<highlight><bold>3</bold></highlight> is offset by <highlight><bold>30</bold></highlight>. Virtual offsets are provided to applications, and are consistent while data is truncated at the beginning of a data stream. Virtual offsets are calculated by adding the ghost offset to the real offset. In the top example, the ghost offset is initialized to zero (<highlight><bold>218</bold></highlight>), as is the case when a file is instantiated. Therefore, V<highlight><bold>1</bold></highlight> (<highlight><bold>220</bold></highlight>) is the same as R<highlight><bold>1</bold></highlight> (<highlight><bold>212</bold></highlight>) which is 10. V<highlight><bold>2</bold></highlight> (<highlight><bold>222</bold></highlight>) is the same as R<highlight><bold>2</bold></highlight> (<highlight><bold>214</bold></highlight>) which is 20. V<highlight><bold>3</bold></highlight> (<highlight><bold>224</bold></highlight>) is the same as R<highlight><bold>3</bold></highlight> (<highlight><bold>216</bold></highlight>) which is 30. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The middle example in <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> shows P<highlight><bold>0</bold></highlight> being truncated (<highlight><bold>230</bold></highlight>). With P<highlight><bold>0</bold></highlight> being truncated, the real offsets shift by the amount of P<highlight><bold>0</bold></highlight>. Therefore, R<highlight><bold>1</bold></highlight> (<highlight><bold>232</bold></highlight>) becomes 0, R<highlight><bold>2</bold></highlight> (<highlight><bold>234</bold></highlight>) becomes 10, and R<highlight><bold>3</bold></highlight> (<highlight><bold>236</bold></highlight>) becomes 20. The ghost offset increments by the amount of data deleted at the beginning of the data stream. Therefore, the ghost offset is now 10 (<highlight><bold>238</bold></highlight>). Virtual offsets are unaffected by deleting P<highlight><bold>0</bold></highlight> because virtual offsets are the summation of the real offset and the ghost offset. Therefore, V<highlight><bold>1</bold></highlight> (<highlight><bold>240</bold></highlight>) is still 10, V<highlight><bold>2</bold></highlight> (<highlight><bold>242</bold></highlight>) is still 20, and V<highlight><bold>3</bold></highlight> (<highlight><bold>244</bold></highlight>) is still 30. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The bottom example of <cross-reference target="DRAWINGS">FIG. 2A</cross-reference> shows P<highlight><bold>1</bold></highlight> being truncated (<highlight><bold>250</bold></highlight>). With P<highlight><bold>1</bold></highlight> truncated, the real offsets shift by the amount of P<highlight><bold>1</bold></highlight>. Therefore, R<highlight><bold>1</bold></highlight> (<highlight><bold>252</bold></highlight>) is not existent, R<highlight><bold>2</bold></highlight> (<highlight><bold>254</bold></highlight>) becomes 0, and R<highlight><bold>3</bold></highlight> (<highlight><bold>256</bold></highlight>) becomes 10. The ghost offset increments by the amount of data deleted for P<highlight><bold>1</bold></highlight>. Therefore, the ghost offset increments to 20 (<highlight><bold>258</bold></highlight>). Virtual offset locations are unaffected by deleting P<highlight><bold>1</bold></highlight> because virtual offsets are the summation of the real offset and the ghost offset. However, V<highlight><bold>1</bold></highlight> (<highlight><bold>260</bold></highlight>) is no longer existent due to P<highlight><bold>1</bold></highlight> being removed. V<highlight><bold>2</bold></highlight> (<highlight><bold>262</bold></highlight>) is still 20, and V<highlight><bold>3</bold></highlight> (<highlight><bold>264</bold></highlight>) is still 30. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2B</cross-reference> is a diagram showing the ghost offset managing truncations that are not in full pages. In the example to the left in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B, sequential data stream <highlight><bold>268</bold></highlight> includes multiple pages. Real offset <highlight><bold>274</bold></highlight> is at the 30<highlight><superscript>th </superscript></highlight>entry on the second page (2,30). Ghost offset <highlight><bold>272</bold></highlight> is initialized to zero, as is the case when a file is instantiated. Since Ghost offset <highlight><bold>272</bold></highlight> is zero, virtual offset <highlight><bold>270</bold></highlight> is the same value as its corresponding real offset <highlight><bold>274</bold></highlight>, which is (2,30). In the example to the right of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B, sequential data stream <highlight><bold>278</bold></highlight> is truncated at the front in the amount of one page and twenty entries (<highlight><bold>286</bold></highlight>). Ghost offset <highlight><bold>282</bold></highlight> is incremented by the amount of data that is deleted and is now (1,20). Real offset <highlight><bold>284</bold></highlight> becomes (1,30)&equals;V&minus;G&equals;(2, 30)&minus;(1,20). When sequential data streams are segmented in pages, information is released on a page by page basis. Therefore, P<highlight><bold>0</bold></highlight> is released but the first twenty entries of P<highlight><bold>1</bold></highlight> <highlight><bold>288</bold></highlight> are not released. Virtual offset <highlight><bold>280</bold></highlight> is calculated by adding the number of pages of ghost offset <highlight><bold>282</bold></highlight> to real offset <highlight><bold>284</bold></highlight>. Virtual offset <highlight><bold>288</bold></highlight> remains at (2,30) because it is real offset <highlight><bold>284</bold></highlight> plus one page from ghost offset <highlight><bold>282</bold></highlight>. V&equals;G&plus;R, when G and R do not refer to the same page, the index of G is ignored and only the page number of G is used for calculations. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart showing the truncation process and the release of storage. Initialization commences at <highlight><bold>300</bold></highlight>, whereupon a request is received (step <highlight><bold>302</bold></highlight>) from application <highlight><bold>301</bold></highlight>. Examples of requests received from applications are a request to read directory information, file information, or to truncate a directory. A snapshot of the requested data is retrieved (step <highlight><bold>305</bold></highlight>), whereupon the file object is instantiated or opened (step <highlight><bold>310</bold></highlight>). The system provides a virtual offset to application <highlight><bold>301</bold></highlight> corresponding to the location of the requested information (step <highlight><bold>315</bold></highlight>). At this point in the process, the virtual offset is the same as the real offset. The ghost offset initializes to zero (step <highlight><bold>320</bold></highlight>) and waits for a truncation request from application <highlight><bold>301</bold></highlight>. Once the truncation request is received (step <highlight><bold>325</bold></highlight>), a determination is made as to whether the truncation request is at the front of the data stream or somewhere else in the data stream (decision <highlight><bold>330</bold></highlight>). If the truncation request is not at the front of the data stream, decision <highlight><bold>330</bold></highlight> branches to &ldquo;no&rdquo; branch <highlight><bold>333</bold></highlight> whereupon non-front truncation is processed (pre-defined process block <highlight><bold>335</bold></highlight>, see <cross-reference target="DRAWINGS">FIG. 5</cross-reference> for further details). On the other hand, if the truncation request is at the front of the data stream, decision <highlight><bold>330</bold></highlight> branches to &ldquo;yes&rdquo; branch <highlight><bold>338</bold></highlight> whereupon front truncation is processed (pre-defined process block <highlight><bold>340</bold></highlight>, see <cross-reference target="DRAWINGS">FIG. 4</cross-reference> for further details). </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Following either truncation process (<highlight><bold>335</bold></highlight> or <highlight><bold>340</bold></highlight>), a determination is made as to whether another truncation request is received (decision <highlight><bold>345</bold></highlight>). If another truncation request is received, decision <highlight><bold>345</bold></highlight> branches to &ldquo;yes&rdquo; branch <highlight><bold>348</bold></highlight> which loops back to handle the next truncation request. During &ldquo;yes&rdquo; branch <highlight><bold>348</bold></highlight>, the virtual offset is calculated by adding the ghost offset to the real offset (step <highlight><bold>350</bold></highlight>). The new virtual offset is provided to the application (step <highlight><bold>355</bold></highlight>) whereupon the system loops back to decision <highlight><bold>330</bold></highlight> and determines whether the truncation request is at the front of the data stream. This looping continues until there are no more truncations to perform, whereupon decision <highlight><bold>345</bold></highlight> branches to &ldquo;no&rdquo; branch <highlight><bold>358</bold></highlight>. The cumulated ghost value is retrieved (step <highlight><bold>360</bold></highlight>). The front of the data stream storage space is released (i.e., deleted) by the amount of the ghost offset (step <highlight><bold>365</bold></highlight>), whereupon processing ends at <highlight><bold>370</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart showing the front truncation process. Front truncation processing commences at <highlight><bold>400</bold></highlight>, whereupon virtual offset <highlight><bold>420</bold></highlight> of the requested file to be truncated is retrieved (step <highlight><bold>410</bold></highlight>) from application <highlight><bold>405</bold></highlight>. The ghost offset is retrieved from the system (step <highlight><bold>430</bold></highlight>), whereupon the real offset location of the file is calculated (step <highlight><bold>440</bold></highlight>). When a file is first opened or instantiated, the real and virtual offsets are the same and the ghost offset is initialized to zero. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The real offset is calculated by subtracting the ghost offset from the virtual offset retrieved from the application. Data is retrieved at the real offset location in the amount of bytes (N) requested by the application (step <highlight><bold>450</bold></highlight>). Requested data <highlight><bold>465</bold></highlight> is provided to application <highlight><bold>405</bold></highlight> (step <highlight><bold>460</bold></highlight>), and the ghost offset is incremented by the amount of bytes N (step <highlight><bold>470</bold></highlight>). In some embodiments, the application does not request to read the data, and only delete it. In these cases, steps <highlight><bold>450</bold></highlight> and <highlight><bold>460</bold></highlight> are omitted. The data is deleted (step <highlight><bold>480</bold></highlight>), and processing returns at <highlight><bold>490</bold></highlight>. During subsequent invocations of front truncation process <highlight><bold>400</bold></highlight>, the ghost value (G) is retained to determine the virtual offsets and real offsets. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart showing the truncation process of an area that is not in the front of a data stream. Non-front truncation processing commences at <highlight><bold>500</bold></highlight>, whereupon virtual offset <highlight><bold>520</bold></highlight> of the requested file to be truncated is retrieved (step <highlight><bold>510</bold></highlight>) from application <highlight><bold>505</bold></highlight>. The ghost offset is retrieved from the system (step <highlight><bold>530</bold></highlight>), whereupon the real offset location of the file is calculated (step <highlight><bold>540</bold></highlight>). When a file is first opened or instantiated, the ghost offset is initialized to zero and the virtual offset is initialized to equal the real offset. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The real offset is calculated by subtracting the ghost offset from the virtual offset retrieved from the application. Data is retrieved at the real offset location in the amount of bytes (N) requested by application <highlight><bold>505</bold></highlight> (step <highlight><bold>550</bold></highlight>). The data is provided to application <highlight><bold>505</bold></highlight> (step <highlight><bold>560</bold></highlight>). In one embodiment, the application does not request to read the data, and only delete it. In these cases, steps <highlight><bold>550</bold></highlight> and <highlight><bold>560</bold></highlight> are omitted. Ghost offsets prior to the truncation are not incremented. The data is deleted (step <highlight><bold>570</bold></highlight>), and processing returns at <highlight><bold>580</bold></highlight>. In one embodiment, an array of ghost offsets can be used to track truncations at various parts of the data stream. For example, ghost offsets G<highlight><bold>1</bold></highlight>, G<highlight><bold>2</bold></highlight>, G<highlight><bold>3</bold></highlight>, etc. can be associated with real offsets R<highlight><bold>1</bold></highlight>, R<highlight><bold>2</bold></highlight>, R<highlight><bold>3</bold></highlight>, etc. When a directory is truncated in the middle of the data stream, directory <highlight><bold>2</bold></highlight> for example, ghost offsets at and after the truncation would be incremented (i.e., G<highlight><bold>2</bold></highlight>, G<highlight><bold>3</bold></highlight>, etc. are incremented, but G<highlight><bold>1</bold></highlight> is not). </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates information handling system <highlight><bold>601</bold></highlight> which is a simplified example of a computer system capable of performing the copy processing described herein. Computer system <highlight><bold>601</bold></highlight> includes processor <highlight><bold>600</bold></highlight> which is coupled to host bus <highlight><bold>605</bold></highlight>. A level two (L2) cache memory <highlight><bold>610</bold></highlight> is also coupled to the host bus <highlight><bold>605</bold></highlight>. Host-to-PCI bridge <highlight><bold>615</bold></highlight> is coupled to main memory <highlight><bold>620</bold></highlight>, includes cache memory and main memory control functions, and provides bus control to handle transfers among PCI bus <highlight><bold>625</bold></highlight>, processor <highlight><bold>600</bold></highlight>, L2 cache <highlight><bold>610</bold></highlight>, main memory <highlight><bold>620</bold></highlight>, and host bus <highlight><bold>605</bold></highlight>. PCI bus <highlight><bold>625</bold></highlight> provides an interface for a variety of devices including, for example, LAN card <highlight><bold>630</bold></highlight>. PCI-to-ISA bridge <highlight><bold>635</bold></highlight> provides bus control to handle transfers between PCI bus <highlight><bold>625</bold></highlight> and ISA bus <highlight><bold>640</bold></highlight>, universal serial bus (USB) functionality <highlight><bold>645</bold></highlight>, IDE device functionality <highlight><bold>650</bold></highlight>, power management functionality <highlight><bold>655</bold></highlight>, and can include other functional elements not shown, such as a real-time clock (RTC), DMA control, interrupt support, and system management bus support. Peripheral devices and input/output (I/O) devices can be attached to various interfaces <highlight><bold>660</bold></highlight> (e.g., parallel interface <highlight><bold>662</bold></highlight>, serial interface <highlight><bold>664</bold></highlight>, infrared (IR) interface <highlight><bold>666</bold></highlight>, keyboard interface <highlight><bold>668</bold></highlight>, mouse interface <highlight><bold>670</bold></highlight>, and fixed disk (FDD) <highlight><bold>672</bold></highlight>) coupled to ISA bus <highlight><bold>640</bold></highlight>. Alternatively, many I/O devices can be accommodated by a super I/O controller (not shown) attached to ISA bus <highlight><bold>640</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> BIOS <highlight><bold>680</bold></highlight> is coupled to ISA bus <highlight><bold>640</bold></highlight>, and incorporates the necessary processor executable code for a variety of low-level system functions and system boot functions. BIOS <highlight><bold>680</bold></highlight> can be stored in any computer readable medium, including magnetic storage media, optical storage media, flash memory, random access memory, read only memory, and communications media conveying signals encoding the instructions (e.g., signals from a network). In order to attach computer system <highlight><bold>601</bold></highlight> another computer system to copy files over a network, LAN card <highlight><bold>630</bold></highlight> is coupled to PCI-to-ISA bridge <highlight><bold>635</bold></highlight>. Similarly, to connect computer system <highlight><bold>601</bold></highlight> to an ISP to connect to the Internet using a telephone line connection, modem <highlight><bold>675</bold></highlight> is connected to serial port <highlight><bold>664</bold></highlight> and PCI-to-ISA Bridge <highlight><bold>635</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> While the computer system described in <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is capable of executing the copying processes described herein, this computer system is simply one example of a computer system. Those skilled in the art will appreciate that many other computer system designs are capable of performing the copying process described herein. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> One of the preferred implementations of the invention is a client application, namely, a set of instructions (program code) in a code module which may, for example, be resident in the random access memory of the computer. Until required by the computer, the set of instructions may be stored in another computer memory, for example, in a hard disk drive, or in a removable memory such as an optical disk (for eventual use in a CD ROM) or floppy disk (for eventual use in a floppy disk drive), or downloaded via the Internet or other computer network. Thus, the present invention may be implemented as a computer program product for use in a computer. In addition, although the various methods described are conveniently implemented in a general purpose computer selectively activated or reconfigured by software, one of ordinary skill in the art would also recognize that such methods may be carried out in hardware, in firmware, or in more specialized apparatus constructed to perform the required method steps. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> While particular embodiments of the present invention have been shown and described, it will be obvious to those skilled in the art that, based upon the teachings herein, changes and modifications may be made without departing from this invention and its broader aspects and, therefore, the appended claims are to encompass within their scope all such changes and modifications as are within the true spirit and scope of this invention. Furthermore, it is to be understood that the invention is solely defined by the appended claims. It will be understood by those with skill in the art that is a specific number of an introduced claim element is intended, such intent will be explicitly recited in the claim, and in the absence of such recitation no such limitation is present. For non-limiting example, as an aid to understanding, the following appended claims contain usage of the introductory phrases &ldquo;at least one&rdquo; and &ldquo;one or more&rdquo; to introduce claim elements. However, the use of such phrases should not be construed to imply that the introduction of a claim element by the indefinite articles &ldquo;a&rdquo; or &ldquo;an&rdquo; limits any particular claim containing such introduced claim element to inventions containing only one such element, even when the same claim includes the introductory phrases &ldquo;one or more&rdquo; or &ldquo;at least one&rdquo;, and indefinite articles such as &ldquo;a&rdquo; or &ldquo;an&rdquo;; the same holds true for the use in the claims of definite articles. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for managing a data stream, said method comprising: 
+<claim-text>identifying a truncation amount corresponding to the data stream; </claim-text>
+<claim-text>incrementing a ghost offset in response to the identification, the ghost offset being a cumulated truncation amount; </claim-text>
+<claim-text>determining one or more real offsets corresponding to one or more data areas within the data stream; and </claim-text>
+<claim-text>calculating one or more virtual offsets corresponding to the data areas based upon the real offsets and the ghost offset. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>removing the cumulated truncation amount of data from a front of the data stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>storing the ghost offset and the real offset in a file system area; and </claim-text>
+<claim-text>providing the virtual offset to an application that accesses the data stream managed by the file system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>repeatedly incrementing the ghost offset in response to multiple truncation requests. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>identifying a plurality of truncation amounts corresponding to the data stream; </claim-text>
+<claim-text>assigning a ghost offset to each of the truncation amounts; </claim-text>
+<claim-text>determining one or more real offsets corresponding to each of the ghost offsets; and </claim-text>
+<claim-text>removing the plurality of truncation amounts from a plurality of areas within the data stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the calculating includes adding the real offset to the ghost offset to determine the virtual offset. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method as described in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the identifying includes receiving a truncation request from an application. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. An information handling system comprising: 
+<claim-text>one or more processors; </claim-text>
+<claim-text>a memory accessible by the processors; </claim-text>
+<claim-text>one or more nonvolatile storage devices accessible by the processors, the nonvolatile storage devices including one or more files and a data stream associated with each of the files; and </claim-text>
+<claim-text>an data stream management tool to manage the data streams, the data stream management tool including: 
+<claim-text>means for identifying a truncation amount corresponding to the data stream; </claim-text>
+<claim-text>means for incrementing a ghost offset in response to the identification, the ghost offset being a cumulated truncation amount; </claim-text>
+<claim-text>means for determining one or more real offsets corresponding to one or more data areas within the data stream; and </claim-text>
+<claim-text>means for calculating one or more virtual offsets corresponding to the data areas based upon the real offsets and the ghost offset. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> further comprising: 
+<claim-text>means for removing the cumulated truncation amount of data from a front of the data stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> further comprising: 
+<claim-text>means for storing the ghost offset and the real offset in a file system area; and </claim-text>
+<claim-text>means for providing the virtual offset to an application that accesses the data stream managed by the file system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> further comprising: 
+<claim-text>means for repeatedly incrementing the ghost offset in response to multiple truncation requests. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> further comprising: 
+<claim-text>means for identifying a plurality of truncation amounts corresponding to the data stream; </claim-text>
+<claim-text>means for assigning a ghost offset to each of the truncation amounts; </claim-text>
+<claim-text>means for determining one or more real offsets corresponding to each of the ghost offsets; and </claim-text>
+<claim-text>means for removing the plurality of truncation amounts from a plurality of areas within the data stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the means for calculating includes means for adding the real offset to the ghost offset to determine the virtual offset. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A computer program product stored in a computer operable media for managing a data stream, said computer program product comprising: 
+<claim-text>means for identifying a truncation amount corresponding to the data stream; </claim-text>
+<claim-text>means for incrementing a ghost offset in response to the identification, the ghost offset being a cumulated truncation amount; </claim-text>
+<claim-text>means for determining one or more real offsets corresponding to one or more data areas within the data stream; and </claim-text>
+<claim-text>means for calculating one or more virtual offsets corresponding to the data areas based upon the real offsets and the ghost offset. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising: 
+<claim-text>means for removing the cumulated truncation amount of data from a front of the data stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising: 
+<claim-text>means for storing the ghost offset and the real offset in a file system area; and </claim-text>
+<claim-text>means for providing the virtual offset to an application that accesses the data stream managed by the file system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising: 
+<claim-text>means for repeatedly incrementing the ghost offset in response to multiple truncation requests. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> further comprising: 
+<claim-text>means for identifying a plurality of truncation amounts corresponding to the data stream; </claim-text>
+<claim-text>means for assigning a ghost offset to each of the truncation amounts; </claim-text>
+<claim-text>means for determining one or more real offsets corresponding to each of the ghost offsets; and </claim-text>
+<claim-text>means for removing the plurality of truncation amounts from a plurality of areas within the data stream. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the means for calculating includes means for adding the real offset to the ghost offset to determine the virtual offset. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The information handling system as described in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the means for identifying includes means for receiving a truncation request from an application.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>6</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005217A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005217A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005217A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005217A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005217A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005217A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005217A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

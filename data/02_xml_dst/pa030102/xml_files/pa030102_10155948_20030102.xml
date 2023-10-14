@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002731A1-20030102-M00001.NB SYSTEM "US20030002731A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030002731A1-20030102-M00001.TIF SYSTEM "US20030002731A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030002731A1-20030102-M00002.NB SYSTEM "US20030002731A1-20030102-M00002.NB" NDATA NB>
+<!ENTITY US20030002731A1-20030102-M00002.TIF SYSTEM "US20030002731A1-20030102-M00002.TIF" NDATA TIF>
+<!ENTITY US20030002731A1-20030102-M00003.NB SYSTEM "US20030002731A1-20030102-M00003.NB" NDATA NB>
+<!ENTITY US20030002731A1-20030102-M00003.TIF SYSTEM "US20030002731A1-20030102-M00003.TIF" NDATA TIF>
+<!ENTITY US20030002731A1-20030102-D00000.TIF SYSTEM "US20030002731A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002731A1-20030102-D00001.TIF SYSTEM "US20030002731A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002731A1-20030102-D00002.TIF SYSTEM "US20030002731A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002731</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10155948</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020524</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>01 113 014.3</doc-number>
+</priority-application-number>
+<filing-date>20010528</filing-date>
+<country-code>EP</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06K009/62</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>382</class>
+<subclass>161000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Pattern recognition with hierarchical networks</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Heiko</given-name>
+<family-name>Wersing</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Frankfurt am Main</city>
+<country-code>DE</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Edgar</given-name>
+<family-name>Korner</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Seligenstadt</city>
+<country-code>DE</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>FENWICK &amp; WEST LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>TWO PALO ALTO SQUARE</address-1>
+<city>PALO ALTO</city>
+<state>CA</state>
+<postalcode>94306</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Within the frameworks of hierarchical neural feed-forward architectures for performing real-world 3D invariant object recognition a technique is proposed that shares components like weight-sharing (<highlight><bold>2</bold></highlight>), and pooling stages (<highlight><bold>3, 5</bold></highlight>) with earlier approaches, but focuses on new methods for determining optimal feature-detecting units in intermediate stages (<highlight><bold>4</bold></highlight>) of the hierarchical network. A new approach for training the hierarchical network is proposed which uses statistical means for (incrementally) learning new feature detection stages and significantly reduces the training effort for complex pattern recognition tasks, compared to the prior art. The incremental learning is based on detecting increasingly statistically independent features in higher stages of the processing hierarchy. Since this learning is unsupervised, no teacher signal is necessary and the recognition architecture can be pre-structured for a certain recognition scenario. Only a final classification step must be trained with supervised learning, which reduces significantly the effort for the adaptation to a recognition task. </paragraph>
+<paragraph id="A-0002" lvl="0">Due to the improved learning efficiency, not only two dimensionally objects, but also three dimensional objects with variations of three dimensional rotation, size and lightning conditions can be recognized. As another advantage this learning method is viable for arbitrary nonlinearities between stages in the hierarchical convolutional networks, like e.g. non-differentiable Winner-Take-All nonlinearities. In contrast thereto the technology according to the abovementioned prior art can only perform backpropagation learning for differentiable nonlinearities which poses certain restrictions on the network design. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to a method for recognizing a pattern having a set of features, a method for training a hierarchical network, a computer software program for implementing such a method, a pattern recognition apparatus with a hierarchical network, and the use of a pattern recognition apparatus. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention finds application in the field of pattern recognition, wherein the pattern can be represented in an optical, acoustical or any other digitally representable manner. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> At first the background of the processing architecture will be explained. The concept of convergent hierarchical coding assumes that sensory processing in the brain can be organized in hierarchical stages, where each stage performs specialized, parallel operations that depend on input from earlier stages. The convergent hierarchical processing scheme can be employed to form neural representations which capture increasingly complex feature combinations, up to the so-called &ldquo;grandmother cell&rdquo;, that may fire only if a specific object is being recognized, perhaps even under specific viewing conditions. The main criticism against this type of hierarchical coding is that it may lead to a combinatorial explosion of the possibilities which must be represented, due to the large number of combinations of features which constitute a particular object under different viewing conditions (von der Malsburg, C. (1999), &ldquo;The what and why of binding: The modeler&apos;s perspective&rdquo;, Neuron, 24, 95-104). </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In the recent years several authors have suggested approaches to avoid such a combinatorial explosion for achieving invariant recognition. The main idea is to use intermediate stages in a hierarchical network to achieve higher degrees of invariance over responses that correspond to the same object, thus reducing the combinatorial complexity effectively. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Since the work of Fukushima, who proposed the Neocognitron as an early model of translation invariant recognition, two major processing modes in the hierarchy have been emphasized: Feature-selective neurons are sensitive to particular features which are usually local in nature. Pooling neurons perform a spatial integration over feature-selective neurons which are successively activated, if an invariance transformation is applied to the stimulus. As was recently emphasized by Mel, B. W. &amp; Fiser, J. (2000), &ldquo;Minimizing binding errors using learned conjunctive features&rdquo;, Neural computation 12(4), 731-762, the combined stages of local feature detection and spatial pooling face what could be called a stability-selectivity dilemma. On the one hand excessive spatial pooling leads to complex feature detectors with a very stable response under image transformations. On the other hand, the selectivity of the detector is largely reduced, since wide-ranged spatial pooling may accumulate too many weak evidences, increasing the chance of accidental appearance of the feature. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Despite its conceptual attractivity and neurobiological evidence, the plausibility of the concept of hierarchical feed-forward recognition stands or falls by the successful application to sufficiently difficult real-world 3D invariant recognition problems. The central problem is the formulation of a feasible learning approach for optimizing the combined feature-detecting and pooling stages. Apart from promising results on artificial data and very successful applications in the realm of hand-written character recognition, applications to 3D recognition problems (Lawrence, S., Giles, C. L., Tsoi, A. C., &amp; Back, A. D. (1997), &ldquo;Face recognition: A convolutional neural-network approach&rdquo;, IEEE Transactions on Neural Networks 8(1), 98-113) are exceptional. One reason is that the processing of real-world images requires network sizes that usually make the application of standard supervised learning methods like error backpropagation infeasible. The processing stages in the hierarchy may also contain network nonlinearities like Winner-Take-All, which do not allow similar gradient-descent optimization. Of great importance for the processing inside a hierarchical network is the coding strategy employed. An important principle is redundancy reduction, that is a transformation of the input which reduces the statistical dependencies among elements of the input stream. Wavelet-like features have been derived which resemble the receptive fields of V1 cells either by imposing sparse overcomplete representations (Olshausen, B. A. &amp; Field, D. J. (1997), &ldquo;Sparse coding with an overcomplete basis set: A strategy employed in V1&rdquo;, Vision Research, 37, 3311-3325) or imposing statistical independence as in independent component analysis (Bell, A. J. &amp; Sejnowski, T. J. (1997), &ldquo;The &lsquo;independent components&rsquo; of natural scenes are edge filters&rdquo;, Vision Research, 37, 3327-3338). These cells perform the initial visual processing and are thus attributed to the initial stages in hierarchical processing. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Apart from understanding biological vision, these functional principles are also of great relevance for the field of technical computer vision. Although ICA (Independent Component Analysis) has been discussed for feature detection in vision by several authors, there are only few references for its usefulness in invariant object recognition applications. Bartlett, M. S. &amp; Sejnowski, T. J. (1997) &ldquo;Viewpoint invariant face recognition using independent component analysis and attractor networks&rdquo;, In M. C. Mozer, M. I. Jordan, &amp; T. Petsche (Eds.), &ldquo;Advances in Neural Information Processing Systems&rdquo;, Volume 9, pp. 817, The MIT Press, showed that for face recognition ICA representations have advantages over PCA (Principal Component Analysis)-based representations with regard to pose invariance and classification performance. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Now the use of hierarchical networks for pattern recognition will be explained. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> An essential problem for the application to recognition tasks is which coding principles are used for the transformation of information in the hierarchy and which local feature representation is optimal for representing objects under invariance. Both properties are not independent and must cooperate to reach the desired goal. In spite of its conceptual attractivity, learning in deep hierarchical networks still faces some major drawbacks. The following review will discuss the problems for the major approaches, which were considered so far. Fukushima, K. (1980), &ldquo;Neocognitron: A self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position&rdquo;, Biol. Cyb., 39, 139-202, introduced with the Neocognitron a principle of hierarchical processing for invariant recognition, that is based on successive stages of local template matching and spatial pooling. The Neocognitron can be trained by unsupervised, competitive learning, however, applications like hand-written digit recognition have required a supervised manual training procedure. A certain disadvantage is the critical dependence of the performance on the appropriate manual training pattern selection (Lovell, D., Downs, T., &amp; Tsoi, A. (1997), &ldquo;An evaluation of the neocognitron&rdquo;, IEEE Trans. Neur. Netw., 8, 1090-1105) for the template matching stages. The necessity of teacher intervention during the learning stages has so far made the training infeasible for more complex recognition scenarios like 3D object recognition. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Riesenhuber, M. &amp; Poggio, T. (1999), &ldquo;Are cortical models really bound by the &ldquo;binding problem&rdquo;&quest;&rdquo;, Neuron, 24, 87-93, emphasized the point that hierarchical networks with appropriate pooling operations may avoid the combinatorial explosion of combination cells. They proposed a hierarchical model with similar matching and pooling stages as in the Neocognitron. A main difference are the nonlinearities which influence the transmission of feedforward information through the network. To reduce the superposition problem, in their model a complex cell focuses on the input of the presynaptic cell providing the largest input. The model has been applied to the recognition of artificial paper clip images and computer-rendered animal and car objects (Riesenhuber, M. &amp; Poggio, T. (1999b), &ldquo;Hierarchical models of object recognition in cortex&rdquo;, Nature Neuroscience 2(11), 1019-1025) and uses a local enumeration scheme for defining intermediate combination features. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> From Y. Le Cun et al (&ldquo;Hand-written digit recognition with back-propagation network&rdquo;, 1990, in advances in neural information processing systems 2, pp. 396-404) a multi-layer network is known. An input image is scanned with a single neuron that has a local receptive field, and the states of this neuron are stored in corresponding locations in a layer called a feature map. This operation is equivalent to a convolution with a small size kernel. The process can be performed in parallel by implementing the feature map as a plane of neurons whose weights vectors are constrained to be equal. That is, units in a feature map are constrained to perform the sane operation on different parts of the image. In addition, a certain level of shift invariance is present in the system as shifting the input will shift the result on the feature map, but will leave it unchanged otherwise. Furthermore it is proposed to have multiple feature maps extracting different features from the same image. According to this state of the art the idea of local, convolutional feature maps can be applied to subsequent hidden layers as well, to extract features of increasing complexity and abstraction. Multi-layered convolutional networks have been widely applied to pattern recognition tasks, with a focus on optical character recognition, (see LeCun, Y., Bottou. L., Bengio, Y., &amp; Haffner, P. (1998), &ldquo;Gradient-based learning applied to document recognition&rdquo;, Proceedings of the IEEE, 86, 2278-2324 for a comprehensive review). Learning of optimal features is carried out using the backpropagation algorithm, where constraints of translation invariance are explicitly imposed by weight sharing. Due to the deep hierarchies, however, the gradient learning takes considerable training time for large training ensembles and network sizes. Lawrence, S., Giles, C. L., Tsoi, A. C., &amp; Back, A. D. (1997), &ldquo;Face recognition: A convolutional neural-network approach&rdquo;, IEEE Transactions on Neural Networks 8(1), 98-113 have applied the method augmented with a prior vector quantization based on self-organizing maps for dimensionality reduction and reported improved performance for a face classification setup. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Now applications of hierarchical models on the invariant recognition of objects will be shortly explained. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> U.S. Pat. No. 5,058,179 relates to a hierarchy constrained automatic learning network for character recognition. Highly accurate, reliable optical character recognition thereby is afforded by the hierarchically layered network having several layers of several constrained feature detection for localized feature extraction followed by several fully connected layers for dimensionality reduction. The character classification is performed in the ultimate fully connected layer. Each layer of parallel constrained feature detection comprises a plurality of constrained feature maps and a corresponding plurality of kernels wherein a predetermined kernel is directly related to a single constrained feature map. Undersampling can be performed from layer to layer. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> U.S. Pat. No. 5,067,164 also discloses a hierarchical constrained automatic learning neural network for recognition having several layers of constrained feature detection wherein each layer of constrained feature detection includes a plurality of constrained feature maps and a corresponding plurality of feature reduction maps. Each feature reduction map is connected to only one constrained feature map in the layer for undersampling that constrained feature map. Units in each constrained feature map of the first constrained feature detection layer respond as a function of a corresponding kernel and of different portions of the pixel image of the character captured in a receptive field associated with the unit. Units in each feature map of the second constrained feature detection layer respond as a function of a corresponding kernel and of different portions of an individual feature reduction map or a combination of several feature reduction maps in the first constrained feature detection layer as captured in a receptive field of the unit. The feature reduction maps of the second constrained feature detection layer are fully connected to each unit of the final character classification layer. Kernels are automatically learned by the error backpropagation algorithm during network initialization or training. One problem of this approach is that learning must be done for all kernels simultaneously in the hierarchy, which makes learning too slow for large networks. This has so far precluded the application of this kind of convolutional networks to more difficult problems of three-dimensional invariant object recognition. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> U.S. Pat. No. 6,038,337 discloses a method and an apparatus for object recognition using a hybrid neural network system exhibiting a local image sampling, a self-organizing map neural network for dimension reduction and a hybrid convolutional network. The hybrid convolutional neural network provides for partial invariance to translation, rotation, scale and deformation. The hybrid convolutional network extracts successively larger features in a hierarchical set of layers. As an example application face recognition of frontal views is given. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> In view of the above prior art the object of the present invention is to improve the coding efficiency and to reduce the learning constraints in large scale hierarchical convolutional networks. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The basic concept to achieve this object is a new approach for training the hierarchical network which uses statistical means for (incrementally) learning new feature detection stages. As a practical matter the improvement should be such that not only two dimensionally objects, but also three dimensional objects with variations of three dimensional rotation, size and lightning conditions can be recognized. As another advantage this learning method is viable for arbitrary nonlinearities between stages in the hierarchical convolutional networks. In contrast thereto the technology according to the abovementioned prior art can only perform backpropagation learning for differentiable nonlinearities which poses certain restrictions on the network design. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The object is achieved by means of the features of the independent claims. The dependent claims develop further the central idea of the present invention. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> According to the present invention therefore a method for recognizing a pattern having a set of features is proposed. At first a plurality of fixed feature detectors are convolved with a local window scanned over a representation of a pattern to be detected to generate a plurality of feature maps. Then an arbitrary nonlinearity is applied to each feature map separately. Local combinations of features of the feature maps are sensed. Finally, the pattern is classified (and thus recognized) on the basis of the sensed local combinations. According to the present invention for the local combination of features (corresponding to an intermediate layer of a network) statistically independent features are pre-set. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The statistically independent features can be pre-determined by means of an independent component analysis (ICA) of convolutions of training patterns. Independent Component Analysis resides in the construction of new features which are the independent components of a data set. The independent components are random variables of minimum mutual information constructed from linear combinations of the input features. It is a fact of information theory that such variables will be as independent as possible. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Alternatively or additionally the statistically independent features can be pre-determined by means of a principal component analysis (PCA) of convolutions of training patterns. Principal component analysis resides in the construction of new features which are the principal components of a data set. The principal components are random variables of maximal variance constructed from orthogonal linear combinations of the input features. Since this ensures only uncorrelatedness of the resulting features this is a weaker notion of statistical independence than for independent component analysis. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> To generate the feature maps, a winner-takes-all strategy and a further nonlinear function can be applied on the result of the convolution. The statistical learning methods described above can be applied regardless of the nature of the combined winner-take-all and further nonlinearities. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> At least one pooling step can be provided in which feature maps of a proceeding map are locally averaged and subsampled. The pooling step contributes to the invariance of the recognition under transformations of the different patterns corresponding to the same object. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The step of classifying can be effected using a one-layered sigmoidal function trained with a gradient descent technique. (Note that for pre-setting the statistically independent features no classical supervised learning process is necessary thus reducing substantially the effort needed for setting up the system). The step of classifying can alternatively be carried out using a radial basis function network, a nearest neighbor matching algorithm, or a multi-layer-perceptron network. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The steps of feature detection, optional pooling and combination can be repeated several times. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> According to a further aspect of the present invention a method for recognizing a pattern having a set of features is proposed. A plurality of fixed feature detectors are convolved for the local window scanned over a representation of the pattern to generate a plurality of feature maps. Local combinations of features of the feature maps are sensed and the pattern is classified (and thus recognized) on the basis of the sensed local combinations. To generate the feature maps, a winner-takes-all strategy is applied on the result of the convolution. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> According to a further aspect of the present invention a method for training a hierarchical network is proposed. The hierarchical network comprises means for convolving a plurality of fixed feature detectors with a local window scanned over a representation of the pattern to generate a plurality of feature maps, means for applying a nonlinear function to each feature map separately, intermediate means for sensing local combinations of simple features of the feature maps, and means for recognizing the pattern by classifying it on the basis of the sensed local combinations. According to the present invention the means for sensing local combinations are incrementally trained such that the statistical independence of the local combinations of features is enhanced. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> According to a still further aspect of the present invention a computer software program implementing a method as set forth above when running on a computing device is proposed. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> According to a still further aspect of the present invention a pattern recognition apparatus with a hierarchical network is proposed. The hierarchical network comprises means for inputting a representation of a pattern (i.e. a digital photo of an object). Furthermore means for convolving a plurality of fixed feature detectors with a local window scanned over a representation of the pattern to generate a plurality of feature maps are provided. Intermediate means sense local combinations of features of the feature maps. Classification means &ldquo;recognize&rdquo; the pattern on the basis of the sensed local combinations. The means for sensing local combinations are designed for a use of pre-set of statistically independent features. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> According to a still further aspect of the present invention a pattern recognition apparatus with a hierarchical network is proposed, the hierarchical network comprising means for inputting a representation of a pattern. Furthermore means for convolving a plurality of fixed feature detectors with a local window scanned over a representation of the pattern are provided to generate a plurality of feature maps. Intermediate means sense local combinations of features of the feature maps. Finally the means for classifying recognize the pattern on the basis of sensed local combinations. The convolution means thereby are designed for a use of a winner-takes-all strategy to generate the feature map. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The classifying means can be tuned to a particular whole view of the pattern. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The hierarchical network can comprise pooling means for locally averaging and subsampling feature maps generated by the convolution means. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> The classifying means can be designed to use a sigmoidal function trained with a gradient descent technique. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The classifying means can be designed to use a radial basis function network. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The classifying means can be based on a Nearest-Neighbor matching method. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> The classifying means can be based on a Multi-Layer-Perceptron network. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The hierarchical network can be implemented by a parallel computation network. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> It is important to note that the set of means for the first feature detection, the optional pooling and the combination layer can be provided several times in a concatenated manner. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> According to a still further aspect of the present invention a pattern recognition apparatus as defined before can be used for optical recognition of characters or objects in particularly for the optical recognition of three dimensional objects.</paragraph>
+</summary-of-invention>
+<brief-description-of-drawings>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Further features, objects and advantages of the present invention will become evident for the man skilled in the art when reading the following detailed explanation of an embodiment of the present invention taken in conjunction with the figures of the enclosed drawings. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> explains the prestructuring of a network according to the present invention, and </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows schematically the architecture of a hierarchical network according to the present invention.</paragraph>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> At first the prestructuring of a network according to the present invention will be shown with reference to <cross-reference target="DRAWINGS">FIG. 1</cross-reference> which furthermore serves to demonstrate the technical means to implement the present invention. Images are sampled by a sampling device <highlight><bold>17</bold></highlight>, such as f.e. a digital video or photo camera and then supplied to the hierarchical network, generally referenced with <highlight><bold>16</bold></highlight>. The hierarchical network <highlight><bold>16</bold></highlight> comprises at least one set comprising a simple feature detection stage <highlight><bold>18</bold></highlight> and a combination feature detection stage <highlight><bold>19</bold></highlight>. These stages <highlight><bold>18</bold></highlight>, <highlight><bold>19</bold></highlight> can be repeated several times within the network <highlight><bold>18</bold></highlight>, as it is schematically referenced with <highlight><bold>20</bold></highlight>. The final output of the network <highlight><bold>18</bold></highlight> is then supplied to classifying means <highlight><bold>21</bold></highlight> which recognize the sampled image by classifying it. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Apart from the new structure the present invention is also concerned with a new approach for training the hierarchical network, which training uses statistical means for (incrementally) learning new feature detection stages <highlight><bold>19</bold></highlight>. The incremental learning is based on detecting increasingly statistically independent features in higher stages of the processing hierarchy. Since this learning is unsupervised, no teacher signal is necessary and the recognition architecture can be pre-structured for a certain recognition scenario. Only the final classification means <highlight><bold>21</bold></highlight> must be trained with supervised learning, which reduces significantly the effort for the adaptation to a recognition task. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> In the following the hierarchical model architecture according to the present invention will be explained in detailed with reference to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. The model is based on a feed-forward architecture with weight-sharing and a succession of feature-sensitive matching stages <highlight><bold>2</bold></highlight> and pooling stages <highlight><bold>3</bold></highlight>. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The model comprises three stages in the processing hierarchy. The first feature-matching stage <highlight><bold>2</bold></highlight> consists of an initial linear sign-insensitive receptive field summation, a Winner-Take-All mechanism between features at the same position and a final non-linear threshold function. In the following the notation will be adopted that vector indices run over the set of neurons within a particular plane of a particular layer. To compute the response q<highlight><subscript>1</subscript></highlight><highlight><superscript>l </superscript></highlight>(x,y) of a simple cell in the first layer <highlight><bold>2</bold></highlight>, responsive to feature type l at position (x,y), first the image vector I is multiplied with a weight vector w<highlight><subscript>1</subscript></highlight><highlight><superscript>l </superscript></highlight>(x,y) characterizing the receptive field profile:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>q</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;&verbar;<highlight><italic>w</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)* <highlight><italic>I&verbar;</italic></highlight>&emsp;&emsp;(1)</in-line-formula></paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The inner product is denoted by *, i.e. for a 10&times;10 pixel image I and w<highlight><subscript>1</subscript></highlight><highlight><superscript>l </superscript></highlight>(x,y) are 100-dimensional vectors. The weights w<highlight><subscript>1</subscript></highlight><highlight><superscript>l </superscript></highlight>are normalized and characterize a localized receptive field in the visual field input layer. All cells in a feature plane l have the same receptive field structure, given by w<highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(x,y), but shifted receptive field centers, like in a classical weight-sharing or convolutional architecture (Fukushima, K. (1980), &ldquo;Neocognitron: A self-organizing neural network model for a mechanism of pattern recognition unaffected by shift in position&rdquo;, Biol. Cyb., 39, 139-202; LeCun, Y., Bottou, L., Bengio, Y., &amp; Haffner, P. (1998), &ldquo;Gradient-based learning applied to document recognition&rdquo;, Proceedings of the IEEE, 86, 2278-2324). </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> In a second step a soft Winner-Take-All (WTA) mechanism is performed with  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mrow>
+          <msubsup>
+            <mi>r</mi>
+            <mn>1</mn>
+            <mi>l</mi>
+          </msubsup>
+          <mo>&af;</mo>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <mi>x</mi>
+              <mo>,</mo>
+              <mi>y</mi>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+        <mo>=</mo>
+        <mrow>
+          <mo>{</mo>
+          <mtable>
+            <mtr>
+              <mtd>
+                <mn>0</mn>
+              </mtd>
+              <mtd>
+                <mrow>
+                  <mrow>
+                    <mrow>
+                      <mstyle>
+                        <mtext>if</mtext>
+                      </mstyle>
+                      <mo>&it;</mo>
+                      <mstyle>
+                        <mtext>&emsp;</mtext>
+                      </mstyle>
+                      <mo>&it;</mo>
+                      <mfrac>
+                        <mrow>
+                          <msubsup>
+                            <mi>q</mi>
+                            <mn>1</mn>
+                            <mi>l</mi>
+                          </msubsup>
+                          <mo>&af;</mo>
+                          <mrow>
+                            <mo>(</mo>
+                            <mrow>
+                              <mi>x</mi>
+                              <mo>,</mo>
+                              <mi>y</mi>
+                            </mrow>
+                            <mo>)</mo>
+                          </mrow>
+                        </mrow>
+                        <mi>M</mi>
+                      </mfrac>
+                    </mrow>
+                    <mo>&lt;</mo>
+                    <mrow>
+                      <msub>
+                        <mi>&gamma;</mi>
+                        <mn>1</mn>
+                      </msub>
+                      <mo>&it;</mo>
+                      <mstyle>
+                        <mtext>&emsp;</mtext>
+                      </mstyle>
+                      <mo>&it;</mo>
+                      <mstyle>
+                        <mtext>or</mtext>
+                      </mstyle>
+                      <mo>&it;</mo>
+                      <mstyle>
+                        <mtext>&emsp;</mtext>
+                      </mstyle>
+                      <mo>&it;</mo>
+                      <mi>M</mi>
+                    </mrow>
+                  </mrow>
+                  <mo>=</mo>
+                  <mn>0</mn>
+                </mrow>
+              </mtd>
+            </mtr>
+            <mtr>
+              <mtd>
+                <mfrac>
+                  <mrow>
+                    <mrow>
+                      <msubsup>
+                        <mi>q</mi>
+                        <mn>1</mn>
+                        <mi>l</mi>
+                      </msubsup>
+                      <mo>&af;</mo>
+                      <mrow>
+                        <mo>(</mo>
+                        <mrow>
+                          <mi>x</mi>
+                          <mo>,</mo>
+                          <mi>y</mi>
+                        </mrow>
+                        <mo>)</mo>
+                      </mrow>
+                    </mrow>
+                    <mo>-</mo>
+                    <mrow>
+                      <mi>M</mi>
+                      <mo>&it;</mo>
+                      <mstyle>
+                        <mtext>&emsp;</mtext>
+                      </mstyle>
+                      <mo>&it;</mo>
+                      <msub>
+                        <mi>&gamma;</mi>
+                        <mn>1</mn>
+                      </msub>
+                    </mrow>
+                  </mrow>
+                  <mrow>
+                    <mn>1</mn>
+                    <mo>-</mo>
+                    <msub>
+                      <mi>&gamma;</mi>
+                      <mn>1</mn>
+                    </msub>
+                  </mrow>
+                </mfrac>
+              </mtd>
+              <mtd>
+                <mstyle>
+                  <mtext>else,</mtext>
+                </mstyle>
+              </mtd>
+            </mtr>
+          </mtable>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mn>2</mn>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030002731A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="42.0147" file="US20030002731A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0049" lvl="7"><number>&lsqb;0049&rsqb;</number> where M&equals;max<highlight><subscript>k </subscript></highlight>q<highlight><subscript>1</subscript></highlight><highlight><superscript>k</superscript></highlight>(x,y) and r<highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(x,y) is the response after the WTA mechanism which suppresses sub-maximal responses. The parameter 0&lt;&ggr;<highlight><subscript>1</subscript></highlight>&lt;1 controls the strength of the competition. This nonlinearity is motivated as a model of latency-based competition that suppresses late responses through fast lateral inhibition. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The activity is then passed through a simple threshold function with a common threshold &thgr;<highlight><subscript>1 </subscript></highlight>for all cells in the first layer <highlight><bold>2</bold></highlight>:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>s</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;<highlight><italic>H</italic></highlight>(<highlight><italic>r</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)&minus;&thgr;<highlight><subscript>1</subscript></highlight>)&emsp;&emsp;(3)</in-line-formula></paragraph>
+<paragraph id="P-0051" lvl="7"><number>&lsqb;0051&rsqb;</number> where H(x)&equals;1 if x&plusmn;0 and H(x)&equals;0 else and s<highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(x,y) is the final activity of the neuron sensitive to feature l at position (x,y) in the first layer <highlight><bold>2</bold></highlight>. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The activities of the layer <highlight><bold>3</bold></highlight> of pooling cells are given by</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>C</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;tan <highlight><italic>h</italic></highlight>(<highlight><italic>g</italic></highlight><highlight><subscript>1</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)*<highlight><italic>s</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><superscript>l</superscript></highlight>)&emsp;&emsp;(4)</in-line-formula></paragraph>
+<paragraph id="P-0053" lvl="7"><number>&lsqb;0053&rsqb;</number> where g<highlight><subscript>1</subscript></highlight>(x,y) is a normalized Gaussian localized spatial pooling kernel, with a width characterized by &sgr;<highlight><subscript>1</subscript></highlight>, which is identical for all features l, and tan h is the hyperbolic tangent sigmoid transfer function. The optional pooling layer <highlight><bold>3</bold></highlight> contributes to the invariance of the recognition under transformations of the different patterns corresponding to the same object. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> The features in the intermediate layer <highlight><bold>4</bold></highlight> are sensitive to local combinations <highlight><bold>10</bold></highlight>, <highlight><bold>11</bold></highlight> of the features <highlight><bold>12</bold></highlight>, <highlight><bold>13</bold></highlight> in the planes of the previous layer <highlight><bold>3</bold></highlight> (or <highlight><bold>2</bold></highlight> in case no pooling layer is provided), and are thus called combination cells in the following. The combined linear summation over previous planes is given by:  
+<math-cwu id="MATH-US-00002">
+<number>2</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mrow>
+          <msubsup>
+            <mi>q</mi>
+            <mn>2</mn>
+            <mi>l</mi>
+          </msubsup>
+          <mo>&af;</mo>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <mi>x</mi>
+              <mo>,</mo>
+              <mi>y</mi>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+        <mo>=</mo>
+        <mrow>
+          <mo>&LeftBracketingBar;</mo>
+          <mrow>
+            <munder>
+              <mo>&Sum;</mo>
+              <mi>k</mi>
+            </munder>
+            <mo>&it;</mo>
+            <mrow>
+              <mrow>
+                <msubsup>
+                  <mi>w</mi>
+                  <mn>2</mn>
+                  <mi>lk</mi>
+                </msubsup>
+                <mo>&af;</mo>
+                <mrow>
+                  <mo>(</mo>
+                  <mrow>
+                    <mi>x</mi>
+                    <mo>,</mo>
+                    <mi>y</mi>
+                  </mrow>
+                  <mo>)</mo>
+                </mrow>
+              </mrow>
+              <mo>*</mo>
+              <msubsup>
+                <mi>c</mi>
+                <mn>1</mn>
+                <mi>k</mi>
+              </msubsup>
+            </mrow>
+          </mrow>
+          <mo>&RightBracketingBar;</mo>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mn>5</mn>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00002" file="US20030002731A1-20030102-M00002.NB"/>
+<image id="EMI-M00002" wi="216.027" he="24.97635" file="US20030002731A1-20030102-M00002.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0055" lvl="7"><number>&lsqb;0055&rsqb;</number> where w<highlight><subscript>1</subscript></highlight><highlight><superscript>lk</superscript></highlight>(x,y) is the receptive field vector of the pooling cell of feature l at position (x,y) describing connections to the plane k of the cells of the previous pooling layer <highlight><bold>3</bold></highlight>. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> After the same WTA procedure with a strength parameter &ggr;<highlight><subscript>2</subscript></highlight>, the activity in the pooling layer <highlight><bold>3</bold></highlight> is given after the application of a threshold function with a common threshold &thgr;<highlight><subscript>2</subscript></highlight>:</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>s</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;<highlight><italic>H</italic></highlight>(<highlight><italic>r</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)&minus;&thgr;<highlight><subscript>2</subscript></highlight>)&emsp;&emsp;(6)</in-line-formula></paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> The step from the intermediate combination layer <highlight><bold>4</bold></highlight> to the second pooling layer <highlight><bold>5</bold></highlight> is identical to equation (4) and given by</paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>c</italic></highlight><highlight><subscript>2</subscript></highlight><highlight><superscript>l</superscript></highlight>(<highlight><italic>x,y</italic></highlight>)&equals;tan <highlight><italic>h</italic></highlight>(<highlight><italic>g</italic></highlight><highlight><subscript>2</subscript></highlight>(<highlight><italic>x,y</italic></highlight>)*s<highlight><subscript>2</subscript></highlight><highlight><superscript>l</superscript></highlight>)&emsp;&emsp;(7)</in-line-formula></paragraph>
+<paragraph id="P-0058" lvl="7"><number>&lsqb;0058&rsqb;</number> with a second Gaussian spatial pooling kernel, characterized by g<highlight><subscript>2</subscript></highlight>(x,y) with range &sgr;<highlight><subscript>2</subscript></highlight>. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> In the final layer <highlight><bold>15</bold></highlight> neurons are sensitive to a whole view of a presented object, like the view-tuned-units (VTUs) <highlight><bold>6</bold></highlight> of Riesenhuber, M. &amp; Poggio, T. (1999), &ldquo;Are cortical models rally bound by the &ldquo;binding problem&rdquo; &ldquo;&quest;, Neuron, 24, 87-93), which are of radial-basis function type. To facilitate gradient-based learning, however, again a sigmoid nonlinearity of the form:  
+<math-cwu id="MATH-US-00003">
+<number>3</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <msubsup>
+          <mi>s</mi>
+          <mn>3</mn>
+          <mi>l</mi>
+        </msubsup>
+        <mo>=</mo>
+        <mrow>
+          <mi>&empty;</mi>
+          <mo>&af;</mo>
+          <mrow>
+            <mo>(</mo>
+            <mrow>
+              <mrow>
+                <munder>
+                  <mo>&Sum;</mo>
+                  <mi>k</mi>
+                </munder>
+                <mo>&it;</mo>
+                <mrow>
+                  <msubsup>
+                    <mi>w</mi>
+                    <mn>3</mn>
+                    <mi>lk</mi>
+                  </msubsup>
+                  <mo>*</mo>
+                  <msubsup>
+                    <mi>c</mi>
+                    <mn>2</mn>
+                    <mi>k</mi>
+                  </msubsup>
+                </mrow>
+              </mrow>
+              <mo>-</mo>
+              <msubsup>
+                <mi>&theta;</mi>
+                <mn>3</mn>
+                <mi>l</mi>
+              </msubsup>
+            </mrow>
+            <mo>)</mo>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mn>8</mn>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00003" file="US20030002731A1-20030102-M00003.NB"/>
+<image id="EMI-M00003" wi="216.027" he="24.97635" file="US20030002731A1-20030102-M00003.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0060" lvl="7"><number>&lsqb;0060&rsqb;</number> is chosen, where &Oslash;(x)&equals;1&plus;exp(&minus;&bgr;x))<highlight><superscript>&minus;1 </superscript></highlight>is a sigmoid Fermi transfer function and W<highlight><subscript>3</subscript></highlight><highlight><superscript>lk </superscript></highlight>is the connection vector of a single view-tuned cell, indexed by l to the previous whole plane k in the previous layer. To allow for a greater flexibility in response, every cell <highlight><bold>6</bold></highlight> has its own threshold &thgr;<highlight><subscript>3</subscript></highlight><highlight><superscript>l</superscript></highlight>. Each VTU cell <highlight><bold>6</bold></highlight> represents a particular view of an object, therefore classification of an unknown input stimulus is done by taking the maximally active VTU <highlight><bold>6</bold></highlight> in the final layer <highlight><bold>15</bold></highlight>. If this activation does not exceed a certain threshold, the pattern may be rejected as unknown or clutter. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> It is important to note that the set of layers consisting of the first feature detection layer <highlight><bold>3</bold></highlight>, the optional pooling layer <highlight><bold>3</bold></highlight> and the combination layer <highlight><bold>4</bold></highlight> can be provided several times. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> Now the training of a hierarchical network according to the present invention will be explained. The training can be effected by feeding the network with training patterns. According to an example the library of training patterns consists of 100 objects taken at 72 views with successive 5&deg; rotations. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The starting point is an appropriate adjustment of pooling ranges &sgr;<highlight><subscript>1</subscript></highlight>,&sgr;<highlight><subscript>2</subscript></highlight>, thresholds &thgr;<highlight><subscript>1</subscript></highlight>,&thgr;<highlight><subscript>2</subscript></highlight>, and strengths &ggr;<highlight><subscript>1</subscript></highlight>,&ggr;<highlight><subscript>2 </subscript></highlight>of the WTA competition. These parameters characterize the overall quality of the network nonlinearities. In a second step then the parameters of the nonlinearities are kept constant and the weight structure of the intermediate and final layers in the hierarchy are modified. According to an example the evaluation is based on a classification task of the 100 objects of the known COIL-100 database (Nayar, S. K., Nene, S. A., &amp; Murase, H. (1996), &ldquo;Real-time 100 object recognition system&rdquo;, in Proc. Of ARPA Image Understanding Workshop, Palm Springs). First a simple paradigm for the training of the view-tuned units was followed, which is similar to the RBF-type setting of Riesenhuber &amp; Poggio. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> For each of the 100 objects there are 72 views available, which are taken at subsequent rotations of 5&deg;. Three views at angles 0&deg;, 120&deg;, and 240&deg; are taken as a training pattern (view) for each object and a view-tuned cell for each view is adopted, giving a total of 300 VTUs. For a particular parameter setting, the activation of the final layer <highlight><bold>15</bold></highlight> is recorded. This activity vector is used for nearest-neighbor classification in the high-dimensional space. This can be considered as template matching in the space that is spanned by the neural activities in the final layer <highlight><bold>15</bold></highlight>. Training simply amounts to storing a template for each training view. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> Departing from the work of Riesenhuber &amp; Poggio, first a connection pattern for the cells of the combination layer <highlight><bold>4</bold></highlight> is considered, which is based on connecting only two neurons of the pooling layer <highlight><bold>3</bold></highlight> in the local neighborhood of the four adjacent neurons of the receptive field center of the cell of the combination (intermediate) layer <highlight><bold>4</bold></highlight> within the pooling layer <highlight><bold>3</bold></highlight>. After leaving out symmetric permutations and configurations, where the two pooling neurons are in different orientation planes and occupy the same receptive field position, 120 different pairwise combination cell types are obtained for the combination layer <highlight><bold>4</bold></highlight>. In an exhaustive grid-like search over parameter combinations for a fixed number of 3 VTUs per object, an optimal setting for the classification performance can be found. The resulting parameters are &thgr;<highlight><subscript>1</subscript></highlight>&equals;0.1,&thgr;<highlight><subscript>2</subscript></highlight>&equals;0.95,&sgr;<highlight><subscript>1</subscript></highlight>&equals;2.5,&sgr;<highlight><subscript>2</subscript></highlight>&equals;2.5,&ggr;<highlight><subscript>1&equals;</subscript></highlight>0.9 and &ggr;<highlight><subscript>2</subscript></highlight>&equals;0.0. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> The resulting nearest-neighbor classification is 69% correct. This particular parameter setting implies a certain coding strategy: The first layer <highlight><bold>2</bold></highlight> of simple edge detectors <highlight><bold>12</bold></highlight>, <highlight><bold>13</bold></highlight> combines a rather low threshold with a strong local competition between orientations. The result is a kind of &ldquo;segmentation&rdquo; of the input into one of the four different orientation categories. These features are pooled within a range that is comparable to the size of the Gabor receptive fields (layer <highlight><bold>2</bold></highlight>). The pairwise combination cells have a high threshold, which is only activated, if both presynaptic cells are strongly active. Since &ggr;<highlight><subscript>2</subscript></highlight>&equals;0, a further WTA at the level of combination cells seems to be unnecessary, since the high threshold already causes strong sparsification. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Assuming that the coding strategy with low initial thresholds and strong WTA is optimal, one can generate an ensemble of activity vectors of the planes of the pooling layer <highlight><bold>3</bold></highlight> for the whole input image ensemble. One can then consider a random selection of 20000 5&times;5 patches from this ensemble. Since there are four planes in the pooling layer <highlight><bold>3</bold></highlight>, this makes up a 5&times;5&times;4&equals;100-dimensional activity vector. One can then both perform a principal (PCA) and independent (ICA) component analysis on this ensemble of local patches. The ICA can f.e. be performed using the FastICA algorithm (Hyv&auml;rinen, A. &amp; Oja, E. (1997), &ldquo;A fast fixed-point algorithm for independent component Analysis&rdquo;; Neural Computation 9(7), 1483-1492). For both PCA and ICA alternatively 20 or 50 components can be considered which are then used as the weight vectors for the connections of the resulting 20 or 50 feature planes. After evaluating the performance of the resulting nearest-neighbor classifier, one can adjust the parameters of the following layers to &sgr;<highlight><subscript>1</subscript></highlight>32 1.5,&sgr;<highlight><subscript>2</subscript></highlight>&equals;1.5,&thgr;<highlight><subscript>2</subscript></highlight>&equals;0.5,&ggr;<highlight><subscript>2</subscript></highlight>&equals;0 which reflects an ad to the more extended 5&times;5 receptive fields of the combination layer neurons. After the optimization based on nearest-neighbor classification the performance gain can be examined, which can be obtained by optimally tuning the response of the view-tuned-units with their sigmoidal transfer function. One can perform gradient-based supervised learning on the classifier output of the final layer neurons. Here, the target output for a particular view i in the training set was given by {overscore (s)}<highlight><subscript>3</subscript></highlight><highlight><superscript>l</superscript></highlight>(i)&equals;0.9, where I is the index of the VTU <highlight><bold>6</bold></highlight> which is closest to the view presented, and {overscore (S)}<highlight><subscript>3</subscript></highlight><highlight><superscript>k</superscript></highlight>(i)&equals;0.3 for the other views of the same object. All other VTUs <highlight><bold>6</bold></highlight> are expected to be silent at an activation level of {overscore (s)}<highlight><subscript>3</subscript></highlight><highlight><superscript>l&prime;</superscript></highlight>(i)&equals;0.1. The training can be done by stochastic gradient descent (see LeCun, Y., Bottou, L., Bengio, Y., &amp; Haffner, P. (1998), &ldquo;Gradient-based learning applied to document recognition&rdquo;, Proceedings of the IEEE, 86, 2278-2324) on the quadratic energy function E&equals;&Sgr;<highlight><subscript>1</subscript></highlight>&Sgr;<highlight><subscript>1</subscript></highlight>({overscore (s)}<highlight><subscript>3</subscript></highlight><highlight><superscript>l</superscript></highlight>(i)&minus;s<highlight><subscript>3</subscript></highlight><highlight><superscript>l</superscript></highlight>(I<highlight><subscript>i</subscript></highlight>))<highlight><superscript>2 </superscript></highlight>where i counts over the training images. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> Of particular interest in any invariant recognition approach is the ability of generalization to previously unseen object views. One of the main idea behind hierarchical architectures is to achieve a gradually increasing invariance of the neural activation in later stages, when certain transformations are applied to the object view. The present invention provides for a considerable invariance gained from the hierarchical architecture. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> Now the Nearest-Neighbor Classification approach which can be performed by the VTUs <highlight><bold>6</bold></highlight> will be explained. Template matching using the nearest neighbor search with an Euclidean metric in the feature space representing the image is a straightforward approach to image classification. The simplest approach would then be to collect the training views like in a photographic memory and then use VTUs <highlight><bold>6</bold></highlight> which perform a nearest neighbor search for the whole image intensity vector. With increasing numbers of training vectors, the performance is clearly expected to increase. The main problem is the inefficient representation of the object representatives, which requires huge amounts of data for larger numbers of objects. As one can expect a higher degree of invariance from the hierarchical processing according to the present invention, the template matching can be based on the activation of the pooled combination cells in layer <highlight><bold>5</bold></highlight>. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> The classification rate exhibits a modest, almost linear increase with the number of available views, if a direct template matching on the image data is applied On the contrary, if one uses a nearest neighbor classifier based on the outputs of the layer <highlight><bold>5</bold></highlight> of the proposed hierarchy, a very rapid increase can be observed already for moderate numbers of training data, which then saturates towards perfect classification. Using the full set of 120 combination cells leads to a similar performance as using 50 cells with largest variance. Of particular interest is that ICA-based determination of the combination cells yields better results and outperforms the simple pairwise constructed combination cells. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> In the following the tuning of View-Tuned Units <highlight><bold>6</bold></highlight> will be explained. The nearest-neighbor matching is a simple approach, which has the advantage of not requiring any additional adaptation of weights. The additional final layer <highlight><bold>15</bold></highlight>, however, should be able to extract more information from the high-dimensional activation pattern in the previous pooling layer <highlight><bold>5</bold></highlight>. To limit the number of available view-tuned units <highlight><bold>6</bold></highlight>, one can use a setup where only three VTUs <highlight><bold>6</bold></highlight> are available for each object. The weights and thresholds of these VTUs <highlight><bold>6</bold></highlight> can be optimized by stochastic gradient descent. In spite of a small number of only three VTUs <highlight><bold>6</bold></highlight> the optimization achieves a comparable performance depending on the number of training patterns available. Here again the ICA optimized features give best results. The principal component analysis, which is a more general variance-based selection approach than choosing pair-wise combination cells with maximum variance, outperforms the pairwise model, but does not reach the level of ICA. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> A central problem for recognition is that any natural stimulus usually not only contains the object to be recognized isolated from a background, but also a strong amount of clutter. It is mainly the amount of clutter in the surround which limits the ability of increasing the pooling ranges to get greater translation tolerance for the recognition (see Mel, B. W. &amp; Fiser, J. (2000), &ldquo;Minimizing binding errors using learned conjunctive features&rdquo;, Neural computation 12(4), 731-762). </paragraph>
+<paragraph id="P-0073" lvl="0"><number>&lsqb;0073&rsqb;</number> The influence of clutter is evaluated by artificially generating a random cluttered background, by cutting out the object images and placing them on a changing cluttered background image with a random position variance of four pixels. With this procedure an image ensemble for the set of 20 objects is generated from the COIL-20 database and performed both training and testing with these images. The ensemble was enlarged by 200 views containing only clutter, for which all VTUs <highlight><bold>6</bold></highlight> are expected to remain silent (i.e. their training output was set to 0.1). Setting a rejection threshold of 0.2 for the final VTUs, only 1% of the clutter images are wrongly classified as objects. The wrong rejection rate, i.e. when a presented object does not exceed threshold activation is less than 1%. The overall classification rate, using three VTUs per object is comparable to the larger COIL-100 set. This highlights the capability of the hierarchical network to generalize over different surroundings, without a necessity for prior segmentation. Even with only three training views, an 85% correct classification can be achieved. </paragraph>
+<paragraph id="P-0074" lvl="0"><number>&lsqb;0074&rsqb;</number> To, summarize, there is an ongoing debate over the capabilities of hierarchical neural feed-forward architectures for performing real-world 3D invariant object recognition. Although a variety of hierarchical models exists, appropriate supervised and unsupervised learning methods are still an issue of intense research. A feed-forward model for recognition is proposed that shares components like weight-sharing, pooling stages, and Winner-Take-All nonlinearities with earlier approaches, but focus on new methods for determining optimal feature-detecting cells in intermediate stages of the hierarchical network. The independent component analysis (ICA), which was previously mostly applied to the initial feature detection stages, yields superior results for the recognition performance also for intermediate complex features. Features learned by ICA lead to better results than earlier proposed heuristically chosen combinations of simple features. </paragraph>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for recognizing a pattern having a set of features, the method comprising the following steps: 
+<claim-text>convolving a plurality of fixed feature detectors with a local window scanned over a representation of the pattern to generate a plurality of feature maps; </claim-text>
+<claim-text>applying a nonlinearity function to each feature map separately; </claim-text>
+<claim-text>sensing local combinations of at least one simple feature of the feature maps; and </claim-text>
+<claim-text>recognizing the pattern by classifying it on the basis of the sensed local combinations, wherein essentially statistically independent features are pre-set for the local combination of features. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the statistically independent features are pre-determined by means of an independent component analysis of convolutions of training patterns. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the statistically independent features are pre-determined by means of a principal component analysis of convolutions of training patterns. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein a winner-takes-all strategy is applied on the result of the convolution to generate the feature maps. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said nonlinearity function applied to each feature map is an arbitrary, a non-differentiable nonlinearity function. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, farther comprising the step of: 
+<claim-text>pooling the feature maps wherein the feature maps of a preceding step are locally averaged and subsampled. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the recognizing step uses a 1-layered sigmoidal function trained with a gradient descent technique to classify the pattern. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein classifying the pattern in the recognizing step uses one of a radial basis function network, a nearest neighbour matching algorithm, and a multi-layer-perceptron network. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said convolving step and said generating step are repeated. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method for recognizing a pattern having a set of features, the method comprising the following steps: 
+<claim-text>convolving a plurality of fixed feature detectors with a local window scanned over a representation of the pattern to generate a plurality of feature maps; </claim-text>
+<claim-text>applying a nonlinearity function to each feature map separately; </claim-text>
+<claim-text>sensing local combinations of the simple features of the feature maps; and </claim-text>
+<claim-text>recognizing the pattern by classifying it on the basis of the sensed local combinations; </claim-text>
+<claim-text>wherein a winner-takes-all strategy is applied on the result of the convolution to generate the feature maps. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A system for training a hierarchical network, the hierarchical network comprising: 
+<claim-text>means for convolving a plurality of fixed feature detectors with a local window scanned a representation of the pattern to generate a plurality of feature maps; </claim-text>
+<claim-text>means for applying a nonlinearity function to each feature map separately; </claim-text>
+<claim-text>intermediate means for sensing local combinations of simple features of the feature maps; and </claim-text>
+<claim-text>means for recognizing the pattern by classifying it on the basis of the sensed local combinations; </claim-text>
+<claim-text>wherein said intermediate means are incrementally trained to enhance the statistical independence of the local combinations of features. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A computer software program, capable of operating on a computing device that implements a method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> when executed on the computing device. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A computer software program, capable of operating on a computing device that implements a method according to <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> when executed on the computing device. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A pattern recognition apparatus with a hierarchical network, the hierarchical network comprising: 
+<claim-text>means for inputting a representation of a pattern; </claim-text>
+<claim-text>means for convolving a plurality of fixed feature detectors with a local window scanned over the representation of the pattern to generate a plurality of feature maps; </claim-text>
+<claim-text>means for applying a nonlinearity function to each feature map separately; </claim-text>
+<claim-text>intermediate means for sensing local combinations of simple features of the feature maps; and </claim-text>
+<claim-text>means for recognizing the pattern by classifying it on the basis of the sensed local combinations; </claim-text>
+<claim-text>wherein said intermediate means utilize pre-set essentially statistically independent features. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the statistically independent features are pre-set by means of an independent component analysis of training patterns. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the statistically independent features are pre-set by a principal component analysis of training patterns. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the means for convolving generates the feature maps applies a winner-takes-all strategy to the result of the convolution. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, the means for applying a nonlinearity function applies an arbitrary, non-differentiable nonlinearity function to each feature map. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, further comprising: 
+<claim-text>pooling means for locally averaging and subsampling feature maps generated by the convolution means. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the recognizing means are designed to use a sigmoidal function trained with a gradient descent technique to classify the pattern. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the recognizing means are designed to use one of a radial basis function network, a nearest neighbor matching algorithm, and a multi-layer-perceptron network to classify the pattern. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the hierarchical network is implemented by means of a parallel computation network. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, for use in optically recognizing at least one of characters and objects in digital representations. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, for use in optically recognizing at least one of handwritten digits and characters. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A pattern recognition apparatus with a hierarchical network, the hierarchical network comprising: 
+<claim-text>means for inputting a representation of a pattern; </claim-text>
+<claim-text>means for convolving a plurality of fixed feature detectors with a local window scanned over the representation of the pattern to generate a plurality of feature maps; </claim-text>
+<claim-text>means for applying a nonlinearity function to each feature map separately; </claim-text>
+<claim-text>intermediate means for sensing local combinations of simple features of the feature maps; and </claim-text>
+<claim-text>means for recognizing the pattern by classifying it on the basis of the sensed local combinations; </claim-text>
+<claim-text>wherein the convolving means use a use of a winner-takes-all strategy to generate the feature maps. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the recognizing are tuned to a particular whole view of the pattern. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, further comprising: 
+<claim-text>pooling means for locally averaging and subsampling feature maps generated by the convolution means. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the recognizing means are designed to use a sigmoidal function trained with a gradient descent technique to classify the pattern. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the recognizing means are designed to use one of a radial basis function network, a nearest neighbour matching algorithm, and a multi-layer-perceptron network to classify the pattern. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the hierarchical network is implemented by means of a parallel computation network. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, for use in optically recognizing at least one of characters and objects in digital representations. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, for use in optically recognizing at least one of handwritten digits and characters.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002731A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002731A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002731A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

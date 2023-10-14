@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030003939A1-20030102-M00001.NB SYSTEM "US20030003939A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030003939A1-20030102-M00001.TIF SYSTEM "US20030003939A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-M00002.NB SYSTEM "US20030003939A1-20030102-M00002.NB" NDATA NB>
+<!ENTITY US20030003939A1-20030102-M00002.TIF SYSTEM "US20030003939A1-20030102-M00002.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-M00003.NB SYSTEM "US20030003939A1-20030102-M00003.NB" NDATA NB>
+<!ENTITY US20030003939A1-20030102-M00003.TIF SYSTEM "US20030003939A1-20030102-M00003.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-D00000.TIF SYSTEM "US20030003939A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-D00001.TIF SYSTEM "US20030003939A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-D00002.TIF SYSTEM "US20030003939A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-D00003.TIF SYSTEM "US20030003939A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-D00004.TIF SYSTEM "US20030003939A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030003939A1-20030102-D00005.TIF SYSTEM "US20030003939A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030003939</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09891798</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010626</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04B007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>455</class>
+<subclass>522000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>455</class>
+<subclass>069000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Estimating Eb/Nt in a CDMA system using power control bits</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Debarag</given-name>
+<middle-name>N.</middle-name>
+<family-name>Banerjee</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Milpitas</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Corporate Patent Counsel</name-1>
+<name-2>Philips Electronics North America Corporation</name-2>
+<address>
+<address-1>580 White Plains Road</address-1>
+<city>Tarrytown</city>
+<state>NY</state>
+<postalcode>10591</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A portable communication device including a power control system which estimates E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>by determining the variance of the noise components of PCBs that are received on the fundamental traffic channel. The power control system includes a demodulator for demodulating a BPSK modulated (or PAM) first signal from a base station, a noise variance calculation circuit that samples the perpendicular noise component of the demodulated signal to determine a noise variance, a power estimation circuit that measures the power of the demodulated signal and provides an estimate of the power of the first signal by eliminating the noise variance from the demodulated signal, and a comparator that compares the ratio of the power estimate and the noise variance to a threshold. The comparator output is a power up or power down signal to the base station. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention generally relates to a portable communication device for use in a CDMA communication system, and particularly to a device for making inner loop forward link power control decisions using only power control bits (PCBs) received on the fundamental traffic channel or on any other constant coding rate BPSK signal to estimate E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t</subscript></highlight>. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The Federal Communications Commission governs the use of the limited radio-frequency spectrum made by various industries. The small portion of the spectrum assigned to each industry must be used efficiently to maximize the number of users of the limited spectrum. Accordingly, various multiple access modulation techniques have been developed to fully exploit the available spectrum. For example, some wireless communication systems employ Code Division Multiple Access (CDMA) modulation which uses a spread spectrum technique for information transmission. More specifically, a spread spectrum system uses a modulation method which distributes or spreads the transmitted signal over a wide frequency band, typically much greater than the bandwidth required to transmit the signal. This modulation technique modulates each baseband data signal with a unique wideband spreading code. As a result, a type of code diversity is obtained. Since only a few hundred kilohertz of a signal is typically affected by frequency selective fade, the remaining content of the signal is received substantially as transmitted. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> In a conventional CDMA system, multiple signals are transmitted simultaneously at the same frequency. A receiver, such as a portable communications device, determines which signal is intended for that receiver by deciphering the spreading code in the signal. The other signals at that frequency appear as noise to the device, and are ignored. While this technique makes efficient use of the available frequency spectrum, it also places a premium on optimum power control of the signals output by the system components (i.e., the base stations and portable communication devices). High power signals increase the interference experienced by other components in the system, thereby lowering the system capacity for reliable information transmission. Thus, a method for controlling the power output for each component is required to prevent transmission of unnecessarily powerful signals. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In a CDMA system, the portable communication devices assist the base stations in controlling the power on the forward link (from the base station to the portable device) by transmitting a power control signal on the reverse link (from the portable device to the base station). In general, the portable device measures its error performance and provides this information to the base station with the power control signal. The base station then makes any necessary adjustments to the power level transmitted to the portable device to ensure quality information transmission at a minimum required power level. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> CDMA communication systems operating under the IS-2000 standard perform forward power link control for the forward fundamental traffic channel (F-FCH) and the dedicated control channel (DCCH) when operating in radio configurations three through nine. Accordingly, the portable device must transmit forward power control bits (FPCs) from which the base station determines the appropriate power allocation to the relevant F-FCH or DCCH. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The IS-2000 standard requires that power control be implemented in a nested, closed-loop control system. The set point for the outer loop of the system is the expected frame error rate (FER) on the received channel (the F-FCH or the DCCH). The outer loop outputs the set point for the ratio of combined received energy per information bit to the effective noise power spectral density (E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t</subscript></highlight>) for the inner loop. The inner loop estimates the received E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>over a Power Control Group (PCG) having a 1.25 ms duration, and compares the estimate to the E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>set point. The result of this comparison is an up or down power control command bit on the reverse link power control subchannel of the reverse link pilot. Accordingly, such systems must estimate the received E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>over a 1.25 ms duration PCG with sufficient accuracy to permit convergence of the twin closed-loop forward power control system. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The received interference (N<highlight><subscript>t</subscript></highlight>) may be generated from any of a variety of sources, including multipath interference from all channels due to a loss of Walsh code orthogonality, co-channel interference from nearby cells, receiver noise, or quadrature rotation due to channel estimation error. N<highlight><subscript>t </subscript></highlight>may be estimated by estimating the variance of a known signal, or estimating the energy on an irrelevant (i.e., not carrying signal information) component (if available) of the received signal. In an IS-2000 system, the known signals are the pilot signals from the same base stations providing the F-FCH and DCCH to the portable device, when received using a receiver with the same combining ratios. Alternatively, an irrelevant component of the received signal is available in IS-2000 systems for the PCBs since they are always transmitted in identical pairs, thereby reducing one degree of freedom from the signal that is otherwise available to the receiver. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The received signal power (E<highlight><subscript>b</subscript></highlight>), on the other hand, is estimated by measuring the power of the punctured power control symbols since the PCBs are always sent at full rate power. Traffic symbols, however, are not used to estimate the received signal power because traffic has a variable rate which is unknown at the time of estimating E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t</subscript></highlight>, thereby preventing an accurate determination of whether a reduction of received signal power is due to an actual power drop, or caused by a decreased rate (i.e., redundant symbols sent at a lower level). </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Conventional portable devices employ pilot combining to estimate E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>as further described in &ldquo;Generalized E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>Estimation for IS-2000,&rdquo; Version 1.0, by John Reagan, published Mar. 2, 2000 which is hereby expressly incorporated herein by reference. Pilot symbols may be used for interference estimation only if combined in the same manner as symbols on the traffic channels. Thus, the hardware of each finger element of the rake receiver must perform a complex multiplication (i.e., two-element dot product), resulting in added complexity. Additionally, the device firmware must combine the pilot signal from samples obtained from each finger element using Maximal Ratio Combining (MRC). The process and algorithms for carrying out this estimation are well known in the art. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> These systems take advantage of the fact that the value of the combined pilot signal is always positive, conforming to the equation I&equals;Q&equals;&plus;p{square root}{square root over (2)}. Since the pilot signal always lies along the I-Q axis and is nominally of constant amplitude, p, the variance along this axis yields the noise variance. Such systems are further deficient, however, because they require the presence of a pilot signal. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Some conventional systems for estimating E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>use data bits which were modulated at the base station using quadrature phase shift keying (QPSK). As is well known in the art, QPSK symbols have four values, each located in a separate quadrant of an I-Q plot. Systems such as that described in U.S. Pat. No. 6,154,659, issued Nov. 28, 2000 to Jalali, et al., are deficient because they depend on deciding on the intended transmitted signal prior to estimating E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t</subscript></highlight>. In reality, however, the intended signal is unknown and such symbol-by-symbol hard decision made without using frame-based coding information is likely to produce a high decision error rate leading to a low overall E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimation accuracy. Furthermore, the noise components of QPSK symbols are more likely to cause the symbols to cross quadrant boundaries because the distances between the noiseless symbols and the decision boundaries are shorter. Also, since all four quadrants contain information, more possibilities for boundary crossings exist, resulting in inaccurate noise estimates. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The present invention provides a portable communication device which estimates E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>by determining the variance of the noise components of Binary Phase Shift Keying (BPSK) modulated PCBs that are received on the fundamental traffic channel. The noise variance is then adjusted for in the E<highlight><subscript>b </subscript></highlight>calculation to yield the noiseless transmitted signal. Finally, the ratio of E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>is compared to the E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>threshold to provide the forward power control decision. In one embodiment of the invention, the noise component perpendicular to the I-Q line of a single PCB is sampled to determine noise variance. Alternatively, each PCB within a PCG may be sampled, and the mean square noise component determined to yield the noise variance. Additionally, a histogram-based approach for determining noise variance may be employed. In another embodiment of the invention, the variance of the noise components of data bits (as opposed to PCBs) in a PAM signal constellation are determined by calculating the perpendicular noise components of the data bits in the manner described above.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The present invention will be better understood upon reference to the following description when considered in conjunction with the accompanying drawings wherein: </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a conceptual block diagram of components of a CDMA wireless communication system. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a diagram illustrating a transmission frame of PCBs. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a graph illustrating the I and Q axes and a received signal point above the 45&deg; I-Q line (or fade line). </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a graph illustrating a histogram for calculating noise variance. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a graph similar to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrating a received signal and a PAM signal constellation.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF EMBODIMENTS OF THE INVENTION </heading>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The embodiments of the invention described herein are not intended to be exhaustive or to limit the invention to the precise forms disclosed. Rather, the embodiments selected for description have been chosen to enable one skilled in the art to practice the invention. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a functional block diagram of a power control system <highlight><bold>10</bold></highlight> of a portable communications device <highlight><bold>12</bold></highlight>. Although portable device <highlight><bold>12</bold></highlight> is indicated as being included in a vehicle, it should be understood that the power control system of this disclosure is not intended to apply only to portable communications device <highlight><bold>12</bold></highlight> for use in a wireless system. System <highlight><bold>10</bold></highlight> determines whether portable device <highlight><bold>12</bold></highlight> transmits an &ldquo;up-power&rdquo; signal or a &ldquo;down-power&rdquo; signal to a base station <highlight><bold>14</bold></highlight>. As shown, portable device <highlight><bold>12</bold></highlight> receives information from base station <highlight><bold>14</bold></highlight>. The information is provided as a stream of data frames (such as T<highlight><subscript>f </subscript></highlight>of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>), as is well known in the art. The information is first demodulated (block <highlight><bold>16</bold></highlight>), then an E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimate is performed over a PCG (block <highlight><bold>18</bold></highlight>) such as the 1.25 ms duration of PCGs of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. Simultaneously, the quality of each frame of data is determined (block <highlight><bold>20</bold></highlight>) according to well known principles in the art, and the target E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>is adjusted if necessary (block <highlight><bold>22</bold></highlight>). The adjustments to the target E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>should be made to maintain the required FER. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The estimated E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>is compared to the target E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>at block <highlight><bold>24</bold></highlight>. Generally, if the estimated E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>is less than the target, portable device <highlight><bold>12</bold></highlight> transmits (block <highlight><bold>26</bold></highlight>) an &ldquo;up-power&rdquo; signal to base station <highlight><bold>14</bold></highlight> to instruct base station <highlight><bold>14</bold></highlight> to increase power by a predetermined amount. Conversely, if the estimated E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>is greater than the target, portable device <highlight><bold>12</bold></highlight> transmits a &ldquo;down-power&rdquo; signal to base station <highlight><bold>14</bold></highlight> which results in a predetermined decrease in power. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> As is well known in the art, the information demodulated at block <highlight><bold>16</bold></highlight> is typically a QPSK modulated signal. The PCB only scheme for estimating E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>according to the present invention takes advantage of the fact that the PCB symbols transmitted in each PCG have identical signs in both I and Q components and power, and are transmitted simultaneously on two quadratures. As is well known in the art, symbols include N number of bits where N&equals;1 binary phase shift keying (BPSK) systems and N&equals;2 in QPSK systems. Accordingly, the QPSK signal for IS-2000 radio configurations three through five reduces to a special case of BPSK for the PCB symbols. A standard QPSK receiver may, however, be used to demodulate these symbols. This special case linear signal constellation situation yields a component of the noise signal perpendicular to the signal axis which is available for the N<highlight><subscript>t </subscript></highlight>estimate as further described below. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the I and Q channels are shown as perpendicular axes defining quadrants <highlight><bold>50</bold></highlight>, <highlight><bold>52</bold></highlight>, <highlight><bold>54</bold></highlight>, and <highlight><bold>56</bold></highlight>. Since the I and Q channels fade together, a noiseless received signal point may lie somewhere on a 45 or 135 degree line (the I-Q line or fade line) depending on the QPSK data symbol transmitted. If the noiseless received signal component <highlight><bold>58</bold></highlight> of the PCB has an absolute value of a, then the configuration of the signal is &lcub;I, Q&rcub;&equals;&lcub;&plusmn;a/{square root}{square root over (2)}&times;, &plusmn;a/{square root}{square root over (2)}&rcub;. Of course, the received signal <highlight><bold>60</bold></highlight> includes both the noiseless received signal component <highlight><bold>58</bold></highlight>, and added noise signal <highlight><bold>62</bold></highlight> which shifts point <highlight><bold>64</bold></highlight> to point <highlight><bold>66</bold></highlight>. Assuming I and Q are the I component and Q component samples of the PCB symbol after multipath combining, then x and y may be defined as x&equals;I&plus;Q and y&equals;I&minus;Q. It therefore follows that the configuration in the x and y axes is &lcub;x,y&rcub;&lcub;&plusmn;a{square root}<highlight><bold>{square root over (2+EE, 0&rcub;. When the n<highlight><subscript>x </subscript></highlight>and n<highlight><subscript>y </subscript></highlight>noise components are added along the x and y directions, the configuration of the noise signal is &lcub;x,y&rcub;&equals;&lcub;&plusmn;a<?RTISPC +29?><?RTISPC +E,rad?><highlight><bold>2</bold></highlight>)}&plus;n</bold></highlight><highlight><subscript>x</subscript></highlight>, n<highlight><subscript>y</subscript></highlight>&rcub;. As is known in the art, the n<highlight><subscript>x </subscript></highlight>and n<highlight><subscript>y </subscript></highlight>noise components are independent of one another. Knowledge regarding the magnitude of one noise component does not permit derivation of the other. The distribution, hence the variance, of the components, however, is identical. Measurement or sampling of the n<highlight><subscript>x </subscript></highlight>noise component is not possible because the portion of x contributed by n<highlight><subscript>x </subscript></highlight>is unknown. In other words, the n<highlight><subscript>x </subscript></highlight>noise component may, during a first sample, add to the magnitude a of noiseless received signal component <highlight><bold>58</bold></highlight>, but subtract from a during a second sample. The perpendicular noise component n<highlight><subscript>y</subscript></highlight>, however, may be sampled for a particular symbol or over many symbols to yield the variance of the noise, which is the instantaneous estimate of N<highlight><subscript>t</subscript></highlight>. The estimated instantaneous noise spectural density {circumflex over (N)}<highlight><subscript>t</subscript></highlight>(k) is thus the variance of n<highlight><subscript>y</subscript></highlight>. That is: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>{circumflex over (N)}</italic></highlight><highlight><subscript>t</subscript></highlight><highlight><italic>&equals;Var</italic></highlight>(<highlight><italic>n</italic></highlight><highlight><subscript>y</subscript></highlight>)&equals;<highlight><italic>E</italic></highlight>(<highlight><italic>n</italic></highlight><highlight><subscript>y</subscript></highlight><highlight><superscript>2</superscript></highlight>)&equals;<highlight><italic>E</italic></highlight>((<highlight><italic>I&minus;Q</italic></highlight>)<highlight><superscript>2</superscript></highlight>)&emsp;&emsp;(Eqn. 1). </in-line-formula></paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In CDMA systems, the noise process is quasi-stationary. Slow variations in noise occur over time due to fading. Thus, it is preferable to estimate noise power using a single-pole filter (or &ldquo;leaky&rdquo; estimator). This results in an N<highlight><subscript>t </subscript></highlight>estimate characterized by </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>{circumflex over (N)}</italic></highlight><highlight><subscript>t</subscript></highlight>(<highlight><italic>k</italic></highlight>)&equals;&bgr;<highlight><italic>{circumflex over (N)}</italic></highlight><highlight><subscript>t</subscript></highlight>(<highlight><italic>k&minus;</italic></highlight>1)&plus;(1&minus;&bgr;)&middot;(<highlight><italic>I</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&minus;Q</italic></highlight><highlight><subscript>k</subscript></highlight>)<highlight><superscript>2</superscript></highlight>&emsp;&emsp;(Eqn. 2). </in-line-formula></paragraph>
+<paragraph id="P-0025" lvl="7"><number>&lsqb;0025&rsqb;</number> Other means of averaging (e.g., FIR filtering, ARMA, etc.) may also be used. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The E<highlight><subscript>b </subscript></highlight>estimate, the estimated power of the noiseless received signal <highlight><bold>58</bold></highlight>, may be sampled over time. If the sign of noiseless received signal <highlight><bold>58</bold></highlight> may vary from sample to sample, then the samples must be squared individually. This squaring operation results in an offset in each sample. More specifically, the squaring of noise signal <highlight><bold>62</bold></highlight> produces the offset. The result of squaring (a{square root}{square root over (2)}&plus;n<highlight><subscript>x</subscript></highlight>) is 2a&circ; 2&plus;n<highlight><subscript>x</subscript></highlight>&circ; 2&plus;2{square root}{square root over (a)}n<highlight><subscript>x</subscript></highlight>. The squared terms are, of course, always positive. The 2{square root}{square root over (2)}an<highlight><subscript>x </subscript></highlight>term, however, could be any polarity. Fortunately, since a and n<highlight><subscript>x </subscript></highlight>are both equally likely to be positive or negative, if enough samples are added, the positive and negative 2an<highlight><subscript>x </subscript></highlight>terms cancel. Only the square of the power of noiseless received signal <highlight><bold>58</bold></highlight> (i.e., a&circ; 2), and the noise bias n<highlight><subscript>x</subscript></highlight>&circ; 2 remain. As described above, the variance of noise component n<highlight><subscript>y </subscript></highlight>perpendicular to the I-Q line is the same as the variance of the n<highlight><subscript>x </subscript></highlight>noise component parallel to the I-Q line. Thus, by substituting the already-calculated variance for noise component n<highlight><subscript>y </subscript></highlight>for the variance of noise component n<highlight><subscript>x</subscript></highlight>, the value of the noise bias n<highlight><subscript>x</subscript></highlight>&circ; 2 may readily be determined and eliminated to yield the estimated E<highlight><subscript>b</subscript></highlight>. Accordingly, the E<highlight><subscript>b</subscript></highlight> 
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <msub>
+          <mover>
+            <mi>E</mi>
+            <mo>^</mo>
+          </mover>
+          <mi>b</mi>
+        </msub>
+        <mo>=</mo>
+        <mrow>
+          <mrow>
+            <mfrac>
+              <msup>
+                <mi>x</mi>
+                <mn>2</mn>
+              </msup>
+              <mn>2</mn>
+            </mfrac>
+            <mo>-</mo>
+            <msub>
+              <mover>
+                <mi>N</mi>
+                <mo>^</mo>
+              </mover>
+              <mi>t</mi>
+            </msub>
+          </mrow>
+          <mo>=</mo>
+          <mrow>
+            <mfrac>
+              <msup>
+                <mrow>
+                  <mo>(</mo>
+                  <mrow>
+                    <mi>I</mi>
+                    <mo>+</mo>
+                    <mi>Q</mi>
+                  </mrow>
+                  <mo>)</mo>
+                </mrow>
+                <mn>2</mn>
+              </msup>
+              <mn>2</mn>
+            </mfrac>
+            <mo>-</mo>
+            <mrow>
+              <msub>
+                <mover>
+                  <mi>N</mi>
+                  <mo>^</mo>
+                </mover>
+                <mi>t</mi>
+              </msub>
+              <mo>.</mo>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Eqn</mi>
+          <mo>.</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>3</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030003939A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="18.96615" file="US20030003939A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0027" lvl="7"><number>&lsqb;0027&rsqb;</number> Here, N<highlight><subscript>t </subscript></highlight>is the noise power spectral density estimate as obtained from Equation 2. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> If for a group of samples of size M, for example, the sign of noiseless received signal <highlight><bold>58</bold></highlight> is known to be identical, then all of the samples may simply be added together. The sum of this addition is divided by the number of such samples and then squared to yield the received signal power E<highlight><subscript>b </subscript></highlight>plus the noise bias. In this case, the E<highlight><subscript>b </subscript></highlight>estimate becomes  
+<math-cwu id="MATH-US-00002">
+<number>2</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <msub>
+          <mover>
+            <mi>E</mi>
+            <mo>^</mo>
+          </mover>
+          <mi>b</mi>
+        </msub>
+        <mo>=</mo>
+        <mrow>
+          <mrow>
+            <mfrac>
+              <msup>
+                <mrow>
+                  <mo>(</mo>
+                  <mrow>
+                    <munderover>
+                      <mo>&Sum;</mo>
+                      <mrow>
+                        <mi>i</mi>
+                        <mo>=</mo>
+                        <mn>1</mn>
+                      </mrow>
+                      <mi>M</mi>
+                    </munderover>
+                    <mo>&it;</mo>
+                    <mstyle>
+                      <mtext>&emsp;</mtext>
+                    </mstyle>
+                    <mo>&it;</mo>
+                    <mrow>
+                      <msub>
+                        <mi>x</mi>
+                        <mi>i</mi>
+                      </msub>
+                      <mo>/</mo>
+                      <mi>M</mi>
+                    </mrow>
+                  </mrow>
+                  <mo>)</mo>
+                </mrow>
+                <mn>2</mn>
+              </msup>
+              <mn>2</mn>
+            </mfrac>
+            <mo>-</mo>
+            <mfrac>
+              <msub>
+                <mover>
+                  <mi>N</mi>
+                  <mo>^</mo>
+                </mover>
+                <mi>t</mi>
+              </msub>
+              <mi>M</mi>
+            </mfrac>
+          </mrow>
+          <mo>=</mo>
+          <mrow>
+            <mfrac>
+              <msup>
+                <mrow>
+                  <mo>(</mo>
+                  <mrow>
+                    <munderover>
+                      <mo>&Sum;</mo>
+                      <mrow>
+                        <mi>i</mi>
+                        <mo>=</mo>
+                        <mn>1</mn>
+                      </mrow>
+                      <mi>M</mi>
+                    </munderover>
+                    <mo>&it;</mo>
+                    <mstyle>
+                      <mtext>&emsp;</mtext>
+                    </mstyle>
+                    <mo>&it;</mo>
+                    <mrow>
+                      <mrow>
+                        <mo>(</mo>
+                        <mrow>
+                          <msub>
+                            <mi>I</mi>
+                            <mi>i</mi>
+                          </msub>
+                          <mo>+</mo>
+                          <msub>
+                            <mi>Q</mi>
+                            <mi>i</mi>
+                          </msub>
+                        </mrow>
+                        <mo>)</mo>
+                      </mrow>
+                      <mo>/</mo>
+                      <mi>M</mi>
+                    </mrow>
+                  </mrow>
+                  <mo>)</mo>
+                </mrow>
+                <mn>2</mn>
+              </msup>
+              <mn>2</mn>
+            </mfrac>
+            <mo>-</mo>
+            <mrow>
+              <mfrac>
+                <msub>
+                  <mover>
+                    <mi>N</mi>
+                    <mo>^</mo>
+                  </mover>
+                  <mi>t</mi>
+                </msub>
+                <mi>M</mi>
+              </mfrac>
+              <mo>.</mo>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Eqn</mi>
+          <mo>.</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>4</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00002" file="US20030003939A1-20030102-M00002.NB"/>
+<image id="EMI-M00002" wi="216.027" he="34.0767" file="US20030003939A1-20030102-M00002.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0029" lvl="7"><number>&lsqb;0029&rsqb;</number> Here also, N<highlight><subscript>t </subscript></highlight>has the same meaning as in Equation 2. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> It should be understood that the value of a is not constant. Fading and F-FCH power control result in different value of a for each PCG. Accordingly, for forward channel power control, only an instantaneous estimate (using one sample of PCBs) can be used, resulting in an E<highlight><subscript>b </subscript></highlight>estimate characterized by Equation 3. Since the noise components n<highlight><subscript>x </subscript></highlight>and n<highlight><subscript>y </subscript></highlight>are IID, the N<highlight><subscript>t </subscript></highlight>estimate requires only one such component, as demonstrated in Equation 1. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Some radio configurations transmit multiple pairs of PCBs in the same PCG. Fortunately, the sign of the PCBs is always the same. Thus, in such radio configurations, the I and Q components of each PCB pair can be added together to yield the sum of each quadrature component. The Equation 4 described above may then be used to estimate E<highlight><subscript>b </subscript></highlight>after the sum of each quadrature component is scaled by the number of PCB components. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The final E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimation is a ratio of the estimated E<highlight><subscript>b </subscript></highlight>and N<highlight><subscript>t </subscript></highlight>values. This estimate, when compared to the inner loop E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>set point, then enables the forward power control decision according to the equation  
+<math-cwu id="MATH-US-00003">
+<number>3</number>
+<math>
+<mrow>
+  <mrow>
+    <mi>FPC</mi>
+    <mo>&af;</mo>
+    <mrow>
+      <mo>(</mo>
+      <mi>k</mi>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+  <mo>=</mo>
+  <mrow>
+    <mrow>
+      <mi>sgn</mi>
+      <mo>&af;</mo>
+      <mrow>
+        <mo>[</mo>
+        <mrow>
+          <mfrac>
+            <msub>
+              <mi>E</mi>
+              <mi>b</mi>
+            </msub>
+            <msub>
+              <mi>N</mi>
+              <mi>t</mi>
+            </msub>
+          </mfrac>
+          <mo>&it;</mo>
+          <msub>
+            <mo>&VerticalSeparator;</mo>
+            <mi>Target</mi>
+          </msub>
+          <mo>&it;</mo>
+          <mrow>
+            <mrow>
+              <mo>-</mo>
+              <mfrac>
+                <msub>
+                  <mi>E</mi>
+                  <mi>b</mi>
+                </msub>
+                <msub>
+                  <mi>N</mi>
+                  <mi>t</mi>
+                </msub>
+              </mfrac>
+            </mrow>
+            <mo>&it;</mo>
+            <mrow>
+              <mo>(</mo>
+              <mi>k</mi>
+              <mo>)</mo>
+            </mrow>
+          </mrow>
+        </mrow>
+        <mo>]</mo>
+      </mrow>
+    </mrow>
+    <mo>.</mo>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00003" file="US20030003939A1-20030102-M00003.NB"/>
+<image id="EMI-M00003" wi="216.027" he="18.00225" file="US20030003939A1-20030102-M00003.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> It should be understood that any of a variety of averaging techniques may be employed to increase the accuracy of the E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimate. One such technique is a histogram-based approach wherein the E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimates of PCBs within one or a plurality of contiguous PCGs are stored over a period of time to create a histogram such as that shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. The histogram is constructed by determining the number of PCBs in a particular PCG having a E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimate that lies above or below a predetermined threshold. A special case indicated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows a two column histogram, each column containing the number of PCBs among a plurality of (6) contiguous PCBs whose E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>exceeded or preceded a predetermined threshold. In the example, block <highlight><bold>90</bold></highlight> indicates that the E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimate for two PCBs exceeded the predetermined threshold. Block <highlight><bold>92</bold></highlight> indicates that four PCBs had E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimates that exceeded the predetermined threshold. After a period of sampling a plurality of PCGs, this example indicates that there were more PCBs having E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimates that exceed the threshold than were PCBs whose E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimate did not exceed the threshold. Accordingly, a down power control command needs to be transmitted. This example can be correlated to the up/down power control operation in IS-2000. However, this method can also be generalized for a multi-level power control operation as well. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Portable device <highlight><bold>12</bold></highlight> of the present invention may also be adapted for estimating E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>using data bits transmitted in a PAM system. A typical PAM signal constellation is shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. As shown, data bits are transmitted in pairs (<highlight><bold>70</bold></highlight>, <highlight><bold>72</bold></highlight>, <highlight><bold>74</bold></highlight>, <highlight><bold>76</bold></highlight>, and <highlight><bold>78</bold></highlight>, <highlight><bold>80</bold></highlight>), each having associated noise components. While the calculations described above are performed for each sample (each pair), only one such computation is depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. Noiseless transmitted data bits <highlight><bold>70</bold></highlight>, <highlight><bold>72</bold></highlight> have magnitudes a, &minus;a, respectively. The received signal <highlight><bold>84</bold></highlight> corresponding to data bit <highlight><bold>70</bold></highlight> lies at point <highlight><bold>82</bold></highlight> due to the contribution of noise components n<highlight><subscript>x </subscript></highlight>and n<highlight><subscript>y </subscript></highlight>as described above. As should be apparent from the foregoing, the calculations for determining N<highlight><subscript>t </subscript></highlight>from the perpendicular noise component n<highlight><subscript>y</subscript></highlight>, and subsequent calculations for determining E<highlight><subscript>b </subscript></highlight>and estimating E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t</subscript></highlight>, are substantially the same as those described with reference to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> since the plot of <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is substantially identical to that of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, but rotated 45 degrees clockwise. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> In CDMA systems, soft-handoffs occur when portable device <highlight><bold>12</bold></highlight> moves from the coverage area of base station <highlight><bold>14</bold></highlight> to the coverage area of another base station (or base stations) in an adjacent cell (or cells). While still communicating with base station <highlight><bold>14</bold></highlight>, portable device <highlight><bold>12</bold></highlight> establishes a communication link with the other base station. This simultaneous communication with two or more base stations is generally required in CDMA systems because base stations in adjacent cells transmit in the same RF band, and the interference between the two forward link signals at the border of the two coverage areas fluctuates unpredictably. This interference causes fading, manifested as poor received signal to noise ratio at portable device <highlight><bold>12</bold></highlight>. The poor signal to noise ratio results in a higher required transmit power from one of the base stations, a higher error rate, or a combination of both. Portable device <highlight><bold>12</bold></highlight> according to the present invention thus performs the E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimate separately on PCBs transmitted by the communicating base stations because the sign of the PCBs from the different base stations might be different. The E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimates are then added to obtain the achievable E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>estimate using MRC. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Accordingly, a portable communications device which provides the above-described PCB-only method for estimating E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>requires very little computational overhead as compared to the pilot combining method. Only two squaring operations, one filtering operation, and one division operation are performed. Additionally, the entire estimate may be performed in firmware, without adding requirements to other hardware/firmware or software blocks in the system. Moreover, pilot combining typically involves multiple, complex multiplication operations (one for each path) and addition operations, each performed separately for each pilot signal from base stations during soft-handoff. This requires additional, dedicated hardware blocks at the chip level, and is therefore not a self-contained solution. Finally, the pilot combining method relies on variance estimation of the pilot signal whose mean is estimated at the same time. This requires use of an additional block with 2N computational units, where N is the number of pilot &ldquo;symbols&rdquo; used in the variance estimator, which is not required using the above-described PCB-only technique. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> While the invention has been described as having an exemplary design, the present invention may be further modified within the spirit and scope of this disclosure. This application is, therefore, intended to cover any variations, uses, or adaptations of the invention using its general principles. Further, this application is intended to cover such departures from the present disclosure as come within known or customary practice in the art to which this invention pertains. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A power control system including: 
+<claim-text>a demodulator for demodulating a first signal having a power value, the demodulated first signal including a noise component that is perpendicular to a signal axis of the first signal; </claim-text>
+<claim-text>a first circuit coupled to the demodulator for receiving the demodulated first signal, the first circuit determining a noise variance of the demodulated first signal from the perpendicular noise component; </claim-text>
+<claim-text>a second circuit coupled to the demodulator and the first circuit, the second circuit providing an estimate of the power value of the first signal by eliminating the noise variance of the perpendicular noise component from the demodulated first signal; and </claim-text>
+<claim-text>an estimator coupled to the first circuit and the second circuit, the estimator calculating the ratio of the power value estimate and the noise variance. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the estimator compares the ratio to a threshold value to provide one of a power up and power down signal to a base station. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the first signal is a BPSK modulated signal. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the first signal is a PCB. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the first signal is a data bit. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the first signal is a PAM signal. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the first signal is a PCB. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the first signal is a data bit. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the first circuit samples a single demodulated first signal to provide an instantaneous noise variance value. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the first circuit samples a plurality of demodulated first signals to provide an average noise variance value. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein the plurality of demodulated first signals are PCBs within a PCG. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the second circuit provides an instantaneous estimate of the power value of the first signal. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the second circuit computes a power value for a plurality of first signals to provide an average power value estimate. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the second circuit employs a histogram-based approach to determine whether the average power value estimate is above or below a predetermined threshold. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A power control system for making inner loop forward control power decisions and generating a corresponding power control signal for transmission to a base station, including: 
+<claim-text>a demodulator for demodulating a first signal from the base station, the first signal having a power value, the demodulated first signal including a noise component that is perpendicular to a signal axis of the first signal; </claim-text>
+<claim-text>a noise variance calculation circuit coupled to the demodulator for receiving the demodulated first signal, the noise variance calculation circuit sampling the perpendicular noise component to determine a noise variance of the demodulated first signal; </claim-text>
+<claim-text>a power estimation circuit coupled to the demodulator and the noise variance calculation circuit, the power estimation circuit providing an estimate of the power value of the first signal by eliminating the noise variance of the perpendicular noise component from the demodulated first signal; and </claim-text>
+<claim-text>an estimator coupled to the noise variance calculation circuit and the power estimation circuit, the estimator calculating the ratio of the power value estimate and the noise variance; and </claim-text>
+<claim-text>a comparator for comparing the ratio to a threshold value to provide one of a power up and power down signal to the base station. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the first signal is a BPSK modulated signal. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the first signal is a PCB. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the first signal is a data bit. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the first signal is a PAM signal. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein the first signal is a PCB. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein the first signal is a data bit. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the noise variance calculation circuit samples a single demodulated first signal to provide an instantaneous noise variance value. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the noise variance calculation circuit samples a plurality of demodulated first signals to provide an average noise variance value. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein the plurality of demodulated first signals are PCBs within a PCG. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the power estimation circuit provides an instantaneous estimate of the power value of the first signal. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the power estimation circuit computes a power value for a plurality of first signals to provide an average power value estimate. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the power estimation circuit employs a histogram-based approach to determine whether the average power value estimate is above or below a predetermined threshold. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A method for making control power decisions including the steps of: 
+<claim-text>demodulating a first signal from a base station; </claim-text>
+<claim-text>sampling a noise component of the demodulated first signal which is perpendicular to the fade line to determine the N<highlight><subscript>t </subscript></highlight>associated with the demodulated first signal; </claim-text>
+<claim-text>estimating the E<highlight><subscript>b </subscript></highlight>associated with the first signal by eliminating the variance of the sampled perpendicular noise component from the square of the demodulated first signal; </claim-text>
+<claim-text>computing an estimated E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t</subscript></highlight>; </claim-text>
+<claim-text>comparing the estimated E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>to a threshold value; and </claim-text>
+<claim-text>providing one of a power up and power down signal to the base station depending upon whether E<highlight><subscript>b</subscript></highlight>/N<highlight><subscript>t </subscript></highlight>is greater than or less than the threshold value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein the first signal is a BPSK modulated PCB. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein the first signal is a data bit. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein the noise component of a single demodulated first signal is sampled to provide an instantaneous estimate of the variance of the sampled noise component. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein the device samples a plurality of demodulated first signals to provide an average of a plurality of estimates of the variance of the sampled noise component. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference> wherein the plurality of demodulated first signals are PCBs within a PCG. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein E<highlight><subscript>b </subscript></highlight>is estimated for a plurality of first signals to provide an average estimate of E<highlight><subscript>b</subscript></highlight>.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030003939A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030003939A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030003939A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030003939A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030003939A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030003939A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

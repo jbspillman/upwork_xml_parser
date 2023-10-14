@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005236A1-20030102-D00000.TIF SYSTEM "US20030005236A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005236A1-20030102-D00001.TIF SYSTEM "US20030005236A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005236A1-20030102-D00002.TIF SYSTEM "US20030005236A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005236A1-20030102-D00003.TIF SYSTEM "US20030005236A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005236</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895119</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>146000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Imprecise snooping based invalidation mechanism</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Ravi</given-name>
+<middle-name>Kumar</middle-name>
+<family-name>Arimilli</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>John</given-name>
+<middle-name>Steven</middle-name>
+<family-name>Dodson</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Pflugerville</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Guy</given-name>
+<middle-name>Lynn</middle-name>
+<family-name>Guthrie</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Jerry</given-name>
+<middle-name>Don</middle-name>
+<family-name>Lewis</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Round Rock</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+</address>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>BRACEWELL &amp; PATTERSON, L.L.P.</name-1>
+<name-2>INTELLECTUAL PROPERTY LAW</name-2>
+<address>
+<address-1>P.O. BOX 969</address-1>
+<city>AUSTIN</city>
+<state>TX</state>
+<postalcode>78767-0969</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method, system, and processor cache configuration that enables efficient retrieval of valid data in response to an invalidate cache miss at a local processor cache. A cache directory is enhanced by appending a set of directional bits in addition to the coherency state bits and the address tag. The directional bits provide information that includes the processor cache identification (ID) and routing method. The processor cache ID indicates which processor operation resulted in the cache line of the local processor changing to the invalidate (I) coherency state. The processor operation may be issued by a local processor or by a processor from another group or node of processors if the multiprocessor system comprises multiple nodes of processors. The routing method indicates what transmission method to utilize to forward a request for the cache line. The request may be forwarded to a local system bus or directly to another processor group via a switch or broadcast mechanism. Processor/Cache directory logic is provided to set and interpret the values of the directional bits and provide responses depending on the values of the bits. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Technical Field </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to data processing systems and in particular to memory systems of a multiprocessor data processing system. Still more particularly the present invention relates to a method and system for providing more efficient operation of caches in a multiprocessor data processing system. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> A data-processing system typically includes a processor coupled to a variety of storage devices arranged in a hierarchical manner. In addition to a main memory, a commonly employed storage device in the hierarchy includes a high-speed memory known as a cache memory. A cache memory speeds up the apparent access times of the relatively slower main memory by retaining the data or instructions that the processor is most likely to access again, and making the data or instructions available to the processor at a much lower latency. As such, cache memory enables relatively fast access to a subset of data and/or instructions that were recently transferred from the main memory to the processor, and thus improves the overall speed of the data-processing system. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In a conventional symmetric multiprocessor (SMP) data processing system, all of the processors are generally identical, insofar as the processors all utilize common instruction sets and communication protocols, have similar hardware architectures, and are generally provided with similar memory hierarchies. For example, a conventional SMP data processing system may comprise a system memory, a plurality of processing elements that each include a processor and one or more levels of cache memory and a system bus coupling the processing elements to each other and to the system memory. Many such systems include at least one level of cache memory shared between two or more processors and which support direct processor cache to processor cache transfer of data (or intervention). To obtain valid execution results in a SMP data processing system, it is important to maintain a coherent memory hierarchy, that is, to provide a single view of the contents of memory to all of the processors. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> During typical operation of a cache hierarchy that supports intervention among processor caches, a cache line that is sort to be modified is requested via an address broadcast mechanism that utilizes the system bus/interconnect (i.e., the address of the cache line is sent out to all the caches). As the number of processors that make up the multiprocessor system increased, a switch-based configuration was utilized in place of the traditional bus configuration to connect the processors to each other. Utilization of a switch enables inter-processor (or processor group) operations (e.g., requests, command, etc.) to be sent directly (i.e., without a broadcast to the entire system). </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The size of multiprocessor systems, particularly the number of processors and/or processor groups, is continually increasing. For example, an 8-way processing system may be interconnected to seven other similar 8-way processing systems to create a 64-way processing system with 8 independent processing nodes. In addition to the increase in the number of processors and processor speeds, increases in the size of caches and resulting longer latency for coherency operations transacted on the cache led to the creation and utilization of cache directories and the implementation of directory-based cache coherency. Accordingly, each memory/cache component comprises a memory/cache directory, which is primarily utilized for reducing snoop response times and maintaining cache coherency more efficiently. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> A coherent memory hierarchy is maintained through the use of a selected memory coherency protocol, such as the MESI protocol. In the MESI protocol, an indication of a coherency state is stored in association with each coherency granule (i.e., cache line) of at least all upper level (cache) memories. Each coherency granule can have one of four states, modified (M), exclusive (E), shared (S), or invalid (I), which can be encoded by two bits in the cache directory. Those skilled in the art are familiar with the MESI protocol and its use to ensure coherency in memory operations. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Each cache line (block) of data in a SMP system, typically includes an address tag field, a state bit field, an inclusivity bit field, and a value field for storing the actual instruction or data. In current processing systems, both the address tag field and the state bit field are contained in the cache directory. This cache directory may be organized under any caching scheme available, such as fully associative, direct mapped, or set-associative, as are well-known in the art. The tag within the address tag field may be a full address for a fully associative directory, or a partial address for a direct-mapped directory or a set-associative directory. The bits within the state bit field are utilized to maintain cache coherency for the data-processing system. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a cache with associated cache directory according to current processor designs. Cache <highlight><bold>201</bold></highlight> comprises 64 cache lines consecutively numbered 0-63. As illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, cache <highlight><bold>201</bold></highlight> has associated cache directory <highlight><bold>203</bold></highlight>, which consists of address tag and coherency state bits. The address tag is a subset of the full address of the corresponding memory block. During operation, a compare match of an incoming address with one of the tags within the address tag field indicates a cache &ldquo;hit&rdquo; if the entry is in a valid state. If no compare match occurs or the entry is in the invalid (I) state then a cache &ldquo;miss&rdquo; occurs. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Improvements in silicon technology, etc. have resulted in the increase in cache sizes and thus, the amount of data each cache is able to hold. Subsequently, very few cache misses occur that are caused because the requested data is not present in the local processor cache. Rather, those misses which occur today are primarily due to invalidates, i.e., the local cache line exists in the I coherency state. Local cache misses are thus more likely to occur due to snooped &ldquo;invalidation&rdquo; operations than due to the cache not having the data. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Typically, a bus &ldquo;snooping&rdquo; technique is utilized to invalidate cache lines during cache coherency operation. Each cache performs a snooping operation by which changes to cache lines that are sent on the system bus are reflected within the local cache in order to maintain coherency amongst the caches. For example, whenever a read or write is performed, the address of the data is broadcast from the originating processor core to all other caches sharing a common bus (or connected via a switch). Each cache snoops the address from the bus and compares the address with an address tag array in the cache directory. If a hit occurs, a snoop response is returned which triggers a coherency operation, such as invalidating the hit cache line, in order to maintain cache coherency. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> When a local cache miss occurs, the requesting processor typically broadcasts the request by sending the address out to the system bus (or switch). A snoop response of &ldquo;retry&rdquo; is issued from a cache with the valid data when the cache has a modified copy of the data that must first be pushed out of the cache or when there was a problem that prevented appropriate snooping. In the case of a retry response, the processor from which the request originated will retry the read or write operation until the data is received. The processor is forced to broadcast the retry because no information is available as to which processor/cache has a valid copy of the requested data. This often leads to a large number of retry operations that utilizes significant bus resources and degrades overall processor speed and performance (i.e., long latencies/coherency resolution and high retry penalties). </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The present invention recognizes that, in light of technological improvements (i.e., larger caches and increased processor speeds) and the subsequent increased occurrence of cache misses due primarily to invalidates, it would be desirable to provide a method and system that allows a processor to quickly retrieve correct data when an invalidate is encountered for a desired cache line. A system, method, and processor cache configuration that reduces the incident of re-tries from a processor node in response to a cache miss caused by an invalidated cache line would be a welcomed improvement. These and other benefits are provided by the present invention described herein. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Disclosed is a method, system, and processor cache configuration that enables efficient retrieval of valid data in response to an invalidate cache miss at a local processor cache. A cache directory is enhanced by appending a set of directional bits in addition to the coherency state bits and the address tag. The directional bits provide information that includes the processor cache identification (ID) and routing method. The processor cache ID indicates which processor operation resulted in the cache line of the local processor changing to the invalidate (I) coherency state. The processor operation may be issued by a local processor or by a processor from another group or node of processors if the multiprocessor system comprises multiple nodes of processors. The routing method indicates what transmission method to utilize to forward a request for the cache line. The request may be forwarded to a local system bus or directly to another processor group via a switch or broadcast mechanism. Processor/Cache directory logic is provided to set and interpret the values of the directional bits and provide responses depending on the values of the bits. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> During operation, a snooping processor causes the cache state of the snooped cache line to be set to invalid. When a local processor, i.e., a processor associated with the snooped cache, issues a request for the cache line, the local processor reads the invalid coherency state of the cache line from the cache directory. The cache directory logic then reads the directional bits and forwards the request to the specific processor (or cache) indicated by the identification bits via the routing mechanism indicated by the routing bits. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The above, as well as additional objects, features, and advantages of the present invention will become apparent in the following detailed written description. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The novel features believed characteristic of the invention are set forth in the appended claims. The invention itself, however, as well as a preferred mode of use, further objects and advantages thereof, will best be understood by reference to the following detailed description of an illustrative embodiment when read in conjunction with the accompanying drawings, wherein: </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> illustrates an 8-way multiprocessor data processing system with a bus topology; </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> illustrates a 64-way multiprocessor data processing system comprised of eight 8-way multiprocessor systems of <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> interconnected via a switch topology; </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an L2 cache and associated directory according to the prior art; </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an L2 cache and associated directory with &ldquo;directional&rdquo; bits in accordance with a preferred embodiment of the invention; </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4A</cross-reference> illustrates a flow chart of the process of setting the directional bits of the cache directory in accordance with a preferred embodiment of the invention; and </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4B</cross-reference> illustrates a flow chart of the process of directly locating valid data of an invalidated cache line utilizing the directional bits in accordance with a preferred embodiment of the invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF ILLUSTRATIVE EMBODIMENT </heading>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> With reference now to the figures, and in particular with reference to <cross-reference target="DRAWINGS">FIGS. 1A and 1B</cross-reference>, there are illustrated high level block diagrams of multiprocessor data processing systems in which preferred embodiments of the invention may be implemented. As shown, data processing system <highlight><bold>100</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> is an 8-way multiprocessor system with the processors A<highlight><bold>0</bold></highlight>-A<highlight><bold>7</bold></highlight> connected via a bus topology. Each processor comprises internal, level one (L1) caches (instruction and data caches) and each processor is coupled to an external, level two (L2) cache <highlight><bold>103</bold></highlight>A-<highlight><bold>103</bold></highlight>D. L2 caches <highlight><bold>103</bold></highlight>A-<highlight><bold>103</bold></highlight>D are utilized to stage data to L1 caches. In other words, L2 caches <highlight><bold>103</bold></highlight>A-<highlight><bold>103</bold></highlight>D function as intermediate storage between system memory <highlight><bold>107</bold></highlight> and L1 caches, and, according to the preferred embodiment are able to store a large amount of data to prevent the occurrence of cache misses due to data not being in the cache. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Although L1 caches are illustrated in <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> as bifurcated (or separated) instruction and data cache, those skilled in the art will appreciate that each bifurcated set of L1 caches could alternatively be implemented as a single L1 cache. Lower level look-aside (L3) caches <highlight><bold>105</bold></highlight>A-<highlight><bold>105</bold></highlight>D are also illustrated. Processors A<highlight><bold>0</bold></highlight>-A<highlight><bold>7</bold></highlight> are grouped in pairs, and a processor group (e.g., A<highlight><bold>0</bold></highlight> and A<highlight><bold>1</bold></highlight>) communicates with another processor group (A<highlight><bold>2</bold></highlight> and A<highlight><bold>3</bold></highlight>) via a system bus <highlight><bold>111</bold></highlight>, which also provides interconnection for system memory <highlight><bold>107</bold></highlight> and I/O devices <highlight><bold>109</bold></highlight>, etc. I/O devices <highlight><bold>109</bold></highlight> and non-volatile memory <highlight><bold>113</bold></highlight> are interconnected to system bus <highlight><bold>111</bold></highlight> via a bus bridge <highlight><bold>115</bold></highlight>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> System bus <highlight><bold>111</bold></highlight>, which may comprise one or more buses serves as a conduit for communication transactions between L2 caches <highlight><bold>103</bold></highlight>A-<highlight><bold>103</bold></highlight>D, system memory <highlight><bold>107</bold></highlight>, I/O devices <highlight><bold>109</bold></highlight>, and nonvolatile storage <highlight><bold>113</bold></highlight>. A typical communication transaction on system bus <highlight><bold>111</bold></highlight> includes a source tag indicating the source of the transaction, a destination tag specifying the intended recipient of the transaction, an address, and sometimes data. Each device coupled to system bus <highlight><bold>111</bold></highlight> preferably snoops all communication transactions on system bus <highlight><bold>111</bold></highlight> to determine if the coherency of the device should be updated for the transaction. Preferably an external snoop path from each cache to the system bus <highlight><bold>111</bold></highlight> is provided. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> According to the preferred embodiment, data processing system <highlight><bold>100</bold></highlight> preferably comprises large local (L2) caches <highlight><bold>105</bold></highlight>A-<highlight><bold>105</bold></highlight>D, which substantially eliminates the occurrence of cache misses due to no data being present. Also, in the preferred embodiment, the caches of data processing system <highlight><bold>100</bold></highlight> each comprises an enhanced directory (described below), by which functional elements of the invention are provided. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> illustrates a 64-way multiprocessor data processing system <highlight><bold>150</bold></highlight> comprising eight (8) of data processing system <highlight><bold>100</bold></highlight> interconnected via a switch <highlight><bold>153</bold></highlight>. As depicted, 64-way data processing system <highlight><bold>150</bold></highlight> is a symmetric multiprocessor (SMP) with each 8-way processor <highlight><bold>151</bold></highlight>A-<highlight><bold>151</bold></highlight>H represented as a node. In addition to the conventional registers, instruction flow logic and execution units utilized to execute program instructions, each of the processor cores (e.g., A<highlight><bold>0</bold></highlight>-A<highlight><bold>7</bold></highlight>) also includes logic (and/or a snoop response and directional utility) which directs the functional aspects of the invention. In the preferred embodiment, this logic is included within the coherency protocol and/or the operating system&apos;s (OS) code. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a cache <highlight><bold>301</bold></highlight> and associated enhanced cache directory <highlight><bold>300</bold></highlight> according to a preferred embodiment of the invention. The present invention adds a series of directional bits <highlight><bold>305</bold></highlight> to the cache directory <highlight><bold>300</bold></highlight> and provides associated processor/cache logic for updating the value of these bits and utilizing the value of the bits to identify the location of valid data (or cache line) to a requesting processor, whose copy of the data in the local cache is in the I state. For example, when a Dclaim is issued by Processor node <highlight><bold>151</bold></highlight>E of <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> to cache line A of the cache of Processor node <highlight><bold>151</bold></highlight>A, the directory entry of cache line A, as it exists in Processor Node <highlight><bold>151</bold></highlight>A, is set to invalid (I) according to the normal coherency response. Simultaneously, the directional bits of the cache line are set to reflect the number (or identifier) of the processor and/or processor node group (i.e., 5 or 101 binary) that caused the invalidation of the cache line A. The operations being snooped on the system bus include the identification information of the processor and processing group. For example, the group ID may be an 8-bit tag, while the processor ID may be a 3-bit tag. In the preferred embodiment, only the processor ID is stored in the directional bits; however, when the processor belongs to another processor group, the processor group ID may also be stored within the directional bits. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In the illustrative embodiment, enhanced cache directory <highlight><bold>300</bold></highlight> comprises 64 rows of data, each corresponding to a cache line within the associated cache <highlight><bold>301</bold></highlight>. Within each row of data, as shown by exemplary directory entry <highlight><bold>303</bold></highlight>, is the cache state <highlight><bold>304</bold></highlight> for the particular cache line (e.g., M, E, S, I) and the address tag <highlight><bold>307</bold></highlight> of the cache line. Also associated (added) to each directory entry <highlight><bold>303</bold></highlight> is a set of direction bits, &ldquo;invalidation source&rdquo; <highlight><bold>309</bold></highlight> and &ldquo;routing method&rdquo; <highlight><bold>311</bold></highlight> that are utilized to (1) point to the processor or processor group/node in whose cache the valid copy of the requested cache line exists and (2) direct the requesting processor how to forward the request, respectively. Exemplary directory entry <highlight><bold>303</bold></highlight> contains an invalid cache state (I), and invalidation source <highlight><bold>309</bold></highlight> is set to 101 indicating that an operation of the 5<highlight><superscript>th </superscript></highlight>processor group caused the local cache line to go to the invalid state and therefore holds a valid copy of the data. Simultaneously, routing method <highlight><bold>311</bold></highlight> is set to 00 indicating that the request should be sent out to the local system bus. The various processes are further described below in <cross-reference target="DRAWINGS">FIGS. 4A and 4B</cross-reference>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Thus, as described above, in the preferred embodiment the directory is expanded to include the directional bits <highlight><bold>305</bold></highlight>. The instruction set architecture (ISA) is not changed, but additional processor/cache logic is provided that first sets the value of the directional bits and also checks the value of the directional bits whenever an invalidate miss occurs to determine which processor node to forward the request to. In another embodiment, the coherency protocol is modified to permit reading of the processor ID from the request on the system bus <highlight><bold>111</bold></highlight> and setting of the directional bits <highlight><bold>305</bold></highlight> whenever the snoop results in the invalidation of the cache line. The snoop operation has a tag with the ID of the snooped processor and sets the directional bits <highlight><bold>305</bold></highlight> when the coherency state is updated. Other means of setting the directional bits <highlight><bold>305</bold></highlight> are contemplated within the operation of the invention. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Whenever the requesting processor desires the locally invalidated cache line, the processor sends a directed address to the processor node represented by the invalidation source bits <highlight><bold>309</bold></highlight>. According to the preferred embodiment, if the corresponding node does not contain the cache line, the address is broadcasted and/or directed to memory depending on the system design. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In one embodiment, each request issued on the system bus <highlight><bold>111</bold></highlight> is tagged to indicate its specific processor ID, which is then read off whenever a cache line is invalidated. Modifications to current system configuration may thus be required, although the invention may be completed utilizing current identification data within the request (origination source, etc.). </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The invention may comprise utilization of the invalidation source bit only; however, in a preferred embodiment, illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the additional routing bits, &ldquo;invalidation source routing method&rdquo; <highlight><bold>311</bold></highlight> (or routing method <highlight><bold>311</bold></highlight>) is also provided within the directory and, together with the invalidation source <highlight><bold>309</bold></highlight>, provides the directional bits. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Routing method <highlight><bold>311</bold></highlight> specifies the route to be taken to get from the present cache to the cache holding the valid data. Processor logic may, responsive to the source route provided, modify the request to enable the request to be forwarded according to the indicated method. With the switch topology, the request may then be transmitted directly to the cache that holds the valid cache line. Thus, the invention provides information on which node or processor cache has the valid cache line and also how (i.e., which route to utilize) to forward the request to the particular node or processor cache. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Thus, routing method <highlight><bold>311</bold></highlight> may take on a plurality of values depending on the number of processor groups and their connectivity. Thus, if there are multiple processor groups, there routing method <highlight><bold>311</bold></highlight> may be utilized to indicate a directed broadcast to a particular group if connectivity between the processor groups is via a switch or the value of the routing method <highlight><bold>311</bold></highlight> may indicate that a general broadcast is required on the system bus if the connectivity is via a bus interconnect. Further, routing method <highlight><bold>311</bold></highlight> may specify within each of the above possibilities if the request is directed or broadcast within a specific group. Accordingly, routing method <highlight><bold>311</bold></highlight> may take on the following values: </paragraph>
+<paragraph id="P-0038" lvl="2"><number>&lsqb;0038&rsqb;</number> 00 local broadcast on local interconnect </paragraph>
+<paragraph id="P-0039" lvl="2"><number>&lsqb;0039&rsqb;</number> 01 local direct to specific processor </paragraph>
+<paragraph id="P-0040" lvl="2"><number>&lsqb;0040&rsqb;</number> 10 remote broadcast on system bus </paragraph>
+<paragraph id="P-0041" lvl="2"><number>&lsqb;0041&rsqb;</number> 11 remote directed to specific group and specific processor </paragraph>
+<paragraph id="P-0042" lvl="7"><number>&lsqb;0042&rsqb;</number> The actual configuration of the processing system determines which of the options are actually available. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4A</cross-reference> illustrates the process by which the directional bits of the cache directory are set. The process begins at block <highlight><bold>401</bold></highlight> and then commences to block <highlight><bold>403</bold></highlight> where a first processor (e.g., Processor A<highlight><bold>2</bold></highlight>) snoops an operation from a second processor (e.g., Processor A<highlight><bold>5</bold></highlight>) for a cache line within L2 cache of the first processor. Following the snoop of the operation, the cache line of L2 cache is invalidated (i.e., coherency state set to I) as shown at block <highlight><bold>405</bold></highlight>. Then, the invalidation source bits are set to reflect the identification code for the second processor as indicated at block <highlight><bold>407</bold></highlight>. A determination is then made at block <highlight><bold>409</bold></highlight> whether the snooped processor is a local processor (i.e., a processor on the same node as the snooped processor). If the snooped processor is a local processor, the routing bits are set to indicate route via local 8-way bus as indicated at block <highlight><bold>411</bold></highlight>. Otherwise, the code for transmission to &ldquo;remote processor&rdquo; is stored as the route as indicated at block <highlight><bold>413</bold></highlight> indicating that a broadcast or directed external route (i.e., via the switch) is to be utilized. The process then ends as shown at block <highlight><bold>415</bold></highlight>. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> A specific example is now provided utilizing processor A<highlight><bold>2</bold></highlight> and local processor A<highlight><bold>5</bold></highlight> as the snooping and snooped processors respectively. Processor A<highlight><bold>2</bold></highlight>&apos;s L2 cache has to invalidate an active cache line due to a snoop of an operation from Processor A<highlight><bold>5</bold></highlight>. Invalidation source bit is stored as A<highlight><bold>5</bold></highlight> and source route is stored as the local 8-way bus. When A<highlight><bold>2</bold></highlight> needs to acquire the cache line again, L2 cache directs the bus interface unit (BUI) to route the address locally first. If the L2 cache of Processor A<highlight><bold>5</bold></highlight> has the active/valid cache line, the data is provided locally without going to through the switch. If not, the address is then broadcasted and the data returned from the new source. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> In another example, Processor A<highlight><bold>2</bold></highlight>&apos;s L2 cache has to invalidate an active cache line due to a snoop from non-local Processor G<highlight><bold>3</bold></highlight>. Invalidation source is stored as &ldquo;G<highlight><bold>3</bold></highlight>&rdquo; and the source route is stored as &ldquo;remote SMP G.&rdquo; Re-acquiring the cache line can now be done by either broadcasting the address or routing the address directly to SMP G to save on address bandwidth. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4B</cross-reference> illustrates the process of requesting a cache line that has been invalidated. The process begins at block <highlight><bold>451</bold></highlight> and thereafter proceeds to block <highlight><bold>453</bold></highlight> which illustrates a processor request for a cache line in its L2 cache. A determination is made at block <highlight><bold>455</bold></highlight> whether an invalidate cache miss occurs (i.e., whether the coherency bit of the cache line requested is set to I). If there is not an invalidate cache miss, the request process proceeds as normal as shown at block <highlight><bold>457</bold></highlight>. If, however, an invalidate cache miss occurs, the directional bits are read as shown at block <highlight><bold>457</bold></highlight>. A determination is then made at block <highlight><bold>461</bold></highlight> whether the routing bit indicates a local snooper. If the routing bit indicates a local processor&apos;s operation was snooped, the request is forwarded to the snooping processor via the local 8-way system bus as illustrated at block <highlight><bold>463</bold></highlight>. If, however, the routing bit does not indicate a local processor&apos;s operation was snooped, the request is routed to the external node directly via a switch or indirectly via a broadcast on the system bus as shown at block <highlight><bold>465</bold></highlight>. Then the process ends as shown at block <highlight><bold>467</bold></highlight>. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In one embodiment, the directory may comprise information based on the relative distance from the requesting cache of all other cache&apos;s that hold valid data (e.g., data shared among multiple caches). According to this embodiment, assuming there is shared data in a local cache (or multiple nodes), which is the same as data in a remote cache whose operation was snooped, the processing logic of the invention selects the closest cache and stores that cache&apos;s ID and routing information in the directional bits. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> For example, if the local processor A<highlight><bold>2</bold></highlight> shares a cache line with remote processor G<highlight><bold>3</bold></highlight> and G<highlight><bold>3</bold></highlight> issues an operation that invalidates the cache line of local processor A<highlight><bold>2</bold></highlight>, the directional bits are set to reflect G<highlight><bold>3</bold></highlight> (and appropriate global system routing method). Assuming processor A<highlight><bold>4</bold></highlight> of local processor group later acquires a copy of the modified cache line in G<highlight><bold>3</bold></highlight>, local processor A<highlight><bold>2</bold></highlight> would snoop this transaction and update its directional bits to reflect A<highlight><bold>4</bold></highlight> (and appropriate local system routing method). Thus, local processor A<highlight><bold>2</bold></highlight> continues to snoop operations and update its directional bits accordingly. Thus, it is not necessary for local processor A<highlight><bold>2</bold></highlight> to snoop every operation, and the directional bits are updated solely for those operations that are snooped. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Use of the directional bits thus provides an imprecise tracking mechanism for snoop operations, and the snoop operations are not retried. The invention provides an imprecise, direct address mechanism for a multi-way SMP by dynamically routing the next request to the processor group or node of the last processor whose bus transaction invalidated the cache line. Then, according to one embodiment, a sweep of the specific group may be completed to determine which processor has the cache line modified. The storage of the invalidation source <highlight><bold>309</bold></highlight> and routing method <highlight><bold>311</bold></highlight> is imprecise because the cache that owns the invalid line cannot snoop all transfers. Thus, in the preferred embodiment, since the process is imprecise, retries are not issued when the local processor request sent to the remote processor indicated by the directional bits does not receive a clean response or misses at the cache of the remote processor. Statistically, this occurs very infrequently and the cache is able to acquire the line most efficiently for the system. The invention allows the development of larger SMPs with faster operation due to the elimination (or substantial reduction) of global retries on the system bus by providing somewhat precise histories across different snoopers. Less time is spend retrieving information/data and performance of the system is improved. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> In a related embodiment, when shared data is present in two or more remote nodes, the broadcast is directed to only those nodes that contain the address block in their local caches. This helps to determine how far up and down the cache blocks to send a request. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> While the invention has been particularly shown and described with reference to a preferred embodiment, it will be understood by those skilled in the art that various changes in form and detail may be made therein. It is therefore contemplated that such modifications can be made without departing from the spirit or scope of the present invention as defined in the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for providing directed system response to an invalidation miss at a local processor cache of a data processing system having a plurality of processors, said method comprising: 
+<claim-text>providing directional bits for a cache line of a cache directory of said local processor cache; </claim-text>
+<claim-text>in response to a snoop of an operation that causes a coherency state of said cache line in said local processor cache to go invalid, setting a value of said directional bits to indicate a processor identifier (ID) associated with an origination processor that issued said operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising, responsive to a request for said cache line by an associated local processor, immediately forwarding said request to a processor indicated by said processor ID, whereby said request is forwarded to said origination processor. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said directional bits includes at least one source bit that is utilized to stored said processor ID and at least one route bit that is utilized to indicate a transfer method for forwarding said request for said cache line, wherein said forwarding step further comprises: 
+<claim-text>responsive to a request for said cache line by an associated local processor, immediately forwarding said request to said origination processor via a transfer mechanism indicated by said at least one route bit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein said immediately forwarding step includes first retrieving said processor ID and said routing information from said plurality of bits. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said multiprocessor data processing system comprises at least two nodes of processor groups, and said forwarding of said request includes: 
+<claim-text>first determining that said origination processor belongs to a local processor group that includes said local processor; and </claim-text>
+<claim-text>in response to said determining step, setting said value of said at least one route bit to indicate forwarding via a local transmission mechanism. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein when said local processor is connected via a switch to other processors within said local processor group, said request is forwarded directly to said origination processor, and when said local processor is connected via a local system bus, said request is broadcasted on said local system bus. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising setting said value of said route bit to indicate a global, system-wide bus broadcast when said processor does not belong to said local group. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising setting said value of said routing method to indicate a directed, system-wide bus broadcast when said processor does not belong to said local group and said processor groups are connected via a switch, wherein a specific processor from another processor group is sent the request directly. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising, responsive to a cache miss when said request is transmitted directly to said origination processor, issuing said request to said global system bus. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein said forwarding further includes: 
+<claim-text>storing a value of a closest processor having a valid copy of said cache line within said source bit when more than one processor has a valid copy of said cache line; and </claim-text>
+<claim-text>subsequently forwarding said request to said closest processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A multiprocessor data processing system that provides directed addressing of cache intervention in response to an invalidate, comprising: 
+<claim-text>a plurality of processors, each processor having an associated cache that supports intervention; </claim-text>
+<claim-text>logic associated with a cache directory of at least one local processor cache that: 
+<claim-text>responsive to a snoop of an operation that invalidates a cache line of said local processor cache, updates a directory entry of said cache line to include a processor identifier (ID) of the origination processor, which issued said operation; and </claim-text>
+<claim-text>responsive to a later request from a local processor to access said cache line, immediately forwards said request to a processor indicated by said processor ID, whereby said request is forwarded to said origination processor. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The multiprocessor data processing system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said logic further provides source routing information for said directory entry that is utilized to indicate a transfer method for forwarding said request for said cache line, wherein said logic forwards said request to said origination processor via a transfer mechanism indicated by said source routing information. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The multiprocessor data processing system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further comprising at least two nodes of processor groups, and said logic further includes: 
+<claim-text>means for first determining that said origination processor belongs to a local processor group that includes said local processor; and </claim-text>
+<claim-text>means, responsive to said determining step, for setting said value of said at least one route bit to indicate forwarding via a local transmission mechanism. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The multiprocessor data processing system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein when said local processor is connected via a switch to other processors within said local processor group, said request is forwarded directly to said origination processor, and when said local processor is connected via a local system bus, said request is broadcasted on said local system bus. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The multiprocessor data processing system of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said logic further comprises means for setting said value of said route bit to indicate a global, system-wide bus broadcast when said processor does not belong to said local group. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The multiprocessor data processing system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said logic further comprises means for setting said value of said routing method to indicate a directed, system-wide bus broadcast when said processor does not belong to said local group and said processor groups are connected via a switch, wherein a specific processor from another processor group is sent the request directly. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The multiprocessor data processing system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein said logic further comprises means, responsive to a cache miss when said request is transmitted directly to said origination processor, for issuing said request to said global system bus. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The multiprocessor data processing system of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein said forwarding means further includes means for storing a value of a closest processor having a valid copy of said cache line within said source bit when more than one processor has a valid copy of said cache line. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A memory subsystem of a multiprocessor data processing system comprising: 
+<claim-text>a memory; </claim-text>
+<claim-text>a plurality of caches associated with processors of said multiprocessor data processing system that comprise cache lines in which data is stored; </claim-text>
+<claim-text>a plurality of cache directories each affiliated with a particular one of said plurality of caches, wherein each entry of said cache directory includes a coherency state for each cache line within said particular cache, an address tag, and directional bits, which indicates an origination processor whose cache contains a valid copy of data when said coherency state of said cache line is the invalidate state, wherein an operation that caused said cache line to be invalidated was issued by the origination processor; and </claim-text>
+<claim-text>logic, responsive to a receipt of a request for said cache line, for forwarding a request for said cache line from an associated local processor to an origination processor indicated by said directional bits. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein said logic includes: 
+<claim-text>means, responsive to a snoop of an operation that invalidates a cache line of said local processor cache, for updating a directory entry of said cache line to include a processor identifier (ID) of the origination processor, which issued said operation; and </claim-text>
+<claim-text>means, responsive to a later request from a local processor to access said cache line, for immediately forwarding said request to a processor indicated by said processor ID, whereby said request is forwarded to said origination processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said logic further provides source routing information for said directory entry that is utilized to indicate a transfer method for forwarding said request for said cache line, wherein said logic forwards said request to said origination processor via a transfer mechanism indicated by said source routing information. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein said multiprocessor data processing system comprising at least two nodes of processor groups, and said logic further includes: 
+<claim-text>means for first determining that said origination processor belongs to a local processor group that includes said local processor; and </claim-text>
+<claim-text>means, responsive to said determining step, for setting said value of said at least one route bit to indicate forwarding via a local transmission mechanism. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein when said local processor is connected via a switch to other processors within said local processor group, said request is forwarded directly to said origination processor, and when said local processor is connected via a local system bus, said request is broadcasted on said local system bus. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein said logic further comprises means for setting said value of said route bit to indicate a global, system-wide bus broadcast when said processor does not belong to said local group. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference>, wherein said logic further comprises means for setting said value of said routing method to indicate a directed, system-wide bus broadcast when said processor does not belong to said local group and said processor groups are connected via a switch, wherein a specific processor from another processor group is sent the request directly. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein said logic further comprises means, responsive to a cache miss when said request is transmitted directly to said origination processor, for issuing said request to said global system bus. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The memory subsystem of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein said forwarding means further includes means for storing a value of a closest processor having a valid copy of said cache line within said source bit when more than one processor has a valid copy of said cache line.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1A</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005236A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005236A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005236A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005236A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

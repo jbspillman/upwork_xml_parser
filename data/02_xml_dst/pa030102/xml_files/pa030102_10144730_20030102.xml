@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002589A1-20030102-D00000.TIF SYSTEM "US20030002589A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002589A1-20030102-D00001.TIF SYSTEM "US20030002589A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002589A1-20030102-D00002.TIF SYSTEM "US20030002589A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002589A1-20030102-D00003.TIF SYSTEM "US20030002589A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030002589A1-20030102-D00004.TIF SYSTEM "US20030002589A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030002589A1-20030102-D00005.TIF SYSTEM "US20030002589A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002589</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10144730</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020515</filing-date>
+</domestic-filing-data>
+<foreign-priority-data>
+<priority-application-number>
+<doc-number>2001-197064</doc-number>
+</priority-application-number>
+<filing-date>20010628</filing-date>
+<country-code>JP</country-code>
+</foreign-priority-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L027/20</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>H04L027/12</ipc>
+</classification-ipc-secondary>
+<classification-ipc-secondary>
+<ipc>H04L027/04</ipc>
+</classification-ipc-secondary>
+<classification-ipc-secondary>
+<ipc>H04L027/00</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>375</class>
+<subclass>259000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>375</class>
+<subclass>295000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Serial communication circuit and serial transmitting and receiving system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Kotaro</given-name>
+<family-name>Suzuki</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Hyogo</city>
+<country-code>JP</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Takeshi</given-name>
+<family-name>Fujii</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Hyogo</city>
+<country-code>JP</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Platon N. Mandros</name-1>
+<name-2>BURNS, DOANE, SWECKER &amp; MATHIS, L.L.P.</name-2>
+<address>
+<address-1>P.O. BOX 1404</address-1>
+<city>Alexandria</city>
+<state>VA</state>
+<postalcode>22313-1404</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">To eliminates the need for synchronization of operating clocks with each other in serial communications between the semiconductor integrated circuit at the transmitting and receiving sides. In the reloading control unit of the circuit at the transmitting side, a second reloading register is set in a timer after setting a first reloading register when DATA&equals;0, while when DATA&equals;1, the first reloading register is set in the timer after setting the second reloading register. Accordingly, waveforms having different duty ratios are outputted. In the data converting circuit of the circuit at the receiving side, the waveforms are converted into &ldquo;0&rdquo;, &ldquo;1&rdquo; based on the ratio of the H,L level periods of each waveform to supply them to a serial I/O. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates to a serial communication circuit incorporated in transmitting and receiving sides of a microcomputer or the like for serially transmitting and receiving data and a serial transmitting and receiving system consisting of transmitting and receiving sides, and more particularly to a serial communication circuit and a serial transmitting and receiving system operable without relying on clock synchronization between the transmitting and receiving sides. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a connection diagram of a conventional two-wire serial communication circuit. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, the serial communication circuit comprises a semiconductor integrated circuit at the transmitting side <highlight><bold>101</bold></highlight>; a semiconductor integrated circuit at the receiving side <highlight><bold>102</bold></highlight>. &ldquo;A&rdquo; represents a signal line; &ldquo;B&rdquo; a data line; and &ldquo;PORT&rdquo;, &ldquo;TxD&rdquo;, and &ldquo;RxD&rdquo; terminal. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Next, the operation of a conventional two-wire serial communication circuit will be described. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The semiconductor integrated circuit <highlight><bold>101</bold></highlight> at the transmitting side sends a signal from the PORT for controlling communications, and outputs data to be transmitted from the TxD. On the other hand, the semiconductor integrated circuit <highlight><bold>102</bold></highlight> at the receiving side receives the signal input from the PORT for controlling the communications, and the data to be received from the RxD. The signal of the signal line A permits data transmission/reception only during an &ldquo;H&rdquo; period. The data line B carries data to be transmitted/received between the two semiconductor integrated circuits <highlight><bold>101</bold></highlight>,<highlight><bold>102</bold></highlight>. The semiconductor integrated circuits <highlight><bold>101</bold></highlight>,<highlight><bold>102</bold></highlight> are both operated respectively based on independent oscillation circuits. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> It should be noted that these circuits <highlight><bold>101</bold></highlight>,<highlight><bold>102</bold></highlight> are operated at substantially equal frequencies within an error tolerance defined in specifications. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a timing chart of the two-wire serial communication circuit. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 7</cross-reference>, &ldquo;PORT&rdquo; represents the signal line A of <cross-reference target="DRAWINGS">FIG. 6</cross-reference>; &ldquo;CLK 1&rdquo; an operating clock at the transmitting side; &ldquo;DATA&rdquo; the data line B of <cross-reference target="DRAWINGS">FIG. 6</cross-reference>; and &ldquo;CLK 2&rdquo; an operating clock at the receiving side. As can be seen from the chart, phases of waveforms between the CLK <highlight><bold>1</bold></highlight> and the CLK <highlight><bold>2</bold></highlight> are slightly shifted. The semiconductor integrated circuit <highlight><bold>102</bold></highlight> at the receiving side fetches the DATA at the trailing edge of the CLK <highlight><bold>2</bold></highlight>. Thus, there is a possibility that a malfunction will be broken if the data is fetched at the trailing edge of the CLK <highlight><bold>2</bold></highlight> when a phase of the CLK <highlight><bold>1</bold></highlight> is shifted therefrom during the unsettled state of data, for example at a point C of <cross-reference target="DRAWINGS">FIG. 7</cross-reference>. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> However, there has been a problem that, since the conventional serial transmission circuit is configured as above, a communication error could be occurred at the semiconductor integrated circuit at the receiving side during the unsettled state of data, a clock synchronization being needed between the semiconductor integrated circuits at the receiving and transmitting sides to avoid the occurrence of the communication error. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The present invention has been made to solve the above problems, and it is an object of the invention to provide a serial communication circuit and a serial transmitting and receiving system for accomplishing serial communications without relying on clock synchronization between the semiconductor integrated circuits at the receiving and transmitting sides. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> A serial communication circuit according to the invention comprises two or more reloading registers in which given data are being stored, respectively; a first counting means for counting a first data and a second data as the given data set from the reloading registers so as to generate a duty ratio of serial data to be transmitted; and data converting means for converting serial data into waveforms having the duty ratio generated by the first counting means to transmit the waveforms. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A serial communication circuit according to the invention comprises a second counting means for counting a first and a second level periods when the waveforms transmitted from the transmitting side: and comparing means for comparing the counted values of the first and second level periods with each other by the second counting means </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> A serial transmitting and receiving system according to the invention comprises two or more reloading registers in which given data are being stored, respectively; a first counting means for counting a first data and a second data as the given data set from the reloading registers so as to generate a duty ratio of serial data to be transmitted; data converting means for converting serial data into waveforms having the duty ratio generated by the first counting means to transmit the waveforms; a second counting means for counting a first and a second level periods when the waveforms transmitted from the data converting means: and comparing means for comparing the counted values of the first and second level periods with each other by the second counting means. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The first counting means starts a counting operation of the second data after a counting operation of the first data has finished. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The duty ratio is a value other than 1:1. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The first level period is H level, and the second level period is L level. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Further comprising reloading register control means for setting the stored values in the corresponding reloading registers, based on a level of a serial data. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A serial communication circuit according to the invention comprises two or more reloading registers in which given data are being stored, respectively; a first counting means for counting a first data and a second data as the given data which are set from the reloading registers so as to generate a duty ratio for serial data to be transmitted; data converting means for converting serial data into waveforms having the duty ratio generated by the first counting means to transmit the waveforms; and control means for controlling writing operation of data to be stored in the reloading registers. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> A serial transmitting and receiving system comprises two or more reloading registers in which given data are being stored, respectively; a first counting means for counting a first data and a second data as the given data which are set from the reloading registers so as to generate a duty ratio for serial data to be transmitted; data converting means for converting serial data into waveforms having the duty ratio generated by the first counting means to transmit the waveforms; a second counting means for counting a first and a second level periods when the waveforms transmitted from the data converting means: comparing means for comparing the counted values of the first and second level periods with each other by the second counting means; and control means for controlling writing operation of data to be stored in the reloading registers. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Each of the reloading register has a reading/writing function. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The circuit further comprises error recognition means for recognizing a communication error of received data based on the result of the comparing means when a duty ratio of the received data as a waveform ratio, gets worse than a fixed value.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram showing a configuration of a serial communication circuit according to a first embodiment of the present invention. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a timing chart showing an example of data outputted to a signal line F of the circuit shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram showing a specific example of a received data converting circuit. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram showing a specific example of a semiconductor integrated circuit at the transmitting side according to a second embodiment of the invention. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a block diagram showing a specific example of a semiconductor integrated circuit at the receiving side according to a third embodiment of the invention. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram showing a connection example of a conventional two-wire serial communication circuit. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> is a timing chart of communications of the conventional two-wire serial communication circuit.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Throughout the figures, the same reference numerals, and characters, unless otherwise noted, are used to denote like features, elements, components, or portions of the illustrated embodiments. </paragraph>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The preferred embodiments of the present invention will be described in detail with reference to the attached drawings. </paragraph>
+</section>
+<section>
+<heading lvl="1">First Embodiment </heading>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram showing a serial communication circuit according to a first embodiment of the invention. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> semiconductor integrated circuit <highlight><bold>1</bold></highlight> at the transmitting side comprises a serial data transmission circuit <highlight><bold>3</bold></highlight>; a reloading register control circuit (control means) <highlight><bold>4</bold></highlight>; reloading registers <highlight><bold>5</bold></highlight>,<highlight><bold>6</bold></highlight>, in which fixed values &ldquo;01H&rdquo;, &ldquo;03H&rdquo; are respectively set, a timer <highlight><bold>7</bold></highlight>, and a waveform output circuit (data converting means) <highlight><bold>8</bold></highlight>. The semiconductor integrated circuit <highlight><bold>1</bold></highlight> at the transmitting side transmits a serial data through signal lines D, E and so on. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> On the other hand, a semiconductor integrated circuit <highlight><bold>2</bold></highlight> at the receiving side comprises a received data converting circuit (second counting means and comparing means) <highlight><bold>9</bold></highlight>; and a serial data receiving circuit <highlight><bold>10</bold></highlight>. The semiconductor integrated circuit <highlight><bold>2</bold></highlight> at the receiving side receives the serial data transmitted from the transmitting side through signal lines F, G and so on. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> In the semiconductor integrated circuit <highlight><bold>1</bold></highlight> at the transmitting side, the serial data transmission circuit <highlight><bold>3</bold></highlight> is a communication circuit of a clock synchronous type. Data more than 2 bits to be sent are transmitted as binary data by shifting by 1 bit from higher bits (or lower bits). The reloading register control circuit <highlight><bold>4</bold></highlight> first sets the data &ldquo;03H&rdquo; of the reloading register <highlight><bold>5</bold></highlight> in the timer <highlight><bold>7</bold></highlight> when the timer <highlight><bold>7</bold></highlight> underflows during data input through the signal line D is at a first level, i.e., &ldquo;H&rdquo; (or &ldquo;1&rdquo;), and then sets the data &ldquo;01H&rdquo; of the reloading register <highlight><bold>6</bold></highlight> in the timer <highlight><bold>7</bold></highlight> when the timer <highlight><bold>7</bold></highlight> underflows. When data input through the signal line D is at a second level, i.e., &ldquo;L&rdquo; (or &ldquo;0&rdquo;), the reloading register control circuit <highlight><bold>4</bold></highlight> first sets the data of the reloading register <highlight><bold>6</bold></highlight> in the timer <highlight><bold>7</bold></highlight> when the timer <highlight><bold>7</bold></highlight> underflows, and then sets the data of the reloading register <highlight><bold>5</bold></highlight> in the timer <highlight><bold>7</bold></highlight> when the timer <highlight><bold>7</bold></highlight> underflows. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In sum, the reloading register <highlight><bold>5</bold></highlight> sets a fixed value &ldquo;03H&rdquo; in the timer <highlight><bold>7</bold></highlight> in response to a command issued from the reloading register control circuit <highlight><bold>4</bold></highlight>. In addition, the reloading register <highlight><bold>6</bold></highlight> sets a fixed value &ldquo;01H&rdquo; in the timer <highlight><bold>7</bold></highlight> in response to a command issued from the reloading register control circuit <highlight><bold>4</bold></highlight>. The timer <highlight><bold>7</bold></highlight> counts down the set data, and then the data set from the corresponding reloading registers <highlight><bold>5</bold></highlight>,<highlight><bold>6</bold></highlight> when the timer underflows. The waveform output circuit <highlight><bold>8</bold></highlight> inverts data in response to an underflow signal from the timer <highlight><bold>7</bold></highlight>, and outputs the inverted data as serial communication data. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> On the other hand, in the semiconductor integrated circuit <highlight><bold>2</bold></highlight> at the receiving side, the received data converting circuit <highlight><bold>9</bold></highlight> includes a timer <highlight><bold>11</bold></highlight> and a comparator <highlight><bold>14</bold></highlight> (described later). The duration of the H,L periods of data input through the signal line F are counted by the timer <highlight><bold>11</bold></highlight>. The count values of the H,L periods are compared with each other by the comparator <highlight><bold>14</bold></highlight>. If the H period is longer, then the data is outputted as binary data &ldquo;1&rdquo;. Otherwise, then the data is outputted as binary data &ldquo;0&rdquo;. Then, transmitted data are received as binary data by shifting by 1 bit from higher bits by the serial data receiving circuit <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Next, the operation of the first embodiment will be described. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> In the semiconductor integrated circuit <highlight><bold>1</bold></highlight> at the transmitting side, first, the data of &ldquo;H&rdquo; input from the serial data transmission circuit <highlight><bold>3</bold></highlight> through the signal line D is recognized by the reloading register control circuit <highlight><bold>4</bold></highlight>. Accordingly, the data &ldquo;03H&rdquo; of the reloading register <highlight><bold>5</bold></highlight> is set in the timer <highlight><bold>7</bold></highlight>, and counts down by the timer <highlight><bold>7</bold></highlight>. When the timer <highlight><bold>7</bold></highlight> underflows, the data &ldquo;01H&rdquo; of the reloading register <highlight><bold>6</bold></highlight> is set in the timer <highlight><bold>7</bold></highlight>, and counts down by the timer <highlight><bold>7</bold></highlight>. Thus, the data of &ldquo;H&rdquo; fed through the signal line D is outputted as a signal of a duty ratio of 3:1 through the signal line F. The duty ratio means the rate of an &ldquo;H&rdquo; or &ldquo;L&rdquo; input period occupying one data cycle. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> On the other hand, in the semiconductor integrated circuit <highlight><bold>2</bold></highlight> at the receiving side, the signal of the duty ratio 3:1 input through the signal line F, the &ldquo;H&rdquo; period of one cycle is counted by the timer <highlight><bold>11</bold></highlight> or the like in the received data converting circuit <highlight><bold>9</bold></highlight>, and the counted result is held therein. Then, an &ldquo;L&rdquo; period is counted by the same means. These two counted results are in turn compared with each other to determine which is longer. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> If the result of the comparison shows that the &ldquo;H&rdquo; period is longer, the data is converted into 1 bit data of &ldquo;H&rdquo;. Otherwise, then the data is converted into 1 bit data of &ldquo;L&rdquo;. The converted data is input through the signal line G to the serial data receiving circuit <highlight><bold>10</bold></highlight>, and the reception of 1 bit data is finished. By repeating this process by 8 bits, 8 bit data can be transferred. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a timing chart showing an example of data outputted to the signal line of the circuit shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> specifically shows a waveform outputted from the waveform output circuit <highlight><bold>8</bold></highlight> to the signal line F when data transmitted through the signal line D is &ldquo;0110&rdquo;. In <cross-reference target="DRAWINGS">FIG. 2</cross-reference> the duration of the waveforms is of ratios a:b&equals;1:3 and c:d&equals;3:1. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram showing a specific example of the received data converting circuit <highlight><bold>9</bold></highlight>. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the received data converting circuit <highlight><bold>9</bold></highlight> comprises a timer <highlight><bold>11</bold></highlight>; registers <highlight><bold>12</bold></highlight>,<highlight><bold>13</bold></highlight>; a comparator <highlight><bold>14</bold></highlight>. This received data converting circuit <highlight><bold>9</bold></highlight> counts the &ldquo;H&rdquo; period of data input through the signal line F by the timer <highlight><bold>11</bold></highlight>, and stores the counted value in the register <highlight><bold>12</bold></highlight>. The received data converting circuit <highlight><bold>9</bold></highlight> also counts the &ldquo;L&rdquo; period of the data input through the signal line F by the timer <highlight><bold>11</bold></highlight>, and stores the counted value in the register <highlight><bold>13</bold></highlight>. Then, the data are input through signal lines J,K to the comparator <highlight><bold>14</bold></highlight>. The values of the registers <highlight><bold>12</bold></highlight>,<highlight><bold>13</bold></highlight> are compared with each other by the comparator <highlight><bold>14</bold></highlight> to determine which is longer. If the value of the register <highlight><bold>12</bold></highlight> is larger, then &ldquo;1&rdquo; is outputted; otherwise &ldquo;0&rdquo; is outputted. Then, the outputted data is fed as serial data to the signal line G. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> As mentioned above, according to the first embodiment, the use of the serial communication circuit enables communications between the semiconductor integrated circuits at the transmitting and receiving sides, even if communication speeds are not decided beforehand by the operating clocks at the transmitting and receiving sides. Further, communications can be carried out irrespective of the operating clock at the receiving side, even when the serial communication circuit is operated by using a circuit, e.g., a ring oscillator, which causes oscillation frequency to be changed by voltage fluctuation. </paragraph>
+</section>
+<section>
+<heading lvl="1">Second Embodiment </heading>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram showing a specific example of the semiconductor integrated circuit at the transmitting side according to a second embodiment of the invention. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the semiconductor integrated circuit <highlight><bold>1</bold></highlight>&prime; comprises a CPU <highlight><bold>15</bold></highlight> as a logical operation circuit in the semiconductor integrated circuit; a serial data transmission circuit <highlight><bold>3</bold></highlight>; a reloading register control circuit <highlight><bold>4</bold></highlight>; reloading registers <highlight><bold>5</bold></highlight>, <highlight><bold>6</bold></highlight>; a timer <highlight><bold>7</bold></highlight>; and a waveform output circuit <highlight><bold>8</bold></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> This embodiment is directed to one in which there is added a CPU <highlight><bold>15</bold></highlight> (control means) to the above first embodiment shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> and a set value is written in the reloading registers <highlight><bold>5</bold></highlight>,<highlight><bold>6</bold></highlight>. In this embodiment, the configuration and operation of the semiconductor integrated circuit at the receiving side is the same as those of the semiconductor integrated circuit <highlight><bold>2</bold></highlight>, and thus description thereof will be omitted. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> Next, the operation of the second embodiment will be described. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> In the circuitry shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the basic operation of the serial data transmission circuit <highlight><bold>3</bold></highlight>, the reloading register control circuit <highlight><bold>4</bold></highlight>, the reloading registers <highlight><bold>5</bold></highlight>,<highlight><bold>6</bold></highlight>, the timer <highlight><bold>7</bold></highlight> and the waveform output circuit <highlight><bold>8</bold></highlight> are the same as those of the first embodiment, and thus only the operation which is different from that of the first embodiment will be described below. Implementation of a reading/writing function by software enables the CPU <highlight><bold>15</bold></highlight> to write set values respectively in the reloading registers <highlight><bold>5</bold></highlight>,<highlight><bold>6</bold></highlight> through signal lines L,M. Accordingly, it is possible to change the duty ratio 3:1 of the output signal from the waveform output circuit <highlight><bold>8</bold></highlight> illustrated in the first embodiment to another one depending on the use condition of a user. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> As mentioned above, according to the second embodiment, optimal communication accuracy can be maintained, even if external factors cause fluctuation in the operating clock. </paragraph>
+</section>
+<section>
+<heading lvl="1">Third Embodiment </heading>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a block diagram showing a specific example of the semiconductor integrated circuit <highlight><bold>9</bold></highlight> at the receiving side according to a third embodiment of the invention. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, the semiconductor integrated circuit <highlight><bold>9</bold></highlight>&prime; comprises a timer <highlight><bold>11</bold></highlight>; registers <highlight><bold>12</bold></highlight>,<highlight><bold>13</bold></highlight>; a comparator <highlight><bold>14</bold></highlight>. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> This embodiment is directed to one in which there is provided error recognition means, in the comparator <highlight><bold>14</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, for outputting an error signal to an external unit (not shown) if a given duty ratio is not satisfied. In this embodiment, the semiconductor integrated circuit at the transmitting side is the same as that of the foregoing first or second embodiment, and thus description about the configuration and operation thereof will be omitted. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Next, the operation of the third embodiment will be described. Since the basic operation is similar to that of the first embodiment, only the operation which is different from the first embodiment will be described below. In the circuitry shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, if the duty ratio of the data of the signal line F is not reached to a fixed ratio or higher when it is fetched into the received data converting circuit <highlight><bold>9</bold></highlight>, the comparator <highlight><bold>14</bold></highlight> that has achieved this duty ratio is provided with the error recognition means therein for outputting an error signal to a signal line N. This error signal is fed to the comparator <highlight><bold>14</bold></highlight> or the external unit to feed back therefrom. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> Alternatively, the error recognition means may be separately provided. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> As mentioned above, according to the third embodiment, no communication errors are produced, and a malfunction caused by the communication error of the semiconductor integrated circuit can be prevented. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> The advantages of the present invention can be summarized as follows. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> The invention allows communications even when the operating clocks of the integrated circuits at the transmitting and receiving sides are out of synchronization with each other. This realizes serial communications without relaying on any synchronization between the operating clocks of the semiconductor integrated circuits at the receiving and transmitting sides. Therefore, the data converting means converts serial data into the waveforms having different duty ratios based on the duty ratio generated by the first counting means, and then transmits the waveforms. The second counting means counts the first and second level periods of each waveform, and then comparator compares the counted value of the first and second level periods with each other. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> The invention converts the serial data into the waveforms having different duty ratios, which are not subject to the operating clocks. Therefore, the control means sets the set value of the corresponding reloading register in the first counting means based on the level of serial data. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The invention permits communications even when the operating clocks between the transmitting and receiving sides are out of synchronization with each other. This actualizes serial communications without relaying on any synchronization between the operating clocks of the semiconductor integrated. Therefore, the data converting means converts serial data into the waveforms having different duty ratios based on the duty ratio generated by the first counting means, and then transmits the waveforms. The second counting means counts the first and second level periods of each waveform, and then comparator compares the counted value of the first and second level periods with each other. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The invention optionally changes the duty ratio of the first and second level periods or the waveform ratio, and deals with fluctuation in the operating clocks caused by external factors. Therefore, the invention comprises the control means for controlling writing of data stored in the reloading registers and the reloading register has the rearing/writing function. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> The invention prevents a malfunction caused by the communication error of the semiconductor integrated circuit. Therefore, the invention comprises the error recognition means for recognizing a communication error of received data based on the comparison result of the comparing means when the waveform ratio of the data gets worse than a fixed value. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> While in each of the foregoing first to third embodiments, two reloading registers <highlight><bold>5</bold></highlight>,<highlight><bold>6</bold></highlight> (or registers <highlight><bold>12</bold></highlight>,<highlight><bold>13</bold></highlight>) are adopted, three or more reloading registers may be used without restricting the invention to the foregoing embodiments. This offers more accurate serial communications. It should be understood by those skilled in the art that various modifications and changes may be made without departing from the sprit and scope of the invention. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Also, it should be noted that the invention meets all the objects mentioned above and also has the advantages of wide commercial utility, and that the invention has been set forth for purposes of illustration only and not of limitation. That is, the invention is limited only by the following claims which follow. Consequently, reference should be made to the following claims in determining the full scope of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A serial communication circuit for performing serial communications between semiconductor integrated circuit at the transmitting and receiving sides comprising: 
+<claim-text>two or more reloading registers in which given data are being stored, respectively; </claim-text>
+<claim-text>a first counting means for counting a first data and a second data as said given data set from said reloading registers so as to generate a duty ratio of serial data to be transmitted; and </claim-text>
+<claim-text>data converting means for converting serial data into waveforms having the duty ratio generated by said first counting means to transmit the waveforms. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A serial communication circuit for performing serial communications between semiconductor integrated circuit at the transmitting and receiving sides comprising: 
+<claim-text>a second counting means for counting a first and a second level periods when the waveforms transmitted from said transmitting side: and </claim-text>
+<claim-text>comparing means for comparing the counted values of the first and second level periods with each other by said second counting means. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A serial transmitting and receiving system for performing serial communications between semiconductor integrated circuit at the transmitting and receiving sides comprising: 
+<claim-text>two or more reloading registers in which given data are being stored, respectively; </claim-text>
+<claim-text>a first counting means for counting a first data and a second data as said given data set from said reloading registers so as to generate a duty ratio of serial data to be transmitted; </claim-text>
+<claim-text>data converting means for converting serial data into waveforms having the duty ratio generated by said first counting means to transmit the waveforms; </claim-text>
+<claim-text>a second counting means for counting a first and a second level periods when the waveforms transmitted from said data converting means: and </claim-text>
+<claim-text>comparing means for comparing the counted values of the first and second level periods with each other by said second counting means. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The serial communication circuit according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said first counting means starts a counting operation of said second data after a counting operation of said first data has finished. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The serial communication circuit according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said duty ratio is a value other than 1:1. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The serial communication circuit according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said first level period is H level, and said second level period is L level. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The serial communication circuit according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising reloading register control means for setting the stored values in said corresponding reloading registers, based on a level of a serial data. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A serial communication circuit for performing serial communications between semiconductor integrated circuit at the transmitting and receiving sides comprising: 
+<claim-text>two or more reloading registers in which given data are being stored, respectively; </claim-text>
+<claim-text>a first counting means for counting a first data and a second data as said given data which are set from said reloading registers so as to generate a duty ratio for serial data to be transmitted; </claim-text>
+<claim-text>data converting means for converting serial data into waveforms having the duty ratio generated by said first counting means to transmit the waveforms; and </claim-text>
+<claim-text>control means for controlling writing operation of data to be stored in said reloading registers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A serial transmitting and receiving system for performing serial communications between semiconductor integrated circuit at the transmitting and receiving sides comprising: 
+<claim-text>two or more reloading registers in which given data are being stored, respectively; </claim-text>
+<claim-text>a first counting means for counting a first data and a second data as said given data which are set from said reloading registers so as to generate a duty ratio for serial data to be transmitted; </claim-text>
+<claim-text>data converting means for converting serial data into waveforms having the duty ratio generated by said first counting means to transmit the waveforms; </claim-text>
+<claim-text>a second counting means for counting a first and a second level periods when the waveforms transmitted from said data converting means: </claim-text>
+<claim-text>comparing means for comparing the counted values of the first and second level periods with each other by said second counting means; and </claim-text>
+<claim-text>control means for controlling writing operation of data to be stored in said reloading registers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The serial communication circuit according to <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein each of said reloading register has a reading/writing function. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The serial communication circuit according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the circuit further comprises error recognition means for recognizing a communication error of received data based on the result of said comparing means when a duty ratio of the received data as a waveform ratio, gets worse than a fixed value.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002589A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002589A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002589A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002589A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030002589A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030002589A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

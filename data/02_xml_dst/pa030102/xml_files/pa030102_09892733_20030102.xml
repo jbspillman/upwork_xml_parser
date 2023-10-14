@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004994A1-20030102-D00000.TIF SYSTEM "US20030004994A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004994A1-20030102-D00001.TIF SYSTEM "US20030004994A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004994A1-20030102-D00002.TIF SYSTEM "US20030004994A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004994A1-20030102-D00003.TIF SYSTEM "US20030004994A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004994</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892733</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F017/21</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>513000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and apparatus for content based HTML coding</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Brian</given-name>
+<middle-name>J.</middle-name>
+<family-name>Kamrowski</family-name>
+</name>
+<residence>
+<residence-us>
+<city></city>
+<state></state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Steven</given-name>
+<middle-name>P.</middle-name>
+<family-name>Poulsen</family-name>
+</name>
+<residence>
+<residence-us>
+<city></city>
+<state></state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>ANTONELLI TERRY STOUT AND KRAUS</name-1>
+<name-2></name-2>
+<address>
+<address-1>SUITE 1800</address-1>
+<address-2>1300 NORTH SEVENTEENTH STREET</address-2>
+<city>ARLINGTON</city>
+<state>VA</state>
+<postalcode>22209</postalcode>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Method and apparatus for content based HyperText Markup Language (HTML) coding. A computing device such as a server may include an HTML simplifier, encoder, and memory. Source HTML data may be accessed that presents HTML web pages. The HTML data is simplified. The simplification minimizes the size of the HTML data. Prior knowledge of the HTML data may be used during the simplification. The simplified HTML data is encoded using a Huffman code. The encoded/compressed HTML data is stored. HTML data is encoded/compressed based on an empirical study of common HTML pages, therefore, providing optimization and performance gains. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates to HyperText Markup Language (HTML), and more specifically to content based compression of HTML. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Background Information </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> With the Internet increasing in popularity and use, more and more individuals, corporations and organizations are developing and making available web pages for access by users at client machines. These web pages generally reside at servers that receive requests from client machines for access these web pages. Browsers at client machines receive the web pages from the server for display at the client machine. The web pages may have been created using HyperText Mark-up Language (HTML) or Extensible Mark-up Language (XML), and may be transmitted from the server to the client machine using Hypertext Transfer Protocol (HTTP). </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Most HTTP data transmitted from a web server to a client browser is standard HTML ASCII (American Standard Code for Information Interchange) text. One or more bytes of the HTTP data represent each character of the HTML source. With this current approach, no HTML specific optimization is performed. Therefore, Internet bandwidth is wasted since HTML data is highly compressible. Web server resources are also wasted because a unique web server port is opened for each client. The port remains open during the entire HTTP session. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Compressed (i.e., coded) HTML is discussed in RFC 2068 &sect;3.5. This document includes various forms of widely used compression algorithms. However, the compression algorithms referenced in RFC 2068 are very generic and not tailored for HTML. They do not leverage several potential size and performance gains achievable with HTML.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The present invention is further described in the detailed description which follows in reference to the noted plurality of drawings by way of non-limiting examples of embodiments of the present invention in which like reference numerals represent similar parts throughout the several views of the drawings and wherein: </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a block diagram of a server according to an example embodiment of the present invention; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a flowchart of an example process for content based HTML coding according to an example embodiment of the present invention; and </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows a flowchart of an example simplification process according to an example embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The particulars shown herein are by way of example and for purposes of illustrative discussion of the embodiments of the present invention. The description taken with the drawings make it apparent to those skilled in the art how the present invention may be embodied in practice. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Further, arrangements may be shown in block diagram form in order to avoid obscuring the invention, and also in view of the fact that specifics with respect to implementation of such block diagram arrangements is highly dependent upon the platform within which the present invention is to be implemented, i.e., specifics should be well within purview of one skilled in the art. Where specific details (e.g., circuits, flowcharts) are set forth in order to describe example embodiments of the invention, it should be apparent to one skilled in the art that the invention can be practiced without these specific details. Finally, it should be apparent that any combination of hard-wired circuitry and software instructions can be used to implement embodiments of the present invention, i.e., the present invention is not limited to any specific combination of hardware circuitry and software instructions. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Although example embodiments of the present invention may be described using an example system block diagram in an example host unit environment, practice of the invention is not limited thereto, i.e., the invention may be able to be practiced with other types of systems, and in other types of environments. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Reference in the specification to &ldquo;one embodiment&rdquo; or &ldquo;an embodiment&rdquo; means that a particular feature, structure, or characteristic described in connection with the embodiment is included in at least one embodiment of the invention. The appearances of the phrase &ldquo;in one embodiment&rdquo; in various places in the specification are not necessarily all referring to the same embodiment. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The present invention relates to method and apparatus for content based HTML coding where prior knowledge of source HTTP data may be leveraged and used to compress the HTTP data for more efficient storage and transmission to a client machine. HTML data is simplified and then encoded using a Huffman code to provide increased performance gains and optimization of the HTML data. The encoded data may then be stored in memory, e.g., a cache, at a web server until the web pages or content represented by the HTML data is requested by a client machine. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The simplification of HTML data may include any or all of several processes. Each character of a U.S. English web page may be represented with a small amount data. The only necessary ASCII characters may be A-Z, a-z, 0-9, and several punctuation characters. Infrequent characters may be represented with known Universal Resource Locator (URL) escaped notation. For example, the character &ldquo;&circ; &rdquo; is rarely used and, therefore, may be represented by its ASCII hexadecimal value %5e. Case may be ignored for several elements of an HTML page. Moreover, white space (blank spaces) and comments may be removed. HTML pages are written with a mark-up language. Therefore, the grammar of the language may be used in the compression. For example, the most common element found in an HTML page is &lt;A href&equals;&Prime;&gt;. This entire element may be replaced by a single value and the element rebuilt when the page is uncompressed. Elements inside of HTML tags may be reordered to match the coding symbols. This does not alter the functionality or appearance of the rendered HTML page. An entire byte value is not required for each HTML character and, therefore, multiple characters may be encoded into a single byte. For example, the term &lt;A href&equals;&Prime;&gt; that consists of multiple characters, may be simplified (e.g., encoded) into a single byte. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The simplified HTML data may then be encoded. Although, many encoders may be used and still be within the spirit and scope of the present invention, use of a Huffman code is advantageous for the coding of HTML data. A Huffman code may be generated empirically by analyzing thousands of industry standard HTML pages. A brute force iterative method may be employed to produce the ideal code. A Huffman code produces a tree structure with the encoding of the data. The most frequently occurring data and data patterns occur at the top of the tree. The least occurring data is at the bottom of the tree. HTML is encoded by parsing the tree. A common HTML string may be represented with a few bits rather than several bytes. After Huffman encoding, the HTML data is represented in binary format. The Huffman tree may not be communicated between clients and a server since each network device may contain its own copy. Moreover, multiple Huffman codes may be utilized. In one embodiment of the present invention, only the source HTML data may be compressed, and not images or text data outside of HTML tags. The HTML source data may be converted to some normalized set of data before the HTML data is compressed, therefore, providing a smaller Huffman tree that compresses the same amount of information. Therefore, optimization may be within the HTML tags. Further, attributes within the HTML data may be reordered to get better pattern matches. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a block diagram of a server according to an example embodiment of the present invention. Server <highlight><bold>10</bold></highlight> may include an HTML simplification processor <highlight><bold>20</bold></highlight>, an encoder <highlight><bold>30</bold></highlight>, a decoder <highlight><bold>40</bold></highlight>, and a storage device such as a cache <highlight><bold>50</bold></highlight>. Server <highlight><bold>10</bold></highlight> may be a host for web pages and a particular web site. The HTML that represents the web pages, after having been created by a developer, may be simplified in simplification processor <highlight><bold>20</bold></highlight>. This result may then be compressed by generating a Huffman code of the simplified HTML data by encoder <highlight><bold>30</bold></highlight>. The result of the Huffman coding represents an encoded version of the HTML data. The compressed/encoded HTML data represents the web pages and may then be stored in cache <highlight><bold>50</bold></highlight>. The function of HTML simplification processor <highlight><bold>20</bold></highlight>, encoder <highlight><bold>30</bold></highlight>, and decoder <highlight><bold>40</bold></highlight> may be performed by hardware, in software, or by a combination thereof. Server <highlight><bold>10</bold></highlight> may also include a network interface for interfacing to client or other computing devices desiring access to the HTML data or content. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> A client machine desiring access to the web site hosted by server <highlight><bold>10</bold></highlight> may make a request to server <highlight><bold>10</bold></highlight> for access to the web site. As part of the request, a coding field may exist that allows the browser at the client machine to notify a server of which compression, encryption, etc. algorithms the browser can handle (e.g., compressed HTML). The coding field information may be used by the client machine and server <highlight><bold>10</bold></highlight> to negotiate for different ways of communicating. If the browser can handle the compressed HTML, as encoded and stored in cache <highlight><bold>50</bold></highlight>, server <highlight><bold>10</bold></highlight> may reply to the client&apos;s request by transmitting the encoded data from cache <highlight><bold>50</bold></highlight> to the client machine. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The client machine may decode the HTML data (i.e., web pages) by applying the encoded data to the Huffman tree in reverse. The unencoded data may then be used by the browser at the client machine. If the client machine cannot handle compressed data, decoder <highlight><bold>40</bold></highlight> may be used at server <highlight><bold>10</bold></highlight> to unencode the HTML data in cache <highlight><bold>50</bold></highlight>. The unencoded versions of the web pages may then be sent to the client machine. Further, for client machines that do not have the Huffman tree needed for decoding, server <highlight><bold>10</bold></highlight> may automatically install the Huffman tree at the client machine, therefore allowing the client machine to unencode the compressed HTML pages. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a flowchart of an example process for content based HTML coding according to an example embodiment of the present invention. A server or other processing device first accesses the HTML data S<highlight><bold>1</bold></highlight>. The HTML data may represent HTML web pages. The HTML pages may then be simplified S<highlight><bold>2</bold></highlight>. A Huffman code may then be generated for the simplified pages S<highlight><bold>3</bold></highlight>. The result of the Huffman coding may then be stored S<highlight><bold>4</bold></highlight>. A client may then send a request to the server for the HTML pages S<highlight><bold>5</bold></highlight>. The server may then transmit the coded (i.e., compressed) HTML pages to the client device S<highlight><bold>6</bold></highlight>. The client may then unencode the pages by applying the coded data to the Huffman tree in reverse S<highlight><bold>7</bold></highlight>. The unencoded HTML pages may then be rendered by a web browser at the client machine S<highlight><bold>8</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows a flowchart of an example simplification process according to an example embodiment of the present invention. One or more HTML pages are received S<highlight><bold>20</bold></highlight>. A number of different processes or tasks may then operate on the HTML pages sequentially or in parallel. All spaces (white space) may be removed from the HTML pages S<highlight><bold>22</bold></highlight>. All comments may be removed from the HTML pages S<highlight><bold>24</bold></highlight>. Tag attributes within the HTML pages may be reordered S<highlight><bold>26</bold></highlight>. All double quotes in the HTML pages may be converted to single quotes (or vice versa) S<highlight><bold>28</bold></highlight>. All text in the HTML pages may be normalized. For example, the text case may be normalized to upper case S<highlight><bold>30</bold></highlight>. Uncommon characters found in the HTML pages may be represented in standard escape notation S<highlight><bold>32</bold></highlight>. Further, other simplifications may be performed based on knowledge of the HTML data S<highlight><bold>34</bold></highlight>. For example, multiple characters may be encoded into a single byte. At the conclusion of the simplification process, the simplified pages may be sent to an encoder, such as a Huffman code generator S<highlight><bold>40</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The present invention is advantageous in that methods and apparatus according to the present invention provide compression tailored for HTML. Apparatus and methods according to the present invention provide a compression scheme that leverages the inherent compressability of HTML. According to the present invention, HTML may be compressed based on an empirical study of common HTML pages, therefore, providing optimization and performance gains not achieved by other compression schemes. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> It is noted that the foregoing examples have been provided merely for the purpose of explanation and are in no way to be construed as limiting of the present invention. While the present invention has been described with reference to a preferred embodiment, it is understood that the words that have been used herein are words of description and illustration, rather than words of limitation. Changes may be made within the purview of the appended claims, as presently stated and as amended, without departing from the scope and spirit of the present invention in its aspects. Although the present invention has been described herein with reference to particular methods, materials, and embodiments, the present invention is not intended to be limited to the particulars disclosed herein, rather, the present invention extends to all functionally equivalent structures, methods and uses, such as are within the scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for content based HyperText Markup Language (HTML) coding comprising: 
+<claim-text>accessing source HTML data; </claim-text>
+<claim-text>simplifying the HTML data, the simplifying minimizing the size of the HTML data, knowledge of the HTML data being used during the simplification; </claim-text>
+<claim-text>encoding the simplified HTML data; and </claim-text>
+<claim-text>storing the encoded HTML data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising transmitting the encoded HTML data to a computing device in response to a request from the computing device for access to the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising transmitting the encoded data from a server to the computing device. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the HTML data represents at least one web page. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the simplification includes removal of spaces from the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the simplification includes removal of comments from the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the simplification includes normalizing the case of text in the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the simplification includes reordering tag attributes in the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the simplification includes representing some characters in the HTML data in standard escape notation. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the simplification includes encoding multiple characters in the HTML data into a single byte. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the encoding comprises generating a Huffman code for the simplified HTML data. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising storing the encoded HTML data in a cache. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. An apparatus comprising a storage medium with instructions stored therein, the instructions when executed causing a computing device to perform: 
+<claim-text>accessing source HTML data; </claim-text>
+<claim-text>simplifying the HTML data, the simplifying minimizing the size of the HTML data, knowledge of the HTML data being used during the simplification; </claim-text>
+<claim-text>encoding the simplified HTML data; and </claim-text>
+<claim-text>storing the encoded HTML data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the HTML data represents at least one web page. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, the instructions when executed causing a computing device to further perform transmitting the encoded HTML data to a computing device in response to a request from the computing device for access to the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, the instructions when executed causing a computing device to further perform transmitting the encoded data from a server to the computing device. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A server device comprising: 
+<claim-text>a HTML simplifier, the HTML simplifier capable of simplifying source HTML data, the simplifying minimizing the size of the HTML data, knowledge of the HTML data being used during the simplification; </claim-text>
+<claim-text>an encoder; the encoder capable of encoding the simplified HTML data; and </claim-text>
+<claim-text>a memory device, the encoded HTML data being stored in the memory device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the simplification includes removal of spaces from the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the simplification includes removal of comments from the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the simplification includes normalizing the case of text in the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the simplification includes reordering tag attributes in the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the simplification includes representing some characters in the HTML data in standard escape notation. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the simplification includes encoding multiple characters in the HTML data into a single byte. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the encoding comprises generating a Huffman code for the simplified HTML data. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, further comprising storing the encoded HTML data in a cache. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the HTML data represents at least one web page. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, further comprising a network interface, the server transmitting the encoded HTML data over the network interface to a computing device in response to a request from the computing device for access to the HTML data. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The server according to <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, further perform transmitting the encoded data from a server to the computing device.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004994A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004994A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004994A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004994A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

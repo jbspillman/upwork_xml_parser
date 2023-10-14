@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004924A1-20030102-D00000.TIF SYSTEM "US20030004924A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00001.TIF SYSTEM "US20030004924A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00002.TIF SYSTEM "US20030004924A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00003.TIF SYSTEM "US20030004924A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00004.TIF SYSTEM "US20030004924A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00005.TIF SYSTEM "US20030004924A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00006.TIF SYSTEM "US20030004924A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00007.TIF SYSTEM "US20030004924A1-20030102-D00007.TIF" NDATA TIF>
+<!ENTITY US20030004924A1-20030102-D00008.TIF SYSTEM "US20030004924A1-20030102-D00008.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004924</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895980</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>001000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Apparatus for database record locking and method therefor</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Mark</given-name>
+<middle-name>Joseph</middle-name>
+<family-name>Williams</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Barry S. Newberger</name-1>
+<name-2></name-2>
+<address>
+<address-1>5400 Ranaissance Tower</address-1>
+<address-2>1201 Elm Street</address-2>
+<city>Dallas</city>
+<state>TX</state>
+<postalcode>75270</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and process for locking database records are implemented. A lock state is selectively set in response to a locking operation request. The lock state constitutes a class in an object-oriented locking service architecture. A locking operation corresponding to the locking operation request is performed on one or more records. The locking operation is implemented by a method of a lock state class in the object-oriented locking service architecture, the lock state class corresponding to a current lock state. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">TECHNICAL FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates in general to data processing systems for database management, and in particular, to a system for locking database records in a multi-threaded, distributed, data processing environment. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND INFORMATION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Database management systems (or other file management system) in a multi-threaded, or similar multiple client data processing system environment must implement a scheme for avoiding record collisions or contentions. That is, the database management system (DBMS) must incorporate a scheme for locking records so that a second client does not access the record during the pendency of an operation on the records by the first client. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Typically a software component which may be referred to as a &ldquo;resource manager&rdquo; controls which records are locked. The resource manager may track, for each record, whether the record is locked, including a type of lock such as a shared lock or exclusive lock, for the record. Consequently, the resource manager may, for a realistically sized database, be complex, with the locking and unlocking of records involving a multiplicty of decision paths. Thus, there is a need in the art for more efficient lock management systems. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The aforementioned needs are addressed by the present invention. Accordingly there is provided a method for database record locking. A lock state is selectively set in response to a locking operation request. The lock state constitutes a class in an object-oriented locking service architecture. A locking operation corresponding to the locking operation request is performed on one or more records. The locking operation is implemented by a method of a lock state class in the object-oriented locking service architecture, the lock state class corresponding to a current lock state. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The foregoing has outlined rather broadly the features and technical advantages of the present invention in order that the detailed description of the invention that follows may be better understood. Additional features and advantages of the invention will be described hereinafter which form the subject of the claims of the invention. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> For a more complete understanding of the present invention, and the advantages thereof, reference is now made to the following descriptions taken in conjunction with the accompanying drawings, in which: </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates, in block diagram form, a database system in accordance with an embodiment of the present invention; </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates, in block diagram form, a data processing system which may be used in conjunction with the embodiment of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> schematically illustrates an object-oriented architecture for managing record blocking in accordance with the principles of the present invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a state diagram for the transitioning of states in accordance with the architecture of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates, in flowchart form, a record locking methodology in accordance with an embodiment of the present invention; and </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates in further detail a database system in accordance with the principles of the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> In the following description, numerous specific details are set forth to provide a thorough understanding of the present invention. For example, database records maybe identified by particular numerical values, however it would be recognized by those of ordinary skill in the art that the present invention may be practiced without such specific details. Furthermore, the present invention, for clarity, may be described in the context of the Java&trade; programming language, however, the present invention may be practiced in other programming language context in addition to Java&trade;. In other instances, well-known circuits have been shown in block diagram form in order not to obscure the present invention in unnecessary detail. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Refer now to the drawings wherein depicted elements are not necessarily shown to scale and wherein like or similar elements are designated by the same reference numeral through the several views. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference> there is illustrated a database system <highlight><bold>100</bold></highlight> in accordance with the principles of the present invention. System <highlight><bold>100</bold></highlight> includes one or more database clients <highlight><bold>102</bold></highlight>, labeled CA, CB, . . . , CX. Access to database (DB) <highlight><bold>104</bold></highlight> is mediated via database server <highlight><bold>106</bold></highlight> which includes locking service <highlight><bold>108</bold></highlight> in accordance with the principles of the present invention. Clients <highlight><bold>102</bold></highlight> may be coupled to database server <highlight><bold>106</bold></highlight> via network <highlight><bold>110</bold></highlight>, may be a local machine or via a network which may be a local area network (LAN), wide area network (WAN), or the Internet. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Refer now to <cross-reference target="DRAWINGS">FIG. 2</cross-reference> which illustrates a database server <highlight><bold>106</bold></highlight> in accordance with the principles of the present invention, in further detail. Server <highlight><bold>106</bold></highlight> may include a central processing unit (CPU) <highlight><bold>210</bold></highlight> coupled to various other components by system bus <highlight><bold>212</bold></highlight>. An operating system <highlight><bold>240</bold></highlight> runs on CPU <highlight><bold>210</bold></highlight> and provides control and coordinates the function of the various components in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. Application <highlight><bold>250</bold></highlight> includes locking service <highlight><bold>108</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, in accordance with the principles of the present invention and which will be described further in conjunction further with FIGS. <highlight><bold>3</bold></highlight>-<highlight><bold>6</bold></highlight> hereinbelow. Application <highlight><bold>250</bold></highlight> runs in conjunction with operating system <highlight><bold>240</bold></highlight>, which coordinates the internal functions of database server <highlight><bold>106</bold></highlight>, as would be understood by those of ordinary skill in the art. Additionally, read only memory (ROM) <highlight><bold>216</bold></highlight> is coupled to system bus <highlight><bold>212</bold></highlight> and includes a basic input/output system (BIOS) that control certain basic functions of server <highlight><bold>106</bold></highlight>. Random access memory (RAM) <highlight><bold>214</bold></highlight>, disk adapter <highlight><bold>218</bold></highlight> and communications adapter <highlight><bold>234</bold></highlight> are also coupled to system bus <highlight><bold>212</bold></highlight>. It should be noted that software components including operating system <highlight><bold>240</bold></highlight> and application <highlight><bold>250</bold></highlight> are loaded into RAM <highlight><bold>214</bold></highlight> which is the computer systems main memory. Disk adapter <highlight><bold>218</bold></highlight> may be a Universal Serial Bus (USB) or other adapter that communicates with disk units <highlight><bold>220</bold></highlight>. It is noted that the program of the present invention may reside in disk unit <highlight><bold>220</bold></highlight> and loaded into RAM <highlight><bold>214</bold></highlight> by operating system <highlight><bold>240</bold></highlight>, as required. Communications adapter <highlight><bold>234</bold></highlight> interconnect bus <highlight><bold>212</bold></highlight> with a network, such as network <highlight><bold>110</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Implementations of the invention include implementations as a computer system programmed to execute the method or methods described herein, and as a computer program product. According to the computer system implementations, sets of instructions for executing the method or methods are resident in the random access memory <highlight><bold>214</bold></highlight> of one or more computer systems configured generally as described above. And to require by server <highlight><bold>106</bold></highlight>, the set of instructions maybe stored as a computer program product in another computer memory, for example in disk drive <highlight><bold>220</bold></highlight> (which may include a removable memory such as an optical disk or floppy disk for eventual use in disk drive <highlight><bold>220</bold></highlight>). Furthermore, the computer program product can also be stored in another computer and transmitted when desired to the work station by a network or by an external network such as the Internet. One skilled in the art would appreciate that the physical storage of the sets of instructions physically changes the medium upon which it is stored so that the medium carries computerable information. The change may be electrical, magnetic, chemical or some other physical change. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Refer now to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrating an object-oriented locking service architecture <highlight><bold>300</bold></highlight> for providing locking services in accordance with the principles of the present invention. RecordLockManager class <highlight><bold>302</bold></highlight> manages transitions between lock states of the database, which states will be described further below. Additionally, RecordLockManager class <highlight><bold>302</bold></highlight> includes methods for handling the locking and unlocking of database records. RecordLockManager class <highlight><bold>302</bold></highlight> implements RecordLockContext <highlight><bold>304</bold></highlight>. RecordLockContext <highlight><bold>304</bold></highlight> is an interface class. An interface class defines methods that are implicitly abstract. Thus, RecordLockManager <highlight><bold>302</bold></highlight> may provide an implementation of a changeState ( ) method for managing state transitions, defined by RecordLockContext <highlight><bold>304</bold></highlight>. (In the Java&trade; programming language context, an interface class replaces the multiple inheritance of other object-oriented programming languages such s C&plus;&plus;.) </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> RecordLockManager <highlight><bold>302</bold></highlight> also contains a RecordLockState object <highlight><bold>303</bold></highlight> representing the current lock state of the database. RecordLockState object <highlight><bold>303</bold></highlight> maybe an instance of one of three state classes, NoneLockedState class <highlight><bold>306</bold></highlight>, SomeLockedState class <highlight><bold>308</bold></highlight> and AlLockedState class <highlight><bold>310</bold></highlight>. RecordLockState object <highlight><bold>303</bold></highlight> may change as the database transitions into different states, as discussed below. Note that RecordLockState object <highlight><bold>303</bold></highlight> may be a singleton, that is a single instantiation of a class, for the entire system. All three classes implement RecordLockState interface <highlight><bold>312</bold></highlight> defining methods for locking and unlocking records, which are implemented by each NoneLockedState class <highlight><bold>306</bold></highlight>, SomeLockedState class <highlight><bold>308</bold></highlight> and AllLockedState class <highlight><bold>310</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The NoneLockedState class <highlight><bold>306</bold></highlight> represents a state in which all records are freely available in the database. (This may be the default initial state of the database when a server in accordance with the principles of the present invention starts.) AllLockedState class <highlight><bold>310</bold></highlight> represents a state in which the entire database is locked. SomeLockedState class <highlight><bold>308</bold></highlight> represents a state in which one or more individual records in the database are locked. SomeLockedState class <highlight><bold>308</bold></highlight> may include hashtable <highlight><bold>314</bold></highlight>, which contains a hash of all of the records in the locked state. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The current lock state of the database, represented by RecordLockState object <highlight><bold>303</bold></highlight>, can transition to a different one of NoneLockedState, SomeLockedState or AllLockedState when either a lock or unlock request is called on the corresponding one of NoneLockedState class <highlight><bold>306</bold></highlight>, SomeLockedState class <highlight><bold>308</bold></highlight> or AllLockedState class <highlight><bold>310</bold></highlight>. (Note that a lock request and unlock request may collectively be referred to as a locking operation request.) Locking operation requests may be received from a client, such as one of clients <highlight><bold>102</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The transitions between different states may be understood by referring now to <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrating a state diagram in accordance with the principles of the present invention. Consider first NoneLockedState class <highlight><bold>306</bold></highlight>. Calling lock( ) on NoneLockedState class <highlight><bold>306</bold></highlight> may transition the state to either AllLockedState <highlight><bold>310</bold></highlight> or SomeLockedState <highlight><bold>308</bold></highlight>. If the lock is called with a valid record number (indicated by &ldquo;r&rdquo; in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>) then the state transitions to SomeLockedState <highlight><bold>308</bold></highlight>, transition <highlight><bold>402</bold></highlight>. Records may be identified by a unique identifier, for example, a record number which may be in a range from zero to a predetermined maximum record number. However, other record numbers may be used in an alternative embodiments of the present invention, and these would be understood by those of ordinary skill in the art to fall within the spirit and scope of the present invention. Additionally, a particular identifier may be associated with the entire database. In <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the record number value &ldquo;&minus;1&rdquo;, denotes the entire database. Calling lock(&minus;1) on NoneLockedState <highlight><bold>306</bold></highlight> transitions the state to AllLockedState <highlight><bold>310</bold></highlight>, transition <highlight><bold>404</bold></highlight>. Calling unlock( ) on NoneLockedState <highlight><bold>306</bold></highlight> results in an invalid transition, and an exception may be thrown, transition <highlight><bold>406</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Consider now transitions from SomeLockedState <highlight><bold>308</bold></highlight>. If a lock request is made on a record, r, that is, a lock request as called on SomeLockedState <highlight><bold>308</bold></highlight>, the state remains in SomeLockedState class <highlight><bold>308</bold></highlight>, transition <highlight><bold>408</bold></highlight>. Requesting a lock on the entire database by calling lock (&minus;1) on SomeLockedState <highlight><bold>308</bold></highlight> is invalid, transition <highlight><bold>410</bold></highlight>. Additionally, an unlock request may be made on SomeLockedState class <highlight><bold>308</bold></highlight>. If the hash table, such as hash table <highlight><bold>314</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is empty as a result of the unlock operation, a transition of the current state from SomeLockedState class <highlight><bold>308</bold></highlight> to NoneLockedState <highlight><bold>306</bold></highlight> results, transition <highlight><bold>412</bold></highlight>. (The operations on the hashtable will be described in conjunction with <cross-reference target="DRAWINGS">FIG. 5</cross-reference> hereinbelow.) </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Now consider locking and unlocking requests called on AllLockedState class <highlight><bold>310</bold></highlight>. If an unlock request on the entire database is called on AllLockedState class <highlight><bold>310</bold></highlight>, a transition to NoneLockedState <highlight><bold>306</bold></highlight> results, transition <highlight><bold>414</bold></highlight>. Calling a lock on AllLockedState class <highlight><bold>310</bold></highlight> results in an invalid transition, and again, an exception may be thrown, transition <highlight><bold>416</bold></highlight>. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Refer now to <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrating, in flow chart form, a locking methodology <highlight><bold>500</bold></highlight> in accordance with the principles of the present invention. The steps of methodology <highlight><bold>500</bold></highlight> may be performed by one or more of the methods of the classes in the objected oriented architecture described hereinabove in conjunction with <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. This will be discussed in further detail below. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Initialization of the database is performed in steps <highlight><bold>502</bold></highlight> and <highlight><bold>504</bold></highlight>. In step <highlight><bold>502</bold></highlight>, the database is started. In step <highlight><bold>504</bold></highlight>, the current state is initialized to NoneLockedState. In step <highlight><bold>506</bold></highlight>, locking methodology <highlight><bold>500</bold></highlight> enters a locking event loop, that is active while the database is active, and terminates, in step <highlight><bold>508</bold></highlight>, when the database is inactive. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> While in the locking event loop, locking requests from database clients, such as clients <highlight><bold>102</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, are handled in steps <highlight><bold>510</bold></highlight> and <highlight><bold>512</bold></highlight>, respectively. Lock and unlock requests may be handled by RecordManager.lock( ) and RecordLock.unlock( ) methods in an embodiment in accordance with the inventive principles of object-oriented architecture <highlight><bold>300</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. If neither a lock or unlock request is receiver, methodology loops between steps <highlight><bold>506</bold></highlight>, <highlight><bold>510</bold></highlight> and <highlight><bold>512</bold></highlight>. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> If, in step <highlight><bold>510</bold></highlight>, a lock request is received, it is determined, in step <highlight><bold>514</bold></highlight>, if the current state is lockable. If not, in step <highlight><bold>516</bold></highlight>, an exception is thrown. Recall that, referring to <cross-reference target="DRAWINGS">FIG. 4, a</cross-reference> lock request on the AllLockedState is invalid. If the current state is lockable, in step <highlight><bold>518</bold></highlight> it is determined if the record number corresponds to the record number representing the entire database, which may be &minus;1, for example. If the lock request is for the entire database, the current state transitions to the AllLockedState, in step <highlight><bold>520</bold></highlight>. The current state may be changed in an embodiment accordance with the architecture of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> by the RecordManager.changeState( ) method which implements the changeState( ) method defined in RecordLockContext <highlight><bold>304</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> If, however, the lock request is not for the entire database, then the lock request is directed to a particular record, which as previously discussed, may be identified by a record number, for example. In step <highlight><bold>522</bold></highlight>, methodology <highlight><bold>500</bold></highlight> enters a loop pending availability of the record. If the record is not available (that is, the record is currently locked by another client), in step <highlight><bold>524</bold></highlight>, methodology waits for an unlock notification. (In an embodiment of the present invention in accordance with architecture <highlight><bold>300</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, step <highlight><bold>522</bold></highlight> may be performed by detecting the current state to be an AllLockedState object, or a SomeLockedState object with a hashtable entry corresponding to the record lock request.) When the record becomes available, methodology <highlight><bold>500</bold></highlight> breaks out of the loop via the &ldquo;Yes&rdquo; branch in step <highlight><bold>522</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> If (step <highlight><bold>528</bold></highlight>), the current state is SomeLockedState, then, as described hereinabove, the lock state remains SomeLockedState, and in step <highlight><bold>530</bold></highlight>, the hashtable is updated to include the record number or other identifier of the record corresponding to the lock request, thereby locking the record. (This may be performed by the SomeLockedState.lock( ) method implemented by SomeLockedState class <highlight><bold>308</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, which may be passed the request by RecordManager.lock( ). </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Otherwise, in step <highlight><bold>532</bold></highlight>, the state transitions to SomeLockedState. (Recall that a valid lock request may also be called on a current NoneLockedStated.) Step <highlight><bold>532</bold></highlight> may be performed by the RecordManager.changeState( ) method, as described above, and the lock request passed to the SomeLockedState.lock( ) method in an embodiment in accordance with object-oriented architecture <highlight><bold>300</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, to update the hashtable, step <highlight><bold>530</bold></highlight>, as previously discussed. Methodology <highlight><bold>500</bold></highlight> returns to step <highlight><bold>506</bold></highlight> to continue to process lock and unlock requests. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Returning to step <highlight><bold>512</bold></highlight>, if an unlock request is received, in step <highlight><bold>532</bold></highlight> it is determined if the current state is NoneLockedState. If so, in step <highlight><bold>534</bold></highlight>, an exception is thrown. Recall that, referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, an unlock request on the NoneLockedState is invalid. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Otherwise, it is determined (step <highlight><bold>536</bold></highlight>) if the current state is AllLockedState. If so, the current state transitions to the NoneLockedState, and methodology <highlight><bold>500</bold></highlight> returns to step <highlight><bold>506</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In an embodiment of the present invention, each lock and unlock request maybe associated with a separate thread of execution. This may be understood by referring to <cross-reference target="DRAWINGS">FIG. 6</cross-reference> which illustrates the database system of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> in further detail. Database elements may be represented in the database server, such as server <highlight><bold>106</bold></highlight>, by a static data object <highlight><bold>602</bold></highlight>, of which there may be a single instance. Methods of static data object <highlight><bold>602</bold></highlight> implement actions on database elements, including the locking and unlocking of records, which may be effected via locking service <highlight><bold>108</bold></highlight>, in accordance with the principles of the present invention. Each request from a client, such as one of clients <highlight><bold>102</bold></highlight> may be mediated by a separate thread of execution (or simply, execution thread), denoted T<highlight><subscript>1</subscript></highlight>, T<highlight><subscript>2</subscript></highlight>, . . . , T<highlight><subscript>n </subscript></highlight>in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. (Threads of execution also may be referred to a execution threads, or simply, threads.) Each thread may invoke the methods of static data object <highlight><bold>602</bold></highlight> through an instance of a corresponding local data object <highlight><bold>604</bold></highlight>. Additionally, each locked record may be associated with the thread that &ldquo;locked&rdquo; it. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Returning to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, in step <highlight><bold>538</bold></highlight>, it is determined if the thread requesting the unlocking of the record &ldquo;owns&rdquo; the record, that is, if the thread associated with the request locking the record is the unlocking thread. If not, in step <highlight><bold>540</bold></highlight>, an exception is thrown. Otherwise, the record is unlocked, step <highlight><bold>542</bold></highlight>. Step <highlight><bold>542</bold></highlight> may be performed by SomeLockedState.unlock( ), in an embodiment in accordance with the object-oriented architecture of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> In step <highlight><bold>544</bold></highlight>, the record number, or other identifier, of the unlocked record is deleted from the hashtable. In step <highlight><bold>546</bold></highlight>, it is determined if the hashtable is empty. If so, there are no locked records, and in step <highlight><bold>548</bold></highlight>, the current state transitions to NoneLockedState. Otherwise, the current state is unchanged, and step <highlight><bold>548</bold></highlight> is bypassed. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Recall that, as discussed in conjunction with steps <highlight><bold>522</bold></highlight> and <highlight><bold>524</bold></highlight>, a client may be waiting for the record to become available. In step <highlight><bold>550</bold></highlight>, all threads are notified that the record has been unlocked, and methodology <highlight><bold>500</bold></highlight> returns to step <highlight><bold>506</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Although the present invention and its advantages have been described in detail, it should be understood that various changes, substitutions and alterations can be made herein without departing from the spirit and scope of the invention as defined by the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for database record locking comprising the steps of: selectively setting a lock state in response to a locking operation request, wherein said lock state comprises an object in an object-oriented locking service architecture; and 
+<claim-text>performing a locking operation corresponding to said locking operation request on one or more records said locking operating being implemented by a method of a lock state class in said object-oriented locking service architecture corresponding to a current lock state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said locking operation comprises one of a lock operation and an unlock operation. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said lock state comprises one of a NoneLockedState, SomeLockedState and AllLockedState. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein said locking operation request includes an identifier of said one or more records. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said step of selectively setting said lock state in response to said locking operation request includes transitioning from a first lock state to a second lock state. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein said step of transitioning from said first lock state to said second lock state is performed by a method of a a record manager class in said object-oriented locking service architecture. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> further comprising the step of, if said locking operation request is a lock request, determining if said one or more records is available. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising the step of updating a hashtable in response to said step of performing said locking operation corresponding to said locking operation request, wherein said hashtable includes one or more identifiers corresponding to locked records. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said locking operation request is associated with an execution thread, and wherein each locked record is associated with a lock request thread of execution locking a corresponding one of each locked record. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> further comprising the step of, if said locking operation request comprises an unlock request, determining if an execution thread corresponding to said unlock request comprises a same execution thread corresponding to a lock request locking said one or more records. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A data processing system for database record locking comprising: 
+<claim-text>circuitry operable for selectively setting a lock state in response to a locking operation request, wherein said lock state comprises an object in an object-oriented locking service architecture; and </claim-text>
+<claim-text>circuitry operable for performing a locking operation corresponding to said locking operation request on one or more records said locking operation being implemented by a method of a lock state class in said object-oriented locking service architecture corresponding to a current lock state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein said locking operation comprises one of a lock operation and an unlock operation. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein said lock state comprises one of a NoneLockedState, SomeLockedState and AllLockedState. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein said locking operation request includes an identifier of said one or more records. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein said circitry operable for selectively setting said lock state in response to said locking operation request includes circuitry operable for transitioning from a first lock state to a second lock state. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein said circuitry operable for transitioning from said first lock state to said second lock state is operable in response to a method of a a record manager class in said object-oriented locking service architecture. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further comprising circuitry operable for, if said locking operation request is a lock request, determining if said one or more records is available. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> further comprising circuitry operable for updating a hashtable in response to said circuitry operable for performing said locking operation corresponding to said locking operation request, wherein said hashtable includes one or more identifiers corresponding to locked records. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein said locking operation request is associated with an execution thread, and wherein each locked record is associated with a lock request thread of execution locking a corresponding one of each locked record. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> further comprising circuitry operable for, if said locking operation request comprises an unlock request, determining if an execution thread corresponding to said unlock request comprises a same execution thread corresponding to a lock request locking said one or more records. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A computer program product in a machine readible storage medium, the program product for database record locking, comprising programming instructions for performing the steps of: 
+<claim-text>selectively setting a lock state in response to a locking operation request, wherein said lock state comprises an object in an object-oriented locking service architecture; and </claim-text>
+<claim-text>performing a locking operation corresponding to said locking operation request on one or more records said locking operation being implemented by a method of a lock state class in said object-oriented locking service architecture corresponding to a current lock state. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein said locking operation comprises one of a lock operation and an unlock operation. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein said lock state comprises one of a NoneLockedState, SomeLockedState and AllLockedState. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein said locking operation request includes an identifier of said one or more records. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein said step of selectively setting said lock state in response to said locking operation request includes transitioning from a first lock state to a second lock state. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> wherein said step of transitioning from said first lock state to said second lock state is performed by a method of a a record manager class in said object-oriented locking service architecture. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> further comprising programming instructions for performing the step of, if said locking operation request is a lock request, determining if said one or more records is available. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> further comprising programming instructions for performing the step of updating a hashtable in response to said step of performing said locking operation corresponding to said locking operation request, wherein said hashtable includes one or more identifiers corresponding to locked records. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein said locking operation request is associated with an execution thread, and wherein each locked record is associated with a lock request thread of execution locking a corresponding one of each locked record. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference> further comprising programming for performing the step of, if said locking operation request comprises an unlock request, determining if an execution thread corresponding to said unlock request comprises a same execution thread corresponding to a lock request locking said one or more records.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004924A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004924A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004924A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004924A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004924A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004924A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030004924A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030004924A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00008">
+<image id="EMI-D00008" file="US20030004924A1-20030102-D00008.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

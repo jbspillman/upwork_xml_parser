@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002466A1-20030102-D00000.TIF SYSTEM "US20030002466A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002466A1-20030102-D00001.TIF SYSTEM "US20030002466A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002466A1-20030102-D00002.TIF SYSTEM "US20030002466A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002466A1-20030102-D00003.TIF SYSTEM "US20030002466A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002466</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09884270</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010619</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04Q007/24</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>H04L012/66</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>370</class>
+<subclass>338000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>714</class>
+<subclass>763000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>370</class>
+<subclass>352000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Sparse byte enable indicator for high speed memory access arbitration method and apparatus</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Michael</given-name>
+<middle-name>J.</middle-name>
+<family-name>Peters</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Fort Collins</city>
+<state>CO</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>James</given-name>
+<middle-name>R.</middle-name>
+<family-name>Klobcar</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Winter Springs</city>
+<state>FL</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>SHERIDAN ROSS PC</name-1>
+<name-2></name-2>
+<address>
+<address-1>1560 BROADWAY</address-1>
+<address-2>SUITE 1200</address-2>
+<city>DENVER</city>
+<state>CO</state>
+<postalcode>80202</postalcode>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A sparse byte enable indicator for high speed memory access arbitration and a memory controller utilizing same is provided. According to the invention, a sparse byte enable indication is provided to the memory controller with or at about the same time that a request for a write to memory is received from a client. In response to receiving the sparse byte enable indication, the memory controller can begin to initiate a read-modify-write sequence. The present invention allows write operations involving less than complete data words in a first block of data to be completed in fewer clock cycles than in connection with conventional controllers that do not utilize a sparse byte enable indication. The present invention is applicable in connection with any device controlling access to memory in systems utilizing error correction code. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to computer memory access arbitration. In particular the present invention relates to the efficient handling of write requests in connection with error correction code. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> In computer systems utilizing high speed synchronous dynamic random access memory (SDRAM), there is at least some latency between the time a new memory access is requested and the time that data can actually start flowing to or from the memory. This latency is due to the way that SDRAM operates. In particular, before a read or write operation can begin, a bank (row) in the memory must first be activated. Next, a read or write command can be issued along with the remainder of the address that is being accessed. Data transfers can begin only after these steps have been taken. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> An additional period latency is involved if an error correction code (ECC) is used. This is because write data must pass through the ECC logic in order to create a syndrome value based on the data that is being written. The data and syndrome value are then written together. The additional processing required by an error correction code typically adds from 10 to 15 clocks of latency during a read-modify-write operation from the start of an access request to the first cycle in which a data transfer occurs. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In many devices that access SDRAM, there are multiple internal clients that may require access to the SDRAM. Often, an arbitration module is provided to determine which of the clients has access to the memory at any given point in time. However, because of the latency described above, there is typically a gap between the end of one client&apos;s access to the memory and the beginning of another access to the memory. During this period of latency, the memory interface is unused. This latency reduces the overall performance of the computer system. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Memory controllers that include arbiters to determine which of the clients will be granted access to the memory next, and that track whether that client will be writing to or reading from the memory, have been developed. Such systems, which are often capable of determining the next client to be granted access while a previous access is still in progress, can improve the performance of the computer system. In general, the performance improvement comes from allowing the memory controller to begin the steps required to prepare for the next client access internally while the previous access is still in progress. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The performance of the memory controller may be additionally refined by having the clients provide transaction size information to the arbiter, so that the arbiter can determine when that client&apos;s transaction is nearing completion. The arbiter can then determine which client will be granted access next, and can forward the address and read or write information to the memory controller for the next transaction, while a current transaction is still in progress. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In order to improve the reliability of systems that store information in SDRAM, error correction code is often used. In a typical ECC scheme, an 8 bit syndrome value is appended to each 64 bit word of data that is written to the SDRAM. The syndrome value is created based on the 64 bit data word value. When the data and syndrome value are read back from memory, the memory controller calculates a new syndrome value from the data that was read. The new syndrome value is compared to the syndrome value that was also read from the SDRAM. If the syndrome values match, the data is presumed to be correct, and it is passed to the appropriate client. If there is a difference between the syndrome values, an error in the data is indicated. Depending on the algorithm employed and the type of data error, the error may be correctable based on the information provided by the syndrome value. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> One drawback of using this type of error correction code occurs in connection with a sparse byte enable condition. A sparse byte enable condition occurs when less than a complete 64 bit word is to be written to memory. A less than complete data word may be received when the address specifying a first word in a block of data to be written is unaligned. A sparse byte enable condition is typically signaled by byte enable bits that are provided with the data. In particular, the byte enable bits signal which of the 8 bytes in the 64 bit block of data are to be written. When a sparse byte enable condition is encountered, the data word cannot be written directly to memory. Instead, a read-modify-write sequence must be used. This sequence is necessary to allow the memory controller to create a new ECC syndrome value to be written to memory along with the data. The new ECC syndrome value is calculated from a combination of the original data read from the memory and the bytes of new data that are to be written. That is, the older data is used as filler to form a complete 64 bit data word. As can be appreciated, the complete data word must be formed before the otherwise incomplete data is stored, in order to calculate a valid ECC syndrome value. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Conventional memory controllers are not informed that a block of data is in a sparse byte enable condition until that block of data is received. Therefore, when the memory controller is expecting to write data, and has prepared for a write operation, additional clocks of latency are incurred if sparse byte enables are received, as the memory controller must terminate the steps begun for a write operation, and instead read old data from the memory. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Therefore, it would be desirable to provide a method and an apparatus for controlling access to memory that remove or reduce the additional period of latency incurred when a write operation involving less than a complete data word is encountered. Furthermore, it would be advantageous to provide a method and an apparatus for controlling access to memory that were inexpensive to implement and reliable in operation. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> In accordance with the present invention, a high speed memory access arbitration method and apparatus that include a sparse byte enable indication are provided. The present invention generally allows a memory interface included as part of a memory controller or RAID controller to appropriately prepare for a write to memory when the first block of data to be written includes less than a complete data word. In particular, the present invention provides a memory interface that, upon receipt of an indication that a first block of data to be written contains less than a complete data word, initiates a read from memory. Therefore, old data read from memory can be available at about the same time the first block of data to be written is received. The old data can be combined with first block of data to be written to form a complete data word, and an ECC syndrome value can be calculated. The complete data word and ECC syndrome value can then be written to memory. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> According to an embodiment of the present invention, a sparse byte enable condition is signaled to the memory interface of the controller by a client or device when the client or device issues a write request that involves a first block of data having less than a complete data word. In response to receiving the sparse byte indication, the memory interface initiates a read of old data from the memory. The old data read from memory is combined with the data to be written to form a complete data word. The complete data word includes all of the data to be written as part of the first block of data, and portions of the block of old data read from memory. An error correction syndrome value is calculated from the complete data word, and the complete data word and syndrome value are written to memory. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> According to another embodiment of the present invention, a write request is produced in an external device that includes an indication that a first block of data identified in connection with the write request contains less than a complete data word. The write request is provided to a first data interface included in the controller. In response to receiving the write request, the memory interface operates to read a block of old data from a memory. The incomplete first block of data is combined with the block of old data to form a complete data word. The complete data word thus formed includes all of the data within the first block of data to be written, and at least a portion of the old block of data read from memory. An error correction syndrome value is calculated from the newly formed complete data word. The newly formed complete data word and the error correction syndrome value are then written to the memory. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> According to still another embodiment of the present invention, a memory controller having a memory interface for use in connection with high speed arbitration is provided. The memory interface operates to initiate a read from memory in response to receiving an indication that a first block of data to be written to memory contains less than a complete data word. The data read from memory is combined with the first block of data to be written to form a complete data word. An error correction syndrome value is calculated for the complete data word, and the complete data word and error correction syndrome value are written to the memory. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The method and apparatus of the present invention allow a memory controller, including a RAID controller, to efficiently process write operations involving error correction code, and involving incomplete data words. In particular, the present invention provides for a sparse byte enable indication that is provided to the memory controller interface of the controller as part of or associated with a write request. The sparse byte enable condition indication allows the memory interface to first read old data from memory before the data to be written arrives at the memory interface, thereby reducing or eliminating the latency that would be encountered if the memory interface was not aware of the sparse byte enable condition until the first block of data arrived at the memory interface. Accordingly, the present invention improves the efficiency and speed of controllers. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Additional advantages of the present invention will become readily apparent from the following discussion, particularly when taken together with the accompanying drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts in functional block diagram form a controller in accordance with an embodiment of the present invention; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flowchart illustrating the operation of a prior art controller; and </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flowchart illustrating operational aspects of a controller in accordance with an embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> With reference now to <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> controller <highlight><bold>100</bold></highlight> in accordance with an embodiment of the present invention is illustrated. The controller <highlight><bold>100</bold></highlight>, in a typical application, is interconnected to a primary system bus <highlight><bold>104</bold></highlight> and to an I/O bus <highlight><bold>108</bold></highlight>. For example, the controller <highlight><bold>100</bold></highlight> may function as a RAID controller. An example of a primary bus is a peripheral component interconnect (PCI) bus, while an example of an I/O bus is a Small Computer System Interface (SCSI) bus. In general, the primary bus <highlight><bold>104</bold></highlight> is connected to a host processor <highlight><bold>112</bold></highlight> and to system memory <highlight><bold>116</bold></highlight>. The I/O bus <highlight><bold>108</bold></highlight> may be interconnected to various storage devices <highlight><bold>120</bold></highlight> and peripheral devices <highlight><bold>124</bold></highlight>. The various devices <highlight><bold>112</bold></highlight>, <highlight><bold>116</bold></highlight>, <highlight><bold>120</bold></highlight> and <highlight><bold>124</bold></highlight> illustrated as being interconnected to the controller <highlight><bold>100</bold></highlight> through the buses <highlight><bold>104</bold></highlight> and <highlight><bold>108</bold></highlight> are provided for exemplary purposes only, and it should be appreciated that additional or alternative configurations are possible. In particular, when the controller <highlight><bold>100</bold></highlight> is used as a controller for a redundant array of inexpensive (or independent) disks (RAID) system, a plurality of storage devices <highlight><bold>120</bold></highlight> will be interconnected to the controller <highlight><bold>100</bold></highlight> through the I/O bus <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> The controller <highlight><bold>100</bold></highlight> may include a primary I/O interface <highlight><bold>128</bold></highlight> for interconnecting the controller <highlight><bold>100</bold></highlight> to the primary bus <highlight><bold>104</bold></highlight>. A device I/O interface <highlight><bold>132</bold></highlight> may be provided for interconnecting the controller <highlight><bold>100</bold></highlight> to the I/O bus <highlight><bold>108</bold></highlight>. A data line <highlight><bold>136</bold></highlight> may be provided to interconnect the primary I/O interface <highlight><bold>128</bold></highlight> to the device I/O <highlight><bold>132</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> A first memory client <highlight><bold>140</bold></highlight> is interconnected to a memory interface <highlight><bold>144</bold></highlight> by a signal line <highlight><bold>148</bold></highlight>. A second memory client <highlight><bold>152</bold></highlight> is interconnected to the memory interface <highlight><bold>144</bold></highlight> by a signal line <highlight><bold>156</bold></highlight>. In general, the memory clients <highlight><bold>140</bold></highlight> and <highlight><bold>152</bold></highlight> perform various operations on data passed to and from memory <highlight><bold>160</bold></highlight> interconnected to the controller <highlight><bold>100</bold></highlight> through the memory interface <highlight><bold>144</bold></highlight>. For example, the memory clients <highlight><bold>140</bold></highlight> and <highlight><bold>152</bold></highlight> may initialize data in the memory <highlight><bold>160</bold></highlight>, perform error correction code checks, verify a region of memory, move data from the primary I/O interface <highlight><bold>128</bold></highlight> to the memory interface <highlight><bold>144</bold></highlight> for storage in the memory <highlight><bold>160</bold></highlight>, perform various operations on data, including producing ECC syndrome values, and calculate RAID parity values. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The controller <highlight><bold>100</bold></highlight> is also provided with an arbitrator (or arbiter) <highlight><bold>164</bold></highlight>. In general, the arbitrator <highlight><bold>164</bold></highlight> receives signals from clients (e.g., the memory clients <highlight><bold>140</bold></highlight> and <highlight><bold>152</bold></highlight>) of the controller <highlight><bold>100</bold></highlight> or external devices (e.g., the host processor <highlight><bold>112</bold></highlight> or storage devices <highlight><bold>120</bold></highlight>) requesting access to the memory <highlight><bold>160</bold></highlight>. The arbitrator <highlight><bold>164</bold></highlight> generally prioritizes the requests for access to determine the order in which access to the memory <highlight><bold>160</bold></highlight> will be granted. A processor <highlight><bold>168</bold></highlight> or XOR accelerator (not illustrated) or both may be provided to coordinate and control the operation of the various components of the controller <highlight><bold>100</bold></highlight>. For example, the processor <highlight><bold>168</bold></highlight> may control the distribution of data across various storage devices, for example storage devices <highlight><bold>120</bold></highlight><highlight><italic>a</italic></highlight>, <highlight><bold>120</bold></highlight><highlight><italic>b </italic></highlight>and <highlight><bold>120</bold></highlight><highlight><italic>c</italic></highlight>, in accordance with the particular RAID storage scheme being implemented. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The controller <highlight><bold>100</bold></highlight> may be implemented as a card or daughter board interconnected to the primary bus <highlight><bold>104</bold></highlight> provided as part of the system board of a host computer, or may be part of the system board (or mother board) itself. Furthermore, various of the functional components described in connection with the controller <highlight><bold>100</bold></highlight> may be implemented in one or a number of interconnected integrated circuits. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> With reference now to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> flowchart illustrating the operation of a controller arbitrator in accordance with the prior art is illustrated. In general, an initial check is made for client requests (step <highlight><bold>200</bold></highlight>). If no client request is detected, the system idles at this initial state, to await a client request. If a client request has been received, the arbitrator determines which client will be granted access next (step <highlight><bold>204</bold></highlight>). Then, the arbitrator determines whether a data burst is currently in progress (step <highlight><bold>208</bold></highlight>). If a data burst is currently in progress, a determination is next made as to whether the current data burst is nearly completed (step <highlight><bold>212</bold></highlight>). For example, the arbitrator may determine whether a selected number of clocks or less are required before the current data burst is completed. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> If the current data burst is not near completion, the arbitrator returns to step <highlight><bold>204</bold></highlight>, and the determination of which client will be granted next is reassessed. Then, at step <highlight><bold>208</bold></highlight>, if a data burst is not currently in progress, or if completion of a current burst is near, the system proceeds to determine whether the new burst of data (i.e. the burst of data associated with the client that will be granted access to a memory next) involves a read from memory or a write to memory (step <highlight><bold>216</bold></highlight>). If the data involved in the next client&apos;s request will be read from the memory, the arbitrator signals the memory interface to prepare for a new read transaction (step <highlight><bold>220</bold></highlight>). Alternatively, if the data associated with the next client&apos;s request will be written to the memory, the arbitrator signals the memory interface to prepare for a new write transaction (step <highlight><bold>224</bold></highlight>). </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> From the above description, it can be appreciated that, in response to receiving a request for a write transaction, the prior art arbitration scheme prepares the memory interface to write, without regard to whether the first block of data involved in the write operation contains a complete data word. Therefore, as described in the background of the invention section above, the memory interface may have to abort the write transaction, and instead prepare for and execute a read from memory in order to combine the partial data word to be written to memory with the old data word in memory, thereby forming a complete data word and allowing a new ECC syndrome value to be calculated. The additional steps required when a partial data word is to be written to memory in connection with the conventional arbitration scheme results in a delay in completion of the write operation. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> With reference now to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the operation of a memory interface <highlight><bold>100</bold></highlight> in accordance with the present invention is illustrated. Initially, at step <highlight><bold>300</bold></highlight>, the arbitrator <highlight><bold>164</bold></highlight> of the controller <highlight><bold>100</bold></highlight> determines whether there are any pending client or external device requests. The arbitrator <highlight><bold>164</bold></highlight> continues in this state until a client or external device request is received, at which point the arbitrator <highlight><bold>164</bold></highlight> proceeds to determine which client or external device will be granted access to the memory interface <highlight><bold>144</bold></highlight> next (step <highlight><bold>304</bold></highlight>). </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> The arbitrator <highlight><bold>164</bold></highlight> then determines whether a read or write operation in connection with a burst of data is currently in progress (step <highlight><bold>308</bold></highlight>). If a data burst is currently in progress, the arbitrator <highlight><bold>164</bold></highlight> determines whether the end of the burst is near (step <highlight><bold>312</bold></highlight>). If the end of the current data burst is not near, the arbitrator <highlight><bold>164</bold></highlight> returns to step <highlight><bold>304</bold></highlight> to reassess which client will be granted access next. If the end of the current burst is near, or if no data burst is in progress, the arbitrator <highlight><bold>164</bold></highlight> determines whether the request associated with the next client or device to be granted access involves a read or a write operation (step <highlight><bold>316</bold></highlight>). Accordingly, it can be appreciated that steps <highlight><bold>300</bold></highlight>-<highlight><bold>316</bold></highlight> of the present invention correspond to steps <highlight><bold>200</bold></highlight>-<highlight><bold>216</bold></highlight> of the prior art controller, and in particular the prior art arbitrator. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> If the request concerns a read, the arbitrator <highlight><bold>164</bold></highlight> notifies the memory interface <highlight><bold>144</bold></highlight> of a new read transaction (step <highlight><bold>320</bold></highlight>). Accordingly, step <highlight><bold>320</bold></highlight> of the present invention corresponds to step <highlight><bold>220</bold></highlight> of the conventional controller. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The memory interface <highlight><bold>144</bold></highlight> of the present invention differs from the conventional memory interface if the data request of the next client or external device to be granted access to the memory <highlight><bold>160</bold></highlight> concerns a write. In particular, the arbitrator <highlight><bold>164</bold></highlight> of the controller <highlight><bold>100</bold></highlight> of the present invention determines whether the write request includes or is associated with a sparse byte enable indication (step <highlight><bold>324</bold></highlight>). If the request for access to the memory <highlight><bold>160</bold></highlight> includes or is associated with a sparse byte enable indication, the arbitrator <highlight><bold>164</bold></highlight> notifies the memory interface <highlight><bold>144</bold></highlight> of a new read-modify-write transaction (step <highlight><bold>328</bold></highlight>). As part of the read-modify-write transaction, the memory interface <highlight><bold>144</bold></highlight> first reads the old data from the memory <highlight><bold>160</bold></highlight>, so that the old data is available when the first block of data to be written to the memory <highlight><bold>160</bold></highlight> is received by the memory interface <highlight><bold>144</bold></highlight>. The controller <highlight><bold>100</bold></highlight>, and in particular the memory interface <highlight><bold>144</bold></highlight>, then combine or merge the partial block of data with the old data to form a complete data word, and calculate a new ECC syndrome value. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In combining the partial data word with the old word in memory, those bytes of the incomplete data word that are enabled (i.e. that contain information for storage in the memory) are retained, while each non-enabled byte of the incomplete data word is filled with a byte of the old data read from memory. This is necessary because the data held in memory in connection with error correction code must always be known in order for the error correction function to operate correctly. That is, the ECC syndrome value depends on all of the bytes included in a data word. If an ECC syndrome value is calculated from a partial data word, and that partial data word and syndrome value are stored in memory, the non-enabled bytes are not written to memory. Therefore, when the data word is retrieved from the cache, the partial data word and the bytes of old data that were not overwritten will be included in that data word. Furthermore, the syndrome value calculated upon retrieval of the data word will not match the previously calculated syndrome value, and an error will be indicated. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> If a sparse byte enable signal is not detected at step <highlight><bold>324</bold></highlight>, the arbitrator <highlight><bold>164</bold></highlight> notifies the memory interface <highlight><bold>144</bold></highlight> of a new write transaction (step <highlight><bold>332</bold></highlight>). The controller may then prepare for and execute a write operation.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="21PT" align="center"/>
+<colspec colname="2" colwidth="98PT" align="left"/>
+<colspec colname="3" colwidth="98PT" align="left"/>
+<thead>
+<row>
+<entry namest="1" nameend="3" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Clock</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>Cycle</entry>
+</row>
+<row>
+<entry>&num;</entry>
+<entry>Conventional Controller Events</entry>
+<entry>New Controller Events</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="21PT" align="char" char="."/>
+<colspec colname="2" colwidth="98PT" align="left"/>
+<colspec colname="3" colwidth="98PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry>1</entry>
+<entry>write in progress for client &num;1</entry>
+<entry>write in progress for client &num;1</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>arbiter gets write request from</entry>
+<entry>arbiter gets write request</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;2</entry>
+<entry>from client &num;2</entry>
+</row>
+<row>
+<entry>3</entry>
+<entry>write in progress nearing</entry>
+<entry>write in progress nearing</entry>
+</row>
+<row>
+<entry></entry>
+<entry>completion</entry>
+<entry>completion</entry>
+</row>
+<row>
+<entry>4</entry>
+<entry>arbiter notifies memory interface</entry>
+<entry>arbiter notifies memory interface</entry>
+</row>
+<row>
+<entry></entry>
+<entry>of pending write (no notification</entry>
+<entry>of pending write with sparse</entry>
+</row>
+<row>
+<entry></entry>
+<entry>of sparse byte enables)</entry>
+<entry>byte enables</entry>
+</row>
+<row>
+<entry>5</entry>
+<entry>memory interface waits for</entry>
+<entry>memory interface issues activate</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;1&apos;s write to complete</entry>
+<entry>command to memory based on</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>starting address from client &num;2</entry>
+</row>
+<row>
+<entry>6</entry>
+<entry>memory interface waits for</entry>
+<entry>wait cycle (required by DRAM</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;1&apos;s write to complete</entry>
+<entry>protocol), client &num;1&apos;s</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>write continues</entry>
+</row>
+<row>
+<entry>7</entry>
+<entry>memory interface waits for</entry>
+<entry>wait cycle (required by DRAM</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;1&apos;s write to complete</entry>
+<entry>protocol), client &num;1&apos;s</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>write completes</entry>
+</row>
+<row>
+<entry>8</entry>
+<entry>memory interface waits for</entry>
+<entry>memory interface issues read</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;1&apos;s write to complete</entry>
+<entry>command to memory for client</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>&num;2&apos;s read-modify-write</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>sequence, client &num;1&apos;s</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>write continues</entry>
+</row>
+<row>
+<entry>9</entry>
+<entry>memory interface waits for</entry>
+<entry>client &num;1&apos;s write continues</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;1&apos;s write to complete</entry>
+<entry>while memory begins process of</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>retrieving read data for client &num;2</entry>
+</row>
+<row>
+<entry>10</entry>
+<entry>memory interface waits for</entry>
+<entry>client &num;1&apos;s write continues</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;1&apos;s write to complete</entry>
+<entry>while memory continues process</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>of retrieving read data for client</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>&num;2</entry>
+</row>
+<row>
+<entry>11</entry>
+<entry>write for client &num;1 completes</entry>
+<entry>write for client &num;1 completes</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>while memory continues process</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>of retrieving read data for client</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>&num;2</entry>
+</row>
+<row>
+<entry>12</entry>
+<entry>memory interface sees first write</entry>
+<entry>read data for client &num;2 is</entry>
+</row>
+<row>
+<entry></entry>
+<entry>data and byte enables from</entry>
+<entry>received by memory interface</entry>
+</row>
+<row>
+<entry></entry>
+<entry>client &num;2</entry>
+</row>
+<row>
+<entry>13</entry>
+<entry>memory interface issues activate</entry>
+<entry>memory interface terminates</entry>
+</row>
+<row>
+<entry></entry>
+<entry>command to memory based on</entry>
+<entry>read and merges read data with</entry>
+</row>
+<row>
+<entry></entry>
+<entry>starting address from client &num;2</entry>
+<entry>write data</entry>
+</row>
+<row>
+<entry>14</entry>
+<entry>wait cycle (required by DRAM</entry>
+<entry>memory interface calculates new</entry>
+</row>
+<row>
+<entry></entry>
+<entry>protocol)</entry>
+<entry>syndrome value</entry>
+</row>
+<row>
+<entry>15</entry>
+<entry>wait cycle (required by DRAM</entry>
+<entry>memory interface issues write</entry>
+</row>
+<row>
+<entry></entry>
+<entry>protocol)</entry>
+<entry>command and first quadword of</entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry>write data for client &num;2</entry>
+</row>
+<row>
+<entry>16</entry>
+<entry>memory interface issues read</entry>
+<entry>memory interface retrieves</entry>
+</row>
+<row>
+<entry></entry>
+<entry>command to memory for client</entry>
+<entry>second quadword of write data</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&num;2&apos;s read-modify-write sequence</entry>
+<entry>for client &num;2</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> With reference now to Table 1, a comparison of the operation of a controller according to the prior art and a controller <highlight><bold>100</bold></highlight> including an arbitrator <highlight><bold>164</bold></highlight> in accordance with the present invention is illustrated. In particular, the operation of a conventional controller in response to a write request is compared to the operation of an embodiment of the present invention in response to an identical request. Initially, at clock cycle &num;1, a write is in progress in both the old controller and in the controller <highlight><bold>100</bold></highlight> in accordance with the present invention. At clock cycle &num;2, a write request is received from client &num;2. With respect to the old controller, the write request does not include or is not associated with a sparse byte enable condition indication. With respect to the new controller <highlight><bold>100</bold></highlight>, the write request includes an indication that the first block of data that will be written contains less than a complete data word. For example, where a complete data word consists of 64 bits of data (i.e. a quadword, or a word that contains 8 bytes of information) a block of data containing less than a complete data word would include 7 bytes of information or less. When the data itself is transmitted, a byte enable bit is set high for each byte of the data word containing information. However, to obtain an indication that the data word is not complete prior to receipt of the information itself, such a signal must be included in the request from the client to write information. Alternatively, the indication may be provided with any other message provided to the memory interface <highlight><bold>144</bold></highlight> in advance of the data itself. The indication may consist of a bit in a predetermined position among a series bits that is, for example, set high to indicate an incomplete data word, and low to indicate a complete data word. As a further alternative, the byte enable bits themselves may be provided to the controller in advance of the data. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> At clock cycle &num;3, the write in progress in connection with client &num;1 is nearing completion with respect to both the conventional controller and the controller <highlight><bold>100</bold></highlight> in accordance with the present invention. At clock cycle &num;4, the arbitrator notifies the memory interface that a write request from client &num;2 is pending. This notification is provided with respect to both the conventional controller and the controller <highlight><bold>100</bold></highlight> in accordance with the present invention. However, the controller <highlight><bold>100</bold></highlight> of the present invention also notifies the memory interface <highlight><bold>144</bold></highlight> that the first block of data to be written contains less than a complete word (e.g., contains less than a full 64 bit word or quad word). </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> At clock cycles 5-10, the memory interface of the conventional controller waits for client number &num;1&apos;s write to complete. In contrast, the memory interface <highlight><bold>144</bold></highlight> of the controller <highlight><bold>100</bold></highlight> in accordance with the present invention issues an activate command to the memory <highlight><bold>160</bold></highlight> based on the starting address for the write operation received from client &num;2 at clock cycle &num;5. At clock cycles &num;6 and &num;7, the memory interface <highlight><bold>144</bold></highlight> of the controller <highlight><bold>100</bold></highlight> in accordance with the present invention waits, as required by typical DRAM protocol. At clock cycle &num;8, the memory interface <highlight><bold>144</bold></highlight> of the present invention issues a read command to the memory <highlight><bold>160</bold></highlight> to initiate the read-modify-write sequence in connection with the write operation requested by client &num;2. At clock cycles &num;9 and &num;10, the memory <highlight><bold>160</bold></highlight> of the controller <highlight><bold>100</bold></highlight> begins the process of retrieving (i.e. reading) data requested by client &num;2. It will be noted that during the above described activity for clock cycles &num;5-&num;10 in connection with the controller <highlight><bold>100</bold></highlight> of the present invention, the write requested by client &num;1 continues. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> At clock cycle &num;11, the write operation for client &num;1 completes with respect to both the conventional controller and the controller <highlight><bold>100</bold></highlight> in accordance with the present invention. Both controllers likewise receive the first write data in connection with the write request from client &num;2 at clock cycle &num;12. Clock cycle &num;12 is also the first time that the conventional controller receives an indication that the first block of data contains less than a complete data word. That is because the block of data includes the byte enables that notify the controller that the data word is less than complete. With respect to the controller <highlight><bold>100</bold></highlight> in accordance with the present invention, at clock cycle &num;12 the read data for client &num;2 is received from memory by the memory interface <highlight><bold>144</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> At clock cycle &num;13, the conventional controller issues an activate command to a memory interface based on the starting address received from client &num;2, and after wait cycles at clock cycles &num;14 and &num;15, issues a read command in connection with the read-modify-write sequence for client &num;2&apos;s write request. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> At clock cycle &num;13, the memory interface <highlight><bold>144</bold></highlight> of the controller <highlight><bold>100</bold></highlight> in accordance with the present invention terminates the read operation and merges the data read from memory <highlight><bold>160</bold></highlight> with the incomplete data block received in connection with the write operation for client &num;2. In general, all bytes of the block of data to written that are not enabled are overwritten with old data from memory <highlight><bold>160</bold></highlight>. The bytes of data within the first block of data to be written with byte enables activated are not overwritten. In this way, a complete data word is formed. At clock cycle &num;14, the memory interface <highlight><bold>144</bold></highlight> of the controller <highlight><bold>100</bold></highlight> calculates a new ECC syndrome value from the complete data word formed at clock cycle &num;13. The memory interface <highlight><bold>144</bold></highlight> of the controller <highlight><bold>100</bold></highlight> issues a write command to write the complete data word to memory <highlight><bold>160</bold></highlight>, and also retrieves a second block of data, if present, in connection with the write request from client &num;2. At clock cycle &num;16, the second block of data is received at the memory interface <highlight><bold>144</bold></highlight> of the controller <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> From the above description, it is apparent that the conventional controller did not issue a command to retrieve or read all of the data from memory until clock cycle &num;16, while the controller <highlight><bold>100</bold></highlight> in accordance with the present invention issued that command at clock cycle &num;8. Therefore, it can be appreciated that the controller <highlight><bold>100</bold></highlight> in accordance with the present invention saved 8 clock cycles as compared to the conventional controller. In particular, the controller <highlight><bold>100</bold></highlight> of the present invention was able to initiate a read from memory before the first block of data arrived at the controller <highlight><bold>100</bold></highlight>. This is because, according to the present invention, an indication that the first block of data contains less than a complete data word is provided to the controller <highlight><bold>100</bold></highlight> during or about the same clock cycle that the controller <highlight><bold>100</bold></highlight> receives the write request from the client (client &num;2 in the example given above). In contrast, the conventional controller must wait until the first block of data is actually received to ascertain that the block of data contained less than a complete data word. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Furthermore, the savings in clock cycles provided by the controller <highlight><bold>100</bold></highlight> of the present invention would be even greater as compared to a controller that took steps to perform a write operation after receiving the write request. This is because the conventional controller would then have to abort the write request and instead initiate the read from a memory. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The present invention is applicable to memory controllers used in connection with computer systems using error correction code. The controller of the present invention is particularly useful in connection with the control of RAID storage systems. However, its application is not so limited. For example, the present invention may be used in connection with general memory controllers, bridges between communication buses and any device controller utilizing cache memory in connection with error correction code. Furthermore, although the description above has referred to a DRAM memory cache, it will be appreciated that the present invention can be used in connection with any type of rewritable memory, including RAM, SDRAM and SRAM. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> The foregoing discussion of the invention has been presented for purposes of illustration and description. Further, the description is not intended to limit the invention to the form disclosed herein. Consequently, variations and modifications commensurate with the above teachings, within the skill and knowledge of the relevant art, are within the scope of the present invention. The embodiment described hereinabove are further intended to explain the best mode presently known in practicing the invention and to enable others skilled in the art to utilize the invention in such or in other embodiments and with various modification required by their particular application or use of the invention. It is intended that the appended claims be construed to include the alternative embodiments to the extent permitted by the prior art. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for efficiently writing data to memory in connection with error correction code, comprising: 
+<claim-text>providing information to a memory interface related to an amount of data included in at least a first word of said data to be written before said data to be written is provided to said interface; and </claim-text>
+<claim-text>in response to said information, initiating a read of old data from said memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said information comprises an indication that said amount of data included in said at least a first word of said data to be written is less than a complete data word. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein a complete data word includes 64 bits of data. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said information comprises an indication of enabled bytes in a first word of said data to be written. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>receiving said data to be written at said memory interface; </claim-text>
+<claim-text>merging said data to be written with said old data to create a complete data word; </claim-text>
+<claim-text>calculating an error correction syndrome value from said complete data word; and </claim-text>
+<claim-text>writing said complete data word and said error correction syndrome value to said memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method for controlling computer memory, comprising: 
+<claim-text>receiving at a first memory interface a request to write data to said memory; </claim-text>
+<claim-text>receiving at said first memory interface an indication that an incomplete data word is to be written in connection with a first block of said data; </claim-text>
+<claim-text>in response to said indication that an incomplete data word is to be written in connection with said first block of said data, initiating a read of old data from said memory; </claim-text>
+<claim-text>combining said incomplete data word of said first block of data with said old data to form a complete data word, wherein said complete data word includes all of said incomplete data word of said first block of said data and a portion of said old data; </claim-text>
+<claim-text>calculating a first error correction syndrome value from said complete data word; and </claim-text>
+<claim-text>writing said complete data word and said first error correction syndrome value to said memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said indication that an incomplete data word is to be written in connection with a first block of said data is received as part of said request to write data to said memory. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said write request is received from a first client interconnected to said first memory interface by a communication bus. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising: 
+<claim-text>reading said complete data word and said syndrome value from said memory; </claim-text>
+<claim-text>providing said complete data word and said syndrome value to at least one of first input/output interface and a second input/output interface. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein said at least one of said first input/output interface and said second input/output interface is interconnected to a storage device. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein a write operation is initiated in response to a write request for which no indication that an incomplete data word is to be written in connection with a first block of data is received. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising: 
+<claim-text>reading said complete data word and said first error correction syndrome value from said memory; </claim-text>
+<claim-text>calculating a second error correction syndrome value from said complete data word read from said memory; and </claim-text>
+<claim-text>comparing said first error correction syndrome value to said second error correction syndrome value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said complete data word is discarded if said first and second error correction syndrome values are not equal. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said complete data word and said first error correction syndrome value are provided to a an external device if said first and second error correction values are equal. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein those portions of said first block of data that are not to be written do not contain data. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said syndrome value is calculated by performing an XOR operation. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein a complete data word comprises a 64 bit word. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A computer memory controller, comprising: 
+<claim-text>a primary input/output interface; </claim-text>
+<claim-text>a device input/output interface interconnected to said primary input/output interface; </claim-text>
+<claim-text>at least a first memory client interconnected to said primary input/output interface; </claim-text>
+<claim-text>a memory interface interconnected to said memory client and to said device input/output interface; </claim-text>
+<claim-text>memory interconnected to said memory interface; and </claim-text>
+<claim-text>an arbitrator, wherein in response to a sparse byte enable signal received as part of a write request said memory interface initiates a read operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The computer memory controller of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said read operation comprises reading old data stored in said memory. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The computer memory controller of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein data associated with said write request is combined with said old data to form a complete data word. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The computer memory controller of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein said memory client calculates an error correction syndrome value from said complete data word. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer memory controller of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein said error correction syndrome value and said complete data word are stored in said memory. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The computer memory controller of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein data associated with said write request is stored in a plurality of storage devices interconnected to said computer memory controller.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002466A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002466A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002466A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002466A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

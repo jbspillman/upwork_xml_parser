@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005190A1-20030102-D00000.TIF SYSTEM "US20030005190A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00001.TIF SYSTEM "US20030005190A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00002.TIF SYSTEM "US20030005190A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00003.TIF SYSTEM "US20030005190A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00004.TIF SYSTEM "US20030005190A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00005.TIF SYSTEM "US20030005190A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00006.TIF SYSTEM "US20030005190A1-20030102-D00006.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00007.TIF SYSTEM "US20030005190A1-20030102-D00007.TIF" NDATA TIF>
+<!ENTITY US20030005190A1-20030102-D00008.TIF SYSTEM "US20030005190A1-20030102-D00008.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005190</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895461</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F003/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>710</class>
+<subclass>052000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and apparatus for high throughput short packet transfers with minimum memory footprint</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Brian</given-name>
+<middle-name>A.</middle-name>
+<family-name>Leete</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Beaverton</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A device is presented including a host controller. A host controller driver is connected to the host controller. The host controller arranges queue element transfer descriptors (qTDs) in a circularly linked order. Also presented is a method including determining whether execution of a first queue element transfer descriptor (qTD) in a first bank including many qTDs results in a short packet condition. Following an alternate pointer in the first bank that points to a second bank if execution of the first qTD resulted in the short packet condition. Following a next pointer to a second qTD in the first bank if the execution of the first qTD completed normally. Also executing the second qTD in the first bank. The qTDs in the first bank and the second bank are circularly linked. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates to a universal serial bus (USB) environment, and more particularly to a method and apparatus to improve an enhanced host controller interface (EHCI) performance for USB devices. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In many of today&apos;s processors and systems, such as personal computer (PC) systems, there exist USB ports for connecting various USB devices. Many USB devices are frequently used by PC users. For example, USB devices may be printers, compact disc read-only memory (CD-ROM) drives, CD-ROM writer (CDRW) drives, digital versatile disc (DVD) drives, cameras, pointing devices (e.g., computer mouse), keyboards, joy-sticks, hard-drives, speakers, etc. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Different standards of USB technology have different bandwidths. For example, Universal Serial Bus Specification, revision 1.1, Sep. 23, 1998 (USB 1.1) devices are capable of operating at 12 Mbits/second (Mbps), and Universal Serial Bus Specification, revision 2.0, Apr. 27, 2000 (USB 2.0; also known as high-speed USB) devices are capable of operating at 480 Mbps. USB 2.0 defines a multiple speed-signaling environment where a single high-speed bus may support one or more USB 1.1 classic busses through a USB 2.0 hub (Transaction Translator). In this environment, system software (the Host Controller Driver) must allocate and manage the bandwidth of USB 1.1 classic busses. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The Enhanced Host Controller Interface (EHCI) specification for a Universal Serial Bus, revision 0.95, Nov. 10, 2000 describes the register-level interface for a host controller (HC) for USB 2.0. The USB 2.0 HC is a bus master on the peripheral component interconnect (PCI) bus. The HC independently traverses linked memory structures created and maintained by the HC driver to initiate transactions on the USB. In the USB EHCI specification, two data structures known as the queue head (QH) and the queue element transfer descriptor (qTD) are defined. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The QH contains all of the endpoint specific information required. The QH also contains links to a list of qTDs. A qTD represents all or part of a buffer passed to the HC driver from a higher level driver, or user level application. The QH contains all of the endpoint specific information required. The QH also contains links to a list of qTDs. A qTD represents all or part of a buffer passed to the HC driver from a higher level driver, or user level application. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The qTD data structure is only used with a QH. The qTD is used for one or more USB transactions. A qTD can, at most, transfer 20,480 (5*4,096) bytes. When the HC completes execution of a qTD, it will follow the next-pointer. When a USB device returns less data than requested by the qTD, a short packet condition results. When the HC receives a short packet, the HC follows the alternate-pointer.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The invention is illustrated by way of example and not by way of limitation in the figures of the accompanying drawings in which like references indicate similar elements. It should be noted that references to &ldquo;an&rdquo; or &ldquo;one&rdquo; embodiment in this disclosure are not necessarily to the same embodiment, and such references mean at least one. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a structure of a queue head. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a structure of a queue element transfer descriptor (qTD). </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a Universal Serial Bus (USB) 2.0 system. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates an enhanced host controller interface (EHCI). </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates a first method for organizing qTDs. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a second method for organizing qTDs. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates an embodiment of the invention that organizes qTDs to improve throughput in the presence of short packets. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> illustrates a block diagram of a process of an embodiment of the invention that organizes qTDs to improve throughput in the presence of short packets when buffer contents are less than or equal to the storage capacity of qTDs in a bank. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8B</cross-reference> illustrates a block diagram of a process of an embodiment of the invention that organizes qTDs to improve throughput in the presence of short packets when buffer contents are greater than the storage capacity of qTDs in a bank (continued from <cross-reference target="DRAWINGS">FIG. 8A</cross-reference>).</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The invention generally relates to a method to reducing memory consumption of universal serial bus (USB) data structures and improving throughput of USB transactions. Referring to the figures, exemplary embodiments of the invention will now be described. The exemplary embodiments are provided to illustrate the invention and should not be construed as limiting the scope of the invention. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a typical structure layout of a queue head (QH). QH horizontal link pointer (QHLP) <highlight><bold>110</bold></highlight> comprises four fields. QHLP field <highlight><bold>111</bold></highlight> contains the address of the next data object to be processed in the horizontal list and corresponds to memory address signals &lsqb;<highlight><bold>31</bold></highlight>:<highlight><bold>5</bold></highlight>&rsqb;, respectively. Field <highlight><bold>112</bold></highlight> is reserved, and bits <highlight><bold>4</bold></highlight>:<highlight><bold>3</bold></highlight> must be written as 0s. Field <highlight><bold>113</bold></highlight> comprising bits <highlight><bold>2</bold></highlight>:<highlight><bold>1</bold></highlight>, indicates to the hardware whether the item referenced by the link pointer is a isochronous transaction descriptor (iTD), split transaction isochronous transaction descriptor (siTD) or a QH. Field <highlight><bold>113</bold></highlight> allows the USB host controller to perform the proper type of processing on the item after it is fetched. Field <highlight><bold>114</bold></highlight>, bit <highlight><bold>0</bold></highlight>, is the terminate field. If the QH is in the context of the periodic list, a set (&ldquo;1&rdquo;) bit in field <highlight><bold>114</bold></highlight> indicates to the HC that this is the end of the periodic list. This bit, however, is ignored by the HC when the QH is in the asynchronous schedule. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Field <highlight><bold>120</bold></highlight> illustrates QH DWord<highlight><bold>1</bold></highlight>, and field <highlight><bold>130</bold></highlight> illustrates end point characteristics comprising QH DWord<highlight><bold>2</bold></highlight>. Field <highlight><bold>121</bold></highlight> is the not acknowledged or negative acknowledged (Nak) count re-load field. Field <highlight><bold>121</bold></highlight> contains a value, which is used by the HC to reload Nak counter field. Field <highlight><bold>133</bold></highlight> illustrates a control end-point flag. Field <highlight><bold>123</bold></highlight> represents the maximum packet length. The maximum packet length directly corresponds to the maximum packet size of the associated endpoint. The maximum value of field <highlight><bold>123</bold></highlight> is 0&times;400 (1024). </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Field <highlight><bold>124</bold></highlight> illustrates head of reclamation list flag. Field <highlight><bold>124</bold></highlight> is set by system software to mark a QH as being the head of the reclamation list. Field <highlight><bold>125</bold></highlight> illustrates data toggle control. Field <highlight><bold>125</bold></highlight> specifies where the HC should get the initial data toggle on an overlay transition. Field <highlight><bold>126</bold></highlight> illustrates endpoint speed. Field <highlight><bold>126</bold></highlight> is the speed of the associated endpoint. Field <highlight><bold>127</bold></highlight> illustrates the endpoint number. Field <highlight><bold>127</bold></highlight> selects the particular endpoint number on the device serving as the data source or sink. Field <highlight><bold>128</bold></highlight> is a reserved bit. Field <highlight><bold>129</bold></highlight> illustrates the device address. Field <highlight><bold>129</bold></highlight> selects the specific device serving as the data source or sink. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Field <highlight><bold>131</bold></highlight> illustrates the high-bandwidth pipe multiplier. Field <highlight><bold>131</bold></highlight> is a multiplier used to key the HC as the number of successive packets the HC may submit to the endpoint in the current execution. The HC makes the simplified assumption that software properly initializes this field. Field <highlight><bold>132</bold></highlight> illustrates the port number. Field <highlight><bold>132</bold></highlight> is ignored by the HC unless field <highlight><bold>126</bold></highlight> indicates a full-speed or low-speed device. The value is the port number identifier on the USB 2.0 hub, below which the full- or low-speed device associated with this endpoint is attached. This information is used in the split-transaction protocol. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Field <highlight><bold>133</bold></highlight> illustrates the hub address. Field <highlight><bold>133</bold></highlight> is ignored by the HC unless field <highlight><bold>126</bold></highlight> indicates a full- or low-speed device. The value is the USB device address of the USB 2.0 hub below which the full- or low-speed device associated with this endpoint is attached. Field <highlight><bold>134</bold></highlight> illustrates the split-completion mask. Field <highlight><bold>134</bold></highlight> is ignored by the HC unless field <highlight><bold>126</bold></highlight> indicates the device is a low- or full-speed device and this QH is in the periodic list. Field <highlight><bold>134</bold></highlight> is used to determine during which micro-frames the HC should execute a complete-split transaction. When the criteria for using this field are met, a zero value in this field has undefined behavior. Field <highlight><bold>135</bold></highlight> illustrates the interrupt schedule mask. Field <highlight><bold>135</bold></highlight> is used for all endpoint speeds. When the QH is on the asynchronous schedule, software should set this field to a zero (&ldquo;0&rdquo;). A non-zero value in this field indicates an interrupt endpoint. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Field <highlight><bold>140</bold></highlight> illustrates the current queue transaction descriptor link pointer. Field <highlight><bold>140</bold></highlight> contains the address of the current transaction being processed in this queue and corresponds to memory address signals &lsqb;<highlight><bold>31</bold></highlight>:<highlight><bold>5</bold></highlight>&rsqb;, respectively. Field <highlight><bold>141</bold></highlight> is reserved for future use. Field <highlight><bold>142</bold></highlight> illustrates the next queue element transfer descriptor (qTD) pointer. Field <highlight><bold>143</bold></highlight> illustrates the alternate next qTD pointer. Fields <highlight><bold>150</bold></highlight> through <highlight><bold>154</bold></highlight> illustrate buffer pointer pages <highlight><bold>0</bold></highlight>-<highlight><bold>4</bold></highlight>, respectively. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates the structure of a qTD. As can be seen in <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> qTD contains two structure pointers (next qTD pointer <highlight><bold>210</bold></highlight> and alternate next qTD pointer <highlight><bold>220</bold></highlight>) which are used for queue advancement, a data word (Dword) of transfer state (<highlight><bold>230</bold></highlight>), and a five-element array of data buffer pointers (<highlight><bold>240</bold></highlight>). The complete structure of qTD <highlight><bold>200</bold></highlight> consists of 32 bytes. Next qTD pointer <highlight><bold>210</bold></highlight> and alternate next qTD pointer <highlight><bold>220</bold></highlight> point to the next qTD to execute. Next qTD pointer <highlight><bold>210</bold></highlight> contains the physical memory address of the next qTD to be processed. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Bit <highlight><bold>0</bold></highlight> in qTD pointer <highlight><bold>210</bold></highlight> is the terminate field. If bit <highlight><bold>0</bold></highlight> of qTD pointer <highlight><bold>210</bold></highlight> is set (&ldquo;1&rdquo;), bit <highlight><bold>0</bold></highlight> indicates the pointer is invalid. If bit <highlight><bold>0</bold></highlight> of qTD pointer <highlight><bold>210</bold></highlight> is not set (&ldquo;0&rdquo;), the pointer is valid. Alternate qTD pointer <highlight><bold>220</bold></highlight> contains the physical memory address of the next qTD to be processed in the event that the current qTD execution encounters a short packet. Like qTD pointer <highlight><bold>210</bold></highlight>, alternate qTD pointer <highlight><bold>220</bold></highlight> has bit <highlight><bold>0</bold></highlight> as a terminate bit. The third Dword <highlight><bold>230</bold></highlight>, known as the qTD token, contains most of the information the HC needs to execute a USB transaction. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Bit <highlight><bold>0</bold></highlight> is data toggle sequence bit <highlight><bold>231</bold></highlight>. The use of data toggle sequence bit <highlight><bold>231</bold></highlight> depends on the setting of the data toggle control bit (illustrated as <highlight><bold>125</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>) in the QH. Total bytes to transfer <highlight><bold>232</bold></highlight> specifies the total number of bytes to be moved with the particular transfer descriptor. Total bytes to transfer <highlight><bold>232</bold></highlight> is decremented by the amount of bytes actually moved during the transaction. If the interrupt on complete (IOC) <highlight><bold>233</bold></highlight> bit is set (&ldquo;1&rdquo;), then when the particular qTD execution is completed, the HC should issue an interrupt at the next interrupt threshold. Current page <highlight><bold>234</bold></highlight> is used as an index into the qTD buffer pointer list. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Error counter <highlight><bold>235</bold></highlight> is a 2-bit down counter that keeps track of the number of consecutive errors detected while executing the particular qTD. Program identification (PID) code <highlight><bold>236</bold></highlight> is an encoding of the token that should be used for transactions associated with the particular transfer descriptor. Status <highlight><bold>237</bold></highlight> is used by the HC to communicate individual command execution states back to the HC driver. Status <highlight><bold>237</bold></highlight> contains the status of the last transaction performed on the particular qTD. Each buffer pointer in buffer pointer list <highlight><bold>240</bold></highlight> contains a 4K page aligned, physical memory address. The lower bits (<highlight><bold>0</bold></highlight>-<highlight><bold>12</bold></highlight>) are reserved in all pointers except the first one (i.e., page <highlight><bold>0</bold></highlight>). </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> A USB host system is composed of a number of hardware and software layers. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a block diagram of building block layers in a USB 2.0 system. System <highlight><bold>300</bold></highlight> is comprised of client driver software <highlight><bold>310</bold></highlight>, universal serial bus driver (USBD) <highlight><bold>320</bold></highlight>, companion host controller (HC) driver <highlight><bold>330</bold></highlight>, companion HC <highlight><bold>340</bold></highlight>, enhanced host controller driver (EHCD) <highlight><bold>350</bold></highlight>, universal host controller (UHC) <highlight><bold>360</bold></highlight> and USB device <highlight><bold>370</bold></highlight>. In system <highlight><bold>300</bold></highlight>, system software consists of client driver software <highlight><bold>310</bold></highlight>, USBD <highlight><bold>320</bold></highlight>, companion HC driver <highlight><bold>330</bold></highlight>, and EHCD <highlight><bold>350</bold></highlight>. In system <highlight><bold>300</bold></highlight> the hardware comprises companion HC <highlight><bold>340</bold></highlight>, UHC <highlight><bold>360</bold></highlight>, and USB device <highlight><bold>370</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Client driver software <highlight><bold>310</bold></highlight> typically executes on the host personal computer (PC) corresponding to a particular USB device. Client driver software <highlight><bold>310</bold></highlight> is typically part of the operating system (OS) or may be provided with a USB device. USBD <highlight><bold>320</bold></highlight> is a system bus driver that abstracts the details of the particular HC driver for a particular OS. Companion HC Driver <highlight><bold>330</bold></highlight> is typically a UHC interface (UHCI) driver or an open HCI (OHCI) driver for USB. The HC driver provides a software layer between specific HC hardware and the USBD. Companion HC <highlight><bold>340</bold></highlight>, is typically UHCI or OHCI standards. Companion HC <highlight><bold>340</bold></highlight> is the specific hardware implementation of the HC. There is one HC specification for USB 2.0 functionality, and two specifications for full- and low-speed HCs. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates the general architecture of enhanced host controller interface (EHCI) <highlight><bold>400</bold></highlight>. EHCI <highlight><bold>400</bold></highlight> comprises three interface spaces: peripheral component interconnect (PCI) configuration <highlight><bold>410</bold></highlight>, register <highlight><bold>420</bold></highlight>, and schedule interface <highlight><bold>430</bold></highlight>. PCI configuration <highlight><bold>410</bold></highlight> includes PCI registers used for system component enumeration and PCI power management. PCI configuration registers in PCI configuration <highlight><bold>410</bold></highlight> comprise PCI class code <highlight><bold>411</bold></highlight>, USB base address <highlight><bold>412</bold></highlight>, and PCI power management interface <highlight><bold>413</bold></highlight>. Register <highlight><bold>420</bold></highlight> comprises memory based input/output (I/O) registers. Memory based I/O registers are comprised of capability registers <highlight><bold>421</bold></highlight> and operational registers <highlight><bold>422</bold></highlight>. Register <highlight><bold>420</bold></highlight> must be implemented as memory-mapped I/O. Schedule interface <highlight><bold>430</bold></highlight> is typically memory allocated and managed by the HC driver for the periodic and asynchronous schedules. EHCI <highlight><bold>400</bold></highlight> allows software to enable or disable each schedule. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> There are typically two (2) methods for organizing qTDs. <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates the first method. In the method illustrated in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, all of the qTDs <highlight><bold>510</bold></highlight> necessary to represent at least two buffers are created. Each alternate-pointer of buffer N <highlight><bold>520</bold></highlight> points to the first qTD <highlight><bold>510</bold></highlight> of buffer N&plus;1 <highlight><bold>530</bold></highlight>. This method, however, requires a large memory footprint to initialize all of the qTDs <highlight><bold>510</bold></highlight> required to represent both buffers. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates the second method. The second method initializes all the alternate-pointers of the qTDs <highlight><bold>510</bold></highlight> to a &ldquo;dummy&rdquo; qTD. When a short packet is received, the HC will vector to dummy qTD <highlight><bold>620</bold></highlight>. Software then detects the short packet and re-initializes qTDs <highlight><bold>610</bold></highlight>. The software can only detect a short packet condition when the hardware asserts an interrupt. Since interrupts occur at fixed intervals, the time after the short packet is received and before the interrupt is serviced is unused. Therefore, this second approach, while having a small memory footprint, has low throughput. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates a block diagram of an embodiment of the invention comprising N small banks of qTDs <highlight><bold>710</bold></highlight> for each buffer <highlight><bold>720</bold></highlight> posted to the HC driver. In this embodiment of the invention, N may be a small number such as &ldquo;3&rdquo; (three). One should note that N can be other numbers besides 3. Each bank of qTDs <highlight><bold>710</bold></highlight> is circularly linked. Next-pointer <highlight><bold>730</bold></highlight> in each qTD <highlight><bold>705</bold></highlight> points to the next qTD <highlight><bold>705</bold></highlight> in qTD bank <highlight><bold>710</bold></highlight>. The last next-pointer <highlight><bold>730</bold></highlight> in a qTD <highlight><bold>705</bold></highlight> points to the first qTD <highlight><bold>705</bold></highlight> in qTD bank <highlight><bold>710</bold></highlight>. Alternate-pointer <highlight><bold>740</bold></highlight> of each qTD <highlight><bold>705</bold></highlight> in qTD bank <highlight><bold>710</bold></highlight> points to the first qTD <highlight><bold>705</bold></highlight> in the next bank of qTDs (representing the next sequential buffer posted to the HC driver). In this embodiment of the invention, as the HC consumes data from qTDs <highlight><bold>705</bold></highlight> and executes transactions on the USB, the HC driver continually re-initializes and re-uses the statically defined qTDs corresponding to the buffer currently active. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> When the HC driver initializes the last qTD&apos;s buffer, the HC driver sets the next-pointer in the last initialized qTD and begins servicing the qTDs in buffer N&plus;1. If any of qTDs <highlight><bold>705</bold></highlight> in buffer N <highlight><bold>720</bold></highlight> terminate with a short packet, the HC will follow the alternate-pointer to the first qTD of buffer N&plus;1. The same pattern continues for N buffers. This embodiment of the invention can be incorporated into a USB HC (e.g., USB 2.0 enhanced host controller) coupled with a USB HC driver (e.g., an enhanced host controller driver). This embodiment can also be incorporated into a USB system, such as USB 2.0 system <highlight><bold>300</bold></highlight> illustrated in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In one embodiment of the invention, for buffer contents that are smaller than the maximum contents that can fit into N small banks of qTDs <highlight><bold>710</bold></highlight> (e.g., N&equals;3), the HC reads the first qTD for the first buffer. If the execution of the first qTD completes normally, the HC follows the next pointer and executes the transactions contained in the second qTD. Since the last qTD in the transfer has the next pointer pointing to the next buffer, the HC will vector to the next buffer when the execution of the qTD completes. If the buffer returns a short packet, the HC follows the alternate pointer to execute the next buffer. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In one embodiment of the invention, for buffer contents larger than the maximum contents that can fit into N small banks of qTDs <highlight><bold>710</bold></highlight> (e.g., N&equals;3), The HC first reads the first qTD in the first buffer. After the first qTD completes execution, the HC asserts an interrupt to the HC driver. The HC then begins executing the transactions contained in the second qTD. The HC driver simultaneously clears out status in the first qTD and re-initializes it for the next section of the buffer (i.e., it would be the fourth qTD&apos;s worth of information). The HC driver will continue initializing/re-initializing and reusing the three (&ldquo;3&rdquo;) qTDs (where N&equals;3) until either the buffer &ldquo;shorts out,&rdquo; and the HC vectors off to the next buffer via the alternate pointer, or until the transfer completes normally (in which case the HC driver has modified the next pointer to point to the next bank, not to the next qTD in the same bank). </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 8A</cross-reference> illustrates a block diagram of a process of an embodiment of the invention that organizes qTDs to improve throughput in the presence of short packets when buffer contents are less than or equal to the storage capacity of qTDs in a bank. Process <highlight><bold>800</bold></highlight> begins with block <highlight><bold>810</bold></highlight> where a plurality of buffers posted to the HC driver. Block <highlight><bold>820</bold></highlight> then creates a bank of N qTDs for each buffer posted (N is a number, e.g., 3). Block <highlight><bold>825</bold></highlight> determines whether the size of the contents of the buffer is less than or equal to the maximum storage capacity of the qTDs in the bank. If block <highlight><bold>825</bold></highlight> does determine that the size of the contents of the buffer is less than or equal to the maximum storage capacity of the qTDs in the bank, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>830</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Block <highlight><bold>830</bold></highlight> reads the first qTD for the associated buffer. Block <highlight><bold>835</bold></highlight> executes the qTD. Process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>840</bold></highlight> that determines whether execution of the qTD completed normally (i.e., not a short packet condition). If block <highlight><bold>840</bold></highlight> determines that execution of the qTD completed normally, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>850</bold></highlight>. Block <highlight><bold>850</bold></highlight> determines whether the current qTD is the last qTD in the bank. If block <highlight><bold>850</bold></highlight> determines that the qTD recently executed is not the last qTD in the bank, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>860</bold></highlight>. Block <highlight><bold>860</bold></highlight> follows the next qTD pointer to the next qTD in the same bank. Block <highlight><bold>865</bold></highlight> then executes the next qTD that is pointed to by the next pointer. Process <highlight><bold>800</bold></highlight> then continues with block <highlight><bold>840</bold></highlight>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> If block <highlight><bold>850</bold></highlight> determines that the qTD recently executed is the last qTD in the bank, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>855</bold></highlight>. Block <highlight><bold>855</bold></highlight> follows the next qTD pointer to the next qTD in the same bank. Process <highlight><bold>800</bold></highlight> then continues with block <highlight><bold>825</bold></highlight>. One should note that the next buffer that is vectored to increments up to the last buffer. After the last buffer is vectored to, the next buffer to be vectored to would be the first buffer. For example, in a three (&ldquo;3&rdquo;) buffer configuration, after buffer &ldquo;3,&rdquo; buffer &ldquo;1&rdquo; is vectored back to. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> If block <highlight><bold>840</bold></highlight> determines that the execution of the qTD did not complete normally, i.e. a short packet condition, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>845</bold></highlight>. Block <highlight><bold>845</bold></highlight> follows the alternate pointer to the next buffer. Process <highlight><bold>800</bold></highlight> then continues with block <highlight><bold>825</bold></highlight>. If block <highlight><bold>825</bold></highlight> determines that the size of the contents of the buffer is greater than the maximum storage capacity of the qTDs in the bank, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>870</bold></highlight> (illustrated in <cross-reference target="DRAWINGS">FIG. 8B</cross-reference>). </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Block <highlight><bold>870</bold></highlight> reads the first qTD for the respective buffer. Block <highlight><bold>871</bold></highlight> then executes the first qTD. Block <highlight><bold>872</bold></highlight> determines whether the execution of the contents of the buffer completed normally (not &ldquo;shorted out&rdquo; by a short packet condition). If block <highlight><bold>872</bold></highlight> determines that the execution of the contents of the buffer completed normally (i.e., all contents executed), then process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>890</bold></highlight>. Block <highlight><bold>890</bold></highlight> follows the next pointer to the next bank. The next pointer to the next bank increments up until the last bank, then the next pointer points to the first bank. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> If block <highlight><bold>872</bold></highlight> determines that the execution of the buffer contents are not completed, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>880</bold></highlight>. Block <highlight><bold>880</bold></highlight> determines whether execution of the current qTD resulted in a short packet condition. If block <highlight><bold>880</bold></highlight> determines that the execution of the current qTD resulted in a short packet condition, then process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>881</bold></highlight>. Block <highlight><bold>881</bold></highlight> follows the alternate pointer to the next buffer. Process <highlight><bold>800</bold></highlight> then continues with block <highlight><bold>825</bold></highlight>. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> If block <highlight><bold>880</bold></highlight> determines that the execution of the current qTD did not result in a short packet condition, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>873</bold></highlight>. Block <highlight><bold>873</bold></highlight> asserts an interrupt to the HC driver. In block <highlight><bold>874</bold></highlight>, the HC driver clears the status of the qTD while simultaneously re-initializing the qTD. Process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>875</bold></highlight> that determines whether the current qTD is the last qTD in the bank. If block <highlight><bold>875</bold></highlight> determines that the current qTD is the last qTD in the bank, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>882</bold></highlight>. Block <highlight><bold>882</bold></highlight> modifies the next pointer to point to the first qTD in the next buffer. Process <highlight><bold>800</bold></highlight> then continues with block <highlight><bold>825</bold></highlight>. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> If block <highlight><bold>875</bold></highlight> determines that the current qTD is not the last qTD in the bank, process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>876</bold></highlight>. Block <highlight><bold>876</bold></highlight> follows the next qTD pointer to the next qTD in the same bank. Block <highlight><bold>877</bold></highlight> then executes the qTD pointed to by the next pointer. Process <highlight><bold>800</bold></highlight> continues with block <highlight><bold>872</bold></highlight>. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> For input devices, such as Ethernet controllers, hard drives, compact disk read-only-memory (CD-ROM) drives, CD-ROM Writer (CDRW) drives, etc., it is impossible for the host to know in advance how much data the device will return for any given transaction. For these devices, the HC initializes qTDs to account for the largest possible transaction that can be received from the device. The device then typically returns short packets to the host. By implementing the presented embodiments of the invention, efficiency of the HC driver is improved, in terms of memory footprint and bus utilization, in the presence of input devices, such as discussed above. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The above embodiments can also be stored on a device or machine-readable medium and be read by a machine to perform instructions. The machine-readable medium includes any mechanism that provides (i.e., stores and/or transmits) information in a form readable by a machine (e.g., a computer). For example, a machine-readable medium includes read only memory (ROM); random access memory (RAM); magnetic disk storage media; optical storage media; flash memory devices; electrical, optical, acoustical or other form of propagated signals (e.g., carrier waves, infrared signals, digital signals, etc.). The device or machine-readable medium may include a solid state memory device and/or a rotating magnetic or optical disk. The device or machine-readable medium may be distributed when partitions of instructions have been separated into different machines, such as across an interconnection of computers. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> While certain exemplary embodiments have been described and shown in the accompanying drawings, it is to be understood that such embodiments are merely illustrative of and not restrictive on the broad invention, and that this invention not be limited to the specific constructions and arrangements shown and described, since various other modifications may occur to those ordinarily skilled in the art. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. An apparatus comprising: 
+<claim-text>a host controller; and </claim-text>
+<claim-text>a host controller driver, </claim-text>
+<claim-text>wherein a plurality of banks containing a plurality of queue element transfer descriptors (qTDs) are created for a plurality of buffers posted to the host controller driver, and the qTDs are circularly linked. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the host controller is an enhanced host controller interface (EHCI) host controller. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the banks are associated with a particular buffer in the plurality of buffers. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the plurality of buffers are ordered in an incremented order. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein a second buffer is executed upon an occurrence of a short packet in a first qTD associated with a first buffer, the first qTD having an alternate next pointer pointing to a first qTD of the second buffer. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein a next pointer in each of the plurality of qTDs in a first bank point to a next qTD in the first bank, a last qTD in the first bank points to a first qTD in the first bank. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method comprising: 
+<claim-text>determining whether execution of a first queue element transfer descriptor (qTD) in a first bank including a plurality of qTDs results in a short packet condition; </claim-text>
+<claim-text>following an alternate pointer in the first bank that points to a second bank if execution of the first qTD resulted in the short packet condition; </claim-text>
+<claim-text>following a next pointer to a second qTD in the first bank if the execution of the first qTD completed normally; and </claim-text>
+<claim-text>executing the second qTD in the first bank; </claim-text>
+<claim-text>wherein the qTDs in the first bank and the second bank are circularly linked. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further including: 
+<claim-text>determining whether execution of a buffer contents completed execution and completed without a short packet condition if a size of contents in the first buffer is greater than a storage capacity in the first bank; </claim-text>
+<claim-text>asserting an interrupt to a host controller driver; </claim-text>
+<claim-text>clearing status of the first qTD and initializing the first qTD; and </claim-text>
+<claim-text>using the first qTD as overflow for the contents of the first buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the host controller driver coupled to an enhanced host controller interface (EHCI) host controller. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further including: 
+<claim-text>determining whether contents of the first buffer is one of less than and equal to a storage capacity for the first bank; </claim-text>
+<claim-text>determining whether a qTD is the last qTD in the first bank; and </claim-text>
+<claim-text>executing the first qTD in the first bank if the last qTD in the first bank completed execution without a short packet condition. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further including: 
+<claim-text>posting of a plurality of buffers to a host controller driver; and </claim-text>
+<claim-text>creating a bank including a plurality of qTDs for each of the plurality of buffers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein a host controller directs the posting. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. An apparatus comprising a machine-readable medium containing instructions which, when executed by a machine, cause the machine to perform operations comprising: 
+<claim-text>determining whether execution of a first queue element transfer descriptor (qTD) in a first bank including a plurality of qTDs results in a short packet condition; </claim-text>
+<claim-text>following an alternate pointer in the first bank that points to a second bank if execution of the first qTD resulted in the short packet condition; </claim-text>
+<claim-text>following next pointer to a second qTD in the first bank if the execution of the first qTD completed normally; and </claim-text>
+<claim-text>executing the second qTD in the first bank; </claim-text>
+<claim-text>wherein the qTDs in the first bank and the second bank are circularly linked. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>determining whether execution of a buffer contents completed execution and completed without a short packet condition if a size of contents in the first buffer is greater than a storage capacity in the first bank; </claim-text>
+<claim-text>asserting an interrupt to a host controller driver; </claim-text>
+<claim-text>clearing status of the first qTD and initializing the first qTD; and </claim-text>
+<claim-text>using the first qTD as overflow for the contents of the first buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the host controller driver is coupled to an enhanced host controller interface (EHCI) host controller. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>determining whether contents of the first buffer is one of less than and equal to a storage capacity for the first bank; </claim-text>
+<claim-text>determining whether a qTD is the last qTD in the first bank; and </claim-text>
+<claim-text>executing the first qTD in the first bank if the last qTD in the first bank completed execution without a short packet condition. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further containing instructions which, when executed by a machine, cause the machine to perform operations including: 
+<claim-text>posting of a plurality of buffers to a host controller driver; and </claim-text>
+<claim-text>creating a bank including a plurality of qTDs for each of the plurality of buffers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein a host controller directs the posting. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. An apparatus comprising: 
+<claim-text>a host controller; and </claim-text>
+<claim-text>a host controller driver coupled to the host controller, </claim-text>
+<claim-text>wherein the host controller arranges queue element transfer descriptors (qTDs) in a circularly linked order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein a plurality of banks containing a plurality of qTDs are created for a plurality of buffers posted to the host controller driver. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the host controller is an enhanced host controller interface (EHCI) host controller. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein the banks are associated with a particular buffer in the plurality of buffers. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein a second buffer is executed upon an occurrence of a short packet in a first qTD associated with a first buffer, the first qTD having an alternate next pointer pointing to a first qTD of the second buffer. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein a next pointer in each of the plurality of qTDs in a first bank point to a next qTD in the first bank, a last qTD in the first bank points to a first qTD in the first bank. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A system comprising: 
+<claim-text>a bus; </claim-text>
+<claim-text>a first host controller coupled to the bus; and </claim-text>
+<claim-text>a second host controller coupled to the first host controller; </claim-text>
+<claim-text>wherein the first host controller arranges queue element transfer descriptors (qTDs) in a circularly linked order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein a plurality of banks containing a plurality of qTDs are created for a plurality of buffers posted to a host controller driver. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein the first host controller is an enhanced host controller interface (EHCI) host controller. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein the banks are associated with a particular buffer in the plurality of buffers. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein a second buffer is executed upon an occurrence of a short packet in a first qTD associated with a first buffer, the first qTD having an alternate next pointer pointing to a first qTD of the second buffer. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein a next pointer in each of the plurality of qTDs in a first bank point to a next qTD in the first bank, a last qTD in the first bank points to a first qTD in the first bank.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005190A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005190A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005190A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005190A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005190A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005190A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005190A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00007">
+<image id="EMI-D00007" file="US20030005190A1-20030102-D00007.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00008">
+<image id="EMI-D00008" file="US20030005190A1-20030102-D00008.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

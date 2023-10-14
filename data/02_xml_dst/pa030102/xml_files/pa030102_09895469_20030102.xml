@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005176A1-20030102-D00000.TIF SYSTEM "US20030005176A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005176A1-20030102-D00001.TIF SYSTEM "US20030005176A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005176A1-20030102-D00002.TIF SYSTEM "US20030005176A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005176A1-20030102-D00003.TIF SYSTEM "US20030005176A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005176A1-20030102-D00004.TIF SYSTEM "US20030005176A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005176</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895469</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>327000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Accessing a translated resource descriptor of a hardware device</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Scott</given-name>
+<middle-name>P.</middle-name>
+<family-name>Dubal</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Beaverton</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method for accessing a main resource descriptor for a hardware device. A device driver accesses a hardware device&apos;s partial resource descriptor of a translated main resource descriptor stored in an operating system registry. The device driver accesses raw BIOS-assigned configuration information for the hardware device. The device driver compares the memory address in base address register 0 of the partial resource descriptor to the memory address in base address register 0 of the BIOS-assigned configuration information. The device driver selects the translated main resource descriptor that contains the partial resource descriptor with the memory address in base address register 0 that matches the memory address in base address register 0 for the raw BIOS-assigned configuration information. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates to accessing a translated resource descriptor of a hardware device. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> A bus is a component of a computer system that supplies a physical connection to hardware devices. There are a number of different bus architectures with different electrical and logical characteristics. Peripheral Component Interconnect (PCI) is one type of bus architecture. See, e.g., <highlight><italic>PCI Local Bus Specification Revision </italic></highlight>2.2, released Dec. 18, 1998. The Plug-and-Play (PnP) hardware standard is incorporated into the design for PCI. See, for example, <highlight><italic>Plug and Play Design Specification for Institute of Electrical and Electronics Engineers </italic></highlight>(<highlight><italic>IEEE</italic></highlight>) 1394 version 1.0c, published Mar. 3, 1999; revisions May 1999. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The goal of PnP is to enable a user to plug a new hardware device into a computer, and immediately be able to use the hardware device without the user performing complicated configuration tasks. In order for PnP to work, the computer&apos;s basic input/output system (BIOS) and operating system, and the hardware device being installed, among other things, must be PnP compliant. One of the complicated configuration tasks a user avoids when installing a PnP hardware device is resource allocation. Resources, also known as system resources, are used for communication and information transfer among hardware devices in a computer. An interrupt request (IRQ) and a direct memory access (DMA) are examples of resources. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> With PnP, the computer&apos;s BIOS and operating system allocate resources as part of the configuration process, without the need for user input. At power-up, the BIOS identifies a hardware device on a particular bus, and generates configuration information for the hardware device. The BIOS repeats this process until configuration information is generated for each hardware device on each bus of the computer. BIOS-assigned configuration information is referred to as raw configuration information, because it is bus-specific information. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Once the BIOS assigns raw configuration information for the hardware devices, the operating system completes the configuration process. Bus-specific enumerators in the operating system access raw BIOS-assigned configuration information for hardware devices, and store the raw BIOS-assigned configuration information in an area of the operating system called the registry. The operating system then converts the raw BIOS-assigned configuration information into translated information which the operating system can access without regard to the configuration information&apos;s bus, and stores the translated configuration information in the registry. The translated configuration information for a hardware device is referred to as a translated resource descriptor. The translated resource descriptor contains a list of partial resource descriptors for the hardware device. Each partial resource descriptor identifies a resource, e.g., an IRQ, allocated to the hardware device. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Once resources are allocated, the operating system loads the device driver for the hardware device. A device driver is software that controls the physical functions of a hardware device, and manages data transfers for the hardware device. After loading the device driver, the operating system transmits to the device driver the translated resource descriptor for the device. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> If a device driver for a hardware device does not load properly, the hardware device will not function. In that case, a user can run a diagnostic program to determine the source of the problem. The PROSet Utility, manufactured by Intel Corporation of Santa Clara, Calif., is an example of such a diagnostic program. The operating system loads a device driver provided with the diagnostic program that is different than the device driver that failed to properly load. The diagnostic program can then perform tests to determine why the hardware device&apos;s device driver failed to properly load. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Like the hardware device&apos;s device driver, the diagnostic program&apos;s device driver needs the translated resource descriptor for the hardware device in order to function properly. However, because the diagnostic program&apos;s device driver is not the device driver for the hardware device, the operating system does not transmit the translated resource descriptor to the diagnostic program&apos;s device driver. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A kernel mode device driver can access the translated resource descriptor of a PnP hardware device connected to a PCI bus, for example, even though the kernel mode device driver is not the device driver for the PnP hardware device, if the computer is running a Windows PnP compliant operating system, manufactured by Microsoft Corporation of Redmond, Wash. If a diagnostic program is using a kernel mode device driver, the kernel mode device driver can make &ldquo;legacy operating system calls&rdquo; to the Windows operating system&apos;s hardware abstraction layer (HAL) to access the translated resource descriptor for the PnP hardware device. The diagnostic program can then determine why the hardware device&apos;s device driver failed to properly load. However, it is contemplated that future releases of Windows PnP complaint operating systems will not respond to legacy operating system calls to the HAL. Thus, a kernel mode device driver utilized by a diagnostic program will not be able to access the translated resource descriptor of a PnP hardware device connected to a PCI bus. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The invention is illustrated by way of example, and not by way of limitation, in the figures of the accompanying drawings in which like reference numerals refer to similar elements. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is one embodiment of a computer system. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow diagram of accessing the translated resource descriptor of a hardware device. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is an apparatus for accessing the translated resource descriptor of a hardware device. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A method of accessing the translated resource descriptor of a hardware device is described. In the following description, for purposes of explanation, numerous specific details are set forth in order to provide a thorough understanding of the invention. It will be apparent, however, to one skilled in the art that the invention can be practiced without these specific details. In other instances, structures and devices are shown in block diagram form in order to avoid obscuring the invention. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Reference in the specification to &ldquo;one embodiment&rdquo; or &ldquo;an embodiment&rdquo; means that a particular feature, structure, or characteristic described in connection with the embodiment is included in at least one embodiment of the invention. The appearances of the phrase &ldquo;in one embodiment&rdquo; in various places in the specification are not necessarily all referring to the same embodiment. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> A method of accessing the translated resource descriptor of a hardware device is described. Each PnP hardware device has BIOS-assigned configuration information, and a translated resource descriptor. The translated resource descriptor contains a list of partial resource descriptors, one of which has a memory address in base address register 0 that matches the memory address in base address register 0 of the BIOS-assigned configuration information. A device driver that cannot otherwise access the translated resource descriptor for a hardware device, can compare the memory address in base address register 0 of each partial resource descriptor, to the memory address in base address register 0 of the BIOS-assigned configuration information for the hardware device. If the device driver identifies the partial resource descriptor with the memory address in base address register 0 that matches the memory address in base address register 0 of the BIOS-assigned configuration information, the device driver selects the partial resource descriptor&apos;s translated resource descriptor, and stores it. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of one embodiment of a computer system. The computer system is intended to represent a range of computer systems. Other computer systems can include more, fewer and/or different components. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Computer system <highlight><bold>100</bold></highlight> includes a bus <highlight><bold>110</bold></highlight> or other communication device to communicate information, and processor <highlight><bold>120</bold></highlight> coupled to bus <highlight><bold>110</bold></highlight> to process information. While computer system <highlight><bold>100</bold></highlight> is illustrated with a single processor, computer system <highlight><bold>100</bold></highlight> can include multiple processors and/or co-processors. Bus <highlight><bold>110</bold></highlight> encompasses all buses that may be present in a computer system, e.g., a Peripheral Component Interconnect (PCI) bus; a Personal Computer Memory Card International Association (PCMCIA) bus; a Universal Serial Bus (USB), etc. See, e.g., <highlight><italic>PCI Local Bus Specification Revision </italic></highlight>2.2, released Dec. 18, 1998; PC Card Standard, March 1997 Release, First Printing; <highlight><italic>Universal Serial Bus Specification Revision </italic></highlight>2.0, issued Apr. 27, 2000. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Computer system <highlight><bold>100</bold></highlight> further includes random access memory (RAM) or other dynamic storage device <highlight><bold>130</bold></highlight> (referred to as main memory), coupled to bus <highlight><bold>110</bold></highlight> to store information and instructions to be executed by processor <highlight><bold>120</bold></highlight>. Main memory <highlight><bold>130</bold></highlight> also can be used to store temporary variables or other intermediate information while processor <highlight><bold>120</bold></highlight> is executing instructions. Computer system <highlight><bold>100</bold></highlight> also includes read-only memory (ROM) and/or other static storage device <highlight><bold>140</bold></highlight> coupled to bus <highlight><bold>110</bold></highlight> to store static information and instructions for processor <highlight><bold>120</bold></highlight>. In addition, data storage device <highlight><bold>150</bold></highlight> is coupled to bus <highlight><bold>110</bold></highlight> to store information and instructions. Data storage device <highlight><bold>150</bold></highlight> may comprise a magnetic disk (e.g., a hard disk) or optical disc (e.g., a CD-ROM) and corresponding drive. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Computer system <highlight><bold>100</bold></highlight> may further comprise a flat-panel display device <highlight><bold>160</bold></highlight>, such as a cathode ray tube (CRT) or liquid crystal display (LCD), to display information to a user. Alphanumeric input device <highlight><bold>170</bold></highlight>, including alphanumeric and other keys, is typically coupled to bus <highlight><bold>110</bold></highlight> to communicate information and command selections to processor <highlight><bold>120</bold></highlight>. Another type of user input device is cursor control <highlight><bold>175</bold></highlight>, such as a mouse, a trackball, or cursor direction keys to communicate direction information and command selections to processor <highlight><bold>120</bold></highlight> and to control cursor movement on flat-panel display device <highlight><bold>160</bold></highlight>. Computer system <highlight><bold>100</bold></highlight> further includes network interface <highlight><bold>180</bold></highlight> to provide access to a network, such as a local area network. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Instructions are provided to memory from a machine-accessible medium, or an external storage device accessible via a remote connection (e.g., over a network via network interface <highlight><bold>180</bold></highlight>). A machine-accessible medium includes any mechanism that provides (i.e., stores and/or transmits) information in a form readable by a machine (e.g., a computer). For example, a machine-accessible medium includes RAM; ROM; magnetic or optical storage medium; flash memory devices; electrical, optical, acoustical or other form of propagated signals (e.g., carrier waves, infrared signals, digital signals); etc. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In alternative embodiments, hard-wired circuitry can be used in place of or in combination with software instructions to implement the present invention. Thus, the present invention is not limited to any specific combination of hardware circuitry and software instructions. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow diagram of an algorithm that is embodied in the code for a device driver, in order to enable the device driver to access the translated resource descriptor of a hardware device in accordance with the invention. For purposes of illustration and ease of explanation, <cross-reference target="DRAWINGS">FIG. 2</cross-reference> will be described in specific terms of a kernel mode device driver accessing the translated resource descriptor of a PnP hardware device (herein referred to as the PCI PnP hardware device), such as a network adapter, connected to a PCI bus in a computer running the Windows NT operating system, manufactured by Microsoft Corporation of Redmond, Wash. However, the device driver can be a device driver other than a kernel mode device driver accessing information regarding the hardware device. The information being accessed can be information other than the translated resource descriptor. The hardware device can be any hardware device connected to a bus architecture other than PCI, for example, USB. The operating system can be any operating system that has stored the information the device driver is attempting to access, and has not transmitted that information to the device driver. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> At <highlight><bold>200</bold></highlight>, the kernel mode driver accesses Windows NT&apos;s registry. The registry consists of keys, and at <highlight><bold>205</bold></highlight>, the kernel mode device driver accesses the registry key &ldquo;HKEY_LOCAL_MACHINE/HARDWARE/RESOURCEMAP/Plug and Play Manager/Plug and Play Manager&rdquo; (herein referred to as the &ldquo;Resources Registry Key&rdquo;). Each release of the Windows operating system starting with Windows 2000 has the Resources Registry Key, which contains information regarding the resources allocated to each PnP hardware device in a computer. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> At <highlight><bold>210</bold></highlight>, the kernel mode device driver determines whether the Resources Registry Key is empty. If the Resources Registry Key contains a value of NLLL, then the registry key is empty, and the kernel mode device driver ends its search, because an empty registry key does not contain any resource descriptors. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> If the Resources Registry Key is not empty, at <highlight><bold>215</bold></highlight> the kernel mode device driver accesses the first subkey of the Resources Registry Key, and at <highlight><bold>220</bold></highlight> determines whether the subkey contains the information &ldquo;REG_RESOURCE_LIST&rdquo; (herein referred to as the &ldquo;Resource List&rdquo;). The Resource List contains a list of resources allocated to a PnP hardware device. If the Resource List is not present, the kernel mode device driver accesses the next subkey of the Resources Registry Key and begins the process again. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> If a subkey of the Resources Registry Key contains the Resource List, then at <highlight><bold>225</bold></highlight> the kernel mode device driver accesses the Resource List&apos;s main resource descriptor. The main resource descriptor contains a list of partial resource descriptors for a PnP hardware device, and each partial resource descriptor identifies a resource, e.g., an IRQ, allocated to the PnP hardware device. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> At <highlight><bold>230</bold></highlight>, the kernel mode device driver determines certain information regarding the main resource descriptor, specifically whether the main resource descriptor is translated, rather than raw. With Windows NT, a translated main resource descriptor contains the character string &ldquo;translated.&rdquo; If the main resource descriptor is not translated, the kernel mode device driver accesses the next subkey of the Resources Registry Key and begins the process again. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> If the main resource descriptor is translated, then at <highlight><bold>235</bold></highlight>, the kernel mode device driver determines whether the translated main resource descriptor is for an installed PnP hardware device. With Windows NT, a translated main resource descriptor for an installed device contains the character string &ldquo;NTPNP.&rdquo; If the &ldquo;NTPNP&rdquo; character string is not present, then the kernel mode device driver accesses the next subkey of the Resources Registry Key and begins the process again. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> At <highlight><bold>240</bold></highlight>, if the translated main resource descriptor in the Resource List is for an installed PnP hardware device, then the kernel mode device driver converts the translated main resource descriptor to a recognizable data structure. For example, with the kernel mode device driver, this data structure is the &ldquo;CM_RESOURCE_LIST&rdquo; data structure. At <highlight><bold>245</bold></highlight>, the kernel mode device driver accesses in sequence the partial resource descriptors in the translated main resource descriptor. At <highlight><bold>250</bold></highlight>, the kernel mode device driver accesses the BIOS-assigned PCI configuration information for the PCI PnP hardware device, so that at <highlight><bold>255</bold></highlight>, the kernel mode device driver can compare the memory address in base address register 0 (also referred to as &ldquo;BARO&rdquo;) of the partial resource descriptor, to the memory address in base address register 0 of the BIOS-assigned PCI configuration information. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> If the memory address in base address register 0 of a partial resource descriptor does not match the memory address in base address register 0 of the BIOS-assigned PCI configuration information, the kernel mode device driver at <highlight><bold>260</bold></highlight> determines whether the non-matching partial resource descriptor was the last partial resource descriptor of the translated main resource descriptor. If the non-matching partial resource descriptor was the last partial resource descriptor of the translated main resource descriptor, the kernel mode device driver accesses the next subkey of the Resources Registry Key and begins the process again. If the non-matching partial resource descriptor was not the last partial resource descriptor of the translated main resource descriptor, the kernel mode device driver accesses the next partial resource descriptor of the translated main resource descriptor. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The kernel mode device driver continues to compare the memory addresses in base address register 0 of the partial resource descriptors, to the memory address in base address register 0 of the BIOS-assigned PCI configuration information. The kernel mode device driver will either get to the end of the partial resource descriptors of the translated main resource descriptor, in which case the kernel mode device driver will access the next subkey of the Resources Registry Key to begin the entire process again, or find that the memory addresses match. If the memory address in base address register 0 of a partial resource descriptor matches the memory address in base address register 0 of the BIOS-assigned PCI configuration information, the kernel mode device driver has identified the translated main resource descriptor for the PCI PnP hardware device. At <highlight><bold>265</bold></highlight>, the kernel mode device driver stores the translated main resource descriptor that contains the partial resource descriptor with the memory address in base address register 0 that matches the memory address in base address register 0 of the BIOS-assigned PCI configuration information. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> describes the invention in terms of a method. However, one should also understand it to represent a machine-accessible medium having recorded, encoded or otherwise represented thereon instructions, routines, operations, control codes, or the like, that when executed by or otherwise utilized by the machine, cause the machine to perform the method as described above or other embodiments thereof that are within the scope of this disclosure. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is computer system <highlight><bold>100</bold></highlight> modified to include one embodiment of the invention. Computer system <highlight><bold>100</bold></highlight> contains a device driver <highlight><bold>151</bold></highlight> in data storage device <highlight><bold>150</bold></highlight>, PnP hardware device <highlight><bold>300</bold></highlight>, and operating system <highlight><bold>131</bold></highlight> in main memory <highlight><bold>130</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Partial resource descriptor accesser <highlight><bold>152</bold></highlight> accesses registry <highlight><bold>132</bold></highlight>, then accesses resources registry key <highlight><bold>133</bold></highlight>, and determines whether resources registry key <highlight><bold>133</bold></highlight> is empty. If resources registry key <highlight><bold>133</bold></highlight> is not empty, partial resource descriptor <highlight><bold>152</bold></highlight> determines whether a subkey (not shown) of resources registry key <highlight><bold>133</bold></highlight> contains resource list <highlight><bold>134</bold></highlight>. If the subkey of resources registry key <highlight><bold>133</bold></highlight> contains resource list <highlight><bold>134</bold></highlight>, partial resource descriptor accesser <highlight><bold>152</bold></highlight> accesses main resource descriptor <highlight><bold>135</bold></highlight> to determine whether main resource descriptor <highlight><bold>135</bold></highlight> is translated and for an installed hardware device. Finally, if main resource descriptor <highlight><bold>135</bold></highlight> is translated and for an installed hardware device, then partial resource descriptor accesser <highlight><bold>152</bold></highlight> accesses partial resource descriptors <highlight><bold>136</bold></highlight> in sequence. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> For each partial resource descriptors <highlight><bold>136</bold></highlight>, memory address collector <highlight><bold>153</bold></highlight> of device driver <highlight><bold>151</bold></highlight> determines the memory address in base address register 0 <highlight><bold>137</bold></highlight>, and passes the memory address in base address register 0 <highlight><bold>137</bold></highlight> to memory address comparer <highlight><bold>155</bold></highlight>. PCI configuration space accesser <highlight><bold>154</bold></highlight> accesses PCI configuration space <highlight><bold>301</bold></highlight> of PnP hardware device <highlight><bold>300</bold></highlight>. Memory address collector <highlight><bold>153</bold></highlight> determines the memory address in base address register 0 <highlight><bold>303</bold></highlight> of BIOS-assigned PCI configuration information <highlight><bold>302</bold></highlight>, and passes the memory address in base address register <highlight><bold>303</bold></highlight> to memory address comparer <highlight><bold>155</bold></highlight>. Once the memory address in base address register 0 <highlight><bold>137</bold></highlight> of a partial resource descriptors <highlight><bold>136</bold></highlight> matches the memory address in base address register 0 <highlight><bold>303</bold></highlight> of BIOS-assigned PCI configuration information <highlight><bold>302</bold></highlight>, then main resource descriptor retriever <highlight><bold>156</bold></highlight> retrieves main resource descriptor <highlight><bold>135</bold></highlight> that contains the one of partial resource descriptors <highlight><bold>136</bold></highlight> with the matching memory address in base address register 0 <highlight><bold>137</bold></highlight>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> In the foregoing specification, the invention has been described with reference to specific embodiments thereof. It will, however, be evident that various modifications and changes can be made thereto without departing from the broader spirit and scope of the invention. The specification and drawings are, accordingly, to be regarded in an illustrative rather than a restrictive sense. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>accessing configuration information of a first type for a device connected to a bus; </claim-text>
+<claim-text>accessing configuration information of a second type for the device; </claim-text>
+<claim-text>comparing a memory location of the configuration information of the first type to a memory location of the configuration information of the second type; and </claim-text>
+<claim-text>selecting the configuration information of the first type if the memory location of the configuration information of the first type matches the memory location of the configuration information of the second type. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the bus further comprises a Peripheral Component Interconnect bus. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the bus further comprises a Universal Serial Bus. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein selecting the configuration information further comprises storing the configuration information. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method of enabling a device driver to access a translated resource descriptor of a Plug-and-Play device connected to a bus, comprising: 
+<claim-text>accessing a registry of a Windows Plug-and-Play compliant operating system; </claim-text>
+<claim-text>accessing a registry key of the registry; </claim-text>
+<claim-text>determining that the registry key is not empty; </claim-text>
+<claim-text>determining that a subkey of the registry key contains a resource list; </claim-text>
+<claim-text>accessing a main resource descriptor in the resource list; </claim-text>
+<claim-text>making a determination that the main resource descriptor is translated; </claim-text>
+<claim-text>making a determination that a translated main resource descriptor is for an installed device; </claim-text>
+<claim-text>converting the translated main resource descriptor to a data structure for the device driver; </claim-text>
+<claim-text>accessing a partial resource descriptor of the translated main resource descriptor; </claim-text>
+<claim-text>accessing raw basic input/output system (BIOS)-assigned configuration information for the device; </claim-text>
+<claim-text>comparing a memory address location of the raw BIOS-assigned configuration information to the memory address location of the partial resource descriptor; and </claim-text>
+<claim-text>selecting the translated main resource descriptor containing the partial resource descriptor with the memory address location that matches the memory address location of the raw BIOS-assigned configuration information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the device driver further comprises a kernel mode device driver. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the device further comprises a network adapter. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the bus further comprises a Peripheral Component Interconnect bus. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the bus further comprises a Universal Serial Bus. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the Windows PnP compliant operating system further comprises a Windows NT operating system. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the registry key further comprises the HKEY_LOCAL_MACHINE/HARDWARE/RESOURCEMAP/Plug and Play Manager/Plug and Play Manager registry key. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein determining that the main resource descriptor is translated further comprises identifying the character string &ldquo;translated&rdquo; in the main resource descriptor. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein determining from the main resource descriptor that the device is installed further comprises identifying the character string &ldquo;NTPNP&rdquo; in the main resource descriptor. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the data structure further comprises the CM_RESOURCE_LIST data structure. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the memory address location further comprises base address register 0. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A method of enabling a device driver to access a translated resource descriptor of a hardware device connected to a bus, comprising: 
+<claim-text>accessing a registry of an operating system; </claim-text>
+<claim-text>determining that the registry contains a resource list; </claim-text>
+<claim-text>accessing a resource descriptor in the resource list; </claim-text>
+<claim-text>making a determination that the resource descriptor is translated; </claim-text>
+<claim-text>accessing a partial resource descriptor of the translated resource descriptor; </claim-text>
+<claim-text>accessing basic input/output system (BIOS)-assigned configuration information for the hardware device; </claim-text>
+<claim-text>comparing a memory address location of the BIOS-assigned configuration information to the memory address location of the partial resource descriptor; and </claim-text>
+<claim-text>selecting the translated resource descriptor containing the partial resource descriptor with the memory address location that matches the memory address location of the BIOS-assigned configuration information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the hardware device further comprises a Plug-and-Play (PnP) hardware device. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the operating system further comprises a Windows PnP compliant operating system. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. An article of manufacture comprising a machine-accessible medium having stored thereon sequences of instructions that, when executed by the machine, cause the machine to: 
+<claim-text>access a registry of a Windows PnP compliant operating system; </claim-text>
+<claim-text>access a registry key of the registry; </claim-text>
+<claim-text>determine whether the registry key is empty; </claim-text>
+<claim-text>determine whether a subkey of the registry key contains a resource list; </claim-text>
+<claim-text>determine whether a main resource descriptor of the resource list is translated; </claim-text>
+<claim-text>determine whether a translated main resource descriptor is for an installed device; </claim-text>
+<claim-text>convert the translated main resource descriptor to a data structure for the device driver; </claim-text>
+<claim-text>access a partial resource descriptor of the translated main resource descriptor; </claim-text>
+<claim-text>access raw basic input/output system (BIOS)-assigned configuration information for a device connected to a bus; </claim-text>
+<claim-text>compare a memory address in base address register 0 of the partial resource descriptor to a memory address in base address register 0 of the BIOS-assigned configuration information; and </claim-text>
+<claim-text>select the main resource descriptor containing the partial resource descriptor with the memory address in base address register 0 that matches the memory address in base address register 0 of the BIOS-assigned configuration information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the device driver further comprises a kernel mode device driver. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the Windows PnP compliant operating system further comprises a Windows NT operating system. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the registry key further comprises the HKEY_LOCAL_MACHINE/HARDWARE/RESOURCEMAP/Plug and Play Manager/Plug and Play Manager registry key. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein determining that the main resource descriptor is translated further comprises identifying the character string &ldquo;translated&rdquo; in the main resource descriptor. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein determining that the translated main resource descriptor is for an installed device further comprises identifying the character string &ldquo;NTPNP&rdquo; in the translated main resource descriptor. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the data structure further comprises the CM_RESOURCE_LIST data structure. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the device further comprises a network adapter. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the bus further comprises a Peripheral Component Interconnect bus. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the bus further comprises a Universal Serial Bus. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. A device driver, comprising: 
+<claim-text>a partial resource descriptor accesser to access a partial resource descriptor of a translated main resource descriptor of a resource list of a registry key of a registry of a Windows Plug-and-Play compliant operating system; </claim-text>
+<claim-text>a PCI configuration space accesser to access a Peripheral Component Interconnect (PCI) configuration space containing raw basic input/output system (BIOS)-assigned PCI configuration information for a Plug-and-Play device connected to a PCI bus; </claim-text>
+<claim-text>a memory address collector to collect a memory address of the partial resource descriptor and the memory address of the raw BIOS-assigned PCI configuration information, </claim-text>
+<claim-text>a memory address comparer to compare the memory address of the partial resource descriptor to the memory address of the raw BIOS-assigned PCI configuration information; and </claim-text>
+<claim-text>a main resource descriptor retriever to retrieve the translated main resource descriptor containing the partial resource descriptor with the memory address that matches the memory address of the raw BIOS-assigned configuration information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The device driver of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the device driver comprises a kernel mode device driver. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The device driver of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the registry key further comprises the HKEY_LOCAL_MACHINE/HARDWARE/RESOURCEMAP/Plug and Play Manager/Plug and Play Manager registry key. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The device driver of <dependent-claim-reference depends_on="CLM-00022">claim 29</dependent-claim-reference>, wherein the memory address further comprises the memory address in base address register 0.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005176A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005176A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005176A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005176A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005176A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

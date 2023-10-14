@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002790A1-20030102-M00001.NB SYSTEM "US20030002790A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030002790A1-20030102-M00001.TIF SYSTEM "US20030002790A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030002790A1-20030102-D00000.TIF SYSTEM "US20030002790A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002790A1-20030102-D00001.TIF SYSTEM "US20030002790A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002790A1-20030102-D00002.TIF SYSTEM "US20030002790A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002790</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09885670</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010620</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G02F001/01</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>G02B006/32</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>385</class>
+<subclass>033000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>385</class>
+<subclass>015000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>359</class>
+<subclass>238000</subclass>
+</uspc>
+</classification-us-secondary>
+<classification-us-secondary>
+<uspc>
+<class>359</class>
+<subclass>578000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Optical phased array control system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Bartley</given-name>
+<middle-name>C.</middle-name>
+<family-name>Johnson</family-name>
+</name>
+<residence>
+<residence-us>
+<city>North Andover</city>
+<state>MA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Jack</given-name>
+<middle-name>H.</middle-name>
+<family-name>Hollister</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Chesterfield</city>
+<state>MO</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Mark D. Elchuk</name-1>
+<name-2>Harness Dickey &amp; Pierce P.L.C.</name-2>
+<address>
+<address-1>P.O. Box 828</address-1>
+<city>Bloomfield Hills</city>
+<state>MI</state>
+<postalcode>48303</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A real-time control system for an optical phased array is disclosed that comprises a computationally efficient algorithm for calculating phase differences between a plurality of array beamlets and a reference plane wave and further generates phase correction signals that are transmitted to a plurality of phase modulators to realign the array beamlets to compensate for external perturbations and atmospheric aberrations. The phase measurements are based on a phase angle of a complex number comprising square wave functions, and alternately, based on a phase angle of a complex number comprising sine and cosine functions to correct for harmonic content of phase measurements. Furthermore, the phase correction signal is based on the phase measurement times modulo2&pgr;. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to optical phased arrays and more particularly to control systems for optical phased arrays that compensate for phase changes due to external perturbations such as vibration and thermal variations as well as compensating for atmospheric aberrations external to a laser system. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Optical phased arrays are well known in the art and are used in a variety of applications for the purpose of generating an optical output having greater power than an optical input through the use of an array of emitters. More specifically, optical phased arrays have been used in laser systems to generate an output beam having high power levels in addition to high beam quality or brightness. High beam quality allows available light to be concentrated onto a small area at a large distance, which is advantageous in laser weapons systems. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The optical phased array is similar to phased array radar, wherein an array of emitters must be emitting light at precisely the same phase. However, matching the phases of the emitters at optical frequencies is more difficult than with radio frequencies, as used with phased array radar, due to the short wavelength of light. Additionally, external perturbations such as vibrations and thermal variations continuously alter the phase of each emitter. Further, atmospheric aberrations external to the laser system also change the phase of the emitters, wherein a control system may generate an arbitrary phase front to compensate for atmospheric propagation perturbations. Accordingly, a control system must be employed to realign the emitters to compensate for phase changes due to external perturbations and atmospheric aberrations. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Generally, control systems measure the phase of each emitter compared with the phase of a reference signal and feedback phase correction signals to phase modulators that realign the phase of each emitter. Such techniques are referred to as near-field techniques, wherein the phase of each emitter is measured and controlled by using an interferometer to compare the phase of each emitter to the phase of a reference signal. See, for example, U.S. Pat. No. 5,694,408 to Bott et. al., assigned to McDonnell Douglas Corporation, the disclosure of which is incorporated by reference in its entirety herein. The phase modulators may realign the phases of the emitters to match a reference signal, or alternately, the phase modulators may realign the phases of the emitters to produce an output beam having a specific phase profile or phase taper. Furthermore, microprocessors having algorithms to calculate phase measurements and corrections are also employed in the known art. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Unfortunately, the algorithms that are used in the known art to calculate phase measurements and corrections are computationally intensive and thus may not be capable of providing real-time feedback to the phase modulators if the optical phased array comprises a large number of emitters. For example, known art algorithms that use the near-field technique repeatedly sweep a reference beam by 2&pgr; radians while measuring the output for each emitter. Generally, timing information is used from the start of the sweep to the time when the output appears to determine the phase of the emitter, and the algorithm is further sensitive to the AC amplitude of the interferometer signal and also to the DC component thereof. As a result, the algorithm is computationally intensive and consumes valuable time that is needed to continuously correct the phases of the emitters. Additionally, conventional techniques are phase-nulling, and thus the control system cannot lock to an arbitrary phase front to compensate for atmospheric propagation perturbations. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In addition to the near-field techniques, far-field techniques have also been employed in the known art to control elements of an optical phased array. The far-field technique has been used to align an array of semiconductor laser amplifiers by dithering the phases of the elements to achieve a beam with the narrowest far-field divergence. Unfortunately, the computational requirements of the near-field technique scale superlinearly in relation to the number of elements. Furthermore, the signal to noise ratio degrades linearly with the number of elements. As a result, laser systems comprising a large number of emitters for higher power output cannot be controlled real-time due to the computational time required. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Accordingly, there remains a need in the art for an optical phased array control system that comprise computationally efficient algorithms in order to provide real-time feedback to compensate for phase changes due to external perturbations. Further, the algorithms should preferably be capable of calculating phase measurements and corrections with relatively high fidelity. Moreover, the algorithms should be capable of generating arbitrary phase-fronts for corrections due to atmospheric aberrations. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In one preferred form, the present invention provides an optical phased array control system comprising a master oscillator laser that produces a beam, which is split into a reference beam and a plurality of array beamlets. Generally, the phase of the reference beam and the phase of the array beamlets are measured and compared, wherein a computationally efficient algorithm computes both phase measurements and phase corrections. Accordingly, phase correction signals are transmitted to a plurality of phase modulators that correspond to each of the array beamlets. The phase modulators then realign the phases of the array beamlets to compensate for external perturbations. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In operation, the array beamlets are first transmitted through a first fiber array where the beamlets are diverged into a first microlens array. Accordingly, the first microlens array generates a composite beam that is transmitted as an output beam from the system. The composite beam is further transmitted and interfered with a reference plane wave that is generated from the reference beam. The composite beam and the reference plane wave are then transmitted through a second microlens array where the array beamlets and the reference plane wave are focused to a second fiber array. The second fiber array then transmits the array beamlets and the reference plane wave to a plurality of photodetectors, which correspond with the array beamlets, wherein the photodetectors detect the phases of the reference plane wave and the array beamlets. Subsequently, the output from the photodetectors is transmitted to a computing device, such as a personal computer (PC), wherein the algorithm calculates a phase measurement and corrections. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The phase measurement is generally the difference between the phase of a specific array beamlet and the phase of the reference plane wave. In addition, the phase correction for each array beamlet is calculated based on the phase measurement, as described in greater detail below. The phase correction signal is then transmitted to the phase modulators, which realign the phases of the array beamlets to match the phase of the reference beam such that a flat phase front is generated. Alternately, an arbitrary phase-front is generated to correct for atmospheric aberrations. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> As a part of the real-time control system, the reference plane wave is ramped from 0 to 2&pgr; radians using a reference phase modulator. Preferably, the ramp is achieved in four equally spaced steps for optimal results. Accordingly, a trigger is employed to send signals to the phase modulator and to the personal computer, wherein the algorithm uses a signal from the trigger to calculate the phase measurements and corrections as described in greater detail below. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The phase measurement according to the algorithm is calculated based on a difference between the phase of the array beamlets and the phase of the reference plane wave. More specifically, the phase measurement is based on a phase angle of a complex number comprising square wave functions. The square wave functions are insensitive to AC amplitudes and DC components of the phase of the array beamlets and the phase of the reference plane wave, and as a result, the computations are less intensive and are capable of supporting real-time feedback to the phase modulators. In another form, the phase measurement is calculated based on a phase angle of a complex number comprising sine and cosine functions to correct for harmonic content of the phases of the array beamlets and the reference plane wave. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The phase corrections are calculated based on the phase measurement calculation times modulo2&pgr;. The phase correction signal is cumulative, and thus a current phase correction is subtracted from a previous phase correction for each cycle that measures phases and calculates the phase measurements and corrections. Accordingly, the cycle must be faster that the external perturbations in order to provide real-time phase control. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In another form, a plurality of PCs may be employed for a large number of array beamlets, thereby reducing the computing load. As a result, a parallel real-time phase control system may be used that is capable of controlling relatively large optical phased arrays without exceeding available computing resources. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Further areas of applicability of the present invention will become apparent from the detailed description provided hereinafter. It should be understood that the detailed description and specific examples, while indicating the preferred embodiment of the invention, are intended for purposes of illustration only and are not intended to limit the scope of the invention.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The present invention will become more fully understood from the detailed description and the accompanying drawings, wherein: </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic of the optical phased array control system in accordance with a preferred embodiment of the present invention; and </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a diagram of the sinusoidal photodetector output as the reference plane wave is ramped from 0 to 2&pgr; radians, in addition to the square wave functions of the phase measurement, in accordance with the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The following description of the preferred embodiments is merely exemplary in nature and is in no way intended to limit the invention, its application, or uses. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Optical Phased Array Architecture </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Referring to the drawings, a real-time control system for an optical array according to the present invention is illustrated and generally indicated by reference numeral <highlight><bold>10</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. As shown, the real-time control system <highlight><bold>10</bold></highlight> comprises a master oscillator laser <highlight><bold>12</bold></highlight> having a beam <highlight><bold>14</bold></highlight> that is split by a signal power splitter <highlight><bold>16</bold></highlight> into a reference beam <highlight><bold>18</bold></highlight> and a plurality of array beamlets <highlight><bold>20</bold></highlight>. Preferably, the power splitter <highlight><bold>16</bold></highlight> is a passive coupler, such as the 3 dB coupler as illustrated. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Generally, the phases of the array beamlets <highlight><bold>20</bold></highlight> and the reference beam <highlight><bold>18</bold></highlight> are detected by a corresponding set of photodetectors <highlight><bold>22</bold></highlight>, which transmit the phases in photodetector output signals <highlight><bold>23</bold></highlight> to an algorithm <highlight><bold>24</bold></highlight> within a computing device <highlight><bold>26</bold></highlight>. The algorithm <highlight><bold>24</bold></highlight> calculates phase measurements and phase corrections based on the phase of the array beamlets <highlight><bold>20</bold></highlight> compared with the reference beam <highlight><bold>18</bold></highlight>, and transmits phase correction signals <highlight><bold>27</bold></highlight> to a corresponding set of phase modulators <highlight><bold>28</bold></highlight>. Accordingly, the phase modulators <highlight><bold>28</bold></highlight> realign the phases of array beamlets <highlight><bold>20</bold></highlight> to compensate for external perturbations. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> As further shown, the array beamlets <highlight><bold>20</bold></highlight> are transmitted through a first fiber array <highlight><bold>30</bold></highlight>, where the array beamlets <highlight><bold>20</bold></highlight> diverge into a first microlens array <highlight><bold>32</bold></highlight> that generates a composite beam <highlight><bold>34</bold></highlight>. The composite beam <highlight><bold>34</bold></highlight> is transmitted as an output beam <highlight><bold>36</bold></highlight> by a first beam splitter <highlight><bold>38</bold></highlight>, and is further transmitted through a second beam splitter <highlight><bold>40</bold></highlight> to a second microlens array <highlight><bold>42</bold></highlight>. Additionally, a high quality reference plane wave <highlight><bold>44</bold></highlight> is generated from the reference beam <highlight><bold>18</bold></highlight>, preferably using a collimating lens <highlight><bold>46</bold></highlight>. The reference plane wave <highlight><bold>44</bold></highlight> is then interfered with the composite beam <highlight><bold>34</bold></highlight> by the second beam splitter <highlight><bold>40</bold></highlight>, and the reference plane wave <highlight><bold>44</bold></highlight> is also transmitted to the second microlens array <highlight><bold>42</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The second microlens array <highlight><bold>42</bold></highlight> focuses both the composite beam <highlight><bold>34</bold></highlight>, which comprises array beamlets <highlight><bold>20</bold></highlight>, and the reference plane wave <highlight><bold>44</bold></highlight> to a second fiber array <highlight><bold>46</bold></highlight>, which transmits the array beamlets <highlight><bold>20</bold></highlight> and the reference plane wave <highlight><bold>44</bold></highlight> to the photodetectors <highlight><bold>22</bold></highlight>. Accordingly, the photodetectors <highlight><bold>22</bold></highlight> detect the phase of each array beamlet <highlight><bold>20</bold></highlight> and the reference plane wave <highlight><bold>44</bold></highlight> and subsequently transmit the phases to the computing device <highlight><bold>26</bold></highlight> through photodetector output signals <highlight><bold>23</bold></highlight>. As shown, the computing device <highlight><bold>26</bold></highlight> further comprises an analog to digital converter <highlight><bold>48</bold></highlight> that converts an analog output of the photodetectors <highlight><bold>22</bold></highlight> to a digital input for the algorithm <highlight><bold>24</bold></highlight>. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Generally, the algorithm <highlight><bold>24</bold></highlight> calculates a phase measurement, which is the difference between the phase of an individual array beamlet <highlight><bold>20</bold></highlight> and the phase of the reference plane wave <highlight><bold>44</bold></highlight>. The phase measurement is further used to calculate a phase correction that is used for the phase correction signals <highlight><bold>27</bold></highlight>, which are transmitted to the phase modulators <highlight><bold>28</bold></highlight> to correct for phase changes. Accordingly, the computing device <highlight><bold>26</bold></highlight> further comprises a digital to analog converter <highlight><bold>50</bold></highlight> that converts the digital signals from the algorithm <highlight><bold>24</bold></highlight> to an analog signal for the phase correction signals <highlight><bold>27</bold></highlight>. Both the phase measurement and the phase correction calculations of the algorithm <highlight><bold>24</bold></highlight> are described in greater detail below. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> A trigger <highlight><bold>52</bold></highlight> is used to ramp the phase of reference plane wave <highlight><bold>44</bold></highlight> from 0 to 2&pgr; radians through the use of a reference phase modulator <highlight><bold>54</bold></highlight>. The trigger <highlight><bold>52</bold></highlight> also generates a trigger signal <highlight><bold>56</bold></highlight> that is used by the algorithm <highlight><bold>24</bold></highlight> as described in greater detail below. As further shown, optical amplifiers <highlight><bold>58</bold></highlight> may further be employed to amplify the array beamlets <highlight><bold>20</bold></highlight> as necessary. Additionally, a reference amplifier <highlight><bold>60</bold></highlight> may also be employed to amplify the reference beam <highlight><bold>18</bold></highlight> as necessitated by the particular application requirements. Although a total of four (4) array beamlets <highlight><bold>20</bold></highlight> are illustrated herein along with corresponding elements (phase modulators <highlight><bold>28</bold></highlight>, photodetectors <highlight><bold>22</bold></highlight>), it shall be appreciated by those skilled in the art that any number of array beamlets <highlight><bold>20</bold></highlight> and elements may be employed according to the teachings of the present invention. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Accordingly, a real-time control system <highlight><bold>10</bold></highlight> is used to realign the phases of the array beamlets <highlight><bold>20</bold></highlight> to compensate for external perturbations. As shown, the real-time control system <highlight><bold>10</bold></highlight> is a closed-looped system that continuously provides feedback to the phase modulators <highlight><bold>28</bold></highlight> during continued operation of the master oscillator laser <highlight><bold>12</bold></highlight>. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Algorithm </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Generally, the algorithm <highlight><bold>24</bold></highlight> functions according to three (<highlight><bold>3</bold></highlight>) primary cycles: (1) ramping the reference plane wave <highlight><bold>44</bold></highlight> from 0 to 2&pgr; radians and digitizing n points of the photodetector output signals <highlight><bold>23</bold></highlight>; (2) computing the phase measurement, &PHgr;<highlight><subscript>M</subscript></highlight>, which is the phase difference between the reference plane wave phase and an array beamlet phase; and (3) sending a phase correction signal, &PHgr;<highlight><subscript>E</subscript></highlight>, to each phase modulator <highlight><bold>28</bold></highlight> that corresponds with an array beamlet <highlight><bold>20</bold></highlight> to ensure that each array beamlet <highlight><bold>20</bold></highlight> is in phase with the reference plane wave <highlight><bold>44</bold></highlight>. Preferably, n&equals;<highlight><bold>4</bold></highlight> in one form of the present invention, wherein optimal signal to noise ratios have been achieved in preliminary physical systems. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the sinusoidal photodetector output, p(&phgr;), is shown as the reference plane wave <highlight><bold>44</bold></highlight> is ramped from 0 to 2&pgr; radians. As further illustrated, two square wave functions, c(&phgr;) and s(&phgr;) are also used by the algorithm <highlight><bold>24</bold></highlight>, which are a part of the phase measurement calculation as more fully described in the following. Further, the trigger signal is also a square wave function. Accordingly, the square wave functions ignore the DC component of p(&phgr;) and are further insensitive to the AC amplitude of p(&phgr;), which greatly simplifies the calculations of the algorithm <highlight><bold>24</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The phase measurement, &PHgr;<highlight><subscript>M</subscript></highlight>, is calculated according to Equation 1: </paragraph>
+<paragraph lvl="0"><in-line-formula>&PHgr;<highlight><subscript>M</subscript></highlight><highlight><italic>&equals;arg</italic></highlight>(<highlight><italic>I&plus;jQ</italic></highlight>),&emsp;&emsp;(Eq. 1) </in-line-formula></paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Where arg( ) denotes the argument, or phase angle, of the complex number I&plus;jQ. Accordingly, I and Q are defined (for one ramp of reference plane wave <highlight><bold>44</bold></highlight>) according to Equations 2 and 3: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>I&equals;&int;p</italic></highlight>(&phgr;)<highlight><italic>c</italic></highlight>(&phgr;)<highlight><italic>d&phgr;</italic></highlight>&emsp;&emsp;(Eq. 2) </in-line-formula></paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Q&equals;&int;p</italic></highlight>(&phgr;)<highlight><italic>s</italic></highlight>(&phgr;)<highlight><italic>d&plus;,</italic></highlight>&emsp;&emsp;(Eq. 3) </in-line-formula></paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Where c(&phgr;) and s(&phgr;) are the square wave functions according to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In another preferred form, c(&phgr;) and s(&phgr;) may alternately be cos(&phgr;) and sin(&phgr;) functions. As a result, the sine and cosine functions screen against harmonic content in p(<highlight><bold>100</bold></highlight> ). Accordingly, if p(&phgr;) is not a perfectly sinusoidal signal, c(&phgr;) and s(&phgr;) may result in a slight phase measurement error if p(&phgr;) has an undesirable harmonic content. However c(&phgr;) and s(&phgr;) are more computationally efficient than cos(&phgr;) and sin(&phgr;) since cos(&phgr;) and sin(&phgr;) would require additional multiplication steps. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> For a sampling of n points of p(&phgr;), I and Q are computed according to Equations 4 and 5:  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mtable>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mi>I</mi>
+        <mo>=</mo>
+        <mrow>
+          <munderover>
+            <mo>&Sum;</mo>
+            <mrow>
+              <mi>i</mi>
+              <mo>=</mo>
+              <mn>0</mn>
+            </mrow>
+            <mi>n</mi>
+          </munderover>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mrow>
+            <mrow>
+              <mi>p</mi>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <msub>
+                  <mi>&phi;</mi>
+                  <mi>i</mi>
+                </msub>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+            <mo>&it;</mo>
+            <mrow>
+              <mi>c</mi>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <msub>
+                  <mi>&phi;</mi>
+                  <mi>i</mi>
+                </msub>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Eq</mi>
+          <mo>.</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>4</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+  <mtr>
+    <mtd>
+      <mrow>
+        <mi>Q</mi>
+        <mo>=</mo>
+        <mrow>
+          <munderover>
+            <mo>&Sum;</mo>
+            <mrow>
+              <mi>i</mi>
+              <mo>=</mo>
+              <mn>0</mn>
+            </mrow>
+            <mi>n</mi>
+          </munderover>
+          <mo>&it;</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mrow>
+            <mrow>
+              <mi>p</mi>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <msub>
+                  <mi>&phi;</mi>
+                  <mi>i</mi>
+                </msub>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+            <mo>&it;</mo>
+            <mrow>
+              <mi>s</mi>
+              <mo>&af;</mo>
+              <mrow>
+                <mo>(</mo>
+                <msub>
+                  <mi>&phi;</mi>
+                  <mi>i</mi>
+                </msub>
+                <mo>)</mo>
+              </mrow>
+            </mrow>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mtd>
+    <mtd>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mi>Eq</mi>
+          <mo>.</mo>
+          <mstyle>
+            <mtext>&emsp;</mtext>
+          </mstyle>
+          <mo>&it;</mo>
+          <mn>5</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mtd>
+  </mtr>
+</mtable>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030002790A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="52.07895" file="US20030002790A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> The application of the present invention to an optical phased array when n&equals;4 (wherein the signal to noise ratio is optimized) as illustrated herein would result in the following computation for the phase measurement, &phgr;<highlight><subscript>M</subscript></highlight>, according to Equation 6: </paragraph>
+<paragraph lvl="0"><in-line-formula>&PHgr;<highlight><subscript>M</subscript></highlight><highlight><italic>&equals;arg</italic></highlight>&lsqb;(<highlight><italic>p</italic></highlight>(&pgr;)&minus;<highlight><italic>p</italic></highlight>(0))&plus;<highlight><italic>j</italic></highlight>(<highlight><italic>p</italic></highlight>(3&pgr;/2)&minus;<highlight><italic>p</italic></highlight>(&pgr;/2))&rsqb;&emsp;&emsp;(Eq. 6) </in-line-formula></paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Once the phase measurement, &PHgr;<highlight><subscript>M</subscript></highlight>, is calculated, the algorithm <highlight><bold>24</bold></highlight> next computes a phase correction, &PHgr;<highlight><subscript>E</subscript></highlight>, so that a phase correction signal <highlight><bold>27</bold></highlight> may be sent to each phase modulator <highlight><bold>28</bold></highlight> to realign the array beamlets <highlight><bold>20</bold></highlight>. Accordingly, the phase correction, &PHgr;<highlight><subscript>E</subscript></highlight>, which is cumulative, is computed for the ith measurement/cycle according to Equation 7: </paragraph>
+<paragraph lvl="0"><in-line-formula>&PHgr;<highlight><subscript>E</subscript></highlight>&equals;&PHgr;<highlight><subscript>E</subscript></highlight><highlight><italic>&lsqb;i&minus;</italic></highlight>1&rsqb;&minus;&PHgr;<highlight><subscript>M</subscript></highlight><highlight><italic>&lsqb;i&rsqb; modulo</italic></highlight>2&pgr;&emsp;&emsp;(Eq. 7) </in-line-formula></paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> As the optical phased array is being perturbed by external sources, the calculations are computationally efficient such that the phase modulators <highlight><bold>28</bold></highlight> realign the array beamlets <highlight><bold>20</bold></highlight> corrections at a rate faster than the external perturbations. As a result, a computationally efficient and accurate real-time control system for a variety of optical phased arrays in many applications is provided by the present invention. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> The description of the invention is merely exemplary in nature and, thus, variations that do not depart from the gist of the invention are intended to be within the scope of the invention. Such variations are not to be regarded as a departure from the spirit and scope of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A real-time control system for an optical phased array comprising: 
+<claim-text>a master oscillator laser that generates a beam; </claim-text>
+<claim-text>a signal power splitter that splits the beam into a reference beam and a plurality of array beamlets, wherein each said array beamlet comprises a phase; </claim-text>
+<claim-text>a plurality of phase modulators corresponding to the array beamlets that vary the phase of the array beamlets; </claim-text>
+<claim-text>a reference plane wave that is generated from the reference beam and is interfered with the array beamlets, the reference plane wave comprising a phase; </claim-text>
+<claim-text>a plurality of photodetectors that detect the phase of each array beamlet and the phase of the reference plane wave; and </claim-text>
+<claim-text>an algorithm that provides phase correction signals to the phase modulators, </claim-text>
+<claim-text>wherein the phases of the array beamlets are aligned such that a composite beam is generated that is compensated for external perturbations. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the algorithm further comprises a phase measurement that calculates a difference between the phase of an array beamlet and the phase of the reference plane wave based on a phase angle of a complex number comprising square wave functions, wherein the square wave functions are insensitive to AC amplitudes and DC components of the phase of the array beamlet and the phase of the reference plane wave. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the algorithm further comprises phase correction calculations based on the phase measurement times modulo2&pgr;, such that a phase correction signal is transmitted to the phase modulators. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the algorithm further comprises a phase measurement that calculates a difference between the phase of an array beamlet and the phase of the reference plane wave based on a phase angle of a complex number comprising sine and cosine functions to correct for harmonic content of the phase of the array beamlet and the reference plane wave, wherein the sine and cosine functions are insensitive to AC amplitudes and DC components of the phase of the array beamlet and the phase of the reference plane wave. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the algorithm further comprises phase correction calculations based on the phase measurement times modulo2&pgr;, such that a phase correction signal is transmitted to the phase modulators. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>a first fiber array that receives the array beamlets; </claim-text>
+<claim-text>a first microlens array that receives the array beamlets from the first fiber array and outputs the composite beam; </claim-text>
+<claim-text>a second microlens array that receives the composite beam and the reference plane wave; and </claim-text>
+<claim-text>a second fiber array that receives the composite beam and the reference plane wave from the second microlens array and transmits the array beamlets and the reference plane wave to the photodetectors, </claim-text>
+<claim-text>wherein the array beamlets diverge from the first fiber array and are collimated by the first microlens array, and the second microlens array focuses the array beamlets and the reference plane wave to the second fiber array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising: 
+<claim-text>a first beam splitter that splits the composite beam into an output beam; and </claim-text>
+<claim-text>a second beam splitter that splits the reference plane wave into the composite beam as input to the second microlens array. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising: 
+<claim-text>an analog to digital converter that converts photodetector output signals from the photodetectors into digital signals of the array beamlet phases and the reference plane wave phase; </claim-text>
+<claim-text>a computing device that receives the digital array beamlet phases and the reference plane wave phase as input to the algorithm; and </claim-text>
+<claim-text>a digital to analog converter that converts the phase correction from the algorithm into analog phase correction signals, </claim-text>
+<claim-text>wherein the phase correction signals are transmitted to the phase modulators to vary the phases of the array beamlets. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> further comprising: 
+<claim-text>a reference phase modulator that varies the phase of the reference beam; and </claim-text>
+<claim-text>a trigger that uses the reference phase modulator to ramp the phase of the reference plane wave from 0 to 2&pgr; radians. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the phase of the reference plane wave is ramped from 0 to 2&pgr; radians in four equally spaced steps. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> further comprising an optical amplifier that amplifies output from the reference phase modulator. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the reference plane wave is generated by a collimating lens. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising a plurality of optical amplifiers that amplify the array beamlets after the phase modulators have realigned the phases of the array beamlets. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The real-time control system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the signal power splitter is a 3 dB passive coupler. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method of measuring and controlling the optical phases of array beamlets in an optical phased array, the method comprising the steps of: 
+<claim-text>(a) transmitting a beam from a master oscillator laser to a signal power splitter; </claim-text>
+<claim-text>(b) splitting the beam into a reference beam and a plurality of array beamlets; </claim-text>
+<claim-text>(c) transmitting the array beamlets through a first fiber array and a first microlens array to generate a composite beam; </claim-text>
+<claim-text>(d) transmitting the reference beam through a lens to form a reference plane wave, the reference plane wave comprising a phase; </claim-text>
+<claim-text>(e) interfering the reference plane wave with the composite beam; </claim-text>
+<claim-text>(f) transmitting the interfered reference plane wave and the composite beam through a second microlens array and a second fiber array to a plurality of photodetectors; </claim-text>
+<claim-text>(g) detecting phases of the reference plane wave and the array beamlets; </claim-text>
+<claim-text>(h) calculating a phase measurement, the phase measurement comprising a difference between the phase of the reference plane wave and the array beamlet phases; </claim-text>
+<claim-text>(i) calculating phase corrections; and </claim-text>
+<claim-text>(j) transmitting phase correction signals to a plurality of phase modulators to realign the array beamlets to compensate for external perturbations. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein step (h) further comprises the step of calculating the phase measurement based on a phase angle of a complex number comprising square wave functions, wherein the square waves are insensitive to AC amplitudes and DC components of the phase of the array beamlets and the phase of the reference plane wave. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein step (i) is based on the phase measurement times modulo2&pgr;. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein step (h) further comprises the step of calculating the phase measurement based on a phase angle of a complex number comprising sine and cosine functions to correct for harmonic content of phase measurements, wherein the sine and cosine functions are insensitive to AC amplitudes and DC components of the phase of the array beamlets and the phase of the reference plane wave. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein step (i) is based on the phase measurement times modulo2&pgr;. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A real-time optical phased array control system comprising: 
+<claim-text>a master oscillator laser that generates a beam; </claim-text>
+<claim-text>a signal power splitter that splits the beam into a reference beam and a plurality of array beamlets, wherein each array beamlet comprises a phase; </claim-text>
+<claim-text>a plurality of phase modulators corresponding to the array beamlets that vary the phases of the array beamlets; </claim-text>
+<claim-text>a reference plane wave that is generated from the reference beam and is interfered with the array beamlets, the reference plane wave comprising a phase; </claim-text>
+<claim-text>a first fiber array that receives the array beamlets; </claim-text>
+<claim-text>a first microlens array that receives the array beamlets from the first fiber array and outputs a composite beam; </claim-text>
+<claim-text>a second microlens array that receives the composite beam and the reference plane wave from the first microlens array; </claim-text>
+<claim-text>a second fiber array that receives the composite beam and the reference plane wave from the second microlens array; </claim-text>
+<claim-text>a plurality of photodetectors that receive the array beamlets and the reference plane wave from the second fiber array and detect the phase of the array beamlets and the phase of the reference plane wave; and </claim-text>
+<claim-text>an algorithm that calculates phase measurements and phase corrections to generate phase corrections signals for the phase modulators, </claim-text>
+<claim-text>wherein the phases of the array beamlets are aligned such that the array beamlets compensated for external perturbations </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The real-time optical phased array control system of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, further comprising: 
+<claim-text>an analog to digital converter that converts photodetector output signals from the photodetectors into digital signals of the array beamlet phases and the reference plane wave phase; </claim-text>
+<claim-text>a computing device that sends the digital array beamlet phases and the reference plane wave phase to the algorithm; </claim-text>
+<claim-text>a digital to analog converter that converts the phase corrections from the algorithm into analog phase correction signal, and transmits the phase correction signals to the phase modulators to realign the phases of the array beamlets; </claim-text>
+<claim-text>a reference phase modulator that varies the phase of the reference beam; and </claim-text>
+<claim-text>a trigger that uses the reference phase modulator to ramp the reference plane wave phase from 0 to 2&pgr; radians. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The real-time optical phased array control system of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the phase of the reference plane wave is ramped from 0 to 2&pgr; radians in four equally spaced steps.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002790A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002790A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002790A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

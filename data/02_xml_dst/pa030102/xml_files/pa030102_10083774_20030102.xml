@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002686A1-20030102-D00000.TIF SYSTEM "US20030002686A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002686A1-20030102-D00001.TIF SYSTEM "US20030002686A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002686A1-20030102-D00002.TIF SYSTEM "US20030002686A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002686</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10083774</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020227</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>A61F011/06</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>G10K011/16</ipc>
+</classification-ipc-secondary>
+<classification-ipc-secondary>
+<ipc>H03B029/00</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>381</class>
+<subclass>071100</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Computationally efficient means for optimal control with control constraints</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60271792</doc-number>
+<document-date>20010227</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Thomas</given-name>
+<middle-name>A.</middle-name>
+<family-name>Millott</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Milford</city>
+<state>CT</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Douglas</given-name>
+<middle-name>G.</middle-name>
+<family-name>MacMartin</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Gabriel</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Robert</given-name>
+<middle-name>K.</middle-name>
+<family-name>Goodman</family-name>
+</name>
+<residence>
+<residence-us>
+<city>West Hartford</city>
+<state>CT</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>James</given-name>
+<middle-name>W.</middle-name>
+<family-name>Fuller</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Amston</city>
+<state>CT</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>CARLSON, GASKEY &amp; OLDS, P.C.</name-1>
+<name-2></name-2>
+<address>
+<address-1>400 WEST MAPLE ROAD</address-1>
+<address-2>SUITE 350</address-2>
+<city>BIRMINGHAM</city>
+<state>MI</state>
+<postalcode>48009</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method reduces undesired noise or vibration in a vehicle. The ambient vibration is measured and command signals are generated over time. The command signals are generated based upon the measured vibration and based upon a control weighting. By varying the control weighting over time, the maximum possible performance is always obtained subject to the saturation constraints. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application claims priority to U.S. Provisional Application Serial No. 60/271,792, Filed Feb. 27, 2001.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> This invention relates to optimal control of a system. More particularly, this invention relates to active vibration and active sound control systems for the interior of helicopters. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> 2. Background Art </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Conventional active control systems consist of a number of sensors that measure the ambient variables of interest (e.g. sound or vibration), a number of actuators capable of generating an effect on these variables (e.g. by producing sound or vibration), and a computer which processes the information received from the sensors and sends commands to the actuators so as to reduce the amplitude of the sensor signals. The control algorithm is the scheme by which the decisions are made as to what commands to the actuators are appropriate. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> A problem may arise in such a control scheme when the control decision yields a command that exceeds the physical capabilities of the system, for example, if the command to an actuator exceeds the actuator&apos;s physical limits. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The present invention utilizes a varying control weighting to provide improved performance while avoiding saturation of the actuators. For a least-squares or quadratic performance index, one typically includes a weighting on the control amplitudes to avoid actuator saturation. However, a constant weighting that is sufficient to ensure that no actuator ever saturates results in less than optimal performance. This invention therefore modifies the control weighting to ensure that the maximum possible performance is always obtained subject to the saturation constraints. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> In the present invention, the ambient vibration is measured by a plurality of sensors. A plurality of command signals are generated over time based upon the measured vibration and based upon a control weighting. By varying the control weighting over time, the maximum possible performance is always obtained subject to the saturation constraints. The control weighting may be varied based upon the magnitude of the command signals.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE FIGURES </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a block diagram of the noise control system of the present invention. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a vehicle in which the present invention may be used.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Control systems consist of a number of sensors which measure ambient vibration (or sound), actuators capable of generating vibration at the sensor locations, and a computer which processes information received from the sensors and sends commands to the actuators which generate a vibration field to cancel ambient vibration (generated, for example by a disturbing force at the helicopter rotor). The control algorithm is the scheme by which the decisions are made as to what the appropriate commands to the actuators are. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a block diagram <highlight><bold>10</bold></highlight> of an active control system. The system comprises a structure <highlight><bold>102</bold></highlight>, the response of which is to be controlled, sensors <highlight><bold>128</bold></highlight>, filter <highlight><bold>112</bold></highlight>, control unit <highlight><bold>106</bold></highlight> and actuators (which could be force generators) <highlight><bold>104</bold></highlight>. A disturbance source <highlight><bold>103</bold></highlight> produces undesired response of the structure <highlight><bold>102</bold></highlight>. In a helicopter, for example, the undesired disturbances are typically due to vibratory aerodynamic loading of rotor blades, gear clash, or other source of vibrational noise. A plurality of sensors <highlight><bold>128</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>n</italic></highlight>) (where n is any suitable number) measure the ambient variables of interest (e.g. sound or vibration). The sensors (generally <highlight><bold>128</bold></highlight>) are typically microphones or accelerometers, or virtually any suitable sensors. Sensors <highlight><bold>128</bold></highlight> generate an electrical signal that corresponds to sensed sound or vibration. The electrical signals are transmitted to filter <highlight><bold>112</bold></highlight> via an associated interconnector <highlight><bold>144</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>n</italic></highlight>) (generally <highlight><bold>144</bold></highlight>). Interconnector <highlight><bold>144</bold></highlight> is typically wires or wireless transmission means, as known to those skilled in the art. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Filter <highlight><bold>112</bold></highlight> receives the sensed vibration signals from sensors <highlight><bold>128</bold></highlight> and performs filtering on the signals, eliminating information that is not relevant to vibration or sound control. The output from the filter <highlight><bold>112</bold></highlight> is transmitted to control unit <highlight><bold>106</bold></highlight> via interconnector <highlight><bold>142</bold></highlight> respectively. The control circuit <highlight><bold>106</bold></highlight> generates control signals that control force generators <highlight><bold>104</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>n</italic></highlight>). </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A plurality of force generators <highlight><bold>104</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>n</italic></highlight>) (where n is any suitable number) are used to generate a force capable of affecting the sensed variables (e.g. by producing sound or vibration). Force generators <highlight><bold>104</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>n</italic></highlight>) (generally <highlight><bold>104</bold></highlight>) are typically speakers, shakers, or virtually any suitable actuators. Force actuators <highlight><bold>104</bold></highlight> receive commands from the control unit <highlight><bold>106</bold></highlight> via interconnector <highlight><bold>134</bold></highlight> and output a force, as shown by lines <highlight><bold>132</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>n</italic></highlight>) to compensate for the sensed vibration or sound produced by vibration or sound source <highlight><bold>103</bold></highlight>. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> The control unit <highlight><bold>106</bold></highlight> is typically a processing module, such as a microprocessor, with processing capabilities. Control unit <highlight><bold>106</bold></highlight> stores control algorithms control memory <highlight><bold>105</bold></highlight>, or other suitable memory location. Memory module <highlight><bold>105</bold></highlight> is, for example, RAM, ROM, DVD, CD, a hard drive, or other electronic, optical, magnetic, or any other computer readable medium onto which is stored the control algorithms described herein. The control algorithms are the scheme by which the decisions are made as to what commands to the actuators <highlight><bold>104</bold></highlight> are appropriate. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> For a least-squares or quadratic performance index, one typically includes a weighting on the control amplitudes to avoid actuator saturation. However, a constant weighting that is sufficient to ensure that no actuator ever saturates results in less than optimal performance. This invention therefore modifies the control weighting to ensure that the maximum possible performance is always obtained subject to the saturation constraints. This is useful in the reduction of gear-mesh noise within a helicopter cabin. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> For tonal control problems, the computation can be performed at an update rate lower than the sensor sampling rate as described in the copending application entitled &ldquo;Computationally Efficient Means for Active Control of Tonal Sound or Vibration,&rdquo; which is commonly assigned. This approach involves demodulating the sensor signals so that the desired information is near DC (zero frequency), performing the control computation, and remodulating the control commands to obtain the desired output to the actuators. The control computations are therefore performed on the sine and cosine components at the frequency of interest for each sensor signal. These can be represented as a complex variable where the real part is equal to the cosine term, and the imaginary part is equal to the sine term. The same control algorithm can therefore be used for either low frequency disturbances or tonal disturbances, provided that complex notation is used. The approach will be described for such a demodulated tonal problem, but is equally applicable to low frequency disturbances. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The number of sensors is given by n<highlight><subscript>s </subscript></highlight>and the number of actuators n<highlight><subscript>a</subscript></highlight>. The complex harmonic estimator variables that are calculated from the measurements of noise or vibration level can be assembled into a vector of length n<highlight><subscript>s </subscript></highlight>denoted z<highlight><subscript>k </subscript></highlight>at each sample time k. The control commands generated by the control algorithm can likewise be assembled into a vector of length n<highlight><subscript>a </subscript></highlight>denoted u<highlight><subscript>k</subscript></highlight>. The commands sent to the actuators are generated by multiplying the real and imaginary parts of this vector by the cosine and sine of the desired frequency. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In the narrow bandwidth required for control about each tone, the transfer function between actuators and sensors is roughly constant, and thus, the system can be modeled as a single quasi-steady complex transfer function matrix, denoted T. This matrix of dimension n<highlight><subscript>s </subscript></highlight>by n<highlight><subscript>a </subscript></highlight>describes the relationship between a change in control command and the resulting change in the harmonic estimate of the sensor measurements, that is, &Dgr;Z<highlight><subscript>k</subscript></highlight>&equals;T &Dgr;u<highlight><subscript>k</subscript></highlight>. For notational simplicity, define y<highlight><subscript>k</subscript></highlight>&equals;&Dgr;z<highlight><subscript>k</subscript></highlight>, and v<highlight><subscript>k</subscript></highlight>&equals;&Dgr;u<highlight><subscript>k</subscript></highlight>. The complex values of the elements of T are determined by the physical characteristics of the system (including actuator dynamics, the structure and/or acoustic cavity, and anti-aliasing and reconstruction filters) so that T<highlight><subscript>ij </subscript></highlight>is the response at the reference frequency of sensor i due to a unit command at the reference frequency on actuator j. Many algorithms may be used for making control decisions based on this model. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The control law is derived to minimize a quadratic performance index </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>J&equals;z</italic></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>z&plus;u</italic></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>u&plus;v</italic></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>&dgr;u</subscript></highlight><highlight><italic>v </italic></highlight></in-line-formula></paragraph>
+<paragraph id="P-0021" lvl="7"><number>&lsqb;0021&rsqb;</number> where W<highlight><subscript>z</subscript></highlight>, W<highlight><subscript>u </subscript></highlight>and W<highlight><subscript>&dgr;u </subscript></highlight>are weighting matrices that are typically diagonal on the sensors, control inputs, and rate of change of control inputs respectively. A larger control weighting on an actuator will result in a control solution with smaller amplitude for that actuator. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Solving for the control which minimizes J yields: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>u</italic></highlight><highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&equals;u</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&minus;Y</italic></highlight><highlight><subscript>k</subscript></highlight>(<highlight><italic>W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>u</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>z</italic></highlight><highlight><subscript>k</subscript></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0023" lvl="7"><number>&lsqb;0023&rsqb;</number> where </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>Y</italic></highlight><highlight><subscript>k</subscript></highlight>&equals;(<highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>&plus;W</italic></highlight><highlight><subscript>&dgr;u</subscript></highlight>)<highlight><superscript>&minus;1 </superscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Solving for the steady state control (u<highlight><subscript>k&plus;1</subscript></highlight>&equals;u<highlight><subscript>k</subscript></highlight>) yields </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>u</italic></highlight>&equals;&minus;(<highlight><italic>T</italic></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>T&plus;W</italic></highlight><highlight><subscript>u</subscript></highlight>)<highlight><superscript>&minus;1</superscript></highlight><highlight><italic>T</italic></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>z</italic></highlight><highlight><subscript>0 </subscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The matrix Y determines the rate of convergence of different directions in the control space, but does not affect the steady state solution. In the following equation, the step size multiplier &bgr;&lt;1 provides control over the convergence rate of the algorithm. A value of approximately &bgr;&equals;0.1 may be used, for example. </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>u</italic></highlight><highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&equals;u</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&minus;Y</italic></highlight><highlight><subscript>k</subscript></highlight>(<highlight><italic>W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>u</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>z</italic></highlight><highlight><subscript>k</subscript></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> This equation corresponds to a recursive least-squares (RLS) control law. A least mean square (LMS) gradient approach could also be used, leading to a similar equation for u<highlight><subscript>k&plus;1 </subscript></highlight>but with Y&equals;I instead. For poorly conditioned T matrices, the equalization of convergence rates for different directions that is obtained with the RLS approach is critical. Decreasing the control weighting, W<highlight><subscript>u</subscript></highlight>, increases the low frequency gain, and decreasing the weighting on the rate of change of control, W<highlight><subscript>&dgr;u</subscript></highlight>, increases the loop cross-over frequency (where frequency refers to the demodulated frequency). The notation (u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k </subscript></highlight>will be used to refer to the (demodulated) command to the i<highlight><superscript>th </superscript></highlight>actuator at the k<highlight><superscript>th </superscript></highlight>control iteration. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The command to any actuator may not exceed some (typically) fixed value U<highlight><subscript>max</subscript></highlight>, depending on the range of the D/A (digital to analog converter), amplifier limits, or actuation limits. This maximum value may be different for different actuators. If the desired command to an actuator (u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k </subscript></highlight>as determined by the equations above exceeds the maximum allowable for that actuator by the ratio R&equals;&verbar;(u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k</subscript></highlight>&verbar;/U<highlight><subscript>max</subscript></highlight>, then typically either that one particular actuator command is scaled by 1/R, or the entire vector is scaled by 1/R. In many applications the latter yields better results. For example, with two force actuators that combine to produce a force and a moment, it is preferable to reduce both actuator commands rather than just the saturated actuator, so that a significant change in the desired moment is not introduced. However, either of these two approaches can lead to a significant loss in performance. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Typically, the control weighting values are fixed to a predefined value (based on experience), and are sometimes scheduled versus operating condition. However, in some applications such as using the active noise/vibration control algorithm to minimize helicopter noise and/or vibration, it is very difficult to predetermine control weighting values that provide optimal performance over the entire flight envelope. Fixing the control weighting to prevent actuator saturation in the worst case condition will, in general, result in sub-optimal performance over the remainder of the flight envelope. Furthermore, the value of control weighting which results in optimal performance on one day may not yield the same performance on a different day, or even later during the same flight (e.g., due to weight, temperature, or humidity changes). Based on the above discussion, it would be desirable to be able to actively vary the control weighting values to attempt to find the optimal values for the current operating condition. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> One aspect of the present invention is to introduce a time-varying control weighting. Another aspect is to improve the re-scaling of the actuator commands in the event of actuator saturation. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Variable Weighting </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The approach used to achieve a time-varying control weighting in the noise and vibration control algorithm, denoted as variable control weighting, is as follows. When the code is initialized, the control weightings are set to some initial conservative values. As the control feedback loop converges to a steady state solution, the algorithm slowly varies the control weighting on a channel-by-channel basis until optimal performance is achieved. As discussed herein, &ldquo;optimal performance&rdquo; is defined as achieving the greatest reduction in the magnitude of the sensor signals z without saturating any of the actuator channels. In the variable control weighting approach, values of the actuator commands are used to actively adjust the control weighting values to maximize the reductions in the sensor signals while avoiding saturating any of the actuators. In a steady-state condition, the variable control weighting approach actively seeks for each actuator channel the smallest value of control weighting required to prevent saturation. However, recognizing the fact that a helicopter in flight is never truly in a steady-state condition, the variable control weighting approach actively increases the value of the control weighting for any actuator channel that saturates. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> The approach used in the noise and vibration control algorithm is to introduce various threshold levels, and multiply the control weighting (W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k </subscript></highlight>for each actuator i at each time step k by a scalar based on the magnitude of the control command (u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k </subscript></highlight>computed for that actuator. A table look-up was used for the reduction to practice in helicopter gear-mesh control, however, a continuous function could also have been used. An example is given by the table below.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="105PT" align="left"/>
+<colspec colname="2" colwidth="98PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Magnitude of command</entry>
+<entry>Scale control weight by</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&ensp;&thinsp;0 &lt; &verbar;(u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k</subscript></highlight>&verbar; &lt; .5 * U<highlight><subscript>max</subscript></highlight></entry>
+<entry>(W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k&plus;1 </subscript></highlight>&equals; 0.999 * (W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>&ensp;.5 * u<highlight><subscript>max </subscript></highlight>&lt; &verbar;(u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k</subscript></highlight>&verbar; &lt; .8 * u<highlight><subscript>max</subscript></highlight></entry>
+<entry>(W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k&plus;1 </subscript></highlight>&equals; 1.0 * (W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>&ensp;.8 * u<highlight><subscript>max </subscript></highlight>&lt; &verbar;(u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k</subscript></highlight>&verbar; &lt; .9 * u<highlight><subscript>max</subscript></highlight></entry>
+<entry>(W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k&plus;1 </subscript></highlight>&equals; 1.08 * (W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>&ensp;.9 * u<highlight><subscript>max </subscript></highlight>&lt; &verbar;(u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k</subscript></highlight>&verbar; &lt; 1.0 * u<highlight><subscript>max</subscript></highlight></entry>
+<entry>(W<highlight><subscript>u,1</subscript></highlight>)<highlight><subscript>k&plus;1 </subscript></highlight>&equals; 1.20 * (W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry>1.0 * u<highlight><subscript>max </subscript></highlight>&lt; &verbar;(u<highlight><subscript>i</subscript></highlight>)<highlight><subscript>k</subscript></highlight>&verbar;</entry>
+<entry>(W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k&plus;1 </subscript></highlight>&equals; 1.56 * (W<highlight><subscript>u,i</subscript></highlight>)<highlight><subscript>k</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0033" lvl="7"><number>&lsqb;0033&rsqb;</number> The actual numbers used would differ for each specific application and would depend upon many different factors, including the update rate and the control bandwidth. Similarly, in some applications, the performance metric of interest is not the rms of all sensors, but rather the worst case. For example, with vibration control on a helicopter, the objective is to keep the vibration levels at all locations below some specified level. The weighting matrix W<highlight><subscript>z </subscript></highlight>is used to place differential weighting on various sensors in which it is desired to produce reductions. In the case where there are specific maximum allowable sensor signal magnitudes to satisfy some predefined specification, such as a maximum vibration level in the case of AVC, the relative values of the elements of W<highlight><subscript>z </subscript></highlight>can be actively adjusted such that all sensors are below their maximum allowable values. The relative values in the (typically diagonal) W<highlight><subscript>z </subscript></highlight>matrix are adjusted such that the trace of the matrix remains unchanged but the element corresponding to the sensor which is above the desired specification is increased. This is done iteratively until all are below the desired specification. </paragraph>
+<paragraph id="P-0034" lvl="7"><number>&lsqb;0034&rsqb;</number> Actuator Scaling: </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Conventional approaches to re-scaling the actuator command to avoid saturation result in less than optimal performance. The ideal approach is to modify the control weighting for the actuators (one or more) with the unallowable commands so that the new commands for those actuators are exactly at the limits. The invention described here accomplishes this ideal. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> The nominal updated control step is given by </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>u</italic></highlight><highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&equals;u</italic></highlight><highlight><subscript>k</subscript></highlight>&minus;&bgr;(<highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>&plus;W</italic></highlight><highlight><subscript>&dgr;u</subscript></highlight>)<highlight><superscript>&minus;1</superscript></highlight>(<highlight><italic>W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>u</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>z</italic></highlight><highlight><subscript>k</subscript></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> If the i<highlight><superscript>th </superscript></highlight>actuator command computed from this equation exceeds the allowable command u<highlight><subscript>max </subscript></highlight>(which may be different for different actuators), then a modified control step &mgr;<highlight><subscript>k&plus;1 </subscript></highlight>that satisfies &verbar;&mgr;(i)<highlight><subscript>k&plus;1</subscript></highlight>&verbar;&equals;u<highlight><subscript>max </subscript></highlight>can be computed in a computationally efficient manner from &mgr;<highlight><subscript>k&plus;1 </subscript></highlight>by substituting a new control weighting given by W<highlight><subscript>u</subscript></highlight>&plus;ae<highlight><subscript>i</subscript></highlight>e<highlight><subscript>i</subscript></highlight><highlight><superscript>T </superscript></highlight>into the control update equation. The notation u(i)<highlight><subscript>k </subscript></highlight>indicates the i<highlight><superscript>th </superscript></highlight>element of the vector a at time step k. The vector e<highlight><subscript>i </subscript></highlight>denotes a vector with all zero entries except for unity in the i<highlight><superscript>th </superscript></highlight>entry, so that the new control weighting matrix differs from the original matrix only in the i<highlight><superscript>th </superscript></highlight>diagonal entry. If there are multiple actuators at saturation (L&gt;1), then additional terms are added to W<highlight><subscript>u</subscript></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Solving for &mgr;<highlight><subscript>k&plus;1 </subscript></highlight>for each actuator channel j yields </paragraph>
+<paragraph lvl="0"><in-line-formula>&mgr;(<highlight><italic>j</italic></highlight>)<highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&equals;u</italic></highlight>(<highlight><italic>j</italic></highlight>)<highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&minus;Y</italic></highlight>(<highlight><italic>j,i</italic></highlight>)&agr;(&mgr;(<highlight><italic>i</italic></highlight>)<highlight><subscript>k&plus;1</subscript></highlight>&minus;(1&minus;&bgr;)<highlight><italic>u</italic></highlight>(<highlight><italic>i</italic></highlight>)<highlight><subscript>k</subscript></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> The scalar Y(j,i) refers to the (j,i)<highlight><superscript>th </superscript></highlight>element of the matrix Y defined earlier. For L&gt;1, the same equation holds with a being a real diagonal matrix of additional control weights, i representing a vector of indices corresponding to the saturated actuators, and Y(j,i) a 1&times;L vector. From this equation, then given &agr;, &mgr;(i)<highlight><subscript>k&plus;1 </subscript></highlight>can be computed. From this, the remaining elements of &mgr;<highlight><subscript>k&plus;1 </subscript></highlight>can be computed. The additional L control weightings on the i<highlight><superscript>th </superscript></highlight>channels, &agr;, and the L complex variables &mgr;(j)<highlight><subscript>k&plus;1 </subscript></highlight>are the solution of the L complex equations above along with the L real constraint equations that &verbar;&mgr;(i)<highlight><subscript>k&plus;1</subscript></highlight>&verbar;&equals;u<highlight><subscript>max</subscript></highlight>. This can be solved in a variety of methods. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> In the case of a single unallowable command, &agr; is the solution to the following scalar quadratic equation where y&equals;Y(i,i): </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>a</italic></highlight>(&agr;<highlight><italic>y</italic></highlight>)&plus;2<highlight><italic>b</italic></highlight>(&agr;<highlight><italic>y</italic></highlight>)&plus;<highlight><italic>c&equals;</italic></highlight>0 </in-line-formula></paragraph>
+<paragraph id="P-0041" lvl="7"><number>&lsqb;0041&rsqb;</number> where </paragraph>
+<paragraph id="P-0042" lvl="2"><number>&lsqb;0042&rsqb;</number> a&equals;(1&minus;&bgr;)<highlight><superscript>2</superscript></highlight>&verbar;u(i)<highlight><subscript>k</subscript></highlight>&verbar;<highlight><superscript>2</superscript></highlight>&minus;u<highlight><subscript>max</subscript></highlight><highlight><superscript>2 </superscript></highlight></paragraph>
+<paragraph id="P-0043" lvl="2"><number>&lsqb;0043&rsqb;</number> b&equals;(1&minus;&bgr;)&lsqb;u(i)<highlight><subscript>k&plus;1</subscript></highlight>u(i)<highlight><subscript>k</subscript></highlight>&plus;i(i)<highlight><subscript>k</subscript></highlight>*u(i)<highlight><subscript>k&plus;1</subscript></highlight>&rsqb;/2&minus;u<highlight><subscript>max</subscript></highlight><highlight><superscript>2 </superscript></highlight></paragraph>
+<paragraph id="P-0044" lvl="2"><number>&lsqb;0044&rsqb;</number> c&equals;&verbar;u(i)<highlight><subscript>k&plus;1</subscript></highlight>&verbar;<highlight><superscript>2</superscript></highlight>&minus;u<highlight><subscript>max</subscript></highlight><highlight><superscript>2 </superscript></highlight></paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> Note a &lt;0, since the command at k<highlight><superscript>th </superscript></highlight>step can&apos;t exceed saturation and c&gt;0, since by presumption the command exceeds saturation. Therefore, regardless of the sign of b, there is a unique, real, positive solution a corresponding to the control weight for which the actuator with the nominal command above saturation would instead be exactly at saturation. If the new actuator command vector includes any actuators that exceed saturation, the approach can be applied again in an iterative fashion. However, there is no guarantee that this process will converge. Therefore, since most of the benefit will accrue from the first or second use of this approach, the best compromise is to return to a simpler scaling of the command vector at some point if there are remaining actuator commands exceeding saturation. As an aside, also note that repeating the process for a second actuator would require re-computing the matrix Y with the new control weighting from the first iteration. A similar approach to that described here could be derived where several actuators were considered simultaneously; this would result in a set of coupled equations for the new control weightings. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The scaling formulation described herein can be used in conjunction with the previously described variable control weighting approach. The final line of the table given in the variable control weighting section is modified to use the updated control weighting based on a. This approach results in optimal performance in the presence of actuator saturations. Without this additional modification, the variable control weighting described earlier will eventually converge to the optimal performance solution, however, the convergence maybe poor. Note that if none of the actuators saturate in any conditions, then the actuators have more authority than they need. Hence, if the actuators must be designed so as to never saturate in order to ensure good performance, then the overall cost and weight of the system will be excessive. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> An alternate approach to scaling the control commands if one of them exceeds the saturation value is also possible. This alternate approach results in performance that is close to the optimal solution described above, although it constrains the control command for the saturated actuator more than is necessary. This approach involves scaling back the single command, computing the residual noise introduced by doing so, and computing an additional Au for the remaining actuators to cancel this residual noise. This last step uses a large control rate weighting on the saturated actuator so that the additional Au for that actuator is zero. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> With the first approach (suggested above), the appropriate control weight for that actuator is computed and can be used in the next step. Also, for large n<highlight><subscript>a</subscript></highlight>, the computations required for the approach described below are substantially more than those required for the first approach. However, the second approach is guaranteed to converge if there are multiple actuator saturations. Therefore, the most appropriate algorithm for a particular application depends on the number of actuators, the computation available, and the extent to which multiple actuators are frequently operating at their saturation limits. The second approach, described below, is described in more detail and claimed in copending U.S. application Ser. No. ______, filed ______, and also claims prior to U.S. Serial No. 60/271,792. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Actuator Truncation Scheme </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> This approach to limiting the actuator commands guarantees convergence in n<highlight><subscript>a </subscript></highlight>or less steps to a set of actuator commands which are at or below saturation. A nominal updated control step is given by: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>u</italic></highlight><highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&equals;u</italic></highlight><highlight><subscript>k</subscript></highlight>&minus;&bgr;(<highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>WzT</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>&plus;W</italic></highlight><highlight><subscript>&dgr;u</subscript></highlight>)<highlight><superscript>&minus;1</superscript></highlight>(<highlight><italic>W</italic></highlight><highlight><subscript>u</subscript></highlight><highlight><italic>u</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>z</italic></highlight><highlight><subscript>k</subscript></highlight>) </in-line-formula></paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> If the i<highlight><superscript>th </superscript></highlight>actuator command computed from this equation exceeds the allowable command u<highlight><subscript>max </subscript></highlight>(which may be different for different actuators), then a modified control update &mgr;<highlight><subscript>k&plus;1 </subscript></highlight>that satisfies &verbar;(i)<highlight><subscript>k&plus;1</subscript></highlight>&verbar;&equals;u<highlight><subscript>max </subscript></highlight>is computed from u<highlight><subscript>k&plus;1 </subscript></highlight>by scaling u(i)<highlight><subscript>k&plus;1 </subscript></highlight>by the ratio u<highlight><subscript>max</subscript></highlight>/&verbar;u(i)<highlight><subscript>k&plus;1 </subscript></highlight>while all other elements of u<highlight><subscript>k&plus;1 </subscript></highlight>are held fixed. Then a revised control update u*<highlight><subscript>k&plus;1 </subscript></highlight>is computed from the following control update equation: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>u*</italic></highlight><highlight><subscript>k&plus;1</subscript></highlight>&equals;&mgr;<highlight><subscript>k&plus;1</subscript></highlight>&minus;(<highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><italic>&plus;W*</italic></highlight><highlight><subscript>&dgr;u</subscript></highlight><highlight><italic>&plus;&ggr;e</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>e</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><superscript>T</superscript></highlight>)<highlight><superscript>&minus;1</superscript></highlight>(<highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight><highlight><superscript>H</superscript></highlight><highlight><italic>W</italic></highlight><highlight><subscript>z</subscript></highlight><highlight><italic>T</italic></highlight><highlight><subscript>k</subscript></highlight>(&mgr;<highlight><subscript>k&plus;1</subscript></highlight><highlight><italic>&minus;u</italic></highlight><highlight><subscript>k&plus;1</subscript></highlight>)) </in-line-formula></paragraph>
+<paragraph id="P-0052" lvl="7"><number>&lsqb;0052&rsqb;</number> with </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>W*</italic></highlight><highlight><subscript>&dgr;u</subscript></highlight><highlight><italic>&equals;W</italic></highlight><highlight><subscript>&dgr;u</subscript></highlight><highlight><italic>&plus;&ggr;e</italic></highlight><highlight><subscript>i</subscript></highlight><highlight><italic>e</italic></highlight><highlight><subscript>1</subscript></highlight><highlight><superscript>T </superscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0053" lvl="7"><number>&lsqb;0053&rsqb;</number> where &ggr; is &ldquo;a large number&rdquo; (i.e., on the order of 10<highlight><superscript>6 </superscript></highlight>times larger than the magnitude of a typical element of W<highlight><subscript>&dgr;u</subscript></highlight>.) The vector e<highlight><subscript>i </subscript></highlight>denotes a vector with all zero entries except for unity in the i<highlight><superscript>th </superscript></highlight>entry, so that the new control rate weighting matrix differs from the original matrix only in the i<highlight><superscript>th </superscript></highlight>diagonal entry. The addition of the term &ggr;e<highlight><subscript>i</subscript></highlight>e<highlight><subscript>i</subscript></highlight><highlight><superscript>T </superscript></highlight>to the i<highlight><superscript>th </superscript></highlight>element of the control rate weighting matrix W<highlight><subscript>&dgr;u </subscript></highlight>prevents the i<highlight><superscript>th </superscript></highlight>element of &mgr;<highlight><subscript>k&plus;1 </subscript></highlight>from being altered by the above control update equation, i.e. it is guaranteed that u*(i)<highlight><subscript>k&plus;1</subscript></highlight>&equals;&mgr;(i)<highlight><subscript>k&plus;</subscript></highlight>1 </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> The above procedure is repeated iteratively for each saturated channel (one channel at a time) until no elements of the control update exceed their respective saturation values. This iterative procedure is guaranteed to converge in no more than n<highlight><subscript>a </subscript></highlight>steps since once an actuator channel has reached saturation, that channel&apos;s command is held fixed at saturation until the next control update cycle. Once this procedure has been completed, then u<highlight><subscript>k&plus;1</subscript></highlight>&equals;u*<highlight><subscript>k&plus;1 </subscript></highlight>is defined as the control update for the current cycle. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a perspective view <highlight><bold>20</bold></highlight> of a vehicle <highlight><bold>118</bold></highlight> in which the present invention can be used. Vehicle <highlight><bold>118</bold></highlight>, which is typically a helicopter, has rotor blades <highlight><bold>119</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>d</italic></highlight>). Gearbox housing <highlight><bold>110</bold></highlight> is mounted at an upper portion of vehicle <highlight><bold>118</bold></highlight>. Gearbox mounting feet <highlight><bold>140</bold></highlight>(<highlight><italic>a</italic></highlight>) . . . (<highlight><italic>c</italic></highlight>) (generally <highlight><bold>140</bold></highlight>) provide a mechanism for affixing gearbox housing <highlight><bold>110</bold></highlight> to vehicle airframe <highlight><bold>142</bold></highlight>. Sensors <highlight><bold>128</bold></highlight>(<highlight><italic>a</italic></highlight>) through (<highlight><italic>d</italic></highlight>) (generally <highlight><bold>128</bold></highlight>) are used to sense acoustic vibration produced by the vehicle, which can be from the rotorblades <highlight><bold>119</bold></highlight> or the gearbox housing <highlight><bold>110</bold></highlight>. Although only four sensors are shown, there are typically any suitable number of sensors necessary to provide sufficient feedback to the controller (not shown). The sensors <highlight><bold>128</bold></highlight> maybe mounted in the vehicle cabin, on the gearbox mounting feet <highlight><bold>140</bold></highlight>, or to the airframe <highlight><bold>142</bold></highlight>, or to another location on the vehicle <highlight><bold>118</bold></highlight> that enables vehicle vibrations or acoustic noise to be sensed. Sensors <highlight><bold>128</bold></highlight> are typically microphones, accelerometers or other sensing devices that are capable of sensing vibration produced by gear clash from the gearbox <highlight><bold>110</bold></highlight> and generating a signal as a function of the sensed vibration. These sensors generate electrical signals (voltages) that are proportional to the local noise or vibration. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> In accordance with the provisions of the patent statutes and jurisprudence, exemplary configurations described above are considered to represent a preferred embodiment of the invention. However, it should be noted that the invention can be practiced otherwise than as specifically illustrated and described without departing from its spirit or scope. Note that alphanumeric labels on method steps are for clarifying references in dependent claims and unless otherwise specified do not require a specific sequence in which the steps are to be performed. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for actively controlling a physical variable of interest including the steps of: 
+<claim-text>a. measuring the physical variable; </claim-text>
+<claim-text>b. generating a plurality of command signals over time based upon said physical variable measured in said step a and based upon a control weighting; and </claim-text>
+<claim-text>c. varying the control weighting over time. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further including the steps of: 
+<claim-text>d. activating a plurality of force generators based upon said plurality of command signals. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein each of the plurality of command signals includes at least one command signal component associated with each of the plurality of force generators and the control weighting includes a plurality of control weighting components, each said control weighting component associated with one of the plurality of command signal components, and wherein said step c. further includes the step of varying more than one of said control weighting components. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further including the step of varying each of the control weighting components based upon a magnitude of the associated command signal component. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein each of the plurality of command signals includes a plurality of command signal components each associated with one of a plurality of force generators, and wherein the control weighting includes a plurality of control weighting components, each said control weighting component associated with one of the plurality of command signal components, and wherein said step c. further includes the step of varying each of the control weighting components based upon a magnitude of its associated command signal component. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein the plurality of control weighting components include a first control weighting component greater than a second control weighting component. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said step c. further includes the step of varying the control weighting based upon a magnitude of the plurality of command signals. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the physical variable is measured by a plurality of sensors in said step a, said method further including the step of minimizing a performance index J&equals;z<highlight><superscript>H</superscript></highlight>W<highlight><subscript>z</subscript></highlight>z&plus;u<highlight><superscript>H</superscript></highlight>W<highlight><subscript>u</subscript></highlight>u&plus;v<highlight><superscript>H</superscript></highlight>W<highlight><subscript>&dgr;u</subscript></highlight>v, where W<highlight><subscript>z</subscript></highlight>, W<highlight><subscript>u </subscript></highlight>and W<highlight><subscript>&dgr;u </subscript></highlight>are matrices for the control weighting on sensors z, control inputs u, and rate of change of control inputs v, respectively. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the control weighting W<highlight><subscript>u </subscript></highlight>is varied over time in said step c. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the control weighting Wu comprises a plurality of control weighting components, each associated with one of a plurality of components of each of the plurality of control commands, the method further including the step of scaling each of the control weighting components based upon a magnitude of the associated control command component. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the control weighting W<highlight><subscript>z </subscript></highlight>is varied over time in said step c. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method for reducing sensed physical variables including the steps of: 
+<claim-text>a. generating a plurality of sensed signals as a function of physical variables; </claim-text>
+<claim-text>b. calculating a plurality of control commands as a function of the sensed signals; </claim-text>
+<claim-text>c. comparing each of the plurality of control commands to at least one maximum; </claim-text>
+<claim-text>d. reducing at least one of the plurality of control commands to a reduced control command based upon said step c.; </claim-text>
+<claim-text>e. recalculating the plurality of control commands other than the reduced control command based upon said step d. and based upon the reduced control command. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein the plurality of control commands are calculated in said steps b. and e. to minimize a performance metric that includes a sensed weighting on the plurality of sensed signals and a control weighting on the plurality of control commands. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the performance metric further includes a weighting on a change in control command over time. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> further including the steps of: 
+<claim-text>f. computing the difference between the at least one control command and the reduced control command; </claim-text>
+<claim-text>g. estimating a difference in the sensed signals based upon the difference; and </claim-text>
+<claim-text>h. recalculating in said step e. based upon said difference in the sensed signals. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A system for controlling a physical variable comprising: 
+<claim-text>A plurality of sensors for measuring the physical variable; </claim-text>
+<claim-text>A control unit generating a plurality of command signals over time based upon said physical variable and based upon a control weighting that varies over time; and </claim-text>
+<claim-text>A plurality of force generators activated based upon said plurality of command signals. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the control unit varies the control weighting based upon a magnitude of at least one of the plurality of command signals. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> wherein the plurality of command signals includes at least one command signal component associated with each of the plurality of force generators and wherein the control weighting includes a plurality of control weighting components, each said component associated with one of the plurality of command signals, and wherein said step c. further includes the step of varying each of the control weighting components based upon a magnitude of the associated command signal. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein the control weighting components include a first control weighting component greater than a second control weighting component. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. A computer readable medium storing a computer program, which when executed by a computer performs the steps of: 
+<claim-text>a. generating a first command signal based upon a measured physical variable and a control weighting; </claim-text>
+<claim-text>b. changing the control weighting over time after said step a.; </claim-text>
+<claim-text>c. generating a second command signal based upon the control weighting after said step b. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference> which when executed by a computer further performs the steps of: 
+<claim-text>d. varying the control weighting based upon a magnitude of the first command signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein the first command signal and second command signal each include at least one command signal component associated with each of a plurality of force generators, and wherein said step b. further includes the step of varying the at least one command signal for each of the force generators sequentially. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein said step c. further includes the step of varying the control weighting based upon a magnitude of at least one of the plurality of command signals. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the plurality of command signals includes at least one command signal component associated with each of a plurality of force generators and wherein the control weighting includes a plurality of control weighting components, each said control weighting component associated with one of the plurality of command signal components, and wherein said step c. further includes the step of varying each of the control weighting components based upon a magnitude of the associated command signal. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> wherein the control weighting components include a first control weighting component greater than a second control weighting component.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002686A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002686A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002686A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

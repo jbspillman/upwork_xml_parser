@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005170A1-20030102-D00000.TIF SYSTEM "US20030005170A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005170A1-20030102-D00001.TIF SYSTEM "US20030005170A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005170A1-20030102-D00002.TIF SYSTEM "US20030005170A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005170A1-20030102-D00003.TIF SYSTEM "US20030005170A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005170A1-20030102-D00004.TIF SYSTEM "US20030005170A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005170A1-20030102-D00005.TIF SYSTEM "US20030005170A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005170</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896016</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/44</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>315000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Java bytecode instruction for determining hashcode values</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>David</given-name>
+<family-name>Wallman</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Sunnyvale</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Stepan</given-name>
+<family-name>Sokolov</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Fremont</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>Sun Microsystems, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>BEYER WEAVER &amp; THOMAS LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 778</address-1>
+<city>BERKELEY</city>
+<state>CA</state>
+<postalcode>94704-0778</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Improved techniques for determining Java hashcode values for Java objects are disclosed. The techniques can be implemented to use a new Java Bytecode instruction which is suitable for execution by a Java virtual machine. As such, the new Java Bytecode instruction can be executed to determine Java hashcode value. Moreover, as will be appreciated, the Java hashcode values can be determined without invoking the Java method which is conventionally used to determine hashcode values. This means that the costly overhead associated with repeatedly invoking Java methods is avoided. In other words, operations that are conventionally performed each time this method is invoked need not be performed. As a result, the performance of virtual machines, especially those operating with limited resources (e.g., embedded systems), can be improved. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates generally to Java programming environments, and more particularly, to techniques suitable for determining hashcode values associated with Java objects. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> One of the goals of high level languages is to provide a portable programming environment such that the computer programs may easily be ported to another computer platform. High level languages such as &ldquo;C&rdquo; provide a level of abstraction from the underlying computer architecture and their success is well evidenced from the fact that most computer applications are now written in a high level language. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Portability has been taken to new heights with the advent of the World Wide Web (&ldquo;the Web&rdquo;) which is an interface protocol for the Internet which allows communication between diverse computer platforms through a graphical interface. Computers communicating over the Web are able to download and execute small applications called applets. Given that applets may be executed on a diverse assortment of computer platforms, the applets are typically executed by a Java virtual machine. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Recently, the Java programming environment has become quite popular. The Java programming language is a language that is designed to be portable enough to be executed on a wide range of computers ranging from small devices (e.g., pagers, cell phones and smart cards) up to supercomputers. Computer programs written in the Java programming language (and other languages) may be compiled into Java Bytecode instructions that are suitable for execution by a Java virtual machine implementation. The Java virtual machine is commonly implemented in software by means of an interpreter for the Java virtual machine instruction set but, in general, may be software, hardware, or both. A particular Java virtual machine implementation and corresponding support libraries together constitute a Java runtime environment. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Computer programs in the Java programming language are arranged in one or more classes or interfaces (referred to herein jointly as classes or class files). Such programs are generally platform, i.e., hardware and operating system, independent. As such, these computer programs may be executed without modification on any computer that is able to run an implementation of the Java runtime environment. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Object-oriented classes written in the Java programming language are compiled to a particular binary format called the &ldquo;class file format.&rdquo; The class file includes various components associated with a single class. These components can be, for example, methods and/or interfaces associated with the class. In addition, the class file format can include a significant amount of ancillary information that is associated with the class. The class file format (as well as the general operation of the Java virtual machine) is described in some detail in <highlight><italic>The Java Virtual Machine Specification, Second Edition, </italic></highlight>by Tim Lindholm and Frank Yellin, which is hereby incorporated herein by reference. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> shows a progression of a simple piece of a Java source code <highlight><bold>101</bold></highlight> through execution by an interpreter, the Java virtual machine. The Java source code <highlight><bold>101</bold></highlight> includes the classic Hello World program written in Java. The source code is then input into a Bytecode compiler <highlight><bold>103</bold></highlight> that compiles the source code into Bytecodes. The Bytecodes are virtual machine instructions as they will be executed by a software emulated computer. Typically, virtual machine instructions are generic (i.e., not designed for any specific microprocessor or computer architecture) but this is not required. The Bytecode compiler outputs a Java class file <highlight><bold>105</bold></highlight> that includes the Bytecodes for the Java program. The Java class file is input into a Java virtual machine <highlight><bold>107</bold></highlight>. The Java virtual machine is an interpreter that decodes and executes the Bytecodes in the Java class file. The Java virtual machine is an interpreter, but is commonly referred to as a virtual machine as it emulates a microprocessor or computer architecture in software (e.g., the microprocessor or computer architecture may not exist in hardware). </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> illustrates a simplified class file <highlight><bold>100</bold></highlight>. As shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>B, the class file <highlight><bold>100</bold></highlight> includes a constant pool <highlight><bold>102</bold></highlight> portion, interfaces portion <highlight><bold>104</bold></highlight>, fields portion <highlight><bold>106</bold></highlight>, methods portion <highlight><bold>108</bold></highlight>, and attributes portion <highlight><bold>110</bold></highlight>. The methods portion <highlight><bold>108</bold></highlight> can include or have references to several Java methods associated with the Java class which is represented in the class file <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> As is known in the art, Java objects can be uniquely identified by a hashcode value. During the execution of Java programs, there is often a need to determine hashcode values for Java objects. Conventionally, the Java method &ldquo;/java/lang/object.hashcode&rdquo; is invoked by the virtual machine to determine these hashcode values. One problem with this approach is that there is an overhead associated with the invocation of a Java method. In other words, Java method invocation requires several operations to be performed. These operations include: locating the appropriate method to be invoked, creating a frame to be placed on the execution stack, and restoring the previous frame on the stack. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Moreover, the cost associated with determining hashcode values is quite high, since the Java method has to be invoked time and time again. In other words, the operations needed to invoke a method have to be performed several times during the execution of a Java program. This, of course, can result in a grossly inefficient use of system resources. In some circumstances, particularly in systems with limited computing power and/or memory, this inefficient use of resources is a serious disadvantage. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> In view of the foregoing, there is a need for improved techniques to determine Java hashcode values which are used to identify Java objects. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Broadly speaking, the invention relates to improved techniques for determining Java hashcode values for Java objects. In accordance with one aspect of the invention, an inventive Java Bytecode instruction suitable for execution by a Java virtual machine is disclosed. As such, the inventive Java Bytecode instruction can be executed to determine Java hashcode value. Moreover, as will be appreciated, the Java hashcode values can be determined without invoking the Java hashcode method conventionally used to determine hashcode values. This means that the costly overhead associated with repeatedly invoking Java hashcode method is avoided. In other words, operations that are conventionally performed each time the Java hashcode method is invoked need not be performed. As a result, the performance of virtual machines, especially those operating with limited resources (e.g., embedded systems) can be improved. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The invention can be implemented in numerous ways, including as a method, an apparatus, a computer readable medium, and a database system. Several embodiments of the invention are discussed below. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> As a Java Bytecode instruction suitable for execution by a Java virtual machine in the Java computing environment, one embodiment of the invention operates to determine a hashcode value for a Java object, thereby allowing the hashcode value to be determined without invoking the Java hashcode method. The Java Bytecode instruction can be executed by a virtual machine which operates to pop a reference to a Java object from the top of an execution stack; calculate a hashcode for the Java object value by accessing the Java object; and push the hashcode on top of the execution stack. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> As a Java virtual machine operating in a Java computing environment, one embodiment of the invention provides a Java virtual machine capable of determining hashcode values for Java objects without invoking the Java hashcode method. The Java virtual machine executes an inventive Java Bytecode instruction to determine hashcode values for Java objects, thereby allowing hashcode values to be determined without invoking the Java hashcode method. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> As a method of determining hashcode values for Java objects, one embodiment of the invention receives a Java Bytecode instruction in a stream of Java Bytecodes suitable for execution by a virtual machine operating in a Java computing environment. The Java Bytecode instruction is designated as a hashcode Java Bytecode instruction which allows hashcode values for Java objects to be determined without invoking a Java hashcode method. The method can also include the acts of: popping a reference to a Java object from an execution stack; calculating a hashcode value for the Java object by accessing the Java object; and pushing the hashcode on the execution stack. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> As a computer readable media including computer program code for determining hashcode values for Java objects, one embodiment of the invention includes: computer program code for receiving a Java Bytecode instruction in a stream of Java Bytecodes suitable for execution by a virtual machine operating in a Java computing environment. The Java Bytecode instruction is designated as a hashcode instruction which allows hashcode values for Java objects to be determined without invoking a Java hashcode method. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> These and other aspects and advantages of the present invention will become more apparent when the detailed description below is read in conjunction with the accompanying drawings. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The present invention will be readily understood by the following detailed description in conjunction with the accompanying drawings, wherein like reference numerals designate like structural elements, and in which: </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1A</cross-reference> shows a progression of a simple piece of a Java source code through execution by an interpreter, the Java virtual machine. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1B</cross-reference> illustrates a simplified class file. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a Java computing environment in accordance with one embodiment of the invention. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a method of determining hashcode values for Java objects.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The present invention pertains to improved techniques for determining Java hashcode values for Java objects. In accordance with one aspect of the invention, an inventive Java Bytecode instruction suitable for execution by a Java virtual machine is disclosed. As such, the inventive Java Bytecode instruction can be executed to determine Java hashcode value. Moreover, as will be appreciated, the Java hashcode values can be determined without invoking the Java hashcode method conventionally used to determine hashcode values. This means that the costly overhead associated with repeatedly invoking Java hashcode method is avoided. In other words, operations that are conventionally performed each time the Java hashcode method is invoked need not be performed. As a result, the performance of virtual machines, especially those operating with limited resources (e.g., embedded systems) can be improved. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Embodiments of the invention are discussed below with reference to FIGS. <highlight><bold>2</bold></highlight>A-<highlight><bold>3</bold></highlight>. However, those skilled in the art will readily appreciate that the detailed description given herein with respect to these figures is for explanatory purposes only as the invention extends beyond these limited embodiments. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> FIGS. <highlight><bold>2</bold></highlight>A-B illustrate a Java computing environment <highlight><bold>200</bold></highlight> in accordance with one embodiment of the invention. A virtual machine <highlight><bold>202</bold></highlight> in the Java computing environment <highlight><bold>200</bold></highlight> receives a stream of Java Bytecodes <highlight><bold>204</bold></highlight> including a Java Aload Bytecode instruction <highlight><bold>206</bold></highlight> and an inventive Java Bytecode <highlight><bold>208</bold></highlight>. The Aload Bytecode instruction <highlight><bold>206</bold></highlight> can be implemented as a conventional Java Bytecode instruction which operates to push a reference A to a Java object <highlight><bold>210</bold></highlight> on an execution stack <highlight><bold>212</bold></highlight>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The inventive Java Bytecode <highlight><bold>208</bold></highlight> is a Java Bytecode instruction that has been specifically designated for determining hashcode values for Java objects. As will be appreciated, the inventive Java Bytecode instruction set can be implemented as a new instruction that is added to the conventional Java Bytecode instruction set. This is possible because the conventional Java Bytecode instruction set does not typically use all the 256 possible values that can be coded by one byte (8 bits). As such, the inventive Java Bytecode instruction set can be assigned a unique 8 bit value that is not used for any conventional Java Bytecode instructions. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>B, the virtual machine <highlight><bold>202</bold></highlight> operates to receive the inventive Java Bytecode instruction <highlight><bold>208</bold></highlight>. When the inventive Java Bytecode instruction <highlight><bold>208</bold></highlight> is executed, the hashcode value of the Java object is determined. In the simplest case, this determination can be made by reading a hashcode field <highlight><bold>214</bold></highlight> of the Java object <highlight><bold>210</bold></highlight> which contains the hashcode value. Alternatively, this determination can operate to calculate the hashcode value for the Java object <highlight><bold>210</bold></highlight>. In any case, after the hashcode value has been determined, the virtual machine <highlight><bold>202</bold></highlight> operates to push the hashcode value on the execution stack <highlight><bold>212</bold></highlight>. It should be noted that the virtual machine <highlight><bold>202</bold></highlight> also operates to pop the reference A from the execution stack <highlight><bold>212</bold></highlight> before pushing the hashcode value on the execution stack <highlight><bold>212</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Accordingly, the inventive Java Bytecode instruction <highlight><bold>208</bold></highlight> can be used to determine hashcode values for Java objects. Moreover, the hashcode value can be determined without invoking a Java method. This means that costly overhead associated with invoking Java methods can be avoided. As a result, the performance of virtual machines, especially those operating with limited resources, can be improved. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates a method <highlight><bold>300</bold></highlight> for determining hashcode values for Java objects. The method <highlight><bold>300</bold></highlight> can be implemented by a virtual machine operating in a Java computing environment. Initially, at operation <highlight><bold>302</bold></highlight>, a reference to a Java object is pushed on the execution stack. Next, at operation <highlight><bold>304</bold></highlight>, an inventive Java Bytecode operation is received. The inventive Java Bytecode operation is designated to indicate that the hashcode value associated with the Java object should be determined. Accordingly, at operation <highlight><bold>306</bold></highlight>, the hashcode value for the Java object is determined using the reference on the execution stack. Thereafter, at operation <highlight><bold>308</bold></highlight>, the reference is popped from the stack. Finally, at operation <highlight><bold>310</bold></highlight>, the hashcode value is pushed on the top of the execution stack. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The many features and advantages of the present invention are apparent from the written description, and thus, it is intended by the appended claims to cover all such features and advantages of the invention. Further, since numerous modifications and changes will readily occur to those skilled in the art, it is not desired to limit the invention to the exact construction and operation as illustrated and described. Hence, all suitable modifications and equivalents may be resorted to as falling within the scope of the invention.</paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. In a Java computing environment, a Java Bytecode instruction suitable for execution by a Java virtual machine in said Java computing environment, wherein said Java Bytecode instruction operates to determine a hashcode value for a Java object, thereby allowing said hashcode value to be determined without invoking a Java method. </claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A Java Bytecode instruction as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said Java Bytecode instruction further operates to: 
+<claim-text>pop a reference to said Java Bytecode instruction from the top of an execution stack; </claim-text>
+<claim-text>calculate a hashcode for said Java object value by accessing said Java object; and </claim-text>
+<claim-text>push said hashcode on top of said execution stack. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A Java Bytecode instruction as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said Java Bytecode instruction is executed in an embedded system. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A Java virtual machine operating in a Java computing environment, said Java virtual machine capable of determining hashcode values of one or more Java objects without invoking a Java hashcode method. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. Java virtual machine as recited in <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said Java virtual machine executes a Java Bytecode instruction to determine said hashcode values for said one or more Java objects. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A Java virtual machine as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein said Java Bytecode instruction operates to determine a hashcode value for a Java object, thereby allowing said hashcode value to be determined without invoking a Java hashcode method. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A Java virtual machine as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein said Java virtual machine operates in an embedded system. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. In a Java computing environment, a method of determining hashcode values for Java objects, said method comprising: 
+<claim-text>receiving a Java Bytecode instruction in a stream of Java Bytecodes suitable for execution by a virtual machine operating in said Java computing environment, and </claim-text>
+<claim-text>wherein said Java Bytecode instruction is designated as a determining hashcode instruction, thereby allowing hashcode values for Java objects to be determined without invoking a Java hashcode method. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said method further comprises: 
+<claim-text>popping a reference to a Java object from an execution stack; </claim-text>
+<claim-text>calculating a hashcode value for said Java object by accessing said Java object; and </claim-text>
+<claim-text>pushing said hashcode value on said execution stack. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein said method further comprises: 
+<claim-text>pushing a reference to said Java object on said execution stack. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said pushing of a reference to said Java object is performed by execution of a Java Aload execution. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein said method is performed by a virtual machine. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein said virtual machine is operating in an embedded system. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A computer readable media including computer program code for determining hashcode values for Java objects, said computer readable media comprising: 
+<claim-text>computer program code for receiving a Java Bytecode instruction in a stream of Java Bytecodes suitable for execution by a virtual machine operating in said Java computing environment, and </claim-text>
+<claim-text>wherein said Java Bytecode instruction is designated as a determining hashcode instruction, thereby allowing hashcode values for Java objects to be determined without invoking a Java hashcode method. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A computer readable media as recited in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein said computer readable media further comprises: 
+<claim-text>computer program code for popping a reference to a Java object from an execution stack; </claim-text>
+<claim-text>computer program code for calculating a hashcode value for said Java object value by accessing said Java object; and </claim-text>
+<claim-text>computer program code for pushing said hashcode value on said execution stack. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A computer readable media as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said computer readable media further comprises: 
+<claim-text>computer program code for pushing a reference to said Java object on said execution stack. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A computer readable media as recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said computer program code for pushing said reference is performed by a Java Aload execution. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A computer readable media as recited in <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein said computer readable media is read by a Java virtual machine. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A computer readable media as recited in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein said virtual machine is operating in an embedded system.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005170A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005170A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005170A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005170A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005170A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005170A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

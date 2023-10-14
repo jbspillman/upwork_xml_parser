@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005223A1-20030102-D00000.TIF SYSTEM "US20030005223A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005223A1-20030102-D00001.TIF SYSTEM "US20030005223A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005223A1-20030102-D00002.TIF SYSTEM "US20030005223A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005223A1-20030102-D00003.TIF SYSTEM "US20030005223A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005223A1-20030102-D00004.TIF SYSTEM "US20030005223A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005223</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894310</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010627</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F013/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>118000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System boot time reduction method</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Richard</given-name>
+<middle-name>L.</middle-name>
+<family-name>Coulson</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>John</given-name>
+<middle-name>I.</middle-name>
+<family-name>Garney</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Jeanna</given-name>
+<middle-name>N.</middle-name>
+<family-name>Matthews</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Massena</city>
+<state>NY</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Robert</given-name>
+<middle-name>J.</middle-name>
+<family-name>Royer</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Portland</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>BLAKELY SOKOLOFF TAYLOR &amp; ZAFMAN</name-1>
+<name-2></name-2>
+<address>
+<address-1>12400 WILSHIRE BOULEVARD, SEVENTH FLOOR</address-1>
+<city>LOS ANGELES</city>
+<state>CA</state>
+<postalcode>90025</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method to reduce the time for system initializations is disclosed. In accordance with the invention, data accessed during a system initialization is loaded into a non-volatile cache and is pinned to prevent eviction. By pinning data into the cache, the data required for system initialization is pre-loaded into the cache on a system reboot, thereby eliminating the need to access a disk. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates to operating systems, and more particularly, to a non-volatile cache used in a system. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND DESCRIPTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The use of a cache with a processor reduces memory access time and increases the overall speed of a device. Typically, a cache is an area of memory which serves as a temporary storage area for a device. Data frequently accessed by the processor remain in the cache after an initial access and subsequent accesses to the same data may be made to the cache. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Two types of caching are commonly used, memory caching and disk caching. A memory cache, sometimes known as cache store, is typically a high-speed memory device such as a static random access memory (SRAM). Memory caching is effective because most programs access the same data or instructions repeatedly. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Disk caching works under the same principle as the memory caching but uses a conventional memory device such as a dynamic random access memory (DRAM). The most recently accessed data from the disk is stored in the disk cache. When a program needs to access the data from the disk, the disk cache is first checked to see if the data is in the disk cache. Disk caching can significantly improve the performance of applications because accessing a byte of data in RAM can be much faster than accessing a byte on a disk. For example, a sequence of disk accesses required to load an operating system and launch system services is predictable. As a result, this initialization data can be brought into a disk cache during normal operation for faster access. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> However, the memory size of a cache is limited and is generally used to store the most recently used data. Therefore, when the cache becomes full, existing lines of data stored in the cache is replaced or de-allocated to make room for newly requested lines of data. The most commonly used cache replacement is the least recently used (LRU) algorithm by which the oldest (least recently used) memory line is evicted. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Although the replacement process generally does not cause problems, replacement of certain types of data can be detrimental. Accordingly, ways to solve some of the problems that can be caused by the replacement algorithm have been suggested in the related art. For example, U.S. Pat. No. 5,913,224 entitled &ldquo;Programmable Cache Including a Non-Lockable Data Way and a Lockable Data Way Configured To Lock Real-Time Data&rdquo; and U.S. Pat. No. 5,974,508 entitled &ldquo;Cache Memory System and Method For Automatically Locking Cache Entries To Prevent Selected Memory Items From Being Replaced&rdquo; disclose a method to lock the contents of time-critical data in a volatile cache memory to prevent eviction during normal operation. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> However, for the type of the data necessary during a system initialization, locking the initialization data into a volatile cache memory would not make the data available when required as the information would be lost between system boots or power cycling of the system. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The invention will be described in detail with reference to the following drawings in which like reference numerals refer to like elements wherein: </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an exemplary system implementing the invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows an exemplary pinning procedure in accordance with an embodiment of the invention; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows an exemplary pinning procedure in accordance with a second embodiment of the invention; and </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows an exemplary pinning procedure in accordance with a third embodiment of the invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> In the following description, specific details are given to provide a thorough understanding of the invention. For example, some circuits are shown in block diagram in order not to obscure the present invention in unnecessary detail. However, it will be understood by those skilled in the art that the present invention may be practiced without such specific details. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> As disclosed herein, a &ldquo;cache&rdquo; refers to a temporary storage area and may be either a memory cache or disk cache. The term &ldquo;data&rdquo; refers to both data and instructions that can be stored in a cache. A &ldquo;disk&rdquo; refers to a hard disk drive, a floppy disk drive, a compact disc (CD) drive or any other magnetic or optical memory device for mass storage of data. The term &ldquo;system initialization&rdquo; refers both to a system boot when the power is first turned on, known as cold booting and a system reboot when a system is restarted, known as warm booting. For purposes of the explanation, system boot and system reboot will be used interchangeably. The term &ldquo;computer readable medium&rdquo; includes, but is not limited to portable or fixed storage devices, optical storage devices, and any other memory devices capable of storing computer instructions and/or data. The term &ldquo;computer instructions&rdquo; are software or firmware including data, codes, and programs that may be read and/or executed to perform certain tasks. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Generally, the invention provides a system and method to retain in a non-volatile storage media the data expected to be needed during a system initialization. The time required to reload an operating system and restart system services is a visible source of irritation to users. However, much of this time is devoted to reading the necessary data from a disk. Since the sequence of data read from a disk during system start-up or initiation is repeatable and can be predicted, the initialization time is reduced by having the data necessary for system initialization pre-loaded into a cache. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> In particular, the data accessed during initialization (hereinafter &ldquo;necessary data&rdquo;) is loaded into a non-volatile cache and marked or &ldquo;pinned&rdquo; to prevent eviction. Accordingly, the necessary data would be resident in the cache for fast access during system initialization even following an unexpected system shutdown, thereby avoiding accesses to the disk. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> An exemplary embodiment of a system <highlight><bold>100</bold></highlight> implementing the principles of the invention is shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The system <highlight><bold>100</bold></highlight> includes a processor <highlight><bold>110</bold></highlight> coupled to a volatile memory <highlight><bold>120</bold></highlight> (hereinafter &ldquo;memory&rdquo;) by a bus <highlight><bold>130</bold></highlight>. In one embodiment, the memory <highlight><bold>110</bold></highlight> is a dynamic random-access-memory (DRAM). Also coupled to the bus <highlight><bold>130</bold></highlight>, a memory control hub <highlight><bold>140</bold></highlight> controls the operations of the memory <highlight><bold>120</bold></highlight> via link <highlight><bold>125</bold></highlight>, a non-volatile cache <highlight><bold>150</bold></highlight> (hereinafter &ldquo;cache&rdquo;) via link <highlight><bold>155</bold></highlight> and a disk <highlight><bold>160</bold></highlight> via link <highlight><bold>165</bold></highlight>. The memory control hub <highlight><bold>140</bold></highlight> includes a logic circuit (not shown) to manage the state or metadata information of memory <highlight><bold>120</bold></highlight> and the cache <highlight><bold>150</bold></highlight>. Moreover, it will be appreciated by those skilled in the art that the memory control hub <highlight><bold>140</bold></highlight> may also include additional circuits to control caching functions such as read, write, update and invalidate operations. Finally, a number of input/output devices <highlight><bold>170</bold></highlight> such as a keyboard, mouse and/or display may be coupled to the bus <highlight><bold>130</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Although the system <highlight><bold>100</bold></highlight> is shown as a system with a single processor, the invention may be implemented with multiple processors, in which additional processors would be coupled to the bus <highlight><bold>130</bold></highlight>. In such case, each additional processor would share the cache <highlight><bold>150</bold></highlight> and memory <highlight><bold>120</bold></highlight> for writing data and/or instructions to and reading data and/or instructions from the same. Also, the system <highlight><bold>100</bold></highlight> shows the cache <highlight><bold>150</bold></highlight> to be a non-volatile storage media. However, the cache <highlight><bold>150</bold></highlight> may be a combination of volatile and non-volatile storage media. Similarly, the memory <highlight><bold>120</bold></highlight> may be one or any combination of a volatile storage media and a non-volatile storage media. Moreover, the cache <highlight><bold>150</bold></highlight> may be implemented into the system <highlight><bold>100</bold></highlight> as an add-in card such as a peripheral component interconnect (PCI) add-in. In still another embodiment, a portion of the disk <highlight><bold>160</bold></highlight> may be allocated as the cache <highlight><bold>150</bold></highlight>. The invention will next be described below. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In one embodiment, the pinning of data is accomplished by adding a &ldquo;pinned bit&rdquo; to the metadata state for each line of data in the cache <highlight><bold>150</bold></highlight>. Typically, the metadata required for correct operation is stored in both the memory <highlight><bold>120</bold></highlight> and the cache <highlight><bold>150</bold></highlight>. Because the metadata is retained between system boots, such metadata will be called &ldquo;persistent metadata.&rdquo; Persistent metadata may include flags to indicate whether a corresponding line of data in the cache <highlight><bold>150</bold></highlight> is valid and/or dirty and a tag to indicate the starting disk address for the data contained in a cache line. Metadata that is not required for correct operation, but improves performance is typically stored in a volatile storage media such as in the memory <highlight><bold>120</bold></highlight>. Stored in a volatile storage media, such metadata is lost between system boots and will be called &ldquo;non-persistent metadata.&rdquo; Non-persistent metadata may include the age of each cache line for use as the least recently used (LRU) information. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In one embodiment, the pinned bit is placed in the memory <highlight><bold>120</bold></highlight> as a non-persistent metadata. On system reboot, the necessary data pinned during initialization of the previous system boot would already be loaded into the cache <highlight><bold>150</bold></highlight>. However, since the pinned bit is non-persistent, the pinning bit information is lost between system boots and a determination cannot be made as to whether a line of data was pinned or whether it was simply still in the cache <highlight><bold>150</bold></highlight>. Therefore, during each initialization sequence, a pinning procedure is performed to pin data. Here, the need to improve system boot performance and the need to keep majority of space in the cache <highlight><bold>150</bold></highlight> free or replaceable during normal operation should be balanced. Hence, an upper bound on the amount of data pinned into the cache <highlight><bold>150</bold></highlight> is set to limit the amount of space occupied during normal execution. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Although any method may be used to limit the amount of data pinned, <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows an exemplary pinning procedure <highlight><bold>200</bold></highlight> in accordance with one embodiment of the invention using a timer. Upon system initialization, a timer is set (block <highlight><bold>220</bold></highlight>). Thereafter, the memory control hub <highlight><bold>140</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> causes the pinned bit(s) corresponding to line(s) of data accessed to be set (block <highlight><bold>230</bold></highlight>) until the timer expires (block <highlight><bold>240</bold></highlight>). Data access here includes both reading and writing to the cache <highlight><bold>150</bold></highlight>. Also, the timer can be set based on the needs of the system. However, in setting the timer, a generous amount of time should be reserved for the initialization sequence. The timer may be set to two minutes, for example, in a mass storage cache. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows another pinning procedure <highlight><bold>300</bold></highlight> in accordance with a second embodiment of the invention allowing a maximum amount of data to be pinned. Upon system initialization, a determination is made whether a maximum amount of data have been pinned (block <highlight><bold>320</bold></highlight>). Until the maximum amount is exceeded, the memory control hub <highlight><bold>140</bold></highlight> causes the pinned bit(s) corresponding to accessed line(s) of data to be set (blocks <highlight><bold>320</bold></highlight> and <highlight><bold>330</bold></highlight>). Access here also includes both reading and writing to the cache <highlight><bold>150</bold></highlight>. The maximum amount that can be pinned is given based on the needs of the system. Generally, the majority of lines of data in the cache <highlight><bold>150</bold></highlight> should be left &ldquo;not pinned&rdquo; for normal operation. For example, in mass storage caches with N cache associativity sets, the maximum amount may be set to one line per cache associativity set. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows another pinning procedure <highlight><bold>400</bold></highlight> in accordance with a third embodiment of the invention using both a timer and a maximum amount of data to pin. In the pinning procedure <highlight><bold>400</bold></highlight>, a &ldquo;cacheBeforeReboot bit&rdquo; is also added to the non-persistent metadata. The cacheBeforeReboot bit is set for any cache line that was present in the cache <highlight><bold>150</bold></highlight> before a system initialization. For example, these bits may be set as the persistent metadata is paged in from the cache <highlight><bold>150</bold></highlight> when a system is restarted. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 4, a</cross-reference> timer is set upon a system initialization (block <highlight><bold>420</bold></highlight>) and if the maximum amount has not been exceeded, the memory control hub <highlight><bold>140</bold></highlight> causes the pinned bit(s) corresponding to accessed cache line(s) to be set (blocks <highlight><bold>430</bold></highlight> and <highlight><bold>440</bold></highlight>). Access here includes both reading and writing to the cache <highlight><bold>150</bold></highlight>. If the maximum amount is exceeded, a determination is made whether a currently accessed cache line was cached before reboot (block <highlight><bold>450</bold></highlight>) by checking the cacheBeforeReboot bit information. If the cacheBeforeReboot bit corresponding to the currently accessed cache line is set, a further determination is made whether there are pinned lines not cached before reboot (block <highlight><bold>460</bold></highlight>) also by checking the corresponding cacheBeforeReboot bits. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> If there is an existing pinned line, in the associativity set for example, not cached before reboot, the memory control hub <highlight><bold>140</bold></highlight> causes the pinned bit(s) corresponding to that existing line(s) to be cleared (or unpinned) and the pinned bit corresponding to the currently accessed cache line to be set (block <highlight><bold>470</bold></highlight>). If it is determined either that the currently accessed cache line was not cached before reboot in block <highlight><bold>450</bold></highlight> or that there is no pinned line not cached before reboot in block <highlight><bold>460</bold></highlight>, the memory control hub <highlight><bold>140</bold></highlight> causes the currently accessed cache line to be brought into the cache <highlight><bold>150</bold></highlight> but not pinned (block <highlight><bold>470</bold></highlight>). </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> After blocks <highlight><bold>440</bold></highlight>, <highlight><bold>470</bold></highlight> and <highlight><bold>480</bold></highlight>, a determination is made whether the timer has expired (block <highlight><bold>490</bold></highlight>). If the timer has expired, the pinning procedure <highlight><bold>400</bold></highlight> ends. Otherwise, the procedure returns to block <highlight><bold>430</bold></highlight> and repeats. Until the timer expires, data is selectively pinned into the cache <highlight><bold>150</bold></highlight> to improve the performance of the next reboot. At the same time, the number of lines that may be pinned is limited to allow the majority of space in the cache for normal operation. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In the pinning procedure <highlight><bold>400</bold></highlight>, preference is given to pinning lines that were already in the cache by pinning lines which were cached before reboot. If there is more than one pinned line not cached before reboot in block <highlight><bold>460</bold></highlight>, the pinned bit corresponding to the line with the latest age is cleared using the LRU information. Therefore, the pinning procedure <highlight><bold>400</bold></highlight> may also give preference to lines with earlier times in order to reflect the true initialization sequence rather than possible early user activity. Furthermore, as in the pinning procedures <highlight><bold>200</bold></highlight> and <highlight><bold>300</bold></highlight>, the timer should be set such that a generous amount of time is reserved for the initialization sequence and the maximum amount to pin should be set such that the majority of each set in the cache is preserved for normal operation. For example, the timer may be set to one minute and the maximum number may be set to one line per set for mass storage caches. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Once the timer expires or the maximum amount has been pinned in the pinning procedures <highlight><bold>200</bold></highlight>-<highlight><bold>400</bold></highlight>, any further accesses will not evict the cache lines with the corresponding pinned bits set. Also, the memory control hub <highlight><bold>140</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> may further include a logic circuit to clear the pinned bits of one or more cache lines. The clearing of multiple cache lines would allow different collections of cache lines to be pinned, for example, if a new operating system is loaded on the system. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> By pinning data into a non-volatile cache during system initialization, the time needed for a system initialization can be reduced. This is especially significant in mass storage caches. In another embodiment, however, the pinned bit may be stored in a non-volatile storage media such that the information is retained between boots. For example, the pinned bit may be included into the metadata stored in the cache <highlight><bold>150</bold></highlight> or to the memory <highlight><bold>120</bold></highlight>, if the memory <highlight><bold>120</bold></highlight> includes a non-volatile storage media. In such case, the pinning procedure during each system initialization would not be necessary as the pinning bit information is retained between system boots. Moreover, although the invention has been described with reference to a system initialization, the teachings of the invention is not limited to pinning data necessary during system initialization and can be applied in any operation which require repeated use of data in a non-volatile cache. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The foregoing embodiments are merely exemplary and are not to be construed as limiting the present invention. The present teachings can be readily applied to other types of apparatuses. The description of the present invention is intended to be illustrative, and not to limit the scope of the claims. Many alternatives, modifications, and variations will be apparent to those skilled in the art. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method comprising: 
+<claim-text>storing data in a first memory, the first memory being a non-volatile storage medium in a cache; and </claim-text>
+<claim-text>pinning a portion of the data stored in the first memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein storing the data comprises storing the data in a mass storage cache. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein pinning of data comprises pinning the portion of data necessary for a system initialization. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the pinning of data comprises: 
+<claim-text>storing metadata corresponding to the data stored in the first memory; and </claim-text>
+<claim-text>setting a state in the metadata to indicate that a corresponding line of data is pinned. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein storing the metadata comprises storing the metadata in a second memory. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein storing the metadata comprises storing the metadata in a volatile storage media. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A metadata stored in a memory comprising: 
+<claim-text>a first state to indicate a least recently used information of a corresponding line of data in a non-volatile memory; and </claim-text>
+<claim-text>a second state to indicate whether a corresponding line of data in the non-volatile memory is pinned. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The metadata of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising: 
+<claim-text>a third state to indicate whether a corresponding line of data in the non-volatile memory was present before a system initialization. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The metadata of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the metadata is stored in a volatile storage media. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A system comprising: 
+<claim-text>a cache including a first storage media to store cache data, the first storage media being a non-volatile storage media; and </claim-text>
+<claim-text>a second storage media to store metadata for the cache data stored in the first storage media, the metadata including a state to indicate whether a corresponding line of data is pinned. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the cache is a mass storage cache. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the second storage media is a volatile storage media. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the second storage media is included in the cache. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the cache is implemented as an add-in card. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A method comprising: 
+<claim-text>accessing a first memory during a system initialization, the first memory being a cache; and </claim-text>
+<claim-text>pinning data accessed during the system initialization in the first memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the cache is a mass storage cache. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising: 
+<claim-text>limiting the pinning of data during the system initialization. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the pinning of data during the system initialization comprises: 
+<claim-text>storing metadata for the data stored in the first memory, the metadata including a first state to indicate whether a corresponding line of data is pinned; and </claim-text>
+<claim-text>setting a first state corresponding to the accessed data to indicate that the accessed data is pinned. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the pinning of data further comprises: 
+<claim-text>setting a timer upon the system initialization; and </claim-text>
+<claim-text>setting a first state corresponding to the accessed data until the timer expires. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the pinning of data further comprises: 
+<claim-text>setting a maximum amount of data to pin; and </claim-text>
+<claim-text>setting a first state corresponding to the accessed data until the maximum amount is exceeded. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the metadata further includes a second state; and wherein the pinning of data further comprises: 
+<claim-text>setting a second state for data that was present before system initialization, the setting of the second state to indicate that a corresponding data was present before the system initialization; </claim-text>
+<claim-text>setting a timer upon the system initialization; </claim-text>
+<claim-text>setting a maximum amount of data to pin; </claim-text>
+<claim-text>setting a first state corresponding to the accessed data if the maximum amount is not exceeded and if the timer has not expired; and otherwise </claim-text>
+<claim-text>clearing a first state corresponding to a pinned data and setting a first state corresponding to the accessed data if the second state corresponding to the pinned data is not set and the pinned data corresponding to the accessed data is set, and if the timer has not expired. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein the metadata further includes a third state to indicate the age of a corresponding line of data and the clearing of a first state comprises: 
+<claim-text>clearing the latest line of data if there is more than one line of pinned data whose second state is not set. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. A system comprising: 
+<claim-text>a cache including a first storage media to access during a system initialization, the first storage media being non-volatile; </claim-text>
+<claim-text>a second storage media to store metadata for data accessed during the system initialization, the metadata including a first state; and </claim-text>
+<claim-text>a memory control hub to cause a first state to be set for data accessed during the system initialization, the setting of the first state to indicate that a corresponding line of data is pinned. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the metadata further includes a second state; and wherein the memory control hub causes the second state to be set for data present before the system initialization, the setting of the second state to indicate that a corresponding line of data was present before the system initialization. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the cache is a mass storage cache. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the memory control hub limits the amount of data pinned. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the second storage media is a volatile storage media. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the second storage media is included in the cache. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, wherein the cache is implemented as an add-in card. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. A program loaded into a computer readable media comprising: 
+<claim-text>a first group of computer instructions to access data in a non-volatile cache; </claim-text>
+<claim-text>a second group of computer instructions to pin data accessed in the non-volatile cache. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The program of claim <highlight><bold>30</bold></highlight>, wherein the second group of computer instructions includes computer instructions to pin data accessed during a system initialization. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The program of claim <highlight><bold>31</bold></highlight>, wherein the second group of computer instructions further includes computer instructions to limit the a mount of data pinned.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005223A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005223A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005223A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005223A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005223A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

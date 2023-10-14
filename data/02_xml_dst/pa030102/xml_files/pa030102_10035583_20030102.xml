@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005012A1-20030102-D00000.TIF SYSTEM "US20030005012A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005012A1-20030102-D00001.TIF SYSTEM "US20030005012A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005012A1-20030102-D00002.TIF SYSTEM "US20030005012A1-20030102-D00002.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005012</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10035583</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20011228</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/38</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>708</class>
+<subclass>495000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for forcing floating point status information to selected values</title-of-invention>
+</technical-information>
+<continuity-data>
+<non-provisional-of-provisional>
+<document-id>
+<doc-number>60293173</doc-number>
+<document-date>20010525</document-date>
+<country-code>US</country-code>
+</document-id>
+</non-provisional-of-provisional>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Guy</given-name>
+<middle-name>L.</middle-name>
+<family-name>Steele</family-name>
+<name-suffix>JR.</name-suffix>
+</name>
+<residence>
+<residence-us>
+<city>Lexington</city>
+<state>MA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>Sun Microsystems, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Finnegan, Henderson, Farabow,</name-1>
+<name-2>Garrett &amp; Dunner, L.L.P.</name-2>
+<address>
+<address-1>1300 I Street, N.W.</address-1>
+<city>Washington</city>
+<state>DC</state>
+<postalcode>20005-3315</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A floating point flag forcing circuit comprising an circuit and a result assembler. The circuit receives a plurality of floating point operands, analyzes the floating point operand, receives one or more control input signals, determines one or more predetermined formats in which the plurality of operands are represented, and generates one or more control signals. The result assembler receives the control signals from the circuit, along with one or more inputs, and assembles a result. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">INCORPORATION BY REFERENCE </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> Related U.S. patent application Ser. No. ______, filed on even date herewith in the name of Guy L. Steele Jr. and entitled &ldquo;Floating Point System That Represents Status Flag Information Within a Floating Point Operand,&rdquo; assigned to the assignee of the present application, is hereby incorporated by reference.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The invention relates generally to systems and methods for performing floating point operations, and more particularly to systems and methods for forcing floating point status information to selected values. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Digital electronic devices, such as digital computers, calculators, and other devices, perform arithmetic calculations on values in integer or &ldquo;fixed point&rdquo; format, in fractional or &ldquo;floating point&rdquo; format, or both. IEEE Standard 754 (hereinafter &ldquo;IEEE Std. 754&rdquo; or &ldquo;the Standard&rdquo;), published in 1985 by the Institute of Electrical and Electronic Engineers and adopted by the American National Standards Institute (ANSI), defines several standard formats for expressing values in floating point format and a number of aspects regarding behavior of computation in connection therewith. In accordance with IEEE Std. 754, a representation in floating point format comprises a plurality of binary digits, or &ldquo;bits,&rdquo; having the structure </paragraph>
+<paragraph id="P-0004" lvl="2"><number>&lsqb;0004&rsqb;</number> se<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight></paragraph>
+<paragraph id="P-0005" lvl="7"><number>&lsqb;0005&rsqb;</number> where bit &ldquo;s&rdquo; is a sign bit indicating whether the entire value is positive or negative, bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; comprise an exponent field representing the exponent &ldquo;e&rdquo; in unsigned binary biased format, and bits &ldquo;f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb</subscript></highlight>&rdquo; comprise a fraction field that represents the fractional portion of &ldquo;f&rdquo; in unsigned binary format (&ldquo;msb&rdquo; represents &ldquo;most-significant bit&rdquo; and &ldquo;lsb&rdquo; represents &ldquo;least-significant bit&rdquo;). The Standard defines two general formats, namely, a &ldquo;single&rdquo; format which comprises thirty-two bits, and a &ldquo;double&rdquo; format which comprises sixty-four bits. In the single format, there is one sign bit &ldquo;s,&rdquo; eight bits &ldquo;e<highlight><subscript>7 </subscript></highlight>. . . e<highlight><subscript>0</subscript></highlight>&rdquo; comprising the exponent field and twenty-three bits &ldquo;f<highlight><subscript>22 </subscript></highlight>. . . f<highlight><subscript>0</subscript></highlight>&rdquo; comprising the fraction field. In the double format, there is one sign bit &ldquo;s,&rdquo; eleven bits &ldquo;e<highlight><subscript>10 </subscript></highlight>. . . e<highlight><subscript>0</subscript></highlight>&rdquo; comprising the exponent field and fifty-two bits &ldquo;f<highlight><subscript>51 </subscript></highlight>. . . f<highlight><subscript>0</subscript></highlight>&rdquo; comprising the fraction field. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> As indicated above, the exponent field of the floating point representation &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; represents the exponent &ldquo;E&rdquo; in biased format. The biased format provides a mechanism by which the sign of the exponent is implicitly indicated. In particular, the bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; represent a binary encoded value &ldquo;e&rdquo; such that &ldquo;e&equals;E&plus;bias.&rdquo; This allows the exponent E to extend from &minus;126 to &plus;127, in the eight-bit &ldquo;single&rdquo; format, and from &minus;1022 to &plus;1023 in the eleven-bit &ldquo;double&rdquo; format, and provides for relatively easy manipulation of the exponents in multiplication and division operations, in which the exponents are added and subtracted, respectively. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> IEEE Std. 754 provides for several different formats with both the single and double formats which are generally based on the bit patterns of the bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; comprising the exponent field and the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>comprising the fraction field. If a number is represented such that all of the bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; of the exponent field are binary ones (i.e., if the bits represent a binary-encoded value of &ldquo;255&rdquo; in the single format or &ldquo;2047&rdquo; in the double format) and all of the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are binary zeros, then the value of the number is positive or negative infinity, depending on the value of the sign bit &ldquo;s.&rdquo; In particular, the value &ldquo;v&rdquo; is v&equals;(&minus;1)<highlight><superscript>s</superscript></highlight>&infin;, where &ldquo;&infin;&rdquo; represents the value of &ldquo;infinity.&rdquo; On the other hand, if all of the bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; of the exponent field are binary ones and if the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are not all zeros, then the value that is represented is deemed &ldquo;not a number,&rdquo; abbreviated in the Standard by &ldquo;NaN.&rdquo;</paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> If a number has an exponent field in which the bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; are neither all binary ones nor all binary zeros (i.e., if the bits represent a binary-encoded value between 2 and 254 in the single format or between 1 and 2046 in the double format), the number is said to be in a &ldquo;normalized&rdquo; format. For a number in the normalized format, the value represented by the number is v&equals;(&minus;1)<highlight><superscript>s</superscript></highlight>2e<highlight><superscript>e&minus;bias </superscript></highlight>(1.&verbar;f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb</subscript></highlight>), where &ldquo;&verbar;&rdquo; represents a concatenation operation. Effectively, in the normalized format, there is an implicit most-significant digit having the value &ldquo;one,&rdquo; so that the twenty-three digits in the fraction field of the single format, or the fifty-two digits in the fraction field of the double format, will effectively represent a value having twenty-four digits or fifty-three digits of precision, respectively, where the value is less than two, but not less than one. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> On the other hand, if a number has an exponent field in which the bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; are all binary zeros, representing the binary-encoded value of &ldquo;zero&rdquo; and a fraction field in which the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>are not all zero, the number is said to be in a &ldquo;denormalized&rdquo; format. For a number in the denormalized format, the value represented by the number is v&equals;(&minus;1)<highlight><superscript>s</superscript></highlight>2<highlight><superscript>e&minus;bias&plus;1</superscript></highlight>(0.&verbar;f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb</subscript></highlight>). It will be appreciated that the range of values of numbers that can be expressed in the denormalized format is disjointed from the range of values of numbers that can be expressed in the normalized format, for both the single and double formats. Finally, if a number has an exponent field in which the bits &ldquo;e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb</subscript></highlight>&rdquo; are all binary zeros, representing the binary-encoded value of &ldquo;zero,&rdquo; and a fraction field in which the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>are all zero, the number has the value &ldquo;zero&rdquo; (reference format <highlight><bold>30</bold></highlight>). It will be appreciated that the value &ldquo;zero&rdquo; may be positive zero or negative zero, depending on the value of the sign bit. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Generally, floating point units to perform computations whose results conform to IEEE Std. 754 are designed to generate a result in response to a floating point instruction in three steps: </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> (a) In the first step (an approximation calculation step), approximation to the absolutely accurate mathematical result (assuming that the input operands represent the specific mathematical values as described by IEEE Std. 754) is calculated that is sufficiently precise. This allows the accurate mathematical result to be summarized by a sign bit, an exponent (typically represented using more bits than are used for an exponent in the standard floating point format), and some number &ldquo;N&rdquo; of bits of the presumed result fraction, plus a guard bit and a sticky bit. The value of the exponent will be such that the value of the fraction generated in step (a) consists of a &ldquo;1&rdquo; before the binary point and a fraction after the binary point. The bits are calculated so as to obtain the same result as the following conceptual procedure (which is impossible under some circumstances to carry out in practice): calculate the mathematical result to an infinite number of bits of precision in binary scientific notation, and in such a way that there is no bit position in the significand such that all bits of lesser significance are 1-bits (this restriction avoids the ambiguity between, for example, 1.100000 . . . and 1.011111 . . . as representations of the value &ldquo;one-and-one-half&rdquo;); then let the N most-significant bits of the infinite significand be used as the intermediate result significand, let the next bit of the infinite significand be the guard bit, and let the sticky bit be &ldquo;0&rdquo; if and only if all remaining bits of the infinite significand are 0-bits (in other words, the sticky bit is the logical OR of all remaining bits of the infinite fraction after the guard bit). </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> (b) In the second step (a rounding step), the guard bit, the sticky bit, perhaps the sign bit, and perhaps some of the bits of the presumed significand generated in step (a) are used to decide whether to alter the result of step (a). For the rounding modes defined by IEEE Std. 754, this is a decision as to whether to increase the magnitude of the number represented by the presumed exponent and fraction generated in step (a). Increasing the magnitude of the number is done by adding &ldquo;1&rdquo; to the significand in its least-significant bit position, as if the significand were a binary integer. It will be appreciated that, if the significand is all 1-bits, then the magnitude of the number is &ldquo;increased&rdquo; by changing it to a high-order 1-bit followed by all 0-bits and adding &ldquo;1&rdquo; to the exponent. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Regarding the rounding modes, it will be further appreciated that: </paragraph>
+<paragraph id="P-0014" lvl="2"><number>&lsqb;0014&rsqb;</number> (i) if the result is a positive number, and </paragraph>
+<paragraph id="P-0015" lvl="3"><number>&lsqb;0015&rsqb;</number> (a) if the decision is made to increase, effectively the decision has been made to increase the value of the result, thereby rounding the result up (i.e., towards positive infinity), but </paragraph>
+<paragraph id="P-0016" lvl="3"><number>&lsqb;0016&rsqb;</number> (b) if the decision is made not to increase, effectively the decision has been made to decrease the value of the result, thereby rounding the result down (i.e., towards negative infinity); and </paragraph>
+<paragraph id="P-0017" lvl="2"><number>&lsqb;0017&rsqb;</number> (ii) if the result is a negative number, and </paragraph>
+<paragraph id="P-0018" lvl="3"><number>&lsqb;0018&rsqb;</number> (a) if the decision is made to increase, effectively the decision has been made to decrease the value of the result, thereby rounding the result down, but </paragraph>
+<paragraph id="P-0019" lvl="3"><number>&lsqb;0019&rsqb;</number> (b) if the decision is made not to increase, effectively the decision has been made to increase the value of the result, thereby rounding the result up. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> (c) In the third step (a packaging step), the result is packaged into a standard floating point format. This may involve substituting a special representation, such as the representation defined for infinity or NaN if an exceptional situation (such as overflow, underflow, or an invalid operation) was detected. Alternatively, this may involve removing the leading 1-bit (if any) of the fraction, because such leading 1-bits are implicit in the standard format. As another alternative, this may involve shifting the fraction in order to construct a denormalized number. As a specific example, it is assumed that this is the step that forces the result to be a NaN if any input operand is a NaN. In this step, the decision is also made as to whether the result should be an infinity. It will be appreciated that, if the result is to be a NaN or infinity, any result from step (b) will be discarded and instead the appropriate representation will be provided as the result. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In addition, in the packaging step, floating point status information is generated, which is stored in a floating point status register. The floating point status information generated for a particular floating point operation includes indications, for example, as to whether </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> (i) a particular operand is invalid for the operation to be performed (&ldquo;invalid operation&rdquo;); </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> (ii) if the operation to be performed is division, the divisor is zero (&ldquo;division-by-zero&rdquo;); </paragraph>
+<paragraph id="P-0024" lvl="2"><number>&lsqb;0024&rsqb;</number> (iii) an overflow occurred during the operation (&ldquo;overflow&rdquo;); </paragraph>
+<paragraph id="P-0025" lvl="2"><number>&lsqb;0025&rsqb;</number> (iv) an underflow occurred during the operation (&ldquo;underflow&rdquo;); and </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> (v) the rounded result of the operation is not exact (&ldquo;inexact&rdquo;). </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> These conditions are typically represented by flags that are stored in the floating point status register separate from the result itself. The floating point status information can be used to dynamically control the operations in response to certain instructions, such as conditional branch, conditional move, and conditional trap instructions that may be in the instruction stream subsequent to the floating point instruction. Also, the floating point status information may enable processing of a trap sequence, which will interrupt the normal flow of program execution. In addition, the floating point status information may be used to affect certain ones of the functional unit control signals that control the rounding mode. IEEE Std. 754 also provides for accumulating floating point status information from, for example, results generated for a plurality of floating point operations. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> IEEE Std. 754 has brought relative harmony and stability to floating point computation and architectural design of floating point units. Moreover, its design was based on some important principles and rests on sensible mathematical semantics that ease the job of programmers and numerical analysts. It also supports the implementation of interval arithmetic, which may prove to be preferable to simple scalar arithmetic for many tasks. Nevertheless, IEEE Std. 754 has some serious drawbacks, including: </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> (i) Modes (e.g., the rounding mode and traps enabled/disabled mode), flags (e.g., flags representing the status information stored in the floating point status register <highlight><bold>25</bold></highlight>), and traps required to implement IEEE Std. 754 introduce implicit serialization issues. Implicit serialization is essentially the need for serial control of access (read/write) to and from globally used registers, such as the floating point status register <highlight><bold>25</bold></highlight>. Under IEEE Std. 754, implicit serialization may arise between (1) different concurrent floating point instructions and (2) between floating point instructions and the instructions that read and write the flags and modes. Furthermore, rounding modes may introduce implicit serialization because they are typically indicated as a global state, although in some microprocessor architectures, the rounding mode is encoded as part of the instruction operation code, which will alleviate this problem to that extent. Thus, the potential for implicit serialization makes the Standard difficult to implement coherently and efficiently in today&apos;s superscalar and parallel processing architectures without loss of performance. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> (ii) The implicit side effects of a procedure that can change the flags or modes can make it very difficult for compilers to perform optimizations on floating point code. As a result, compilers for most languages must assume that every procedure call is an optimization barrier in order to be safe. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> (iii) Global flags, such as those that signal certain modes, make it more difficult to do instruction scheduling where the best performance is provided by interleaving instructions of unrelated computations. Instructions from regions of code governed by different flag settings or different flag detection requirements cannot easily be interleaved when they must share a single set of global flag bits. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> (iv) Furthermore, traps have been difficult to integrate efficiently into architectures and programming language designs for fine-grained control of algorithmic behavior. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> In addition to the above drawbacks, even though existing computer architectures eliminate the rounding modes as a global state by statistically encoding the rounding mode as part of the instruction code, existing computer architectures do not eliminate flags and trap enable bits as a global state, while supporting similar exception detection capabilities. Examples of computer architectures that eliminate the rounding modes as a global state are demonstrated by the ALPHA architecture designed by Digital Equipment Corp. (DEC), which partially eliminates the rounding modes, and the MAJC architecture designed by Sun Microsystems, which completely eliminates the rounding modes. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Furthermore, existing systems for conducting arithmetic floating point instructions, in which flag information is stored in a global state, do not provide the capability of having the flag information associated with one arithmetic expression unassociated with the flag information of another arithmetic expression. Thus, they do not allow for the instructions for two unrelated arithmetic expressions to be interleaved in time to improve the efficiency of a compiler optimizer in performing instruction scheduling. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Although undeveloped in the art, whether the information is accumulated in a global state, as in IEEE 754, or in a numerical result, it would be convenient and useful to have means for clearing selected flag information from the operand value, such as its approximate numerical magnitude, its sign, and whether it is a NaN, an infinity, or one of the other aforementioned operand formats. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Thus, there is a need for a system that avoids such problems when performing floating point operations and, in particular, when forcing floating point status information to selected values. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Methods, systems, and articles of manufacture consistent with the present invention overcome these shortcomings with a floating point status information forcing circuit that forces floating point status information to selected values. In other words, these methods, systems and articles of manufacture selectively clear at least a portion of floating point status flag information within a floating point operand. More particularly stated, one aspect of the present invention provides a method for forcing floating point status information for selectively clearing at least a portion of encoded status flag information within a floating point operand. First, the floating point operand is received and analyzed. The encoded status flag information associated with the floating point operand is analyzed to identify a predetermined format associated with the floating point operand. Next, a control signal is received. The control signal is for selectively clearing the encoded status flag information. Next, an assembly signal is generated, usually based upon the control signal and a rounding mode signal. Finally, the resulting operand is assembled in which at least a portion of the encoded status flag information of the resulting operand is cleared based upon the predetermined format and values of the control signal and the assembly signal. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Additional advantages of the invention will be set forth in part in the description which follows, and in part will be obvious from the description, or may be learned by practicing the invention. The advantages of the invention will be realized and attained by means of the elements and combinations particularly pointed out in the appended claims. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> It is to be understood that both the foregoing general description and the following detailed description are exemplary and exemplary only and are not restrictive of the invention, as claimed. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> The accompanying drawings, which are incorporated herein and constitute a part of this specification, illustrate embodiments of the invention and together with the description, serve to explain the principles of the invention. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a functional block diagram of an exemplary circuit for forcing floating point status information to selected values constructed, consistent with an exemplary embodiment of the present invention; and </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts formats for representations of floating point operands used by the floating point status information forcing circuit depicted in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, consistent with an exemplary embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF THE EMBODIMENTS </heading>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Reference will now be made in detail to exemplary embodiments of the present invention, examples of which are illustrated in the accompanying drawings. Wherever possible, the same reference numbers will be used throughout the drawings to refer to the same or like parts. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Related U.S. patent application Ser. No. ______, which has previously been incorporated by reference, describes an exemplary floating point unit in which floating point status information is encoded in the representations of the results generated thereby. The exemplary floating point unit includes a plurality of functional units, including an adder unit, a multiplier unit, a divider unit, a square root unit, a maximum/minimum unit, a comparator unit, and a unit for forcing floating point status information to selected values, all of which operate under control of functional unit control signals provided by a control unit. The present application is directed to an exemplary unit for forcing floating point status information to selected values that can be used as another functional unit or as part of the aforementioned units in the floating point unit described in related U.S. Patent Application Ser. No. ______. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a functional block diagram of an exemplary floating point status information forcing circuit <highlight><bold>10</bold></highlight> constructed in accordance with an embodiment of the invention. Generally, the floating point status information forcing circuit <highlight><bold>10</bold></highlight> can receive a floating point operand and generate therefrom a result as will be described below, in which floating point status information is embedded in the operand. Advantageously, the floating point status information forcing circuit <highlight><bold>10</bold></highlight> embeds the floating point status information by forcing the status information to predetermined values. In other words, the floating point status information may be intentionally and selectively cleared in embodiments of the present invention to avoid unnecessary accumulation of embedded status information within the resulting operand. Those skilled in the art will appreciate that the selective capability to clear or force the embedded status information to a particular value while preserving other characteristics of the resulting operand value is useful and convenient when attempting to efficiently process one or more floating point operands. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Since the floating point status information is part of the floating point representation of the result, instead of being separate and apart from the result, there is no need to access any external circuitry (e.g., a floating point status register). Thus, the implicit serialization that is required by maintaining the floating point status information separate and apart from the result can be advantageously obviated. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> In the illustrated embodiment of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the exemplary floating point status information forcing circuit <highlight><bold>10</bold></highlight> encodes the floating point status information in results that are generated in a plurality of exemplary formats, which will be illustrated in connection with <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts exemplary formats of floating point operands that the floating point status information forcing circuit <highlight><bold>10</bold></highlight> may receive and of results that it may generate. With reference to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, seven exemplary formats are depicted, including a zero format <highlight><bold>60</bold></highlight>, an underflow format <highlight><bold>61</bold></highlight>, a denormalized format <highlight><bold>62</bold></highlight>, a normalized non-zero format <highlight><bold>63</bold></highlight>, an overflow format <highlight><bold>64</bold></highlight>, an infinity format <highlight><bold>65</bold></highlight>, and a not-a-number (NaN) format <highlight><bold>66</bold></highlight>. The zero exemplary format <highlight><bold>60</bold></highlight> is used to represent the values &ldquo;zero&rdquo; or, more specifically, positive or negative zero, depending on the value of &ldquo;s,&rdquo; the sign bit. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The exemplary underflow format <highlight><bold>61</bold></highlight> provides a mechanism by which the floating point status information forcing circuit <highlight><bold>10</bold></highlight> can indicate that the result of a computation is an underflow. In the underflow format, the sign bit &ldquo;s&rdquo; indicates whether the result is positive or negative, the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field are all binary zeros, and the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field, except for the least-significant bit, are all binary zeros. The least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field is a binary one. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> The exemplary denormalized format <highlight><bold>62</bold></highlight> and normalized non-zero format <highlight><bold>63</bold></highlight> are used to represent finite non-zero floating point values substantially along the lines of that described above in connection with IEEE Std. 754. In both formats <highlight><bold>62</bold></highlight> and <highlight><bold>63</bold></highlight>, the sign bit &ldquo;s&rdquo; indicates whether the result is positive or negative. The bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field of the denormalized format <highlight><bold>62</bold></highlight> are all binary zeros. However, the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field of the normalized non-zero format <highlight><bold>63</bold></highlight> are mixed ones and zeros, except that the exponent field of the normalized non-zero format <highlight><bold>63</bold></highlight> will not have a pattern in which bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb&plus;1 </subscript></highlight>are all binary ones and the least-significant bit e<highlight><subscript>lsb </subscript></highlight>is zero and all of the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are all binary ones. In exemplary denormalized format <highlight><bold>62</bold></highlight>, the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are not all binary zeros. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The exemplary overflow format <highlight><bold>64</bold></highlight> provides a mechanism by which the floating point status information forcing circuit <highlight><bold>10</bold></highlight> can indicate that the result of a computation is an overflow. In the exemplary overflow format <highlight><bold>64</bold></highlight>, the sign bit &ldquo;s&rdquo; indicates whether the result is positive or negative, the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb&plus;1 </subscript></highlight>of the exponent field are all binary ones, with the least-significant bit e<highlight><subscript>lsb </subscript></highlight>being zero. The bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are all binary ones. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> The exemplary infinity format <highlight><bold>65</bold></highlight> provides a mechanism by which the floating point status information forcing circuit <highlight><bold>10</bold></highlight> can indicate that the result is infinite. In the exemplary infinity format <highlight><bold>65</bold></highlight>, the sign bit &ldquo;s&rdquo; indicates whether the result is positive or negative, the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field are all binary ones, and the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>of the fraction field are all binary zeros. The five least-significant bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are flags, which will be described below. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The exemplary NaN (not a number) format <highlight><bold>66</bold></highlight> provides a mechanism by which the floating point status information forcing circuit <highlight><bold>10</bold></highlight> can indicate that the result is not a number. In the exemplary NaN format, the sign bit &ldquo;s&rdquo; can be any value, the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field are all binary ones, and the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>of the fraction field are not all binary zeros. The five least-significant bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are flags, which will be described below. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> As noted above, in values represented in the exemplary infinity format <highlight><bold>65</bold></highlight> and the exemplary NaN format <highlight><bold>66</bold></highlight>, the five low order bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field are flags. In one embodiment, the formats used with the floating point status information forcing circuit <highlight><bold>10</bold></highlight>, include the five flags that are defined by IEEE Std. 754. These flags include an invalid operation flag &ldquo;n,&rdquo; an overflow flag &ldquo;o,&rdquo; an underflow flag &ldquo;u,&rdquo; a division-by-zero flag &ldquo;z,&rdquo; and an inexact flag &ldquo;x.&rdquo; For example, a value in the NaN format <highlight><bold>66</bold></highlight> in which both the overflow flag &ldquo;o&rdquo; and the division-by-zero flag &ldquo;z&rdquo; are set indicates that the value represents a result of a computation that involved an overflow (this from the overflow flag &ldquo;o&rdquo;), as well as an attempt to divide by zero (this from the division-by zero flag &ldquo;z&rdquo;). </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> In one embodiment, the flags may provide the same status information as provided by, for example, information stored in a floating point status register in a prior art floating point unit. In this embodiment, the status information is provided as part of the result and stored therewith in registers in which the result is ultimately stored. Therefore, multiple instructions can be contemporaneously executed, since the floating point status information that may be generated during execution of one instruction, when stored, will not over-write previously-stored floating point status information generated during execution of another instruction. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> In another embodiment, values in the other formats can be indicated as being inexact based in part on the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of their fraction fields. In that embodiment, that particular bit operates as an inexact flag. Thus, the value will be indicated as being inexact if the particular bit, such as the bit f<highlight><subscript>lsb </subscript></highlight>has the value &ldquo;one.&rdquo; Otherwise, those skilled in the art will appreciate that the operand has an exact status. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> Before proceeding to a description of the floating point status information forcing circuit <highlight><bold>10</bold></highlight>, it will be convenient to have names for the finite non- zero numbers that are adjacent to &plus;OV (a value in the overflow pattern with the sign bit &ldquo;s&rdquo; having the value &ldquo;zero,&rdquo; indicating a positive value), &minus;OV (a value in the overflow pattern with the sign bit &ldquo;s&rdquo; having the value of &ldquo;one,&rdquo; indicating a negative value), &plus;UN (a value in the underflow pattern with the sign bit &ldquo;s&rdquo; having the value &ldquo;zero,&rdquo; indicated a positive value), and &minus;UN (a value in the underflow pattern with the sign bit &ldquo;s&rdquo; having the value &ldquo;one,&rdquo; indicating a negative value), as follows:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="147PT" align="left"/>
+<colspec colname="2" colwidth="49PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>0 00000000 00000000000000000000010</entry>
+<entry>&plus;TINY</entry>
+</row>
+<row>
+<entry></entry>
+<entry>1 00000000 00000000000000000000010</entry>
+<entry>&minus;TINY</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0 11111110 11111111111111111111110</entry>
+<entry>&plus;HUGE</entry>
+</row>
+<row>
+<entry></entry>
+<entry>1 11111110 11111111111111111111110</entry>
+<entry>&minus;HUGE</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> Generally, &plus;OV can be deemed to refer to some (or any) value that is strictly between &plus;HUGE and &plus;&infin; and &plus;UN can be deemed to refer to some (or any) value that is strictly between &plus;0 and &plus;TINY. Similarly, &minus;OV can be deemed to refer to some (or any) value that is strictly between &minus;HUGE and &minus;&infin; and &minus;UN can be deemed to refer to some (or any) value that is strictly between &minus;0 and &minus;TINY. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> In this context, those skilled in the art will appreciate that: </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> (i) the magnitude, or absolute value, of &plusmn;HUGE can be considered as being the floating point value that is as large as possible but smaller than the magnitude of &plusmn;OV; </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> (ii) the magnitude of &plusmn;&infin; can be considered as being the floating point value that is as small as possible but larger than the magnitude of OV; </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> (iii) the magnitude of &plusmn;0 can be considered as being the floating point value that is as large as possible but smaller than the magnitude of &plus;UN; and </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> (iv) the magnitude of &plus;TINY can be considered as being the floating point value that is as small as possible but larger than the magnitude of &plusmn;UN. For purposes of clarity and to avoid any potential confusion, these names for such finite non-zero numbers will be used in the following description. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> In an embodiment of the invention, an arrangement is generally provided to force floating point status information, as represented by the embedded flags, associated with a floating point operand to predetermined or selected values. In other words, circuit <highlight><bold>10</bold></highlight> operates to selectively force or clear particular status information from a resulting operand in order to enhance overall floating point processing. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> In the illustrated embodiment in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the exemplary floating point status information forcing circuit <highlight><bold>10</bold></highlight> receives one operand, one or more control signals (such as control signals &ldquo;a&rdquo; through &ldquo;e&rdquo;) and one or more signals representative of the rounding mode. Upon receiving the operand, forcing circuit <highlight><bold>10</bold></highlight> responsively generates a result in which the floating point status information associated with the result is cleared or forced to selected or predetermined values based upon the values of the control signals and rounding mode signals. The control signals &ldquo;a&rdquo; through &ldquo;e&rdquo; may comprise floating point control signals provided by a control unit, as described in the related U.S. patent application Ser. No. ______, which has previously been incorporated by reference. The rounding signals may be implemented as representing conventional IEEE 754 rounding modes or other rounding modes. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> More particularly with regard to the illustrated embodiment, floating point status information is indicated as being cleared if the value of a particular bit, in the case of one flag, or values of particular bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>in the case of multiple flags, is or are set to &ldquo;zero.&rdquo; In the illustrated embodiment shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the exemplary floating point status information forcing circuit generates a resulting output value as follows: </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> (a) if control signal &ldquo;a&rdquo; is asserted, and the operand is in the exemplary NaN format <highlight><bold>66</bold></highlight>, then the result is a copy of the operand with all of the five least-significant bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field, which comprise the floating point status information, set to the value &ldquo;zero,&rdquo; thereby clearing the floating point status information; </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> (b) if control signal &ldquo;b&rdquo; is asserted, and the operand is in the exemplary infinity format <highlight><bold>65</bold></highlight>, then the result is a copy of the operand with the five least-significant bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field, which comprise the floating point status information, set to the value &ldquo;zero,&rdquo; thereby clearing the floating point status information; </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> (c) if control signal &ldquo;c&rdquo; is asserted, and the operand is in the exemplary overflow format <highlight><bold>64</bold></highlight>, then the result is:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="84PT" align="left"/>
+<colspec colname="3" colwidth="56PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>OPERAND</entry>
+<entry>ROUNDING MODE</entry>
+<entry>RESULT</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&plus;OV</entry>
+<entry>toward nearest</entry>
+<entry>&plus;INF</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&plus;OV</entry>
+<entry>toward zero</entry>
+<entry>&plus;HUGE</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&plus;OV</entry>
+<entry>toward plus infinity</entry>
+<entry>&plus;Inf</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&plus;OV</entry>
+<entry>toward minus infinity</entry>
+<entry>&plus;HUGE</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;OV</entry>
+<entry>toward nearest</entry>
+<entry>&minus;Inf</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;OV</entry>
+<entry>toward zero</entry>
+<entry>&minus;HUGE</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;OV</entry>
+<entry>toward plus infinity</entry>
+<entry>&minus;HUGE</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;OV</entry>
+<entry>toward minus infinity</entry>
+<entry>&minus;Inf</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> where, &plus;Inf represents a value in the exemplary infinity format <highlight><bold>65</bold></highlight> with the sign bit clear and all flags clear, and -Inf represents a value in the exemplary infinity format <highlight><bold>65</bold></highlight> with the sign bit set and all flags clear; </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> (d) if control signal &ldquo;d&rdquo; is asserted, and the operand is in the exemplary underflow format <highlight><bold>61</bold></highlight>, then the result is:  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="84PT" align="left"/>
+<colspec colname="3" colwidth="56PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>OPERAND</entry>
+<entry>ROUNDING MODE</entry>
+<entry>RESULT</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&plus;UN</entry>
+<entry>toward nearest</entry>
+<entry>&plus;0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&plus;UN</entry>
+<entry>toward zero</entry>
+<entry>&plus;0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&plus;UN</entry>
+<entry>toward plus infinity</entry>
+<entry>&plus;TINY</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&plus;UN</entry>
+<entry>toward minus infinity</entry>
+<entry>&plus;0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;UN</entry>
+<entry>toward nearest</entry>
+<entry>&minus;0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;UN</entry>
+<entry>toward zero</entry>
+<entry>&minus;0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;UN</entry>
+<entry>toward plus infinity</entry>
+<entry>&minus;0</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&minus;UN</entry>
+<entry>toward minus infinity</entry>
+<entry>&minus;TINY</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> (e) If control signal &ldquo;e&rdquo; is asserted, and the operand is a finite non-zero value that is not in the exemplary underflow format <highlight><bold>61</bold></highlight> or overflow format <highlight><bold>64</bold></highlight>, then the result is: </paragraph>
+<paragraph id="P-0072" lvl="2"><number>&lsqb;0072&rsqb;</number> (i) If the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand has the value &ldquo;zero,&rdquo; the result is equal to the operand; but </paragraph>
+<paragraph id="P-0073" lvl="2"><number>&lsqb;0073&rsqb;</number> (ii) If the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand has the value &ldquo;one,&rdquo; then the result is generated as follows: Let X be the floating point value whose sign is the same as that of the operand and whose magnitude, or absolute value, is as large as possible but smaller than the magnitude of the operand. Let Y be the floating point value whose sign is the same as that of the operand and whose magnitude is as small as possible but larger than the magnitude of the operand. Those skilled in the art will appreciate that X and Y will each be a finite non-zero floating point value with the least-significant bit of the fraction field f<highlight><subscript>lsb </subscript></highlight>having the value of zero. Then the result is as follows:  
+<table-cwu id="TABLE-US-00004">
+<number>4</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="1" colwidth="63PT" align="center"/>
+<colspec colname="2" colwidth="35PT" align="center"/>
+<colspec colname="3" colwidth="70PT" align="left"/>
+<colspec colname="4" colwidth="49PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>OPERAND SIGN</entry>
+<entry>f<highlight><subscript>lsb&plus;1</subscript></highlight></entry>
+<entry>ROUNDING MODE</entry>
+<entry>RESULT</entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>&plus;</entry>
+<entry>0</entry>
+<entry>toward nearest</entry>
+<entry>X</entry>
+</row>
+<row>
+<entry>&plus;</entry>
+<entry>1</entry>
+<entry>toward nearest</entry>
+<entry>Y</entry>
+</row>
+<row>
+<entry>&plus;</entry>
+<entry>x</entry>
+<entry>toward zero</entry>
+<entry>X</entry>
+</row>
+<row>
+<entry>&plus;</entry>
+<entry>x</entry>
+<entry>toward plus infinity</entry>
+<entry>Y</entry>
+</row>
+<row>
+<entry>&plus;</entry>
+<entry>x</entry>
+<entry>toward minus infinity</entry>
+<entry>X</entry>
+</row>
+<row>
+<entry>&minus;</entry>
+<entry>0</entry>
+<entry>toward nearest</entry>
+<entry>X</entry>
+</row>
+<row>
+<entry>&minus;</entry>
+<entry>1</entry>
+<entry>toward nearest</entry>
+<entry>Y</entry>
+</row>
+<row>
+<entry>&minus;</entry>
+<entry>x</entry>
+<entry>toward zero</entry>
+<entry>X</entry>
+</row>
+<row>
+<entry>&minus;</entry>
+<entry>x</entry>
+<entry>toward plus infinity</entry>
+<entry>X</entry>
+</row>
+<row>
+<entry>&minus;</entry>
+<entry>x</entry>
+<entry>toward minus infinity</entry>
+<entry>Y</entry>
+</row>
+<row><entry namest="1" nameend="4" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0074" lvl="7"><number>&lsqb;0074&rsqb;</number> where, the column for f<highlight><subscript>lsb&plus;1</subscript></highlight>, represents the value of the second least-significant bit of the fraction field of the operand, and &ldquo;x&rdquo; means &ldquo;don&apos;t care.&rdquo;</paragraph>
+<paragraph id="P-0075" lvl="0"><number>&lsqb;0075&rsqb;</number> (f) Otherwise, if none of items (a) through (e) applies, then the result corresponds to the operand. </paragraph>
+<paragraph id="P-0076" lvl="0"><number>&lsqb;0076&rsqb;</number> It will be appreciated that, for items (c) and (d) above, values in the exemplary underflow format <highlight><bold>61</bold></highlight> and overflow format <highlight><bold>64</bold></highlight> are considered inexact, as reflected by the fact that the least-significant bits f<highlight><subscript>lsb </subscript></highlight>of their fraction fields have the value &ldquo;one.&rdquo; Accordingly, the floating point status information forcing circuit <highlight><bold>10</bold></highlight>, when it generates the result, will provide an exact value that is proximate to the value represented by the operand, as determined by the rounding mode. Similarly, for items (e)(ii), since the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the operand&apos;s fraction field has the value &ldquo;one,&rdquo; the operand is inexact, and so the floating point status information forcing circuit <highlight><bold>10</bold></highlight>, when it generates the result, will provide an exact value that is proximate to the value represented by the operand, as determined by the rounding mode. In both cases, since the result is exact, the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the result will have the value &ldquo;zero,&rdquo; effectively representing a clear inexact flag &ldquo;x.&rdquo; For item (e)(i), since the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the operand&apos;s fraction field has the value &ldquo;zero,&rdquo; the operand is exact with the &ldquo;zero&rdquo; value representing a cleared inexact flag &ldquo;x.&rdquo;</paragraph>
+<paragraph id="P-0077" lvl="0"><number>&lsqb;0077&rsqb;</number> In addition, for items (c), (d), and (e)(ii), it will be appreciated that for the &ldquo;round to nearest&rdquo; rounding mode, if the second least-significant bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field of the operand has the value &ldquo;zero,&rdquo; the magnitude of the result will correspond to the magnitude of the floating point value that is as large as possible but smaller than the magnitude of the operand. On the other hand, if the second least-significant bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field of the operand has the value &ldquo;one,&rdquo; the magnitude of the result will correspond to the magnitude of the floating point value that is as small as possible but larger than the magnitude of the operand. </paragraph>
+<paragraph id="P-0078" lvl="0"><number>&lsqb;0078&rsqb;</number> With this background, the structure and operation of the exemplary floating point status information forcing circuit <highlight><bold>10</bold></highlight> will be more specifically described in connection with <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. With reference to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the exemplary floating point status information forcing circuit <highlight><bold>10</bold></highlight> comprises an operand buffer <highlight><bold>11</bold></highlight>, an operand analysis circuit <highlight><bold>12</bold></highlight>, a decision circuit <highlight><bold>13</bold></highlight>, a result assembler <highlight><bold>14</bold></highlight> and an incrementation circuit <highlight><bold>15</bold></highlight>. The operand buffer <highlight><bold>11</bold></highlight> receives and stores an operand from, for example, a set of registers (not shown) in a conventional manner. The operand analysis circuit <highlight><bold>12</bold></highlight> analyzes the operand in the operand buffer <highlight><bold>11</bold></highlight> and generates signals providing information relating to the respective operands, which are provided to the decision circuit <highlight><bold>13</bold></highlight>. The signals provided by the operand analysis circuit <highlight><bold>12</bold></highlight> essentially provide information as to the bit pattern of the fraction field of the operand, which is used by the decision circuit in determining the format <highlight><bold>60</bold></highlight>-<highlight><bold>66</bold></highlight> of the operand. The decision circuit <highlight><bold>13</bold></highlight> receives the signals from the operand analysis circuit <highlight><bold>12</bold></highlight>, the control signals (a) through (e), and signals representative of the rounding mode, and generates control signals that control the result assembler <highlight><bold>14</bold></highlight> in assembling the result. The result assembler <highlight><bold>14</bold></highlight> receives information from the operand buffer <highlight><bold>11</bold></highlight> and incrementation circuit <highlight><bold>15</bold></highlight> and, under control of control signals from the decision circuit <highlight><bold>13</bold></highlight>, assembles the result, which is coupled onto a result bus <highlight><bold>17</bold></highlight>. The result bus <highlight><bold>17</bold></highlight>, in turn, may deliver the result to any convenient destination, such as a register in a register set (not shown), for storage or other use. </paragraph>
+<paragraph id="P-0079" lvl="0"><number>&lsqb;0079&rsqb;</number> As noted above, operand analysis circuit <highlight><bold>12</bold></highlight> analyzes the operand in the operand buffer <highlight><bold>11</bold></highlight> and generates signals providing information relating to the fraction field of the operand. In the illustrated embodiment, operand analysis circuit <highlight><bold>12</bold></highlight> comprises a number of comparators, including: </paragraph>
+<paragraph id="P-0080" lvl="2"><number>&lsqb;0080&rsqb;</number> (i) a comparator <highlight><bold>20</bold></highlight> that generates an asserted signal if the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field of the operand in buffer <highlight><bold>11</bold></highlight> are all binary ones, which may be the case if the operand is in the exemplary infinity format <highlight><bold>65</bold></highlight> or the NaN format <highlight><bold>66</bold></highlight>; </paragraph>
+<paragraph id="P-0081" lvl="2"><number>&lsqb;0081&rsqb;</number> (ii) a comparator <highlight><bold>21</bold></highlight> that generates an asserted signal if the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb&plus;1 </subscript></highlight>of the exponent field of the operand in the buffer <highlight><bold>11</bold></highlight> are all binary ones, and the bit e<highlight><subscript>lsb </subscript></highlight>is a binary zero, which may be the case if the operand is in the exemplary overflow format <highlight><bold>64</bold></highlight>; </paragraph>
+<paragraph id="P-0082" lvl="2"><number>&lsqb;0082&rsqb;</number> (iii) a comparator <highlight><bold>22</bold></highlight> that generates an asserted signal if the bit e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field of the operand in buffer <highlight><bold>11</bold></highlight> are all binary zeros, which may be the case if the operand is in the exemplary zero format <highlight><bold>60</bold></highlight>, underflow format <highlight><bold>61</bold></highlight>, or denormalized format <highlight><bold>62</bold></highlight>; </paragraph>
+<paragraph id="P-0083" lvl="2"><number>&lsqb;0083&rsqb;</number> (iv) a comparator <highlight><bold>30</bold></highlight> that generates an asserted signal if the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>of the fraction field of the operand in the buffer <highlight><bold>11</bold></highlight> are all binary ones, which may be the case if the operand is in one of the exemplary formats, such as the denormalized format <highlight><bold>62</bold></highlight>, normalized non-zero format <highlight><bold>63</bold></highlight>, overflow format <highlight><bold>64</bold></highlight>, or NaN format <highlight><bold>66</bold></highlight>; </paragraph>
+<paragraph id="P-0084" lvl="2"><number>&lsqb;0084&rsqb;</number> (v) a comparator <highlight><bold>31</bold></highlight> that generates an asserted signal if the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>of the fraction field of the operand in the buffer <highlight><bold>11</bold></highlight> are all binary zeros, which may be the case if the operand is in one of the exemplary formats, such as the zero format <highlight><bold>60</bold></highlight>, underflow format <highlight><bold>62</bold></highlight>, normalized non-zero format <highlight><bold>63</bold></highlight>, or infinity format <highlight><bold>65</bold></highlight>; </paragraph>
+<paragraph id="P-0085" lvl="2"><number>&lsqb;0085&rsqb;</number> (vi) a comparator <highlight><bold>32</bold></highlight> that generates an asserted signal if the bits of the fraction field f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the operand in the buffer <highlight><bold>11</bold></highlight> are all binary ones, which may be the case if the operand is in the denormalized format <highlight><bold>62</bold></highlight> or normalized non-zero format <highlight><bold>63</bold></highlight>, and which will be the case if the operand is in the exemplary overflow format <highlight><bold>64</bold></highlight>, or if all of the flags &ldquo;n,&rdquo; &ldquo;o,&rdquo; &ldquo;u,&rdquo; &ldquo;z,&rdquo; and &ldquo;x&rdquo; are set in the exemplary infinity format <highlight><bold>65</bold></highlight> or NaN format <highlight><bold>66</bold></highlight>; </paragraph>
+<paragraph id="P-0086" lvl="2"><number>&lsqb;0086&rsqb;</number> (vii) a comparator <highlight><bold>33</bold></highlight> that generates an asserted signal if the bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field of the operand in the buffer <highlight><bold>11</bold></highlight> are all binary zeros, and if the bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field is a binary &ldquo;one,&rdquo; which will be the case if the operand is in the exemplary underflow format <highlight><bold>61</bold></highlight>, and which may be the case if the operand is in the exemplary denormalized format <highlight><bold>62</bold></highlight>, the exemplary normalized non- zero format <highlight><bold>63</bold></highlight>, or if the flags &ldquo;n,&rdquo; &ldquo;o,&rdquo; &ldquo;u,&rdquo; and &ldquo;z&rdquo; are clear and the flag &ldquo;x&rdquo; is set in the exemplary infinity format <highlight><bold>65</bold></highlight> or NaN format <highlight><bold>66</bold></highlight>; and </paragraph>
+<paragraph id="P-0087" lvl="0"><number>&lsqb;0087&rsqb;</number> Exemplary operand analysis circuit <highlight><bold>12</bold></highlight> also includes combinatorial logic elements that receive selected signals from the comparators and generates asserted signals to provide indications as to certain characteristics of the respective operand, including: </paragraph>
+<paragraph id="P-0088" lvl="2"><number>&lsqb;0088&rsqb;</number> (viii) an AND gate <highlight><bold>38</bold></highlight> that generates an asserted signal if the comparators <highlight><bold>31</bold></highlight> and <highlight><bold>33</bold></highlight> are both generating asserted signals, which may be the case if the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand in the operand buffer <highlight><bold>11</bold></highlight> have the bit pattern 00000000000000000000001; and </paragraph>
+<paragraph id="P-0089" lvl="2"><number>&lsqb;0089&rsqb;</number> (ix) an AND gate <highlight><bold>37</bold></highlight> that generates an asserted signal if the comparators <highlight><bold>30</bold></highlight> and <highlight><bold>32</bold></highlight> are both generating asserted signals, which may be the case if the bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand in the operand buffer <highlight><bold>11</bold></highlight> have the bit pattern 11111111111111111111111. </paragraph>
+<paragraph id="P-0090" lvl="0"><number>&lsqb;0090&rsqb;</number> As noted above, the decision circuit <highlight><bold>13</bold></highlight> receives the signals from the operand analysis circuit <highlight><bold>12</bold></highlight>, the control signals (a) through (e), and signals representative of the rounding mode, and generates assembly control signals that control the result assembler <highlight><bold>14</bold></highlight> when assembling the result. In the illustrated embodiment, the exemplary decision circuit <highlight><bold>13</bold></highlight> comprises: </paragraph>
+<paragraph id="P-0091" lvl="2"><number>&lsqb;0091&rsqb;</number> (x) a NAND gate <highlight><bold>40</bold></highlight> that generates an asserted signal if control signal &ldquo;a&rdquo; is asserted, the comparator <highlight><bold>20</bold></highlight> is generating an asserted signal, and comparator <highlight><bold>31</bold></highlight> is generating a negated signal (it will be appreciated that NAND gate <highlight><bold>40</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary NaN format <highlight><bold>66</bold></highlight> and control signal &ldquo;a&rdquo; is asserted (reference item (a) above)); </paragraph>
+<paragraph id="P-0092" lvl="2"><number>&lsqb;0092&rsqb;</number> (xi) an AND gate <highlight><bold>41</bold></highlight> that generates an asserted signal if control signal &ldquo;b&rdquo; is asserted, and the comparators <highlight><bold>20</bold></highlight> and <highlight><bold>31</bold></highlight> are generating asserted signals (it will be appreciated that NAND gate <highlight><bold>40</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary infinity format <highlight><bold>65</bold></highlight> and control signal &ldquo;b&rdquo; is asserted (reference item (b) above)); </paragraph>
+<paragraph id="P-0093" lvl="2"><number>&lsqb;0093&rsqb;</number> (xii) an OR gate <highlight><bold>49</bold></highlight> that generates an asserted signal if either NAND gate <highlight><bold>40</bold></highlight> or AND gate <highlight><bold>41</bold></highlight> is generating an asserted signal (it will be appreciated that OR gate <highlight><bold>49</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary NaN format <highlight><bold>66</bold></highlight> and control signal &ldquo;a&rdquo; is asserted or if in the exemplary infinity format <highlight><bold>65</bold></highlight> and control signal &ldquo;b&rdquo; is asserted (reference items (a) and (b) above)); </paragraph>
+<paragraph id="P-0094" lvl="2"><number>&lsqb;0094&rsqb;</number> (xiii) an AND gate <highlight><bold>42</bold></highlight> that generates an asserted signal if comparator <highlight><bold>21</bold></highlight> and AND gate <highlight><bold>37</bold></highlight> are generating asserted signals, and the control signal &ldquo;c&rdquo; is asserted (it will be appreciated that AND gate <highlight><bold>42</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the overflow format <highlight><bold>64</bold></highlight> and control signal &ldquo;c&rdquo; is asserted (reference item (c) above)); </paragraph>
+<paragraph id="P-0095" lvl="2"><number>&lsqb;0095&rsqb;</number> (xiv) an AND gate <highlight><bold>43</bold></highlight> that generates an asserted signal if comparator <highlight><bold>22</bold></highlight> and AND gate <highlight><bold>38</bold></highlight> are generating asserted signals, and control signal &ldquo;d&rdquo; is asserted (it will be appreciated that AND gate <highlight><bold>43</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary underflow format <highlight><bold>61</bold></highlight> and control signal &ldquo;d&rdquo; is asserted (reference item (d) above)); </paragraph>
+<paragraph id="P-0096" lvl="2"><number>&lsqb;0096&rsqb;</number> (xv) a NAND gate <highlight><bold>44</bold></highlight> that generates an asserted signal if comparator <highlight><bold>22</bold></highlight> is generating an asserted signal and AND gate <highlight><bold>36</bold></highlight> is generating a negated signal (it will be appreciated that NAND gate <highlight><bold>44</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary zero format <highlight><bold>60</bold></highlight> or denormalized format <highlight><bold>62</bold></highlight>); </paragraph>
+<paragraph id="P-0097" lvl="2"><number>&lsqb;0097&rsqb;</number> (xvi) a NAND gate <highlight><bold>45</bold></highlight> that generates an asserted signal if comparators <highlight><bold>20</bold></highlight>, <highlight><bold>21</bold></highlight>, and <highlight><bold>22</bold></highlight> are all generating negated signals (it will be appreciated that NAND gate <highlight><bold>45</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary normalized non-zero format <highlight><bold>63</bold></highlight>); </paragraph>
+<paragraph id="P-0098" lvl="2"><number>&lsqb;0098&rsqb;</number> (xvii) a NAND gate <highlight><bold>46</bold></highlight> that generates an asserted signal if comparator <highlight><bold>21</bold></highlight> is generating an asserted signal and AND gate <highlight><bold>37</bold></highlight> is generating a negated signal (it will be appreciated that NAND gate <highlight><bold>45</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary normalized non-zero format <highlight><bold>63</bold></highlight>); </paragraph>
+<paragraph id="P-0099" lvl="2"><number>&lsqb;0099&rsqb;</number> (xviii) an OR gate <highlight><bold>47</bold></highlight> that generates an asserted signal if any of NAND gates <highlight><bold>44</bold></highlight> through <highlight><bold>46</bold></highlight> are generating asserted signals (it will be appreciated that OR gate <highlight><bold>47</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in one of the exemplary formats, such as the zero format <highlight><bold>60</bold></highlight>, the denormalized format <highlight><bold>62</bold></highlight>, or the normalized non-zero format <highlight><bold>63</bold></highlight>); </paragraph>
+<paragraph id="P-0100" lvl="2"><number>&lsqb;0100&rsqb;</number> (xix) an AND gate <highlight><bold>48</bold></highlight> that generates an asserted signal if OR gate <highlight><bold>47</bold></highlight> is generating an asserted signal and control signal &ldquo;e&rdquo; is asserted (it will be appreciated that AND gate <highlight><bold>48</bold></highlight> may generate an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in one of the exemplary formats, such as the zero format <highlight><bold>60</bold></highlight>, the denormalized format <highlight><bold>62</bold></highlight> or the normalized non-zero format <highlight><bold>63</bold></highlight>, and control signal &ldquo;e&rdquo; is asserted (reference item (e) above)); </paragraph>
+<paragraph id="P-0101" lvl="2"><number>&lsqb;0101&rsqb;</number> (xx) an OR gate <highlight><bold>50</bold></highlight> that generates an asserted signal if any of AND gates <highlight><bold>42</bold></highlight>, <highlight><bold>43</bold></highlight>, or <highlight><bold>48</bold></highlight> are generating asserted signals; and </paragraph>
+<paragraph id="P-0102" lvl="2"><number>&lsqb;0102&rsqb;</number> (xxi) an OR gate <highlight><bold>51</bold></highlight> that generates an asserted signal if either OR gate <highlight><bold>49</bold></highlight> or OR gate <highlight><bold>50</bold></highlight> is generating an asserted signal. </paragraph>
+<paragraph id="P-0103" lvl="0"><number>&lsqb;0103&rsqb;</number> Generally, as noted above, if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary NaN format <highlight><bold>66</bold></highlight> and control signal &ldquo;a&rdquo; is asserted, or in the exemplary infinity format <highlight><bold>65</bold></highlight> and control signal &ldquo;b&rdquo; is asserted, the result corresponds to the operand in the operand buffer <highlight><bold>11</bold></highlight> with the five least-significant bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field, which comprise the floating point status information, set to the value &ldquo;zero,&rdquo; thereby clearing the floating point status information. As noted above, OR gate <highlight><bold>49</bold></highlight> generates an asserted signal if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary NaN format <highlight><bold>66</bold></highlight> and control signal &ldquo;a&rdquo; is asserted, or in the exemplary infinity format <highlight><bold>65</bold></highlight> and control signal &ldquo;b&rdquo; is asserted. As will be described below, if the OR gate <highlight><bold>49</bold></highlight> is generating an asserted signal, the result assembler <highlight><bold>14</bold></highlight> may couple signals representative of the sign bit, exponent field, and most-significant bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>of the fraction field of the operand in operand buffer <highlight><bold>11</bold></highlight> to the result bus <highlight><bold>17</bold></highlight> to represent corresponding bits of the result. In addition, the result assembler <highlight><bold>14</bold></highlight> may couple negated signals to the result bus <highlight><bold>17</bold></highlight> to represent bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the result. Specifically, the signal from OR gate <highlight><bold>49</bold></highlight> directly controls the signal representative of bits f<highlight><subscript>lsb&plus;</subscript></highlight><highlight><subscript>4 </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the result, and through OR gate <highlight><bold>51</bold></highlight> controls the signal representative of bit f<highlight><subscript>lsb </subscript></highlight>of the result. When the signal from OR gate <highlight><bold>49</bold></highlight> is asserted, the signals representative of bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>are negated. </paragraph>
+<paragraph id="P-0104" lvl="0"><number>&lsqb;0104&rsqb;</number> On the other hand, if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary overflow format <highlight><bold>64</bold></highlight> and control signal &ldquo;c&rdquo; is asserted, or in the exemplary underflow format <highlight><bold>61</bold></highlight> and control signal &ldquo;d&rdquo; is asserted, or is an inexact value in one of the exemplary formats, such as the zero format <highlight><bold>60</bold></highlight>, the denormalized format <highlight><bold>62</bold></highlight>, or normalized non-zero format <highlight><bold>63</bold></highlight>, and control signal &ldquo;e&rdquo; is asserted, except for the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field, the result will depend on the rounding mode. As noted above, OR gate <highlight><bold>50</bold></highlight> generates an asserted signal in all three cases. In all three cases, the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the result will have the value &ldquo;zero&rdquo; and the result assembler <highlight><bold>14</bold></highlight> will provide a negated signal representative thereof to the result bus <highlight><bold>17</bold></highlight>. Depending on the rounding mode, except for the sign bit and the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field, the remaining bits of the result, which represent the exponent field and the most- significant bits f<highlight><subscript>msb </subscript></highlight>. . . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field, may correspond to either: </paragraph>
+<paragraph id="P-0105" lvl="2"><number>&lsqb;0105&rsqb;</number> (i) the corresponding bits of the operand in operand buffer <highlight><bold>11</bold></highlight>, i.e., bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the operand in operand buffer <highlight><bold>11</bold></highlight>, or </paragraph>
+<paragraph id="P-0106" lvl="2"><number>&lsqb;0106&rsqb;</number> (ii) to the corresponding bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the operand in the operand buffer <highlight><bold>11</bold></highlight>, considered as an integer, incremented by the value &ldquo;one.&rdquo;</paragraph>
+<paragraph id="P-0107" lvl="0"><number>&lsqb;0107&rsqb;</number> For example, as noted above in connection with item (c), if control signal &ldquo;c&rdquo; is asserted, and the operand is &plus;OV (a positive value in the exemplary overflow format <highlight><bold>64</bold></highlight>), then the result is &plus;Inf (i.e., a value in the exemplary infinity format <highlight><bold>65</bold></highlight> with the sign bit clear, which has the bit pattern 0 11111111 00000000000000000000000) if the rounding mode is &ldquo;toward plus infinity&rdquo; and &plus;HUGE (i.e., a value having the bit pattern 0 11111110 11111111111111111111110) if the rounding mode is &ldquo;toward minus infinity.&rdquo; It will be appreciated that the operand &plus;OV has the bit pattern 0 11111110 1111111111111111111111, with leading &ldquo;0&rdquo; being the sign bit, the next eight bits 11111110 comprising bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>of the exponent field, and the final twenty-three bits 11111111111111111111111 comprising bits f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the fraction field. In that case, if the rounding mode is &ldquo;toward minus infinity,&rdquo; the result will correspond to the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the operand in the operand buffer <highlight><bold>11</bold></highlight> (reference item (i) directly above). On the other hand, if the rounding mode is &ldquo;toward plus infinity,&rdquo; the result will correspond to the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the operand in the operand buffer <highlight><bold>11</bold></highlight>, considered as an integer, incremented by the value &ldquo;one&rdquo; (reference item (ii) directly above). In both cases, the sign bit of the result will have the value &ldquo;zero&rdquo; to indicate that the result is positive and the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the result will have the value &ldquo;zero,&rdquo; which also serves to provide a clear inexact flag &ldquo;x.&rdquo; An examination of bit patterns of results for other rounding modes and operand values will reveal that the results may be generated as described directly above in connection with items (i) and (ii). The incrementation circuit <highlight><bold>15</bold></highlight> is used to provide the value referenced in item (ii) above. </paragraph>
+<paragraph id="P-0108" lvl="0"><number>&lsqb;0108&rsqb;</number> In the illustrated embodiment, the exemplary result assembler <highlight><bold>14</bold></highlight> includes a multiplexer <highlight><bold>58</bold></highlight>, a multiplexer control circuit <highlight><bold>59</bold></highlight>, and a plurality of NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>) (generally identified by reference numeral <highlight><bold>57</bold></highlight>(i)). Each NAND gate <highlight><bold>57</bold></highlight>(i) receives a signal corresponding to one of the least-significant bits f<highlight><subscript>lsb&plus;i </subscript></highlight>of the fraction field, and controls the coupling of the signal. In the case of NAND gate <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>), the signal provided by the NAND gate is coupled to the result bus <highlight><bold>17</bold></highlight> as the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the result. In the case of the other NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>), the signals provided by the NAND gates are coupled to respective inputs of the multiplexer <highlight><bold>58</bold></highlight>. As will be described below in greater detail, the multiplexer <highlight><bold>58</bold></highlight> receives, at one input terminal, signals from the operand buffer <highlight><bold>11</bold></highlight> representing bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>of the exponent and fraction fields of the operand and signals from the NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>), and at the other input terminal, signals from the incrementation circuit <highlight><bold>15</bold></highlight>. The multiplexer control circuit <highlight><bold>59</bold></highlight> generates a multiplexer control signal that controls the multiplexer <highlight><bold>58</bold></highlight>, specifically determining the terminal whose signals are coupled to the result bus <highlight><bold>17</bold></highlight> representative of bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the exponent and fraction fields of the result. In all cases, a signal representative of the sign bit of the operand in operand buffer <highlight><bold>11</bold></highlight> is coupled to the result bus <highlight><bold>17</bold></highlight> to represent the sign bit of the result. </paragraph>
+<paragraph id="P-0109" lvl="0"><number>&lsqb;0109&rsqb;</number> More specifically, the NAND gate <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>) is controlled by the signal generated by the OR gate <highlight><bold>51</bold></highlight> and NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>) are controlled by the signal generated by the OR gate <highlight><bold>49</bold></highlight>. Accordingly, if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary NaN format <highlight><bold>66</bold></highlight> or infinity format <highlight><bold>65</bold></highlight> and the respective &ldquo;a&rdquo; or &ldquo;b&rdquo; control signal is asserted (reference items (a) and (b) above), the OR gate <highlight><bold>49</bold></highlight> will generate an asserted signal, which, in turn, disables the NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>). In addition, OR gate <highlight><bold>51</bold></highlight> will generate an asserted signal, which, in turn, disables the NAND gate <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>). Each disabled NAND gate <highlight><bold>57</bold></highlight>(i), in turn, blocks the signals from the operand buffer <highlight><bold>11</bold></highlight> representing bits f<highlight><subscript>lsb&plus;i </subscript></highlight>of the fraction field of the operand, and provides a signal therefore representing the value &ldquo;zero&rdquo; to the result bus <highlight><bold>17</bold></highlight>, thereby providing cleared flags &ldquo;n,&rdquo; &ldquo;o,&rdquo; &ldquo;u,&rdquo; &ldquo;z,&rdquo; and &ldquo;x&rdquo; in the result. </paragraph>
+<paragraph id="P-0110" lvl="0"><number>&lsqb;0110&rsqb;</number> On the other hand, if the operand in operand buffer <highlight><bold>11</bold></highlight> is in one of the exemplary formats, such as the overflow format <highlight><bold>64</bold></highlight>, underflow format <highlight><bold>61</bold></highlight>, denormalized format <highlight><bold>62</bold></highlight>, or normalized non-zero format <highlight><bold>63</bold></highlight>, and the respective &ldquo;c,&rdquo; &ldquo;d,&rdquo; or &ldquo;e&rdquo; control signal is asserted (reference items (c), (d), and (e) above), the OR gate <highlight><bold>51</bold></highlight> will generate an asserted signal, which, in turn, disables the NAND gate <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>). In this case, however, OR gate <highlight><bold>49</bold></highlight> will generate a negated signal, which, in turn, enables the NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>). Disabled NAND gate <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>), in turn, blocks the signal from the operand buffer <highlight><bold>11</bold></highlight> representing bits f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand, and provides a signal therefore representing the value &ldquo;zero&rdquo; to the result bus <highlight><bold>17</bold></highlight>, effectively representing a clear inexact flag. On the other hand, NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>), enabled by the negated signal generated by OR gate <highlight><bold>49</bold></highlight>, will couple signals representative of the bits f<highlight><subscript>lsb&plus;</subscript></highlight><highlight><subscript>4 </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the operand in operand buffer <highlight><bold>11</bold></highlight> to the multiplexer <highlight><bold>58</bold></highlight>. </paragraph>
+<paragraph id="P-0111" lvl="0"><number>&lsqb;0111&rsqb;</number> Finally, if all of the control signals &ldquo;a&rdquo; through &ldquo;e,&rdquo; are negated, or if a control signal is asserted but the operand is not in the format indicated in connection with items (a) through (e) above, both OR gates <highlight><bold>49</bold></highlight> and <highlight><bold>51</bold></highlight> will generate negated signals. In that case, all NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>), will be enabled to couple signals representative of the bits f<highlight><subscript>lsb&plus;4 </subscript></highlight>. . . f<highlight><subscript>lsb </subscript></highlight>of the operand in operand buffer <highlight><bold>11</bold></highlight> to the result bus <highlight><bold>17</bold></highlight>, in the case of NAND gate <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>), or to the multiplexer <highlight><bold>58</bold></highlight>, in the case of NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>). </paragraph>
+<paragraph id="P-0112" lvl="0"><number>&lsqb;0112&rsqb;</number> As noted above, the multiplexer <highlight><bold>58</bold></highlight> selectively couples signals from the operand buffer <highlight><bold>11</bold></highlight> representative of bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5</subscript></highlight>, signals from the NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>) received at one input terminal, or signals from the incrementation circuit <highlight><bold>15</bold></highlight> received at the other input terminal, to the result bus <highlight><bold>17</bold></highlight> under control of a multiplexer control signal from the multiplexer control circuit <highlight><bold>59</bold></highlight>. The signals provided by the multiplexer <highlight><bold>58</bold></highlight> represent bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the exponent and fraction fields of the result. If the multiplexer control signal provided by the multiplexer control circuit <highlight><bold>15</bold></highlight> is negated, the multiplexer <highlight><bold>58</bold></highlight> will couple signals from the incrementation circuit <highlight><bold>15</bold></highlight> to the result bus <highlight><bold>17</bold></highlight>. On the other hand, if the multiplexer control signal is asserted, the multiplexer <highlight><bold>58</bold></highlight> will couple signals from the operand buffer <highlight><bold>11</bold></highlight> representative of bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>and signals from the NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>) to the result bus <highlight><bold>17</bold></highlight>. </paragraph>
+<paragraph id="P-0113" lvl="0"><number>&lsqb;0113&rsqb;</number> The multiplexer control circuit <highlight><bold>59</bold></highlight> operates under control of the signal generated by OR gate <highlight><bold>50</bold></highlight>, signals representative of the rounding mode, the sign bit, and bits f<highlight><subscript>lsb&plus;1 </subscript></highlight>and f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand in operand buffer <highlight><bold>11</bold></highlight>. Generally, if the signal generated by OR gate <highlight><bold>50</bold></highlight> is negated, which may be the case if the operand in operand buffer <highlight><bold>11</bold></highlight> is in the exemplary NaN format <highlight><bold>66</bold></highlight> or infinity format <highlight><bold>65</bold></highlight> and the respective &ldquo;a&rdquo; or &ldquo;b&rdquo; control signal is asserted (reference items (a) and (b) above), or if all of the control signals &ldquo;a&rdquo; through &ldquo;e&rdquo; are negated, or if a control signal is asserted but the operand is not in the format indicated in connection with items (a) through (e) above, the multiplexer control circuit <highlight><bold>59</bold></highlight> will generate an asserted signal regardless of the conditions of the signals representative of the rounding mode and signals representative of the sign bit and bits f<highlight><subscript>lsb&plus;1 </subscript></highlight>and f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand in operand buffer <highlight><bold>11</bold></highlight>. </paragraph>
+<paragraph id="P-0114" lvl="0"><number>&lsqb;0114&rsqb;</number> On the other hand, if the signal generated by OR gate <highlight><bold>50</bold></highlight> is asserted, which will be the case if the operand in operand buffer <highlight><bold>11</bold></highlight> is in one of the exemplary formats, such as the overflow format <highlight><bold>64</bold></highlight>, underflow format <highlight><bold>61</bold></highlight>, zero format <highlight><bold>60</bold></highlight>, denormalized format <highlight><bold>62</bold></highlight>, or normalized non-zero format <highlight><bold>63</bold></highlight>, and the respective &ldquo;c,&rdquo; &ldquo;d,&rdquo; or &ldquo;e&rdquo; control signal is asserted (reference items (c), (d), and (e) above), whether the multiplexer control signal is asserted or negated will depend on the conditions of the signals representative of the rounding mode and signals representative of the sign bit and bits f<highlight><subscript>lsb&plus;1 </subscript></highlight>and f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand in operand buffer <highlight><bold>11</bold></highlight>. In one embodiment, the rounding mode is specified by rounding mode signals R(<highlight><bold>0</bold></highlight>) and R(<highlight><bold>1</bold></highlight>) as follows:  
+<table-cwu id="TABLE-US-00005">
+<number>5</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="4">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="42PT" align="left"/>
+<colspec colname="2" colwidth="49PT" align="left"/>
+<colspec colname="3" colwidth="105PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>R(1)</entry>
+<entry>R(0)</entry>
+<entry>Rounding Mode</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>round to nearest</entry>
+</row>
+<row>
+<entry></entry>
+<entry>0</entry>
+<entry>1</entry>
+<entry>round toward zero</entry>
+</row>
+<row>
+<entry></entry>
+<entry>1</entry>
+<entry>0</entry>
+<entry>round toward plus infinity</entry>
+</row>
+<row>
+<entry></entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>round toward minus infinity</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0115" lvl="7"><number>&lsqb;0115&rsqb;</number> Thus, if the signal generated by the OR gate <highlight><bold>50</bold></highlight> is asserted, the multiplexer control circuit <highlight><bold>59</bold></highlight> will generate a negated multiplexer control signal, enabling the multiplexer <highlight><bold>58</bold></highlight> to couple signals from the incrementation circuit <highlight><bold>15</bold></highlight> to the result bus <highlight><bold>17</bold></highlight>, if: </paragraph>
+<paragraph id="P-0116" lvl="2"><number>&lsqb;0116&rsqb;</number> (i) a signal representative of the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand in operand buffer <highlight><bold>11</bold></highlight> is asserted, which may be the case if the least-significant bit has the value &ldquo;one;&rdquo; and </paragraph>
+<paragraph id="P-0117" lvl="2"><number>&lsqb;0117&rsqb;</number> (ii) an OR gate <highlight><bold>55</bold></highlight> is generating an asserted signal, which may be the case if: </paragraph>
+<paragraph id="P-0118" lvl="3"><number>&lsqb;0118&rsqb;</number> (a) a NAND gate <highlight><bold>53</bold></highlight> is generating an asserted signal, which may be the case if the R(<highlight><bold>1</bold></highlight>) rounding mode signal is asserted and the R(<highlight><bold>0</bold></highlight>) rounding mode signal has the same asserted or negated condition as the signal representative of the sign of the sign bit of the operand in operand buffer <highlight><bold>11</bold></highlight> (XOR gate <highlight><bold>52</bold></highlight> executes the comparison between the sign bit of the operand in operand buffer <highlight><bold>11</bold></highlight> and the rounding mode signal R(<highlight><bold>0</bold></highlight>)), or </paragraph>
+<paragraph id="P-0119" lvl="3"><number>&lsqb;0119&rsqb;</number> (b) a NAND gate <highlight><bold>54</bold></highlight> is generating an asserted signal, which may be the case if both the R(<highlight><bold>0</bold></highlight>) and R(<highlight><bold>1</bold></highlight>) rounding mode signals are negated and a signal representative of the bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>is asserted, which will be the case if the rounding mode is &ldquo;round to nearest&rdquo; and the bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>has the value &ldquo;one.&rdquo;</paragraph>
+<paragraph id="P-0120" lvl="0"><number>&lsqb;0120&rsqb;</number> It will be appreciated that the NAND gate <highlight><bold>53</bold></highlight> may generate an asserted signal (reference item (ii)(a) directly above) if: </paragraph>
+<paragraph id="P-0121" lvl="2"><number>&lsqb;0121&rsqb;</number> (a) the operand in operand buffer <highlight><bold>11</bold></highlight> is positive and the rounding mode is &ldquo;round toward plus infinity;&rdquo; or </paragraph>
+<paragraph id="P-0122" lvl="2"><number>&lsqb;0122&rsqb;</number> (b) the operand in operand buffer <highlight><bold>11</bold></highlight> is negative and the rounding mode is &ldquo;round toward minus infinity.&rdquo;</paragraph>
+<paragraph id="P-0123" lvl="0"><number>&lsqb;0123&rsqb;</number> In both cases, the negated multiplexer control signal will enable the multiplexer <highlight><bold>58</bold></highlight> to couple the signals provided by incrementation circuit <highlight><bold>15</bold></highlight> to the result bus <highlight><bold>17</bold></highlight> as the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the exponent and fraction fields of the result. It will be appreciated that, if the operand in the operand buffer <highlight><bold>11</bold></highlight> is positive, the increased magnitude represented by the signals provided by incrementation circuit <highlight><bold>15</bold></highlight> will provide an increased result, (i.e., rounded toward plus infinity) as required by the rounding mode. On the other hand, if the operand is negative, the increased magnitude will provide a decreased result (i.e., rounded toward minus infinity), as required by the rounding mode. </paragraph>
+<paragraph id="P-0124" lvl="0"><number>&lsqb;0124&rsqb;</number> On the other hand, the NAND gate <highlight><bold>54</bold></highlight> accommodates the &ldquo;round to nearest&rdquo; rounding mode for items (c), (d), and (e)(ii) above. As noted above, for items (c), (d), and (e)(ii) and for the &ldquo;round to nearest&rdquo; rounding mode, if the second least-significant bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field of the operand has the value &ldquo;zero,&rdquo; the magnitude of the result will correspond to the magnitude of the floating point value that is as large as possible but smaller than the magnitude of the operand, and the magnitude of the result may be represented by the signals received by the multiplexer <highlight><bold>58</bold></highlight> from the operand buffer <highlight><bold>11</bold></highlight> and NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>). On the other hand, if the second least-significant bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field of the operand has the value &ldquo;one,&rdquo; the magnitude of the result will correspond to the magnitude of the floating point value that is as large as possible but smaller than the magnitude of the operand, and the magnitude of the result may be represented by the signals received by the multiplexer <highlight><bold>58</bold></highlight> from the incrementation circuit <highlight><bold>15</bold></highlight>. Accordingly, if the rounding mode signals indicate that the rounding mode is the &ldquo;round to nearest&rdquo; rounding mode, and if the signal representative of bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field of the operand indicates that the bit has the value &ldquo;one,&rdquo; the NAND gate <highlight><bold>54</bold></highlight> is asserted to, in turn, enable the multiplexer control circuit <highlight><bold>59</bold></highlight> to provide a negated signal that, in turn, enables the multiplexer <highlight><bold>58</bold></highlight> to couple the signals from incrementation circuit <highlight><bold>15</bold></highlight> to the result bus <highlight><bold>17</bold></highlight>. </paragraph>
+<paragraph id="P-0125" lvl="0"><number>&lsqb;0125&rsqb;</number> It will be appreciated that, otherwise, the multiplexer control circuit <highlight><bold>59</bold></highlight> will generate an asserted signal to enable the multiplexer <highlight><bold>58</bold></highlight> to couple signals representative of bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>of the exponent and fraction fields of the operand in operand buffer <highlight><bold>11</bold></highlight>, along with signals from NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>) to the result bus <highlight><bold>17</bold></highlight>. It will be appreciated that this will occur: </paragraph>
+<paragraph id="P-0126" lvl="2"><number>&lsqb;0126&rsqb;</number> (i) in connection with items (c), (d), and (e)(ii), for the &ldquo;round to nearest&rdquo; rounding mode, if the second least-significant bit f<highlight><subscript>lsb&plus;1 </subscript></highlight>of the fraction field of the operand has the value &ldquo;zero;&rdquo;</paragraph>
+<paragraph id="P-0127" lvl="2"><number>&lsqb;0127&rsqb;</number> (ii) in connection with items (c), (d), and (e)(ii), in connection with the &ldquo;round to zero&rdquo; rounding mode; </paragraph>
+<paragraph id="P-0128" lvl="2"><number>&lsqb;0128&rsqb;</number> (iii) in connection with items (e)(i), if the operand is in the exemplary denormalized format <highlight><bold>62</bold></highlight> or the normalized non-zero format <highlight><bold>63</bold></highlight>, and if the operand is exact, which may be indicated if the signal provided by operand buffer <highlight><bold>11</bold></highlight> to NAND gate <highlight><bold>57</bold></highlight>(<highlight><bold>0</bold></highlight>), which is representative of the least-significant bit f<highlight><subscript>lsb </subscript></highlight>of the fraction field of the operand, is negated; and </paragraph>
+<paragraph id="P-0129" lvl="0"><number>&lsqb;0129&rsqb;</number> (iv) in connection with item (f) (i.e., if none of items (a) through (e) applies). </paragraph>
+<paragraph id="P-0130" lvl="0"><number>&lsqb;0130&rsqb;</number> Thus, in connection with all of these, the multiplexer <highlight><bold>58</bold></highlight> will couple signals representative of the bits e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;5 </subscript></highlight>from the exponent and fraction fields of the operand in operand buffer <highlight><bold>11</bold></highlight>, along with the signals from the NAND gates <highlight><bold>57</bold></highlight>(<highlight><bold>4</bold></highlight>) through <highlight><bold>57</bold></highlight>(<highlight><bold>1</bold></highlight>) to the result bus <highlight><bold>17</bold></highlight>, as signals representative of the e<highlight><subscript>msb </subscript></highlight>. . . e<highlight><subscript>lsb </subscript></highlight>f<highlight><subscript>msb </subscript></highlight>. . . f<highlight><subscript>lsb&plus;1 </subscript></highlight>for the exponent and fraction fields of the result. </paragraph>
+<paragraph id="P-0131" lvl="0"><number>&lsqb;0131&rsqb;</number> One of ordinary skill in the art will recognize that other formats and bit patterns could be used to represent the floating point operand formats without departing from the principles of the present invention. One of ordinary skill in the art will also recognize that the floating point status information contained in the operands could easily be represented by other bit combinations (not shown) without departing from the principles of the present invention. For example, more or fewer bits could be used, a subset or superset of the exemplary status bits could be used, or the most significant bits of an operand (or some other subset of bits) could be used to indicate the floating point status information, instead of the least significant bits illustrated. </paragraph>
+<paragraph id="P-0132" lvl="0"><number>&lsqb;0132&rsqb;</number> It will be appreciated that a system in accordance with an embodiment of the invention can be constructed in whole or in part from special purpose hardware or a general purpose computer system, or any combination thereof, any portion of which may be controlled by a suitable program. Any program may in whole or in part comprise part of or be stored on the system in a conventional manner, or it may in whole or in part be provided into the system over a network or other mechanism for transferring information in a conventional manner. In addition, it will be appreciated that the system may be operated and/or otherwise controlled by means of information provided by an operator using operator input elements (not shown) which may be connected directly to the system or which may transfer the information to the system over a network or other mechanism for transferring information in a conventional manner. </paragraph>
+<paragraph id="P-0133" lvl="0"><number>&lsqb;0133&rsqb;</number> It will also be appreciated that the invention may be practiced in an electrical circuit comprising discrete electronic elements, packaged or integrated electronic chips containing logic gates, a circuit utilizing a microprocessor, or on a single chip containing electronic elements or microprocessors. It may also be provided using other technologies capable of performing logical operations such as, for example, AND, OR, and NOT, including but not limited to mechanical, optical, fluidic, and quantum technologies. In addition, the invention may be practiced within a general purpose computer or in any other circuits or systems as are known by those skilled in the art. </paragraph>
+<paragraph id="P-0134" lvl="0"><number>&lsqb;0134&rsqb;</number> The foregoing description has been limited to a specific embodiment of this invention. It will be apparent, however, that various variations and modifications may be made to the invention, with the attainment of some or all of the advantages of the invention. It is the object of the appended claims to cover these and such other variations and modifications as come within the true spirit and scope of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A floating point flag forcing circuit for selectively clearing at least a portion of encoded status flag information within a floating point operand, comprising: 
+<claim-text>a first circuit that determines a predetermined format associated with the floating point operand from the encoded status flag information within the floating point operand; and </claim-text>
+<claim-text>a second circuit that assembles a resulting operand in which at least a portion of the encoded status flag information of the resulting operand is cleared based upon the predetermined format and an assembly signal generated by the first circuit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The floating point flag forcing circuit of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the first circuit comprises: 
+<claim-text>an analysis circuit that analyzes the floating point operand and generates an intermediate indication of a bit pattern associated with the floating point operand; and </claim-text>
+<claim-text>a decision circuit that receives the intermediate indication from the analysis circuit to determine the predetermined format associated with the floating point operand, the decision circuit also being capable of generating the assembly signal, which is provided to the second circuit. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The floating point flag forcing circuit of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the second circuit assembles the resulting operand by selectively forcing the at least a portion of the encoded status flag information of the resulting operand to a selected value in accordance with a rounding mode signal and the assembly signal. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The floating point flag forcing circuit of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the selected value is based upon the predetermined format of the floating point operand, the control signal, and the rounding mode signal. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The floating point flag forcing circuit of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the encoded status flag information represents an invalid operation flag, an overflow flag, an underflow flag, an inexact flag, and a division by zero operation flag. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The floating point flag forcing circuit of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the predetermined format represent a zero format, an overflow format, an underflow format, a denormalized format, a normalized non-zero format, an infinity format, and a not-a-number (NaN) format. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The floating point flag forcing circuit of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein an overflow format represents one of a &plus;OV status and a &minus;OV status. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The floating point flag forcing circuit of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein an underflow format represents one of a &plus;UN status and a &minus;UN status. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method for forcing floating point status information for selectively clearing at least a portion of encoded status flag information within a floating point operand, comprising: 
+<claim-text>receiving the floating point operand; </claim-text>
+<claim-text>analyzing the encoded status flag information associated with the floating point operand to identify a predetermined format associated with the floating point operand; </claim-text>
+<claim-text>receiving a control signal for selectively clearing the encoded status flag information; </claim-text>
+<claim-text>generating an assembly signal; and </claim-text>
+<claim-text>assembling a resulting operand in which at least a portion of the encoded status flag information of the resulting operand is cleared based upon the predetermined format and values of the control signal and the assembly signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the step of analyzing further comprises: 
+<claim-text>generating an intermediate indication of a bit pattern associated with the floating point operand based upon the encoded status flag information for the floating point operand; and </claim-text>
+<claim-text>determining the predetermined format associated with the floating point operand based upon the intermediate indication. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the assembling step further comprises assembling the resulting operand by selectively forcing the at least a portion of the encoded status flag information of the resulting operand to a selected value in accordance with a rounding mode signal and the assembly signal. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the selected value is based upon the predetermined format of the floating point operand and the value of the control signal and the rounding mode signal. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the encoded status flag information represents an invalid operation flag, an overflow flag, an underflow flag, an inexact flag, and a division by zero operation flag. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the predetermined format represent a zero format, an overflow format, an underflow format, a denormalized format, a normalized non-zero format, an infinity format, and a not-a-number (NaN) format. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein an overflow format represents one of a &plus;OV status and a &minus;OV status. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein an underflow format represents one of a &plus;UN status and a &minus;UN status. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A computer-readable medium on which is stored a set of instructions for selectively clearing at least a portion of encoded status flag information within a floating point operand, which when executed perform the steps of: 
+<claim-text>receiving the floating point operand; </claim-text>
+<claim-text>analyzing the encoded status flag information associated with the floating point operand to identify a predetermined format associated with the floating point operand; </claim-text>
+<claim-text>receiving a control signal for selectively clearing the encoded status flag information; </claim-text>
+<claim-text>generating an assembly signal; and </claim-text>
+<claim-text>assembling a resulting operand in which at least a portion of the encoded status flag information of the resulting operand is cleared based upon the predetermined format and values of the control signal and the assembly signal. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the step of analyzing further comprises: 
+<claim-text>generating an intermediate indication of a bit pattern associated with the floating point operand based upon the encoded status flag information for the floating point operand; and </claim-text>
+<claim-text>determining the predetermined format associated with the floating point operand based upon the intermediate indication. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the assembling step further comprises assembling the resulting operand by selectively forcing the at least a portion of the encoded status flag information of the resulting operand to a selected value in accordance with a rounding mode signal and the assembly signal. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the selected value is based upon the predetermined format of the floating point operand and the value of the control signal and the rounding mode signal. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the encoded status flag information represents an invalid operation flag, an overflow flag, an underflow flag, an inexact flag, and a division by zero operation flag. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the predetermined format represent a zero format, an overflow format, an underflow format, a denormalized format, a normalized non-zero format, an infinity format, and a not-a-number (NaN) format. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein an overflow format represents one of a &plus;OV status and a &minus;OV status. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The computer readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein an underflow format represents one of a &plus;UN status and a &minus;UN status.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005012A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005012A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005012A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

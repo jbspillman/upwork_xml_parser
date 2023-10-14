@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005268A1-20030102-D00000.TIF SYSTEM "US20030005268A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005268A1-20030102-D00001.TIF SYSTEM "US20030005268A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005268A1-20030102-D00002.TIF SYSTEM "US20030005268A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005268A1-20030102-D00003.TIF SYSTEM "US20030005268A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005268A1-20030102-D00004.TIF SYSTEM "US20030005268A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005268A1-20030102-D00005.TIF SYSTEM "US20030005268A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005268A1-20030102-D00006.TIF SYSTEM "US20030005268A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005268</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09870450</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010601</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>712</class>
+<subclass>223000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Find first bit value instruction</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Michael</given-name>
+<middle-name>I.</middle-name>
+<family-name>Catherwood</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Pepperell</city>
+<state>MA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>SWIDLER BERLIN SHEREFF FRIEDMAN, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>3000 K STREET, NW</address-1>
+<address-2>BOX IP</address-2>
+<city>WASHINGTON</city>
+<state>DC</state>
+<postalcode>20007</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Bit operation instructions such as find first bit instructions are provided. The instructions themselves include four instructions for returning a value corresponding to a bit position that stores the first zero or the first one in a memory location beginning from the left or right side of a data word depending on the instruction. Two additional instructions find the first bit change from the left or the right side of a memory location. The instructions operate on data specified in a source register and return a result to a destination register. The source and destination registers may store the data directly or may store pointers to the data. In addition, the instructions may specify the source data as word or byte data. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to systems and methods for instruction processing and, more particularly, to systems and methods for providing bit operation instruction processing, such as find first bit instruction processing, pursuant to which the first zero or one in a memory location beginning on the left or right side is identified. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Processors, including microprocessors, digital signal processors and microcontrollers, operate by running software programs that are embodied in one or more series of instructions stored in a memory. The processors run the software by fetching the instructions from the series of instructions, decoding the instructions and executing them. The instructions themselves control the sequence of functions that the processor performs and the order in which the processor fetches and executes the instructions. For example, the order for fetching and executing each instruction may be inherent in the order of the instructions within the series. Alternatively, instructions such as branch instructions, conditional branch instructions, subroutine calls and other flow control instructions may cause instructions to be fetched and executed out of the inherent order of the instruction series. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> When a processor fetches and executes instructions in the inherent order of the instruction series, the processor may execute the instructions very efficiently without wasting processor cycles to determine, for example, where the next instruction is. When flow control instructions are processed, one or more processor cycles may be wasted while the processor locates and fetches the next instruction required for execution. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Processors, including digital signal processors, are conventionally adept at processing instructions that operate on word or byte data. For example, a 16 bit processor is adept at performing operations on 16 bit data. However, the same 16 bit processor is conventionally not adept at performing operations on single bits of data. When bit operations are required, conventionally they are be implemented with a software subroutine or a software loop within a program. Software loops and subroutines make inefficient use of processor resources and tend to reduce the performance of the processor. When, for example, a task management application within a real-time operating system is running on the processor, which tends to rely on bit wise operations implemented in a subroutine, the performance impact may cause impractical delays depending on the application. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Consider the find first instruction. This instruction seeks to find the first zero or one within a memory location. Conventionally, this instruction would have to be implemented in software with a program loop or a subroutine call. The program loop or subroutine would include multiple instructions that either a) perform a masking operation on a register, analyze the result of the register and output the value; or b) perform shifting operations on the value in a memory location until a one or a zero is shifted out of the memory location at one end. Both of these techniques require multiple processor cycles and instructions to implement and accordingly are inefficient. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> There is a need for a new method of implementing bit operations within a processor that makes efficient use of processor cycles and instructions efficiently. There is a further need for a new method of implementing find first instructions for bit intensive applications such as task management in real time operating systems and data normalization applications. There is a need for a processor that implements find first operation processing without losing processor cycles to delay associated with flow control instructions. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> According to embodiments of the present invention, a method and a processor for processing find first instructions are provided. The instructions themselves include four instructions for returning a value corresponding to the bit position that specifies the first zero or the first one beginning from the left or right side of a data word (for LSB and MSB depending on data format and designation). Two additional instructions find the first bit change from the left or the right side. The instructions operate on data specified in a source register and return a result to a destination register. The source and destination registers may store the data directly or may store pointers to the data. In addition, the instructions may specify the source data as word or byte data. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> These instructions may be executed in one processor cycle and with one program instruction utilizing bit operation logic within the processor. This represents a significant performance advantage over multiple-instruction software implemented techniques. It also allows smaller programs and accordingly more efficient use of program memory space on a processor. For task management in real-time operating systems and data normalization applications which continuously implement bit manipulation techniques, these instructions may improve performance over conventional techniques by several times. When program loops are implemented to perform the find first operations, order of magnitude performance increases are possible depending on the processor. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A method of processing a bit operation instructions according to an embodiment of the present invention includes fetching and decoding a find first bit instruction. The method further includes executing the find first bit instruction on a source operand to calculate a result corresponding to the first bit position meeting the criteria of the instruction and storing the result. The method may further include setting a flag within a status register when none of the bit positions meet the criteria of the instruction. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The find first bit instruction may be a find first zero or one instruction from the left or right side of a memory location or register. Alternatively, the find first bit instruction may be a find first bit change instruction from the left or right side of a memory location. The instructions may specify the source and destination operands in byte or word width format. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> According to another embodiment of the present invention, a processor for find first instruction processing, includes a program memory, a program counter and an arithmetic logic unit (ALU). The program memory for stores instructions including a find first bit instruction. The program counter identifies current instructions for processing. The ALU executes instructions within the program memory and includes bit operation logic for executing the find first bit instruction on a source operand to calculate a result corresponding to the first bit position meeting the criteria of the instruction. The find first bit instruction may be a find first zero or one instruction from the left or right side of a memory location. Alternatively, the find first bit instruction may be a find first bit change instruction from the left or right side of a memory location. The instructions may specify the source and destination operands in byte or word width format.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE FIGURES </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> The above described features and advantages of the present invention will be more fully appreciated with reference to the detailed description and appended figures in which: </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts a functional block diagram of an embodiment of a processor chip within which embodiments of the present invention may find application. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a functional block diagram of a data busing scheme for use in a processor, which has a microcontroller and a digital signal processing engine, within which embodiments of the present invention may find application. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> depicts a functional block diagram of a processor configuration for processing bit operations such as find first bit logic according to embodiments of the present invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> depicts a method of processing bit operations such as find first bit operations according to embodiments of the present invention. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> depicts a table of bit operation instructions according to embodiments of the present invention. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> FIGS. <highlight><bold>6</bold></highlight> depicts a block diagram showing an illustrative implementation of the find first bit logic according to an embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> According to an embodiment of the present invention, a processor for processing bit operation instructions such as find first bit instructions is provided. The instructions themselves include four instructions for returning a value corresponding to a bit position that stores the first zero or the first one in a memory location beginning from the left or right side of a data word depending on the instruction. Two additional instructions find the first bit change from the left or the right side of a memory location. The instructions are shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. The instructions operate on data specified in a source register and return a result to a destination register. The source and destination registers may store the data directly or may store pointers to the data. In addition, the instructions may specify the source data as word or byte data. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> These instructions may be executed in one processor cycle and with one program instruction utilizing bit operation logic within the processor. This represents a significant performance advantage over multiple-instruction software implemented techniques. These instructions also allow smaller programs and accordingly more efficient use of program memory space on a processor. For task management in real-time operating systems and data normalization applications which implement frequent bit manipulation operations, these instructions may improve performance over conventional techniques by several times. When compared to program loop implementations for performing bit operations, order of magnitude performance increases are possible depending on the processor. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In order to describe embodiments of bit operation instruction processing, an overview of pertinent processor elements is first presented with reference to <cross-reference target="DRAWINGS">FIGS. 1 and 2</cross-reference>. The bit operation instructions and instruction processing is then described more particularly with reference to FIGS. <highlight><bold>3</bold></highlight>-<highlight><bold>5</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="7"><number>&lsqb;0022&rsqb;</number> Overview of Processor Elements </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> depicts a functional block diagram of an embodiment of a processor chip within which the present invention may find application. Referring to <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> processor <highlight><bold>100</bold></highlight> is coupled to external devices/systems <highlight><bold>140</bold></highlight>. The processor <highlight><bold>100</bold></highlight> may be any type of processor including, for example, a digital signal processor (DSP), a microprocessor, a microcontroller or combinations thereof. The external devices <highlight><bold>140</bold></highlight> may be any type of systems or devices including input/output devices such as keyboards, displays, speakers, microphones, memory, or other systems which may or may not include processors. Moreover, the processor <highlight><bold>100</bold></highlight> and the external devices <highlight><bold>140</bold></highlight> may together comprise a stand alone system. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The processor <highlight><bold>100</bold></highlight> includes a program memory <highlight><bold>105</bold></highlight>, an instruction fetch/decode unit <highlight><bold>110</bold></highlight>, instruction execution units <highlight><bold>115</bold></highlight>, data memory and registers <highlight><bold>120</bold></highlight>, peripherals <highlight><bold>125</bold></highlight>, data I/O <highlight><bold>130</bold></highlight>, and a program counter and loop control unit <highlight><bold>135</bold></highlight>. The bus <highlight><bold>150</bold></highlight>, which may include one or more common buses, communicates data between the units as shown. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The program memory <highlight><bold>105</bold></highlight> stores software embodied in program instructions for execution by the processor <highlight><bold>100</bold></highlight>. The program memory <highlight><bold>105</bold></highlight> may comprise any type of nonvolatile memory such as a read only memory (ROM), a programmable read only memory (PROM), an electrically programmable or an electrically programmable and erasable read only memory (EPROM or EEPROM) or flash memory. In addition, the program memory <highlight><bold>105</bold></highlight> may be supplemented with external nonvolatile memory <highlight><bold>145</bold></highlight> as shown to increase the complexity of software available to the processor <highlight><bold>100</bold></highlight>. Alternatively, the program memory may be volatile memory which receives program instructions from, for example, an external non-volatile memory <highlight><bold>145</bold></highlight>. When the program memory <highlight><bold>105</bold></highlight> is nonvolatile memory, the program memory may be programmed at the time of manufacturing the processor <highlight><bold>100</bold></highlight> or prior to or during implementation of the processor <highlight><bold>100</bold></highlight> within a system. In the latter scenario, the processor <highlight><bold>100</bold></highlight> may be programmed through a process called in-line serial programming. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The instruction fetch/decode unit <highlight><bold>110</bold></highlight> is coupled to the program memory <highlight><bold>105</bold></highlight>, the instruction execution units <highlight><bold>115</bold></highlight> and the data memory <highlight><bold>120</bold></highlight>. Coupled to the program memory <highlight><bold>105</bold></highlight> and the bus <highlight><bold>150</bold></highlight> is the program counter and loop control unit <highlight><bold>135</bold></highlight>. The instruction fetch/decode unit <highlight><bold>110</bold></highlight> fetches the instructions from the program memory <highlight><bold>105</bold></highlight> specified by the address value contained in the program counter <highlight><bold>135</bold></highlight>. The instruction fetch/decode unit <highlight><bold>110</bold></highlight> then decodes the fetched instructions and sends the decoded instructions to the appropriate execution unit <highlight><bold>115</bold></highlight>. The instruction fetch/decode unit <highlight><bold>110</bold></highlight> may also send operand information including addresses of data to the data memory <highlight><bold>120</bold></highlight> and to functional elements that access the registers. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The program counter and loop control unit <highlight><bold>135</bold></highlight> includes a program counter register (not shown) which stores an address of the next instruction to be fetched. During normal instruction processing, the program counter register may be incremented to cause sequential instructions to be fetched. Alternatively, the program counter value may be altered by loading a new value into it via the bus <highlight><bold>150</bold></highlight>. The new value may be derived based on decoding and executing a flow control instruction such as, for example, a branch instruction. In addition, the loop control portion of the program counter and loop control unit <highlight><bold>135</bold></highlight> may be used to provide repeat instruction processing and repeat loop control as further described below. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The instruction execution units <highlight><bold>115</bold></highlight> receive the decoded instructions from the instruction fetch/decode unit <highlight><bold>110</bold></highlight> and thereafter execute the decoded instructions. As part of this process, the execution units may retrieve one or two operands via the bus <highlight><bold>150</bold></highlight> and store the result into a register or memory location within the data memory <highlight><bold>120</bold></highlight>. The execution units may include an arithmetic logic unit (ALU) such as those typically found in a microcontroller. The execution units may also include a digital signal processing engine, a floating point processor, an integer processor or any other convenient execution unit. A preferred embodiment of the execution units and their interaction with the bus <highlight><bold>150</bold></highlight>, which may include one or more buses, is presented in more detail below with reference to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> The data memory and registers <highlight><bold>120</bold></highlight> are volatile memory and are used to store data used and generated by the execution units. The data memory <highlight><bold>120</bold></highlight> and program memory <highlight><bold>105</bold></highlight> are preferably separate memories for storing data and program instructions respectively. This format is a known generally as a Harvard architecture. It is noted, however, that according to the present invention, the architecture may be a Von-Neuman architecture or a modified Harvard architecture which permits the use of some program space for data space. A dotted line is shown, for example, connecting the program memory <highlight><bold>105</bold></highlight> to the bus <highlight><bold>150</bold></highlight>. This path may include logic for aligning data reads from program space such as, for example, during table reads from program space to data memory <highlight><bold>120</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Referring again to <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> plurality of peripherals <highlight><bold>125</bold></highlight> on the processor may be coupled to the bus <highlight><bold>125</bold></highlight>. The peripherals may include, for example, analog to digital converters, timers, bus interfaces and protocols such as, for example, the controller area network (CAN) protocol or the Universal Serial Bus (USB) protocol and other peripherals. The peripherals exchange data over the bus <highlight><bold>150</bold></highlight> with the other units. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The data I/O unit <highlight><bold>130</bold></highlight> may include transceivers and other logic for interfacing with the external devices/systems <highlight><bold>140</bold></highlight>. The data I/O unit <highlight><bold>130</bold></highlight> may further include functionality to permit in circuit serial programming of the Program memory through the data I/O unit <highlight><bold>130</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> depicts a functional block diagram of a data busing scheme for use in a processor <highlight><bold>100</bold></highlight>, such as that shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, which has an integrated microcontroller arithmetic logic unit (ALU) <highlight><bold>270</bold></highlight> and a digital signal processing (DSP) engine <highlight><bold>230</bold></highlight>. This configuration may be used to integrate DSP functionality to an existing microcontroller core. Referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the data memory <highlight><bold>120</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is implemented as two separate memories: an X-memory <highlight><bold>210</bold></highlight> and a Y-memory <highlight><bold>220</bold></highlight>, each being respectively addressable by an X-address generator <highlight><bold>250</bold></highlight> and a Y-address generator <highlight><bold>260</bold></highlight>. The X-address generator may also permit addressing the Y-memory space thus making the data space appear like a single contiguous memory space when addressed from the X address generator. The bus <highlight><bold>150</bold></highlight> may be implemented as two buses, one for each of the X and Y memory, to permit simultaneous fetching of data from the X and Y memories. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> The W registers <highlight><bold>240</bold></highlight> are general purpose address and/or data registers. The DSP engine <highlight><bold>230</bold></highlight> is coupled to both the X and Y memory buses and to the W registers <highlight><bold>240</bold></highlight>. The DSP engine <highlight><bold>230</bold></highlight> may simultaneously fetch data from each the X and Y memory, execute instructions which operate on the simultaneously fetched data and write the result to an accumulator (not shown) and write a prior result to X or Y memory or to the W registers <highlight><bold>240</bold></highlight> within a single processor cycle. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> In one embodiment, the ALU <highlight><bold>270</bold></highlight> may be coupled only to the X memory bus and may only fetch data from the X bus. However, the X and Y memories <highlight><bold>210</bold></highlight> and <highlight><bold>220</bold></highlight> may be addressed as a single memory space by the X address generator in order to make the data memory segregation transparent to the ALU <highlight><bold>270</bold></highlight>. The memory locations within the X and Y memories may be addressed by values stored in the W registers <highlight><bold>240</bold></highlight>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Any processor clocking scheme may be implemented for fetching and executing instructions. A specific example follows, however, to illustrate an embodiment of the present invention. Each instruction cycle is comprised of four Q clock cycles Q1-Q4. The four phase Q cycles provide timing signals to coordinate the decode, read, process data and write data portions of each instruction cycle. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> According to one embodiment of the processor <highlight><bold>100</bold></highlight>, the processor <highlight><bold>100</bold></highlight> concurrently performs two operations&mdash;it fetches the next instruction and executes the present instruction. Accordingly, the two processes occur simultaneously. The following sequence of events may comprise, for example, the fetch instruction cycle:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="42PT" align="right"/>
+<colspec colname="2" colwidth="175PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>Q1:</entry>
+<entry>Fetch Instruction</entry>
+</row>
+<row>
+<entry>Q2:</entry>
+<entry>Fetch Instruction</entry>
+</row>
+<row>
+<entry>Q3:</entry>
+<entry>Fetch Instruction</entry>
+</row>
+<row>
+<entry>Q4:</entry>
+<entry>Latch Instruction into prefetch register, Increment PC</entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> The following sequence of events may comprise, for example, the execute instruction cycle for a single operand instruction:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="21PT" align="right"/>
+<colspec colname="2" colwidth="196PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>Q1:</entry>
+<entry>latch instruction into IR, decode and determine addresses of</entry>
+</row>
+<row>
+<entry></entry>
+<entry>operand data</entry>
+</row>
+<row>
+<entry>Q2:</entry>
+<entry>fetch operand</entry>
+</row>
+<row>
+<entry>Q3:</entry>
+<entry>execute function specified by instruction and calculate destination</entry>
+</row>
+<row>
+<entry></entry>
+<entry>address for data</entry>
+</row>
+<row>
+<entry>Q4:</entry>
+<entry>write result to destination</entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The following sequence of events may comprise, for example, the execute instruction cycle for a dual operand instruction using a data pre-fetch mechanism. These instructions pre-fetch the dual operands simultaneously from the X and Y data memories and store them into registers specified in the instruction. They simultaneously allow instruction execution on the operands fetched during the previous cycle.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="1" colwidth="21PT" align="right"/>
+<colspec colname="2" colwidth="196PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>Q1:</entry>
+<entry>latch instruction into IR, decode and determine addresses of</entry>
+</row>
+<row>
+<entry></entry>
+<entry>operand data</entry>
+</row>
+<row>
+<entry>Q2:</entry>
+<entry>pre-fetch operands into specified registers, execute operation in</entry>
+</row>
+<row>
+<entry></entry>
+<entry>instruction</entry>
+</row>
+<row>
+<entry>Q3:</entry>
+<entry>execute operation in instruction, calculate destination address for</entry>
+</row>
+<row>
+<entry></entry>
+<entry>data</entry>
+</row>
+<row>
+<entry>Q4:</entry>
+<entry>complete execution, write result to destination</entry>
+</row>
+<row><entry namest="1" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0039" lvl="7"><number>&lsqb;0039&rsqb;</number> Bit Operation Instruction Processing </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> depicts a functional block diagram of a processor for processing bit operations according to the present invention. Referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the processor includes a program memory <highlight><bold>300</bold></highlight> for storing instructions such as the bit operation instructions depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. The processor also includes a program counter <highlight><bold>305</bold></highlight> which stores a pointer to the next program instruction that is to be fetched. The processor further includes an instruction register <highlight><bold>315</bold></highlight> for storing an instruction for execution that has been fetched from the program memory <highlight><bold>300</bold></highlight>. The processor may further include pre-fetch registers or an instruction pipeline (not shown) that may be used for fetching and storing a series of upcoming instructions for decoding and execution. The processor also includes an instruction decoder <highlight><bold>320</bold></highlight>, an arithmetic logic unit (ALU) <highlight><bold>325</bold></highlight>, registers <highlight><bold>345</bold></highlight> and a status register <highlight><bold>350</bold></highlight>. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The instruction decoder <highlight><bold>320</bold></highlight> decodes instructions that are stored in the instruction register <highlight><bold>315</bold></highlight>. Based on the bits in the instruction, the instruction decoder <highlight><bold>320</bold></highlight> selectively activates logic within the ALU <highlight><bold>325</bold></highlight> for fetching operands, performing the specified operation on the operands and returning the result to the appropriate memory location. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The ALU <highlight><bold>325</bold></highlight> includes registers <highlight><bold>330</bold></highlight> that receive operands from the registers <highlight><bold>345</bold></highlight> and/or a data memory <highlight><bold>355</bold></highlight> depending on the addressing mode used in the instruction. For example in one addressing mode, the source and/or destination operand data may be stored in the registers <highlight><bold>345</bold></highlight>. In another addressing mode, the source and/or destination operand data may be stored in the data memory <highlight><bold>355</bold></highlight>. Alternatively, some operands may be stored in registers <highlight><bold>345</bold></highlight> while others may be stored in the memory <highlight><bold>355</bold></highlight>. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> The ALU <highlight><bold>325</bold></highlight> includes ALU logic <highlight><bold>335</bold></highlight> and bit operation logic <highlight><bold>340</bold></highlight>, each of which receives inputs from the registers <highlight><bold>330</bold></highlight> and produces outputs to the registers <highlight><bold>345</bold></highlight> and a status register <highlight><bold>350</bold></highlight>. The ALU logic <highlight><bold>335</bold></highlight> executes arithmetic and logic operations according to instructions decoded by the instruction decoder on operands fetched from the registers <highlight><bold>345</bold></highlight> and/or from the data memory <highlight><bold>345</bold></highlight>. In general, the ALU <highlight><bold>335</bold></highlight> processes data in byte or word widths. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> The instruction decoder <highlight><bold>320</bold></highlight> decodes particular instructions and sends control signals to the ALU which direct the fetching of the correct operands specified in the instruction, direct the activation of the correct portion of the ALU logic <highlight><bold>335</bold></highlight> to carry out the operation specified by the instruction on the correct operands, direct the result to be written to the correct destination and direct the status register to store pertinent data when present, such as a status flag indicating a zero result. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The bit operation logic <highlight><bold>340</bold></highlight> may be part of or separate from the ALU logic <highlight><bold>335</bold></highlight>. The bit operation logic is, however, is logically separate from the ALU logic <highlight><bold>335</bold></highlight> and is activated upon the execution of one of the bit operation instructions shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. In this regard, when a bit operation instruction such as one of those depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is present in the instruction decoder <highlight><bold>320</bold></highlight>, the instruction decoder generates control signals which cause the ALU to fetch the specified source operand from the registers <highlight><bold>345</bold></highlight> or from the data memory <highlight><bold>355</bold></highlight> and which cause the bit operation logic <highlight><bold>340</bold></highlight> to operate on the fetched source operand to produce a result. The result depends upon the instruction executed and the source operand as is explained below in more detail. After generating the result, the instruction decoder causes the result to be written back into the correct register <highlight><bold>345</bold></highlight> or memory location within the data memory <highlight><bold>355</bold></highlight>. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> The bit operation logic may include logic for implementing six different bit operation instructions such as those depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. Each of these instructions find the first bit within a memory location matching a predetermined criteria based upon the instruction as indicated in the table of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. Each instruction may specify that the value tested may be a byte stored at a particular memory location or may be a word stored at a particular memory location. The instruction may further specify the source and destination operands as data stored in specified registers, data stored in a memory and pointed to by a pointer stored in specified registers. The instruction may also specify that the pointer may be pre or post incremented or decremented as part of the instruction execution. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The logic for implementing each instruction is selectively activated by the instruction decoder <highlight><bold>320</bold></highlight> when that particular instruction is decoded. An illustrative example of logic that may be used to implement each instruction is shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> depicts a method of processing bit operation instructions such as find first instructions according to embodiments of the present invention. Referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, in step <highlight><bold>400</bold></highlight>, the processor fetches a bit operation instruction from the program memory <highlight><bold>300</bold></highlight>. Then in step <highlight><bold>410</bold></highlight>, the instruction decoder <highlight><bold>320</bold></highlight> decodes the instruction. In step <highlight><bold>420</bold></highlight>, the processor causes control signals to be sent to the ALU <highlight><bold>325</bold></highlight> and the bit operation logic <highlight><bold>340</bold></highlight> within the ALU. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> In step <highlight><bold>430</bold></highlight>, the ALU fetches the source operand from the find first instruction from the specified memory location within the register <highlight><bold>345</bold></highlight> or the data memory <highlight><bold>355</bold></highlight>. In step <highlight><bold>440</bold></highlight>, the processor executes the bit operation instruction decoded. Then in step <highlight><bold>450</bold></highlight>, the processor stores the result into a destination register. In step <highlight><bold>460</bold></highlight>, if a zero result is produced a zero flag is set in the status register <highlight><bold>350</bold></highlight>. A zero result may be produced, for example, when no bits of the memory location tested meet the criteria of the find first instruction. For example, a find first one instruction executed on a value of zero would return a value of zero. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> depicts a block diagram of an illustrative bit operation logic <highlight><bold>340</bold></highlight> and surrounding elements for implementing find first instructions. Referring to <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, the registers <highlight><bold>330</bold></highlight> provide input to the find first logic <highlight><bold>600</bold></highlight> within the bit operation logic <highlight><bold>340</bold></highlight>. The find first logic <highlight><bold>600</bold></highlight> receives control signals from the instruction decoder <highlight><bold>620</bold></highlight>. When a find first instruction is decoded, the instruction decoder <highlight><bold>620</bold></highlight> sends control signals to the find first logic to cause the find first logic to perform a masking operation on the value received from the register <highlight><bold>330</bold></highlight> which in the illustrative embodiment is a 16 bit value. The masking operation performed is determined by the particular type of find first instruction. In general, the masking operation may produce a value of all zeros except for the bit position occupied by the first zero (or one) from the left or right or the first bit change depending on the instruction. The masked value is then output to an encoder <highlight><bold>610</bold></highlight>. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> The encoder <highlight><bold>610</bold></highlight> receives control signals from the instruction decoder <highlight><bold>620</bold></highlight>. When a find first instruction is decoded, the instruction decoder sends appropriate control signals to configure the encoder to perform a translation of a 16 bit value to a 4 bit value. The translated 4 bit value is indicative of the number of the bit position of the one within the masked value measured either from the left or the right depending on the instruction. A FFOL instruction will produce a 4 bit output from the 16 to 4 bit encoder <highlight><bold>610</bold></highlight> that is measured from the left. A FF<highlight><bold>0</bold></highlight>L instruction will produce a 4 bit output from the 16 to 4 bit encoder <highlight><bold>610</bold></highlight> that is measured from the left. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The value output from the encoder <highlight><bold>610</bold></highlight> maybe fed into a barrel shifter <highlight><bold>630</bold></highlight> for normalization operations. Alternatively, the value output from the encoder <highlight><bold>610</bold></highlight> may be provided to the registers <highlight><bold>345</bold></highlight> or the data memory <highlight><bold>355</bold></highlight>. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> While specific embodiments of the present invention have been illustrated and described, it will be understood by those having ordinary skill in the art that changes may be made to those embodiments without departing from the spirit and scope of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of processing a bit operation instruction, comprising: 
+<claim-text>fetching and decoding a find first bit instruction; </claim-text>
+<claim-text>executing the find first bit instruction on a source operand to calculate a result corresponding to the first bit position meeting the criteria of the instruction; </claim-text>
+<claim-text>storing the result. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising setting a zero flag within a status register when none of the bit positions meet the criteria of the instruction. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the instruction is a find first zero instruction. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the find first zero instruction finds the first zero from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the find first zero instruction finds the first zero from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the instruction is a find first one instruction. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the find first one instruction finds the first one from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the find first one instruction finds the first one from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the instruction is a find first bit change instruction. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the find first bit change instruction finds the first bit change from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the find first bit change instruction finds the first bit change from the right side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the find first bit instruction specifies the source operand. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the find first bit instruction specifies a byte of a memory location that stores the source operand. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A processor for find first instruction processing, comprising: 
+<claim-text>a program memory for storing instructions including a find first bit instruction; </claim-text>
+<claim-text>a program counter for identifying current instructions for processing; </claim-text>
+<claim-text>an arithmetic logic unit (ALU) for executing instructions within the program memory, the ALU including bit operation logic for executing the find first bit instruction on a source operand to calculate a result corresponding to the first bit position meeting the criteria of the instruction. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, further comprising setting a zero flag within a status register when none of the bit positions meet the criteria of the instruction. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference> wherein the instruction is a find first zero instruction. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the find first zero instruction finds the first zero from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the find first zero instruction finds the first zero from the right side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the instruction is a find first one instruction. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the find first one instruction finds the first one from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the find first one instruction finds the first one from the right side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the instruction is a find first bit change instruction. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the find first bit change instruction finds the first bit change from the left side of a memory location. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The processor according to <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein the find first bit change instruction finds the first bit change from the right side of a memory location.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005268A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005268A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005268A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005268A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005268A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005268A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005268A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005419A1-20030102-D00000.TIF SYSTEM "US20030005419A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005419A1-20030102-D00001.TIF SYSTEM "US20030005419A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005419A1-20030102-D00002.TIF SYSTEM "US20030005419A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005419A1-20030102-D00003.TIF SYSTEM "US20030005419A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005419A1-20030102-D00004.TIF SYSTEM "US20030005419A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005419A1-20030102-D00005.TIF SYSTEM "US20030005419A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005419</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09416436</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>19991012</filing-date>
+<continued-prosecution-application>This is a publication of a continued prosecution application (CPA) filed under 37 CFR 1.53(d).</continued-prosecution-application>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/45</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>717</class>
+<subclass>141000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>INSERTION OF PREFETCH INSTRUCTIONS INTO COMPUTER PROGRAM CODE</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>JOHN SAMUEL</given-name>
+<family-name>PIEPER</family-name>
+</name>
+<residence>
+<residence-us>
+<city>MONT VERNON</city>
+<state>NH</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>STEVEN ORODON</given-name>
+<family-name>HOBBS</family-name>
+</name>
+<residence>
+<residence-us>
+<city>WESTFORD</city>
+<state>MA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>STEPHEN CORRIDON</given-name>
+<family-name>ROOT</family-name>
+</name>
+<residence>
+<residence-us>
+<city>WESTBORO</city>
+<state>MA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>CESARI AND MCKENNA, LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>88 BLACK FALCON AVENUE</address-1>
+<city>BOSTON</city>
+<state>MA</state>
+<postalcode>02210</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A technique is provided for inserting memory prefetch instructions only at appropriate locations in program code. The instructions are inserted into the program code such that, when the code is executed, the speed and efficiency of execution of the code may be improved, cache conflicts arising from execution of the prefetch instruction may be substantially eliminated, and the number of simultaneously-executing memory prefetch operations may be limited to prevent stalling and/or overtaxing of the processor executing the code. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to a technique for inserting memory prefetch instructions (e.g., instructions that prefetch data into a processor&apos;s on-chip cache memory from off-chip main memory) into computer-executable program code, and more specifically, to such a technique wherein the prefetch instructions may be inserted into the program code in such a way as to improve efficiency and speed of execution of the code, avoid both cache memory conflicts and the overtaxing of processor resources, and reduce program execution inefficiencies (e.g., stalling of program execution by the processor) that can result if the data required by the processor to execute the code is not present in the cache memory when needed by the processor. Although the present invention will be described in connection with embodiments that are particularly well suited to use in connection with inserting of prefetch instructions into program code having one or more program loops in which memory array accesses are present, it will be appreciated that the present invention also may be advantageously used to insert such instructions into other types of program code. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Brief Description of Related Prior Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> As computer processors have increased their processing speeds, main computer memory systems have lagged behind. As a result, the speed of the computer system&apos;s main memory can be the limiting factor in the speed of execution of application programs by the computer system, particularly in the case of programs that manipulate large data structures (e.g., large arrays stored in memory, such as those needed in scientific and engineering programs). More specifically, when data stored in main memory is required by the computer system&apos;s processor to execute a given program, latency in transferring that data from the main memory to the processor may reduce the speed with which the processor may execute the program. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In order to try to increase program execution speed and reduce the aforesaid type of data transfer latency, in many conventional computer systems, the processor is used in conjunction with an associated high-speed cache memory. Typically, when the processor is implemented in a microprocessor integrated circuit chip, this cache memory is comprised in same chip as the processor. In such processors, when the data contained in the cache is accessed by the processor, that memory operation may stay on-chip (i.e., within the processor chip); such on-chip memory operations may be orders of magnitude faster to execute than similar memory operations that must access main memory. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In a further effort to increase program execution speed and efficiency, many conventional high-performance processors (e.g., the Alpha 21264&trade; microprocessor manufactured by, and commercially available from the Assignee of the subject application) have been configured to be able to issue instructions out-of-order, and to process certain instructions in parallel. By implementing these features in a given processor, the bandwidth of the processor&apos;s program instruction throughput may be increased. However, in a sequence of program instructions there may be a so-called &ldquo;critical path&rdquo; of instructions that are dependent upon one another and cannot be issued in parallel. When such a critical path exists in a given set of program instructions, the execution time of the instructions tends to approach the latency of execution of the critical path. In some important types of application programs (e.g., scientific and engineering application programs), memory operations comprise a significant portion of the total instructions in the programs&apos; respective critical paths. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> By appropriately inserting prefetch instructions into a program, the time required for the processor to execute the program&apos;s critical path can be decreased. That is, by inserting prefetch instructions, at appropriate places in the program prior to the point in the program where the data being prefetched by the prefetch instructions is required by the processor, the time required to execute the program&apos;s critical path of instructions may be reduced, by enabling the prefetched data to be in the cache and available to the processor at or near the time when it will be needed by the processor. This can improve the program&apos;s efficiency and speed of execution. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Further problems, in the form of cache conflicts, can arise if both the timing of data prefetching, during execution of the program, is not carefully managed to avoid such conflicts and, when the data is prefetched, it is transferred from the main memory to a cache memory that is not fully associative. That is, when such a cache memory is used, depending upon the timing of prefetching, and the address in main memory of the newly prefetched data, the newly prefetched data may displace (i.e., overwrite) useful data previously stored in the cache just prior to the processor requesting the useful data. When the processor references (e.g., requests) the useful data after it has been displaced from the cache, a cache miss occurs. This, in turn, causes retrieval from the main memory of the previously-displaced useful data, which is again stored in the cache, thereby displacing the data that previously displaced the useful data. The operations involved with this type of cache conflict problem are wasteful as they increase the time that it takes the processor to be able to use the useful data, and also consumes memory system bandwidth. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Computer programmers typically develop computer programs for conventional processors using relatively high-level source code computer languages (e.g., C&plus;&plus;, Pascal, Fortran, etc.). This is because programmers often find developing computer software using such high-level languages to be much easier than developing the software using relatively low-level languages (e.g., assembly and machine language code). Compilation programs (e.g., compilers, linkers, assemblers, etc.) are typically used to translate or convert the source code developed by a programmer into a machine-executable form or image code for execution by the target processor. The compilation programs often implement processes (hereinafter &ldquo;optimization processes&rdquo;) that structure and generate the machine-executable code in such a way as to try to ensure that the execution of the machine-executable code by the target processor consumes a minimum amount of resources of the target computer system. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> One such conventional optimization process is disclosed in U.S. Pat. No. 5,704,053 to Santhanam. The optimization process described in Santhanam involves inserting prefetch instructions that prefetch array accesses in scientific application program loops. This patent also describes performing reuse analysis using only subscript expression analysis, where previous methods had relied on dependence analysis. The patent also describes generating and inserting prefetch instructions, and taking into account reuse of data, to eliminate unnecessary prefetch instructions. Santhanam also teaches determining a &ldquo;prefetch distance&rdquo; (i.e., in essence, a time interval between the beginning of execution of the prefetch instruction and the expected time that the processor will require the data being prefetched by the instruction) that is used to calculate where in the program to insert the prefetch instruction. It is said that the prefetch distance may be calculated in terms of a number of loop iterations, in advance of the expected time that the processor will require the prefetched data. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Santhanam nowhere discloses or suggests employing any kind of cache conflict analysis when determining whether and where to insert a prefetch instruction. Thus, disadvantageously, Santhanam&apos;s disclosed optimization process is unable to prevent cache conflict problems, of the type described above, from occurring during execution of the machine code generated by that process. Santhanam also nowhere discloses or suggests generating the machine-executable code in such a way that the number of simultaneously executing memory operations is limited to prevent stalling and/or overtaxing of the processor. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Other conventional optimization processes are disclosed in e.g., &ldquo;Compilation-Based Prefetching For Memory Latency Tolerance,&rdquo; Ph.D. Thesis of Charles W. Selvidge, MIT/LCS/TR-547, Laboratory For Computer Science, Massachusetts Institute of Technology, Cambridge, Mass., 1992; &ldquo;The GEM Optimizing Compiler System,&rdquo; <highlight><italic>Digital Technical Journal, Volume </italic></highlight>4. <highlight><italic>Number </italic></highlight>4, <highlight><italic>Special Issue, </italic></highlight>1992, pp. 121-136; &ldquo;Compiler Support For Software Prefetching,&rdquo; the Ph.D. Thesis of Nathaniel McIntosh, Rice University, Houston, Tex. 1998; and &ldquo;Tolerating Latency Through Software-Controlled Data Prefetching&rdquo; , the Ph.D. Thesis of Todd Mowry, Stanford University, Palo Alto, Calif., 1994. Unfortunately, these conventional optimization processes suffer from the aforesaid and/or other disadvantages and drawbacks of the optimization process disclosed in Santhanam. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> We think that perhaps the best way to think about prefetch instructions, is that they provide a means for keeping the memory system closer to full utilization. For example, consider first a non-optimally compiled program executed on an in-order processor, in which a load instruction is to be executed followed by an instruction that uses the variable value being loaded. If the load instruction results in a memory miss, there may be a processor stall of several dozen cycles between the load and its usage. From the viewpoint of the memory system, this program is inefficient. The memory system, which could be operating on multiple simultaneous requests, is processing only one at a time, because the stalls are preventing the launching of the next memory transaction. Further, there may be turn-around delays associated with having each new memory access request launched after the previous one is completed. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In another example, a program may be compiled such that several load instructions are executed prior to usage of the loaded variable values to improve program execution efficiency. Alternatively, out-of-order execution may be used to accomplish the same improvement, (i.e., by running ahead of the stalled instruction to find more load instructions to issue.) </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> While this second example results in greater execution efficiency than the first, it still falls far short of utilizing the memory system in an optimal fashion. The problem is the very high latency that results from memory misses. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The key to properly understanding the use of the prefetch instruction is that the desired data motion from memory to the on-chip cache can be initiated far ahead of the time when the results of the prefetch are required, without being tied to a register (either architectural, or remap for out-of-order). Further, a prefetch instruction can be &ldquo;retired&rdquo; long before that data motion is completed. Also, errors such as an &ldquo;out-of-bounds&rdquo; reference can simply be dismissed, as they should not be considered truly problematic errors. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The prior art does not properly consider a key question in inserting prefetch instructions: how far ahead of when their results are required should they be executed&quest; It is our strong contention that this consideration is not properly made in terms of execution times, which the compiler cannot know accurately. It is our contention that this consideration should be made in terms of the cache memory itself (i.e., how many cache lines ahead to prefetch, to match the simultaneous request capability of the memory system). According to our new paradigm, prefetches should be placed in the code stream so as to keep the memory system, as much as possible, fully utilized. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The Alpha 21264TM processor dismisses prefetch instructions that hit in the on-chip cache with a small amount of overhead. Therefore, it is best that program code for that processor be fitted with-prefetch instructions, unless it is conclusively known that the incoming data will reside in the on-chip cache. The inventive strategy presented herein is also appropriate for data that resides in a board level cache, operating at a latency between that of the on-chip cache, and the memory. Indeed, this consideration of a third level of the memory system shows the basic flaw of considering where to insert prefetches in terms of time rather than cache memory lines. A given program will very likely run at different speeds (different inner loop times) depending on which level of the memory system holds its data. A technique is provided in accordance with the present invention for inserting one or more prefetch instructions into executable program code instructions that overcomes the aforesaid and other disadvantages and drawbacks of the prior art. One embodiment of the present invention is employed to advantage in a computerized program code compilation system. In this system, a first set of computer program instructions in a relatively higher level program instruction language is converted by compilation processes, resident in memory in the system, into a second set of computer program instructions in a relatively lower level program instruction language. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The compilation processes include one or more optimization processes, and among the optimization processes is a process that determines whether and where in the second set of instructions to insert memory prefetch instructions. More specifically, this latter process decides whether to insert a prefetch instruction at a given location in the second set of instruction based upon a number of factors. Among these factors is a determination as to whether the insertion of the prefetch instruction at this location will cause an undesired cache memory conflict when and if the prefetch instruction is executed. Also among these factors is a determination as to whether the insertion of the prefetch instruction at the location will cause, when executed by the processor, the number of memory operations being simultaneously executed by the processor to become excessive (i.e., such that the processor&apos;s available resources are likely to be overtaxed and/or the processor is likely to stall). Based upon these factors, the latter process may then decide whether and where in the second set of instructions to insert prefetch instructions, and this process (or another process among the optimization processes, e.g., a loop unrolling process) may place prefetch instructions into the second set of instructions in accordance with this decision. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Thus, the present invention facilitates efficient insertion of prefetch instructions into application programs, which advantageously may take place during compilation of such programs. During this compilation process, the prefetch instructions may be explicitly inserted into an intermediate level, machine-independent code that is first generated by the process from the input source code. A later machine code-generation process may then translate/convert the intermediate level code, including the prefetch instructions, into machine-specific program instructions that are intended to be executed by the target processor. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Advantageously, in the prefetch instruction insertion technique of the present invention, the prefetch instructions are inserted into the program code such that, when the code is executed, the speed and efficiency of execution of the code may be improved, cache conflicts arising from execution of the prefetch instruction may be substantially eliminated, and the number of simultaneously-executing memory prefetch operations may be limited to prevent stalling and/or overtaxing of the processor. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> These and other features and advantages of the present invention will become apparent as the following Detailed Description proceeds and upon reference to the Drawings, wherein like numerals depict like parts, and in which: </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic block diagram of a computer system wherein one embodiment of the technique of the present invention is advantageously practiced. This system can execute computer program processes. These processes may include prefetch operations and, in addition, one of the processes can be the computer program code compilation processes of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flowchart illustrating computer program code compilation processes implemented by the system of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and wherein one embodiment of the technique of the present invention is advantageously practiced. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a schematic representation of a set-associative data cache comprised in the system of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart illustrating in greater detail the optimization processes of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart illustrating in greater detail the prefetch insertion analysis and loop unrolling process comprised in the processes of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Although the following Detailed Description will proceed with reference being made to illustrative embodiments and methods of use, it should be understood that the present invention is not intended to be limited to these embodiments and methods of use. Rather, the present invention should be viewed broadly, as being of broad scope limited only as set forth in the hereinafter appended claims. </paragraph>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF ILLUSTRATIVE EMBODIMENTS </heading>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> With reference being made to FIGS. <highlight><bold>1</bold></highlight>-<highlight><bold>5</bold></highlight>, one embodiment of the technique of the present invention will now be described, in connection with its implementation by processes <highlight><bold>50</bold></highlight> implemented by computer system <highlight><bold>10</bold></highlight>. In general, as is shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, system <highlight><bold>10</bold></highlight> comprises computer-readable memory <highlight><bold>20</bold></highlight> for storing software programs, algorithms, and data structures associated with, and for carrying out, the various processes which reside in memory <highlight><bold>20</bold></highlight> and use the inventive prefetch insertion and optimization processes, and related and other methods and techniques described herein. In addition, system <highlight><bold>10</bold></highlight> further includes processor <highlight><bold>12</bold></highlight> (e.g., an Alpha 21264&trade; microprocessor) which comprises a processor core <highlight><bold>14</bold></highlight> for executing these software programs and algorithms, and for manipulating the stored data structures, to enable the system <highlight><bold>10</bold></highlight> to carry out these methods and techniques. In system <highlight><bold>10</bold></highlight>, processor <highlight><bold>12</bold></highlight> is implemented as a single integrated circuit chip, and in addition to core <highlight><bold>14</bold></highlight>, also comprises an associated cache memory <highlight><bold>16</bold></highlight>. System <highlight><bold>10</bold></highlight> may also include a conventional input/output interface <highlight><bold>22</bold></highlight> (e.g., comprising keyboard, pointing device, display terminal, etc.) for permitting a user to control and interact with the system <highlight><bold>10</bold></highlight>. The processor <highlight><bold>12</bold></highlight>, memory <highlight><bold>20</bold></highlight>, and interface <highlight><bold>22</bold></highlight> are interconnected by a system bus <highlight><bold>18</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flowchart illustrating the sequence of compilation procedures <highlight><bold>50</bold></highlight> applied to relatively higher level source code <highlight><bold>52</bold></highlight> to compile it into relatively low level executable machine code <highlight><bold>74</bold></highlight> in the system <highlight><bold>10</bold></highlight>, as well as the beginning and/or intermediate products produced by and/or input to procedures <highlight><bold>50</bold></highlight>. It should be noted at the outset of the discussion of <cross-reference target="DRAWINGS">FIG. 2</cross-reference> that procedures <highlight><bold>50</bold></highlight> are not limited to being practiced on the same system <highlight><bold>10</bold></highlight> in which code <highlight><bold>74</bold></highlight> is run. Rather, procedures <highlight><bold>50</bold></highlight> may be practiced on a different computer system and the code <highlight><bold>74</bold></highlight> may be executed on computer system <highlight><bold>10</bold></highlight>, or vice versa. In the compilation sequence <highlight><bold>50</bold></highlight>, the first process to be applied to the source code is front end process <highlight><bold>54</bold></highlight>. Using conventional techniques, front end process <highlight><bold>54</bold></highlight> translates source code <highlight><bold>52</bold></highlight> into a compact intermediate form <highlight><bold>56</bold></highlight>. Code <highlight><bold>56</bold></highlight> is then processed by optimization processes <highlight><bold>58</bold></highlight>. This processing of code <highlight><bold>56</bold></highlight> by processes <highlight><bold>58</bold></highlight> will be described in greater detail below, but in general, processes <highlight><bold>58</bold></highlight> expand code <highlight><bold>56</bold></highlight> into an expanded intermediate form <highlight><bold>60</bold></highlight> that is suitable for processing by a conventional code generator process <highlight><bold>62</bold></highlight>, and in doing so, transform the instructions and structure of code <highlight><bold>56</bold></highlight> so as to provide a more efficient code <highlight><bold>60</bold></highlight>. The code <highlight><bold>60</bold></highlight> output by the optimization processes <highlight><bold>58</bold></highlight> is in an intermediate level program code language that is substantially independent of the architecture of the target processor <highlight><bold>12</bold></highlight>. The optimization processes perform this transformation of code <highlight><bold>56</bold></highlight> based upon, among other things, execution profile data <highlight><bold>78</bold></highlight> generated by execution analysis process <highlight><bold>76</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In essence, process <highlight><bold>76</bold></highlight> generates data <highlight><bold>78</bold></highlight> by initially executing code <highlight><bold>74</bold></highlight> using system <highlight><bold>10</bold></highlight>, and then observing and analyzing the manner in which that code <highlight><bold>78</bold></highlight> uses resources (e.g., processor <highlight><bold>14</bold></highlight>, cache <highlight><bold>12</bold></highlight>, and main memory <highlight><bold>20</bold></highlight>, and components thereof) in system <highlight><bold>10</bold></highlight> when it is initially executing. Process <highlight><bold>76</bold></highlight> then generates execution profile data <highlight><bold>78</bold></highlight> that represents the results of its observations and analysis of execution of code <highlight><bold>74</bold></highlight>. The optimization processes <highlight><bold>58</bold></highlight> then use the data <highlight><bold>78</bold></highlight> to generate a new, more efficient version of form <highlight><bold>60</bold></highlight> which then is processed by the other processes in sequence <highlight><bold>50</bold></highlight> (which other processes will be described below) to generate a new, more efficient version of code <highlight><bold>74</bold></highlight>. This new version of code <highlight><bold>74</bold></highlight> may then be executed, and its execution may be observed and analyzed by process <highlight><bold>76</bold></highlight> to generate new profile data <highlight><bold>78</bold></highlight>. The new profile data <highlight><bold>78</bold></highlight> may then be used by the processes <highlight><bold>58</bold></highlight>, in the manner described previously, to generate a further version of form <highlight><bold>60</bold></highlight> that may be more efficient than the previous version of form <highlight><bold>60</bold></highlight>. Code generator process <highlight><bold>62</bold></highlight> translates the expanded intermediate code <highlight><bold>60</bold></highlight> into instructions <highlight><bold>64</bold></highlight> that are specific to the architecture of the target processor <highlight><bold>12</bold></highlight>. In generating the code <highlight><bold>64</bold></highlight>, generator <highlight><bold>62</bold></highlight> modifies the code <highlight><bold>60</bold></highlight> such that code <highlight><bold>64</bold></highlight> reflects scheduling and other low-level optimizations of the code <highlight><bold>60</bold></highlight>, which are dependent on the target processor architecture. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Object code <highlight><bold>68</bold></highlight> is then generated by a conventional process <highlight><bold>66</bold></highlight> from the code <highlight><bold>64</bold></highlight>. Conventional linker <highlight><bold>70</bold></highlight> then combines object code <highlight><bold>68</bold></highlight> with other object code <highlight><bold>72</bold></highlight> (e.g., from library object code) to produce machine-dependent code <highlight><bold>74</bold></highlight> that is executable by the system <highlight><bold>10</bold></highlight>. As discussed previously, the executable code <highlight><bold>74</bold></highlight> is executed by process <highlight><bold>76</bold></highlight> to generate execution profile data <highlight><bold>78</bold></highlight> that is used by the processes <highlight><bold>58</bold></highlight> to determine whether the code <highlight><bold>74</bold></highlight>, when executed, exhibits optimal execution performance, and if code <highlight><bold>74</bold></highlight> does not exhibit optimal execution performance, may be used by the processes <highlight><bold>58</bold></highlight> make more is optimal versions of the code <highlight><bold>60</bold></highlight> from which more optimal versions of code <highlight><bold>74</bold></highlight> may be generated. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> With particular reference being made to FIGS. <highlight><bold>3</bold></highlight>-<highlight><bold>5</bold></highlight>, the function and operation of the optimization processes <highlight><bold>58</bold></highlight> will be described in connection with the compiling of a source code program <highlight><bold>52</bold></highlight>, which program <highlight><bold>52</bold></highlight> for purposes of illustration is assumed to comprise program loops. The sequence of operations in a program loop is predictable because, by definition, the same set of operations is repeated for each iteration of execution of the loop. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Each loop that is subject to the insertion of prefetch instructions has an associated index variable that is incremented by a constant amount in each loop iteration, until some final value of the index variable is reached, at which point the loop is terminated. In scientific programs, it is common for the index variable also to be used in memory references that address elements of large arrays (e.g., that contain scientific data to be manipulated or processed). Typically, such memory array references can give rise to a significant proportion of cache misses. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> An array reference that has a subscript expression that is a linear function of a loop index variable will result in accesses being made to a linear sequence of memory locations. In such situations, the difference in the subscript expression computed in one iteration of the loop and that computed in an immediately preceding iteration of that loop is termed the &ldquo;stride&rdquo; of the array reference. In order to make clearer this concept, the following pseudo-source code-like example is presented:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="203PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>i &equals; 1;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>LOOP</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="35PT" align="left"/>
+<colspec colname="1" colwidth="182PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>a&lsqb;i&rsqb; &equals; b&lsqb;i &plus; 1&rsqb; &plus; c&lsqb;i&rsqb;;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>i &equals; i &plus; 1;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="203PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>END_LOOP</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> In the above example, each time the index variable i changes by one, the address accessed by the expression b&lsqb;i&plus;1&rsqb; changes by the size of one element of the array b. If the size of one element in the example is four bytes, then the stride of that reference is four bytes. Array reference a&lsqb;i&rsqb; has the same stride as b&lsqb;i&plus;1&rsqb; if arrays a and b each have the same element size. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> It is instructive at this point to consider how data is loaded and stored into cache <highlight><bold>16</bold></highlight>, and how cache conflicts in cache <highlight><bold>16</bold></highlight> can arise. For purposes of this discussion, cache <highlight><bold>16</bold></highlight> may be assumed to be a two-way set associative data cache, with each set containing eight cache lines, and each line holding eight data words. The logical layout <highlight><bold>100</bold></highlight> of cache <highlight><bold>16</bold></highlight> is shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> For purposes of this discussion, each array element referenced in the above example may be considered to be one data word in length, and the starting addresses of arrays a, b, and c in memory <highlight><bold>20</bold></highlight> are such that when loaded into cache <highlight><bold>16</bold></highlight>, array a starts in line <highlight><bold>3</bold></highlight> at word <highlight><bold>4</bold></highlight> in layout <highlight><bold>100</bold></highlight>, array b starts in line <highlight><bold>3</bold></highlight> at word <highlight><bold>3</bold></highlight> in layout <highlight><bold>100</bold></highlight>, and array c starts in line <highlight><bold>2</bold></highlight> at word <highlight><bold>0</bold></highlight> of layout <highlight><bold>100</bold></highlight>, respectively. Given these assumptions, the relative locations of accessed elements of arrays a, b, c, when the index variable i has the values 5 and 6 and these elements are stored in cache <highlight><bold>16</bold></highlight>, are shown in unshaded blocks labeled c&lsqb;<highlight><bold>5</bold></highlight>&rsqb;, c&lsqb;<highlight><bold>6</bold></highlight>&rsqb;, a&lsqb;<highlight><bold>5</bold></highlight>&rsqb;, a&lsqb;<highlight><bold>6</bold></highlight>&rsqb;, b&lsqb;<highlight><bold>6</bold></highlight>&rsqb;, b&lsqb;<highlight><bold>7</bold></highlight>&rsqb; in the layout <highlight><bold>100</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> As will be appreciated by those skilled in the art, in set-associative cache <highlight><bold>16</bold></highlight>, there are only a fixed number of locations where a given data word from memory <highlight><bold>20</bold></highlight> is allowed to reside. The line number of the given word in cache <highlight><bold>16</bold></highlight> is a fixed function of the address in memory <highlight><bold>20</bold></highlight> of the given word. Conversely, the set number is not a fixed function of that address, and therefore, a data word to be stored in cache <highlight><bold>16</bold></highlight> may be assigned to either set <highlight><bold>1</bold></highlight> or <highlight><bold>2</bold></highlight>, although all words in the same line must be stored in the same set. In this example, the elements of array a in cache <highlight><bold>16</bold></highlight> have been allocated into set <highlight><bold>1</bold></highlight> (which has been assigned reference numeral <highlight><bold>102</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>). In order to avoid a conflict with the elements of array a, since the elements of array b need to be in the same line as those of the elements of array a, they cannot go into set <highlight><bold>1</bold></highlight>, and have been instead allocated into set <highlight><bold>2</bold></highlight> (which has been assigned to numeral <highlight><bold>104</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>). Elements <highlight><bold>5</bold></highlight> and <highlight><bold>6</bold></highlight> of array c have been allocated to set <highlight><bold>1</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> For purposes of this example, let us assume that during the compilation process, prefetch instructions are inserted into the code of this example to prefetch the reference to c&lsqb;i&rsqb;, and let us also assume that the memory latency and the time required to execute one loop iteration are such that the optimal prefetch distance is 16 words ahead. Therefore, given that this prefetch distance is two cache lines (i.e., 16 words), the prefetched data must be stored into line <highlight><bold>4</bold></highlight>, as shown by the shaded location of c&lsqb;<highlight><bold>21</bold></highlight>&rsqb; in the layout <highlight><bold>100</bold></highlight> <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. However, this prefetched data cannot be stored in set <highlight><bold>1</bold></highlight>, because the currently accessed elements of array a are stored in set <highlight><bold>1</bold></highlight>. Likewise, the prefetched data cannot be stored into set <highlight><bold>2</bold></highlight>, because the currently accessed elements of array b are stored in set <highlight><bold>2</bold></highlight>. In this situation, a cache conflict exists, as there is no location in cache <highlight><bold>16</bold></highlight> in which the prefetched data can be stored without overwriting useful data (i.e., the data elements of arrays a and b that are currently being accessed). </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Advantageously, in accordance with the present invention, this type of potential cache conflict behavior that can be engendered by use of prefetch instructions is detected and prevented. In the embodiment of the present invention that is implemented in system <highlight><bold>10</bold></highlight>, in- essence, this is accomplished during compilation of source code <highlight><bold>52</bold></highlight> by first locating and analyzing groups of memory operations in the code that have a predetermined common relationship that will be described below. However, prior to proceeding with describing the particulars of this relationship and how it is used in eliminating this type of potential cache conflict behavior, it is useful to define terminology that will be used in such description: </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> A &ldquo;reference group&rdquo; is defined herein to be a set of array references in a loop that have the same stride and a known constant offset from each another. A &ldquo;leading reference&rdquo; is defined herein to be the reference in a respective reference group that, regardless of cache alignment, is always the first reference to cause the data it accesses to be stored in a location in cache <highlight><bold>16</bold></highlight> that is associated with a given cache line. Any reference in a respective reference group that is not a leading reference for that group is said to be a &ldquo;trailing reference&rdquo;. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> It is also important to note for purposes of the present discussion that array elements may have known offsets from each other even if their absolute memory addresses (i.e., in memory <highlight><bold>20</bold></highlight>) are not known. For example, in the FORTRAN language a common block may be defined that requires data within the block to be contiguous. If such a common block is so defined, and the size and types of variables within the block are also known, it is possible to know the respective starting addresses of the respective variables in the block relative to each other. Likewise, if the dimensions of an array are known, it is also possible to compute the respective memory offsets between respective elements in the array, if the respective elements&apos; array references are known. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> Moving on from the foregoing, optimization processes <highlight><bold>58</bold></highlight> will now be described in greater detail with reference being made to FIGS. <highlight><bold>4</bold></highlight>-<highlight><bold>5</bold></highlight>. As shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, the first of processes <highlight><bold>58</bold></highlight> is an intermediate language expansion process <highlight><bold>200</bold></highlight>, which process <highlight><bold>200</bold></highlight> utilizes conventional techniques to translate code <highlight><bold>56</bold></highlight> into an expanded intermediate code representation there of suited for use by flow graph reduction process <highlight><bold>202</bold></highlight>. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The first time the code generated by process <highlight><bold>200</bold></highlight> is analyzed by process <highlight><bold>202</bold></highlight>, process <highlight><bold>202</bold></highlight> uses conventional techniques to construct a flow graph representation of the functions, operation, and program flow of the intermediate code generated by process <highlight><bold>200</bold></highlight>. Using this flow graph representation and conventional program flow optimization techniques, the process <highlight><bold>202</bold></highlight> modifies the intermediate code representation provided by process <highlight><bold>200</bold></highlight> so as to optimize its program flow (e.g., redundant program branches and unnecessary program flow blocks embodied in the intermediate code representation may be deleted). Optionally, the resultant modified code may then be processed by a loop-rewriting process <highlight><bold>204</bold></highlight> that introduces certain conventional loop optimizations to the modified code (e.g., loop blocking, loop interchange, loop reversal, loop distribution, and/or loop fusion optimizations). </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> After being processed by process <highlight><bold>204</bold></highlight>, or alternatively, even if the modified intermediate code representation does not undergo processing by process <highlight><bold>204</bold></highlight>, after being processed by process <highlight><bold>202</bold></highlight>, the code is processed by strength reduction induction analysis process <highlight><bold>206</bold></highlight>. Using conventional techniques, process <highlight><bold>206</bold></highlight> identifies in the modified intermediate code induction variables, rewrites expressions, if possible, to use lower-strength operators, and identifies portions of the intermediate code having array accesses with subscripts that are linear functions of the index variable (termed &ldquo;linear subscripts&rdquo; hereinafter). </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> The code that results from this processing by process <highlight><bold>206</bold></highlight>, and the identification of portions of the code having array accesses with linear subscripts are then supplied to prefetch analysis process <highlight><bold>208</bold></highlight>, which examines the memory references in each program loop in that code and decides which memory references should be prefetched. Although <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows the process <highlight><bold>208</bold></highlight> and process <highlight><bold>210</bold></highlight> as being separate, in actual practice, processes <highlight><bold>208</bold></highlight> and <highlight><bold>210</bold></highlight> comprise a single process <highlight><bold>205</bold></highlight>. The processing performed by process <highlight><bold>205</bold></highlight> is described below. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> also indicates that process <highlight><bold>58</bold></highlight> includes common expression elimination, code motion, value and constant propagation, test replacement, and split lifetime analysis processes <highlight><bold>212</bold></highlight>, <highlight><bold>214</bold></highlight>, <highlight><bold>216</bold></highlight>, <highlight><bold>218</bold></highlight>, and <highlight><bold>220</bold></highlight>, respectively. These processes <highlight><bold>212</bold></highlight>, <highlight><bold>214</bold></highlight>, <highlight><bold>216</bold></highlight>, <highlight><bold>218</bold></highlight>, <highlight><bold>220</bold></highlight> are conventional, and therefore, will not be described herein. Also, it is important to note that, although not shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, each of conventional processes <highlight><bold>202</bold></highlight>, <highlight><bold>206</bold></highlight>, <highlight><bold>212</bold></highlight>, <highlight><bold>214</bold></highlight>, <highlight><bold>216</bold></highlight>, <highlight><bold>218</bold></highlight> and <highlight><bold>220</bold></highlight> may make use of the profile data <highlight><bold>78</bold></highlight> once it has been generated, to better carry out their respective optimizations. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> With reference being made to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, the process steps carried out by process <highlight><bold>205</bold></highlight> will now be described. The process <highlight><bold>205</bold></highlight> begins by identifying the inner-most loops in the code being processed (see block <highlight><bold>250</bold></highlight>). For each respective loop in the intermediate code produced by the process <highlight><bold>206</bold></highlight>, groups of array references sharing a common memory offset and having the same stride are then identified (see block <highlight><bold>254</bold></highlight>), and two separate analyses are applied to each such array reference group so identified. One of the two analyses is a cache conflict analysis that determines, for each reference in the identified reference groups, the maximum prefetch distance that the reference can be prefetched without causing a cache conflict (See block <highlight><bold>258</bold></highlight>). The other such analysis is reuse analysis that determines, among other things, leading and trailing references for each such identified reference group (See block <highlight><bold>261</bold></highlight>). Based upon these two analyses, the leading references in each identified reference group with non-zero maximum distances are &ldquo;marked&rdquo; to be prefetched (See block <highlight><bold>262</bold></highlight>). A respective prefetch distance for each reference to be prefetched is then calculated (see block <highlight><bold>266</bold></highlight>), and prefetch instructions may then be inserted, into the code, in accordance with these calculations, by process <highlight><bold>205</bold></highlight> during loop unrolling (See blocks <highlight><bold>266</bold></highlight> and <highlight><bold>268</bold></highlight>). Reuse analysis is described first herein. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> An important part of prefetch analysis is determining those memory references that need not be prefetched. Knowing that a memory reference does not need to be prefetched permits the elimination of the unnecessary overhead that otherwise would result from execution of a unnecessary prefetch instruction. The principal technique used to tell which references do not need to be prefetched is reuse analysis. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> In reuse analysis for a program executed in system <highlight><bold>10</bold></highlight>, temporal and spatial locality inherent in the program are exploited. Locality is of importance in system <highlight><bold>10</bold></highlight> if it occurs with respect to references with the same stride in a given loop, because then such locality will occur on every iteration of the loop. Temporal locality exists when, during multiple loop iterations, the exact same main memory address is repeatedly referenced while the data of that address is still in the cache. Self-temporal locality exists when the same source reference is involved in multiple accesses in different loop iterations. Group-temporal locality is temporal locality that exists when more than one source reference is involved. Group-temporal locality may occur within one iteration,-or across iterations. Spatial locality is akin to temporal locality but occurs when the same cache line is repeatedly referenced, but not the same main memory location. Spatial locality can also be further categorized as self-spatial or group-spatial locality. Self-spatial locality is always across loop iterations, but group-spatial locality may occur on the same loop iteration as well. Reuse analysis for a program executed in system <highlight><bold>10</bold></highlight> can be understood as the analysis of respective reference groups to determine whether &ldquo;locality&rdquo; in a general sense based upon the above defined different types of locality is present. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Reuse analysis is performed for each reference group (see block <highlight><bold>261</bold></highlight>). Reuse analysis is a two-step process. The first step is an initialization step, and the second step is the main analysis step. The first step in reuse analysis for a program executed in system <highlight><bold>10</bold></highlight> comprises sorting the array references according to their respective relative offsets. Since the sorting is based upon relative offsets, any reference can be chosen as a zero-point, and other references have their respective offsets computed relative thereto. The sort can be done using a conventional sort algorithm; in system <highlight><bold>10</bold></highlight> it is accomplished by inserting each reference into a B-tree. B-trees (also known as AVL-trees) are well-known (See chapter 19, section 2 of <highlight><italic>Fundamentals of Data Structures in Pascal, </italic></highlight>by Ellis Horowitz and Sartaj Sahni, copyright 1984, Computer Science Press, Inc., 11 Taft Court, Rockville, Md. 20850, ISBN 0-914894-94-3). Using a B-tree, the references are sorted and indexed, such that searching for references having given offsets using a B-tree takes a time that is proportional to log (n), where n is the number of references being sorted. This allows an efficient, unified algorithm to be used with both small-stride and large-stride references. The normal B-tree structure is augmented by a pointer-chain that allows the references to be &ldquo;walked&rdquo; in sorted order. A walk over the data in sorted order is used to insert these pointers, and to initialize a data structure describing each reference: each reference is initially marked as having no trailing references, and as being a leading reference. The largest offset encountered is remembered, since it is an upper bound on the searching that must be done (see below). </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> The second step of reuse analysis is to actually determine which references trail other references. In block <highlight><bold>261</bold></highlight>, this is done in a second walk over the references in order from the reference with the most trailing offset to the references with the most leading offset. If the stride is positive, the most trailing offset is the numerically smallest and the most leading offset is the numerically largest. If the stride is negative the most leading offset is the numerically smallest and the most trailing offset is the numerically largest. For each reference, the set of offsets that a respective reference will access over time is computed by adding in successive multiples of the stride. The offsets thus computed are called induced offsets. From each induced offset, a &ldquo;window&rdquo; just less than one cache line wide is checked. If a reference is found with an offset in that window, then the first reference trails the reference which has an offset within the window. The data structure describing the trailing reference is modified to note that the reference is not a leading reference, and the trailing reference is added to the list of trailing references of the leader. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> There is often significant overlap in the windows induced by adding a multiple of the stride, especially when the stride is small. The number of checks can be reduced by carefully considering this overlap. A simple way to remove redundant checks is to keep a lower bound and an upper bound on the range of offsets to be checked. The lower bound never needs to be smaller than the biggest offset we have already checked, nor smaller than the induced offset minus the length of one cache line. Similarly, the upper bound need not be larger than the minimum of the largest offset or one cache line higher than induced offset. If the stride is larger than a cache line, searching for the induced offset linearly takes a time that is proportional to n. The B-tree allows this lookup to be done with an indexed search rather than a linear search, thus making it efficient enough to use the same algorithm regardless of the stride of the reference group. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> When the second walk has been completed, any references which have not been marked as trailing references are determined to be leading references: there is no multiple of the stride that causes them to access the same memory as another reference. Each leading reference has a list of its trailing references, which will be used during prefetch insertion (described below). </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> The references are then analyzed, one reference group at a time, for any potential cache conflicts (see block <highlight><bold>258</bold></highlight>). The idea behind the cache conflict analysis is that even though the exact addresses that will be used by a reference group are not known, the relative addresses are known. From the relative offsets used for reuse analysis, the conflict analysis computes a new set of offsets called cache offsets. The cache offset for a given reference is its relative offset within its reference group modulo the cache set size. Cache conflicts can be modeled by inserting all the references into a model of the cache, and checking how many references fall into the same cache line but have different sets. If the number of sets required is larger than the available associativity, a conflict will occur. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> More specifically, cache conflict analysis is performed iteratively. First, all the references in a reference group are checked for cache conflicts that may be present even without prefetching. Then, greater and greater prefetch distances are checked until either the maximum desirable prefetch distance is reached or a conflict is found. Each reference is then &ldquo;labeled&rdquo; with the maximum non-conflicting prefetch distance found. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> The manner in which cache conflict analysis is implemented relies on B-trees. Rather than directly sorting the references, the references are inserted into a B-tree indexed by cache offset. The cache-offset B-tree is &ldquo;walked&rdquo; in order of increasing cache offsets. Each cache offset in turn is inspected for cache conflicts. To check a cache offset s for conflicts, the set of all references that might share that offset must be constructed. The number of distinct cache lines required for all those references is calculated, and if the number of lines is greater than the associativity of the cache there is a conflict. For a given cache offset, the references with exactly that cache offset are inserted into a list. Then all the references with a cache offset that falls within one cache line (forward or backward) of the cache offset being checked are inserted into the list. Each time a reference is to be added to the list, it is added only if there is not already a reference with an offset within one bank-size of the reference to be added (references within one bank-size will share the same cache line). In the end, the number of entries on the list is the associativity required for the cache to hold all the references. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> The analysis described so far checks for cache conflicts among the references that were originally in the code. The next step is to check whether adding a prefetch would cause cache conflicts. The analysis described above is continued, adding, to the list the references with cache offsets within one cache line of where the prefetches would fall. Prefetching one cache line ahead either adds one cache line to the cache offset (when the stride is less than a cache line) or adds a multiple of the stride. Prefetch distances from zero lines ahead to the maximum number of in-flight parallel memory operations are checked, and the largest distance with no conflicts is saved for each reference group. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> For a program executed in system <highlight><bold>10</bold></highlight>, insertion of prefetch instructions is performed to keep the memory system fully utilized. This is in strong contrast to previous approaches, which use prefetch instructions to hide memory latency. Each prefetch instruction has a distance (typically in bytes) ahead of the leading reference with which it is associated. In prior art, the distance is calculated so that the prefetch will complete before the leading reference needs the data. The distance is calculated by determining how long it takes to execute one iteration of the loop. If the memory latency is longer, the prefetch iteration distance is the number of iterations that take just longer than the memory latency time. In the prior art, the prefetch distance for a reference being prefetched is the stride of the reference times the prefetch iteration distance. This effectively hides the latency of the memory, because the data will be in the cache when it is needed. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> We have discovered that this prior art approach to prefetch distance calculation does not yield the best performance. Memory latency is only half the problem: memory bandwidth is also important. The target processor can support some finite number of memory operations in-flight (i.e., executing) simultaneously. For example the Alpha 21264&trade; microprocessor supports up to eight simultaneously executing off-chip references. It is advantageous to have close to the maximum number of simultaneously-executing off-chip references actually executing simultaneously. If there are too many off-chip references in-flight at one time, processor resources are consumed retrying surplus references. The memory system is still at peak usage. The resources the processor uses to track references eventually fill, and the processor will stall until some memory operations complete. If there are too few memory operations in flight simultaneously, the memory system will not be able to take full advantage of parallel requests. In the present invention, to achieve maximum memory bandwidth, the prefetch analysis process <highlight><bold>208</bold></highlight> calculates prefetch distances so as to keep memory system utilization high while minimizing processor stalling. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> A target machine model <highlight><bold>80</bold></highlight> supplies the maximum amount of in-flight memory references that can be executed simultaneously by the target processor. Each in-flight memory reference corresponds to a cache line that is to be moved from memory into the cache, or moved from the cache back into memory. The prefetch analysis phase <highlight><bold>208</bold></highlight> matches the resources required by the loop to the available target processor memory resources by adjusting the prefetch distances (see block <highlight><bold>266</bold></highlight>). First, the total demand for memory bandwidth is calculated: each reference group contributes a demand equal to the number of leading references in that group times the maximum possible prefetch distance for that group. Each reference group gets a pro-rata share of the available number of in-flight references based on its demand. If the total demand is less than the available resources, each leading reference is prefetched a distance ahead of the leading reference equal to the maximum prefetch distance in cache lines for that reference times the cache line size. If the demand for memory resources exceeds the available processor resources, each reference group gets a pro rata share of the available resource based on its demand. The prefetch distance is then the cache line size times its share of the available band-width. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> Each reference is prefetched at least some minimum number of lines ahead supplied by the target processor model. This ensures that the prefetches will be an adequate distance ahead even if there is high demand for memory bandwidth. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> The cache conflict model cannot predict interactions between different reference groups. If there are many references groups, there is almost certain to be a cache conflict. This can be seen from the well-known &ldquo;birthday problem&rdquo; in probability theory: what are the odds that in a collection of individuals of size n, more than im different individuals share a birthday in a year with i days&quest; In this case, the question is: in a collection of reference groups of size n using a cache memory with associativity m where each associative cache bank has i different cache lines, what is the probability that there is a cache conflict&quest; To handle this, if the number of reference streams exceeds a threshold number supplied by the target processor model, all prefetching is abandoned. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> For example, for the Alpha 21264&trade; microprocessor, the target processor model has an available prefetch bandwidth of eight in-flight memory operations. This means that if there is only one reference in a loop, the compiler will insert prefetches eight cache lines ahead. If there are two leading references, the compiler will prefetch each a distance of four cache lines ahead. If there are four references, each would be prefetched two lines ahead. Further alternatively, if there are eight references, the compiler would still prefetch two cache lines ahead, because the minimum distance for that target processor is two lines. However, if there are fifteen leading references, that would be above the cut-off threshold, and no references would be prefetched. Also, three equivalently-strided reference streams are prefetched three cache blocks ahead. If there are three reference streams, and cache conflict analysis has determined that two of the streams have a maximum distance of two lines, but the other has a maximum distance of four lines or more, then each of the two two-line streams is prefetched two line-widths ahead, but the third stream is prefetched four line-widths ahead. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> An intermediate-language representation of prefetch instructions is inserted in accordance with these prefetch distance calculations during the loop unrolling process (see block <highlight><bold>268</bold></highlight>). This allows the unroller to remove redundant prefetches. As the unroller copies the loop body, it inserts a prefetch for each leading reference as the leading reference is copied. Some copies of the prefetches are redundant, and can be eliminated following the teachings of the aforesaid Santhanam patent. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> If the stride is large, prefetching just the leading reference may not be sufficient to ensure that all references are prefetched, due to cache alignment issues. As an example, imagine two references are less than one cache line apart, and there is a stride of two cache lines. Depending upon alignment, both references may be in the same cache line, but it may be likely that the leading reference will be associated with a different cache line from that with which the trailing reference is associated. In such cases, in order to make sure that the trailing reference is not cache miss, a prefetch instruction may also have to be inserted for it, in accordance with the following procedure. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> The reuse analysis phase described the process of marking each leading reference with a list of trailing references. The leading reference is always prefetched. The list of trailing references is examined, and some trailing references should be prefetched. The most trailing reference that is not more than a full cache line behind the leading reference is prefetched. This new reference establishes a new baseline, and the next most trailing reference not more than one full cache line behind it is prefetched, and so forth, until the list of trailers is exhausted. This guarantees that every cache line that might be accessed in one iteration is prefetched, regardless of the alignment of the data in the cache. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> The foregoing description has been directed to specific embodiments of the present invention. It will be apparent, however, that other alternatives, variations and modifications may be made to the described embodiments, with the attainment of some or all of their advantages. Therefore, it is intended that the present invention be viewed as being of broad scope and as covering all such alternatives, modifications, and variations. Thus, it is intended that the present invention be defined only as set forth in the hereinafter appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A computerized system that converts a first set of computer program instructions of a relatively higher level program instruction language into a second set of computer program instructions of a relatively lower level program instruction language, the system comprising: 
+<claim-text>a process resident in said system that makes a determination whether to insert a memory prefetch instruction into a location in the second set of computer program instructions, the process making the determination based at least upon whether insertion of the prefetch instruction at the location is likely to cause an undesired cache memory conflict if the prefetch instruction were to be executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein: 
+<claim-text>the process also performs a program loop unrolling operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein: 
+<claim-text>the determination is also made based upon whether the insertion of the prefetch instruction at the location is likely to permit an undesirably large number of memory operations to be contemporaneously executing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein: 
+<claim-text>the relatively lower level program instruction language is a machine-independent language. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further comprising: 
+<claim-text>a machine code generation process that converts the second set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A computerized system that inserts at least one memory prefetch instruction at a location in a set of computer program instructions, the system comprising: 
+<claim-text>a process resident in said system that makes a determination whether to insert the at least one prefetch instruction at the location based at least upon whether insertion of the prefetch instruction at the location is likely to permit an undesirably large number of memory operations to be contemporaneously executing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A computerized method for converting a first set of computer program instructions of a relatively higher level program instruction language into a second set of computer program instructions of a relatively lower level program instruction language, the method comprising: 
+<claim-text>determining whether to insert a memory prefetch instruction into a location in the second set of computer program instructions, based at least upon whether insertion of the prefetch instruction at the location is likely to cause an undesired cache memory conflict if the prefetch instruction were to be executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>performing a program loop unrolling operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>determination of whether to insert the prefetch instruction at the location is also made based upon whether the insertion of the prefetch instruction at the location is likely to permit an undesirable large number of memory operations to be contemporaneously executing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>the relatively lower level program instruction language is a machine-independent language. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, further comprising: 
+<claim-text>converting the second set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A computerized method for inserting at least one memory prefetch instruction at a location in a set of computer program instructions, the method comprising: 
+<claim-text>determining whether to insert the at least one prefetch instruction at the location based at least upon whether insertion of the prefetch instruction is likely to cause an undesired cache memory conflict if the prefetch instruction were to be executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A computerized method for inserting at least one memory prefetch instruction at a location in a set of computer program instructions, comprising: determining whether to insert the at least one prefetch instruction at the location based at least upon whether insertion of the prefetch instruction at the location is likely to permit an undesirably large number of memory operations to be contemporaneously executing. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein: 
+<claim-text>the process also performs a program loop unrolling operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising: 
+<claim-text>a machine code generation process that converts the set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. Computer-readable memory comprising a first set of computer program instructions that when executed converts a second set of computer program instructions of a relatively higher level program instruction language into a third set of computer program instructions of a relatively lower level program instruction language, the first set of computer program instructions comprising instructions that when executed: 
+<claim-text>makes a determination whether to insert a memory prefetch instruction into a location in the third set of computer program instructions, based at least upon whether insertion of the prefetch instruction at the location is likely to cause an undesired cache memory conflict if the prefetch instruction were to be executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein: 
+<claim-text>the first set of instructions when executed also performs a program loop unrolling operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein: 
+<claim-text>the determination is also made based upon whether the insertion of the prefetch instruction at the location is likely to permit an undesirably large number of memory operations to be contemporaneously executing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein: 
+<claim-text>the relatively lower level program instruction language is a machine-independent language. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, further comprising: 
+<claim-text>machine code generation instructions that when executed convert the third set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. Computer-readable memory comprising a first set of computer program instructions that when executed inserts at least one memory prefetch instruction at a location in a second set of computer program instructions, the first set of instructions comprising instructions that when executed: 
+<claim-text>makes a determination whether to insert the at least one prefetch instruction at the location based at least upon whether insertion of the prefetch instruction is likely to cause an undesired cache memory conflict if the prefetch instruction were to be executed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. Computer-readable memory comprising a first set of computer program instructions that when executed inserts at least one memory prefetch instruction at a location in a second set of computer program instructions, the first set of instructions comprising instructions that when executed: 
+<claim-text>makes a determination whether to insert the at least one prefetch instruction at the location based at least upon whether insertion of the prefetch instruction at the location is likely to permit an undesirably large number of memory operations to be contemporaneously executing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein: 
+<claim-text>the first set of instructions when executed also performs a program loop unrolling operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, wherein: 
+<claim-text>the first set of instructions when executed also makes the determination based upon whether the insertion of the prefetch instruction at the location is likely to permit an undesirably large number of memory operations to be contemporaneously executing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, further comprising: 
+<claim-text>machine code generation instructions that when executed convert the second set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein: 
+<claim-text>the first set of instructions when executed also performs a program loop unrolling operation. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. Computer-readable memory according to <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, further comprising: 
+<claim-text>machine code generation instructions that when executed convert the second set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein: 
+<claim-text>the determination is also made based upon whether the insertion of the prefetch instruction at the location is likely to permit an undesirably large number of memory operations to be contemporaneously executing. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00033">claim 34</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, further comprising: 
+<claim-text>converting the second set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00037">
+<claim-text><highlight><bold>37</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein: 
+<claim-text>the undesirably large number is based upon a maximum number of memory operations that can be contemporaneously executed by a processor. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00038">
+<claim-text><highlight><bold>38</bold></highlight>. A method according to <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising: converting the second set of program instructions into program code that is executable by a target processor. </claim-text>
+</claim>
+<claim id="CLM-00039">
+<claim-text><highlight><bold>39</bold></highlight>. A computerized system that converts a first set of computer program instructions of a relatively higher level program instruction language into a second set of computer program instructions of a relatively lower level program instruction language, the system comprising: 
+<claim-text>a process resident in said system that performs a cache memory reuse analysis that includes sorting array memory references in at least one of the sets of instructions based upon relative offsets of said references, said sorting being carried out using a B-tree in which each of said references is inserted. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00040">
+<claim-text><highlight><bold>40</bold></highlight>. A computerized system that inserts at least one memory prefetch instruction at a location in a set of computer program instructions, the system comprising: 
+<claim-text>a process resident in said system that makes a determination whether to insert the at least one prefetch instruction at the location based at least upon a prefetch distance, in terms of cache memory lines, associated with the location. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00041">
+<claim-text><highlight><bold>41</bold></highlight>. A computerized method for converting a first set of computer program instructions of a relatively higher level program instruction language into a second set of computer program instructions of a relatively lower level program instruction language, the method comprising: 
+<claim-text>performing a cache memory reuse analysis that includes sorting array memory references in at least one of the sets of instructions based upon relative offsets of said references, said sorting being carried out using a B-tree in which each of said references is inserted. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00042">
+<claim-text><highlight><bold>42</bold></highlight>. A computerized method for inserting at least one memory prefetch instruction at a location in a set of computer program instructions, the method comprising: 
+<claim-text>determining whether to insert the at least one prefetch instruction at the location based at least upon a prefetch distance in terms of cache memory lines, associated with the location. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00043">
+<claim-text><highlight><bold>43</bold></highlight>. Computer-readable memory comprising first program instructions that when executed convert one set of computer program instructions of a relatively higher level program instruction language in to another set of computer program instructions of a relatively lower level program instruction language, the first program instructions when executed: 
+<claim-text>performing a cache memory reuse analysis that includes sorting array memory references in at least one of the one and another sets of instructions based upon relative offsets of said references, said sorting being carried out using a B-tree in which each of said references is inserted. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00044">
+<claim-text><highlight><bold>44</bold></highlight>. Computer-readable memory comprising first program instructions that when executed inserts at least one memory prefetch instruction at a location in a set of computer program instructions, the first program instructions when executed: 
+<claim-text>determining whether to insert the at least one prefetch instruction at the location s based at least upon a prefetch distance in terms of cache memory lines, associated with the location. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00045">
+<claim-text><highlight><bold>45</bold></highlight>. A system according to <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the determination is based upon: 
+<claim-text>analyzing the references for cache conflicts based on one of an order of relative offsets and a sort of the references according to offsets of the references modulo cache set size.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005419A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005419A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005419A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005419A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005419A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005419A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

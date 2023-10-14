@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005022A1-20030102-D00000.TIF SYSTEM "US20030005022A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005022A1-20030102-D00001.TIF SYSTEM "US20030005022A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005022A1-20030102-D00002.TIF SYSTEM "US20030005022A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005022A1-20030102-D00003.TIF SYSTEM "US20030005022A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005022A1-20030102-D00004.TIF SYSTEM "US20030005022A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005022A1-20030102-D00005.TIF SYSTEM "US20030005022A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005022A1-20030102-D00006.TIF SYSTEM "US20030005022A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005022</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09898881</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010702</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>100000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Methods and apparatus for implementing a progress reporting interface</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Jordan</given-name>
+<family-name>Brown</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Granada Hills</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>Sun Microsystems, Inc.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>BEYER WEAVER &amp; THOMAS LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>P.O. BOX 778</address-1>
+<city>BERKELEY</city>
+<state>CA</state>
+<postalcode>94704-0778</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">Methods and apparatus for providing a progress associated with an executing process are disclosed. A progress report is generated in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process. The progress report is then provided to a user interface mechanism capable of interpreting the progress reporting language, where the user interface mechanism is adapted for generating a user interface indicating the progress of the one or more steps in the executing process. The user interface mechanism receives the progress report, ascertains the progress of the steps in the executing process from the progress report, and generates a user interface indicating the progress of the steps in the executing process. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates generally to computer software. More particularly, the present invention relates to methods and apparatus for implementing a progress reporting interface during execution of software applications. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In certain computer operating systems, a job is defined as the unit of work that a computer operator (or a program called a job scheduler) provides to the operating system. For example, a job could refer to the execution of an application program such as a weekly payroll program. A job is usually said to be run in batch (rather than interactive) mode. The operator or job scheduler gives the operating system a &ldquo;batch&rdquo; of jobs to do (e.g., payroll, cost analysis, employee file updating) and these are performed in the background when time-sensitive interactive work is not being done. Each job is broken down into &ldquo;job steps,&rdquo; a unit of work that a computer operator (or job scheduler) gives to the operating system. An example of a job step might be to make sure that a particular data set (e.g., computation) or database needed in the job is made accessible. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> In a modem user interface, it is desirable to report the progress of long-running tasks such as batch jobs. However, when a job is run, the progress of the job is rarely reported. As one example, a job is often run from a specific type of user interface such as a command line interface (e.g., shell prompt). After the command indicating the job to run is provided at the shell prompt, the next &ldquo;progress&rdquo; report that the user often receives is the output from that particular job. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Another problem with the reporting of progress with respect to an executing job is the fact that the reporting is often integrated with the job being executed. While the integrated mode of progress reporting may be desirable in some circumstances, such integrated progress reporting is often undesirable. More particularly, the &ldquo;front end&rdquo; process responsible for reporting the progress of the job is often de-coupled from the &ldquo;back end&rdquo; process that is executing the job. As one example, when a user executes a job via a web browser interface, the server performing the job is typically located at another location. Since the front end typically does not have sufficient information associated with the back end processing, it is common for the front end to merely report the completion of execution of the job. Even when the progress is reported during the execution of a job, this &ldquo;report&rdquo; is often merely a simple display such as a flashing or spinning indicating that the job is being executed, with no indication of the progress made or the estimated time to completion. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> In view of the above, it would be desirable if the progress of execution of a particular job could be reported prior to completion of execution of the job. Moreover, it would be beneficial if such a progress report could be provided independent from the front end responsible for presenting the progress. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Methods and apparatus for reporting a progress associated with an executing process are disclosed. This is accomplished, in part, through the use of a progress reporting language. In this manner, an executing process may report a progress of its execution to a user interface mechanism. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In accordance with one aspect of the invention, a back-end process generates a progress report during its execution. The progress report is generated in a progress reporting language that indicates a progress of one or more steps in the executing process. The progress report is then provided to a user interface mechanism capable of interpreting the progress reporting language, where the user interface mechanism is adapted for generating a user interface indicating the progress of the steps in the executing process. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In accordance with yet another aspect of the invention, a front-end user interface mechanism generates a user interface from the progress report. More particularly, the user interface mechanism receives the progress report, ascertains the progress of the steps in the executing process from the progress report, and generates a user interface indicating the progress of the steps in the executing process. For instance, the user interface may be a textual display, visual display, or combined textual-visual display. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The invention, together with further advantages thereof, may best be understood by reference to the following description taken in conjunction with the accompanying drawings in which: </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an exemplary diagram illustrating the generation of a progress report in a progress reporting language by an executing process for use by a user interface mechanism adapted for generating a user interface in accordance with one embodiment of the invention. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a method of generating a progress reporting interface from progress reporting language in accordance with one embodiment of the invention. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is an exemplary diagram illustrating the generation of progress reports by multiple executing processes and the generation of a user interface from the progress reports. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a process flow diagram illustrating a method of generating a progress report in accordance with one embodiment of the invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a process flow diagram illustrating a method of providing a progress report in a progress reporting language as shown at block <highlight><bold>402</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 4</cross-reference> in accordance with one embodiment of the invention. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a block diagram illustrating a typical, general-purpose computer system suitable for implementing the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In the following description, numerous specific details are set forth in order to provide a thorough understanding of the present invention. It will be apparent, however, to one skilled in the art, that the present invention may be practiced without some or all of these specific details. In other instances, well known process steps have not been described in detail in order not to unnecessarily obscure the present invention. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The present invention enables a progress reporting interface to be implemented such that the progress of a running task (i.e., job or process) is reported during its execution. This is accomplished, in part, through the generation of a progress report in a generic progress reporting language. The progress report indicates a progress of an executing process (e.g., job), which may be indicated in a variety of ways. This progress report may then be provided to a user interface mechanism for generation of a user interface from the progress report. In this manner, a user interface may present the progress of an executing process that is de-coupled from the user interface. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is an exemplary diagram illustrating the generation of a progress report in a progress reporting language by an executing process for use by a user interface mechanism adapted for generating a user interface in accordance with one embodiment of the invention. More particularly, as shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, one or more processes (e.g., jobs) may be executing separately or in parallel. For instance, exemplary jobs include the upgrade <highlight><bold>102</bold></highlight> of a process or system module, the backup <highlight><bold>104</bold></highlight> of data, a computation <highlight><bold>106</bold></highlight>, or other process <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As each job executes, it generates a progress report in a progress reporting language <highlight><bold>110</bold></highlight> that indicates a progress of the executing process or job, as well as the progress of steps in the executing process. For instance, as shown at <highlight><bold>112</bold></highlight>, generation and interpretation of the progress reporting language may be implemented in any suitable language, including, but not limited to, Java, C, Shell, or Perl. When the progress report is received by a user interface mechanism capable of interpreting the progress reporting language, the user interface mechanism generates a suitable user interface <highlight><bold>114</bold></highlight> that presents the progress in an effective manner. For instance, as shown, the user interface may be implemented in textual format, or other visual format, including a pie chart, bar graph, or combination of textual and visual formats. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Below is an example of a progress report generated in a progress reporting language: </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> define format Format the Hard Disk </paragraph>
+<paragraph id="P-0024" lvl="2"><number>&lsqb;0024&rsqb;</number> define install Install the Software </paragraph>
+<paragraph id="P-0025" lvl="2"><number>&lsqb;0025&rsqb;</number> define finish Finish up </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> begin format </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> progress <highlight><bold>0</bold></highlight> <highlight><bold>1000</bold></highlight> </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> progress <highlight><bold>247</bold></highlight> <highlight><bold>1000</bold></highlight> </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> progress <highlight><bold>643</bold></highlight> <highlight><bold>1000</bold></highlight> </paragraph>
+<paragraph id="P-0030" lvl="2"><number>&lsqb;0030&rsqb;</number> end format </paragraph>
+<paragraph id="P-0031" lvl="2"><number>&lsqb;0031&rsqb;</number> begin install </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> progress <highlight><bold>1</bold></highlight> <highlight><bold>5</bold></highlight> </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> progress <highlight><bold>2</bold></highlight> <highlight><bold>5</bold></highlight> </paragraph>
+<paragraph id="P-0034" lvl="2"><number>&lsqb;0034&rsqb;</number> progress <highlight><bold>3</bold></highlight> <highlight><bold>5</bold></highlight> </paragraph>
+<paragraph id="P-0035" lvl="2"><number>&lsqb;0035&rsqb;</number> progress <highlight><bold>4</bold></highlight> <highlight><bold>5</bold></highlight> </paragraph>
+<paragraph id="P-0036" lvl="2"><number>&lsqb;0036&rsqb;</number> progress <highlight><bold>5</bold></highlight> <highlight><bold>5</bold></highlight> </paragraph>
+<paragraph id="P-0037" lvl="2"><number>&lsqb;0037&rsqb;</number> end install begin finish </paragraph>
+<paragraph id="P-0038" lvl="2"><number>&lsqb;0038&rsqb;</number> end finish </paragraph>
+</section>
+<section>
+<heading lvl="1">define &lt;step identifier&gt; &lt;step description&gt;</heading>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> This line informs the user interface mechanism that there will be a step in the process tagged &lt;step identifier&gt;, with a &lt;step description&gt; that is adapted for display by the user interface mechanism. For instance, the &lt;step description&gt; may be provided in a human-readable (e.g., textual) format. Define lines indicate steps to be performed in the future; they do not indicate that the specified step is actually starting. Define lines are preferably (but need not be) output at the start of the process, to enable the user interface mechanism to provide advance display of the steps to be performed. The order of the define lines preferably, but need not, represents the order in which the steps will be performed. </paragraph>
+</section>
+<section>
+<heading lvl="1">begin &lt;step identifier&gt;</heading>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> A begin indicator indicates to the user interface mechanism that execution of the specified step in the process (identified by the step identifier) is beginning. Such a progress reporting language may be used to allow parallel processing of multiple steps or jobs. </paragraph>
+</section>
+<section>
+<heading lvl="1">end &lt;step identifier&gt;</heading>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> A completion indicator is used to indicate that execution of the step identified by the step identifier has completed. </paragraph>
+</section>
+<section>
+<heading lvl="1">progress &lt;step identifier&gt; &lt;progress indicator&gt;</heading>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> A progress indicator is used to indicate to the user interface mechanism the progress of the specified step. For instance, the progress indicator may indicate a percentage of completion of the step of the executing process through the indication of one or more values. As one example, &ldquo;progress copy <highlight><bold>57</bold></highlight> <highlight><bold>4352</bold></highlight>&rdquo; may indicate that a milestone, <highlight><bold>57</bold></highlight>, of a total number of substeps of the &ldquo;copy&rdquo; step, <highlight><bold>4352</bold></highlight>, have been completed. In other words, this indicates the percentage of the step that has been completed. Ideally, such progress steps will be generated at least once every 10 seconds and no more frequently than 10 times per second. Thus, in this example, later provided values of the milestone would be greater than (or equal to) earlier provided values of the milestone. Similarly, the final progress report for a particular step should have a &lt;milestone&gt; equal to the &lt;total&gt;. As shown, the step identifier is preferably used to indicate the step being executed. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> The above example is merely illustrative of program lines (e.g., data lines) that may be used to implement a progress reporting language. In addition, such a progress reporting language may be generated in a variety of programming languages. For instance, as described above, the progress reporting language may be implemented in Java, C, Shell, or Perl. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a method of generating a progress reporting interface from progress reporting language in accordance with one embodiment of the invention. As shown in <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> job or process is started at block <highlight><bold>202</bold></highlight>. While the process is executing, progress reporting language such as that described above is generated at block <highlight><bold>204</bold></highlight>. A user interface mechanism or program receives the progress reporting language at block <highlight><bold>206</bold></highlight> and generates a user interface from the progress reporting language indicating the progress of the process. More particularly, as described above, the progress of one or more steps in the process may be indicated. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> As described above, the present invention may be implemented in a parallel-processing context. For instance, multiple processes or multiple steps in the same or different processes may be simultaneously executed. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is an exemplary diagram illustrating the generation of progress reports by multiple executing processes and the generation of a user interface from the progress reports. As shown, multiple jobs, Job <highlight><bold>1</bold></highlight> <highlight><bold>302</bold></highlight>, Job <highlight><bold>2</bold></highlight> <highlight><bold>304</bold></highlight> and Job <highlight><bold>3</bold></highlight> <highlight><bold>306</bold></highlight> execute and generate corresponding progress reports, Progress report <highlight><bold>1</bold></highlight> <highlight><bold>308</bold></highlight>, Progress report <highlight><bold>2</bold></highlight> <highlight><bold>310</bold></highlight>, and Progress report <highlight><bold>3</bold></highlight> <highlight><bold>312</bold></highlight>. A user interface mechanism <highlight><bold>314</bold></highlight> then receives these progress reports and generates a user interface with information from the progress reports. More particularly, the user interface preferably indicates a progress of those steps being executed. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> In accordance with several embodiments of the invention, a progress reporting interface may be generated as described above with reference to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. One method of generating a progress reporting interface is through the generation of a progress report such as that illustrated above. <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a process flow diagram illustrating a method of generating a progress report in accordance with one embodiment of the invention. As described above, an executing process provides a user interface mechanism with a progress report in a progress reporting language at block <highlight><bold>402</bold></highlight>. The generation of a progress report in a progress reporting language by a process or job will be described in further detail below with reference to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. The user interface mechanism receives the progress report from the job at block <highlight><bold>404</bold></highlight> and generates a user interface including information from the progress report at block <highlight><bold>406</bold></highlight>. More particularly, the information preferably indicates the status or progress of step(s) that have been executed and/or are currently being executed. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a process flow diagram illustrating a method of providing a progress report in a progress reporting language as shown at block <highlight><bold>402</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. For each step in a process, a progress report is generated to indicate the progress of the executing step. As shown at block <highlight><bold>502</bold></highlight>, the job provides a step identifier identifying a step to be executed in the future and a step description associated with the step. In this manner, both the step identifier and the step description may be provided for use by a user interface mechanism. More particularly, a &ldquo;define&rdquo; step such as that described above may be provided for multiple steps in the process to be performed. The job then provides a begin indicator at block <highlight><bold>504</bold></highlight> indicating that execution of a step identified by the step identifier is beginning. A progress indicator indicating the progress of one of the steps in the executing process is then provided at block <highlight><bold>506</bold></highlight>. More particularly, as described above, a step identifier is preferably provided to identify the step being executed. In addition, the progress indicator may be implemented in a variety of ways. For instance, the progress indicator may include one or more values indicating a percentage completion of the step. Progress reporting continues as the step in the process executes until it is determined at block <highlight><bold>507</bold></highlight> that the step is complete. A progress completion indicator indicating that execution of the step identified by the step identifier has completed is then provided at block <highlight><bold>508</bold></highlight>. This process repeats as shown for each step in the process that is executed as shown at block <highlight><bold>510</bold></highlight>. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The present invention may be implemented on any suitable computer system. <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a typical, general-purpose computer system <highlight><bold>1502</bold></highlight> suitable for implementing the present invention. The computer system may take any suitable form. For example, the computer system may be integrated with a digital television receiver or set top box. Thus, such a computer system may be used to execute a process or implement a user interface mechanism in accordance with above-described embodiments of the invention. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Computer system <highlight><bold>1530</bold></highlight> or, more specifically, CPUs <highlight><bold>1532</bold></highlight>, may be arranged to support a virtual machine, as will be appreciated by those skilled in the art. The computer system <highlight><bold>1502</bold></highlight> includes any number of processors <highlight><bold>1504</bold></highlight> (also referred to as central processing units, or CPUs) that may be coupled to memory devices including primary storage device <highlight><bold>1506</bold></highlight> (typically a read only memory, or ROM) and primary storage device <highlight><bold>1508</bold></highlight> (typically a random access memory, or RAM). As is well known in the art, ROM acts to transfer data and instructions uni-directionally to the CPUs <highlight><bold>1504</bold></highlight>, while RAM is used typically to transfer data and instructions in a bi-directional manner. Both the primary storage devices <highlight><bold>1506</bold></highlight>, <highlight><bold>1508</bold></highlight> may include any suitable computer-readable media. The CPUs <highlight><bold>1504</bold></highlight> may generally include any number of processors. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> A secondary storage medium <highlight><bold>1510</bold></highlight>, which is typically a mass memory device, may also be coupled bi-directionally to CPUs <highlight><bold>1504</bold></highlight> and provides additional data storage capacity. The mass memory device <highlight><bold>1510</bold></highlight> is a computer-readable medium that may be used to store programs including computer code, data, and the like. Typically, the mass memory device <highlight><bold>1510</bold></highlight> is a storage medium such as a hard disk which is generally slower than primary storage devices <highlight><bold>1506</bold></highlight>, <highlight><bold>1508</bold></highlight>. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> The CPUs <highlight><bold>1504</bold></highlight> may also be coupled to one or more input/output devices <highlight><bold>1512</bold></highlight> that may include, but are not limited to, devices such as video monitors, track balls, mice, keyboards, microphones, touch-sensitive displays, transducer card readers, magnetic or paper tape readers, tablets, styluses, voice or handwriting recognizers, or other well-known input devices such as, of course, other computers. Finally, the CPUs <highlight><bold>1504</bold></highlight> optionally may be coupled to a computer or telecommunications network, e.g., an internet network or an intranet network, using a network connection as shown generally at <highlight><bold>1514</bold></highlight>. With such a network connection, it is contemplated that the CPUs <highlight><bold>1504</bold></highlight> might receive information from the network, or might output information to the network in the course of performing the above-described method steps. Such information, which is often represented as a sequence of instructions to be executed using the CPUs <highlight><bold>1504</bold></highlight>, may be received from and outputted to the network, for example, in the form of a computer data signal embodied in a carrier wave. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> Although illustrative embodiments and applications of this invention are shown and described herein, many variations and modifications are possible which remain within the concept, scope, and spirit of the invention, and these variations would become clear to those of ordinary skill in the art after perusal of this application. Moreover, the above-described process blocks are illustrative only. Therefore, the implementation of the progress reporting interface using a progress reporting language may be performed using alternate process blocks as well as alternate command line structures. In addition, in order to implement a system capable of parallel processing, a process identifier may be provided in addition to a step identifier. For example, the define, begin, end, and progress steps illustrated above may further include a process or job identifier. Accordingly, the present embodiments are to be considered as illustrative and not restrictive, and the invention is not to be limited to the details given herein, but may be modified within the scope and equivalents of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of reporting a progress of an executing process, comprising: 
+<claim-text>generating a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; and </claim-text>
+<claim-text>providing the progress report to a user interface mechanism capable of interpreting the progress reporting language, the user interface mechanism adapted for generating a user interface indicating the progress of the one or more steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein generating a progress report in a progress reporting language comprises: 
+<claim-text>generating a step identifier identifying a step in the process and a step description associated with the step identifier, the step description being adapted for display by the user interface mechanism. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the step is to be performed in the future. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein generating a progress report in a progress reporting language further comprises: 
+<claim-text>generating a begin indicator indicating that execution of a step in the process identified by the step identifier is beginning. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein generating a progress report in a progress reporting language comprises: 
+<claim-text>generating a progress indicator indicating the progress of one of the steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the progress indicator indicates a percentage of completion of the step of the executing process. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the progress indicator comprises one or more values indicating the progress of the step of the executing process. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein generating a progress report in a progress reporting language further comprises: 
+<claim-text>generating a progress indicator associated with the step identifier indicating the progress of a step identified by the step identifier. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein generating a progress report in a progress reporting language comprises: 
+<claim-text>providing a completion indicator indicating that execution of the step identified by the step identifier has completed. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method of providing a progress associated with an executing process, comprising: 
+<claim-text>receiving a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; </claim-text>
+<claim-text>ascertaining the progress of the steps in the executing process from the progress report; and </claim-text>
+<claim-text>generating a user interface indicating the progress of the steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the progress reporting language comprises a step identifier identifying a step in the process and a step description associated with the step identifier, the step description being adapted for display by the user interface mechanism. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the step is to be performed in the future. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the progress reporting language comprises a begin indicator indicating that execution of a step in the process identified by the step identifier is beginning. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the progress reporting language comprises a progress indicator indicating the progress of one of the steps in the executing process. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the progress indicator indicates a percentage of completion of the step of the executing progress. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein the progress indicator comprises one or more values indicating the progress of the step of the executing process. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the progress reporting language comprises a progress indicator associated with the step identifier indicating the progress of a step identified by the step identifier. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The method as recited in <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, wherein the progress reporting language further comprises a completion indicator indicating that execution of the step identified by the step identifier has completed. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A computer-readable medium storing thereon instructions for reporting a progress of an executing process, comprising: 
+<claim-text>instructions for generating a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; and </claim-text>
+<claim-text>instructions for providing the progress report to a user interface mechanism capable of interpreting the progress reporting language, the user interface mechanism adapted for generating a user interface indicating the progress of the one or more steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. An apparatus for reporting a progress of an executing process, comprising: 
+<claim-text>means for generating a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; and </claim-text>
+<claim-text>means for providing the progress report to a user interface mechanism capable of interpreting the progress reporting language, the user interface mechanism adapted for generating a user interface indicating the progress of the one or more steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. An apparatus for reporting a progress of an executing process, comprising: 
+<claim-text>a processor; and </claim-text>
+<claim-text>a memory, at least one of the processor and the memory being adapted for: </claim-text>
+<claim-text>generating a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; and </claim-text>
+<claim-text>providing the progress report to a user interface mechanism capable of interpreting the progress reporting language, the user interface mechanism adapted for generating a user interface indicating the progress of the one or more steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. A computer-readable medium storing thereon instructions for providing a progress associated with an executing process, comprising: 
+<claim-text>instructions for receiving a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; </claim-text>
+<claim-text>instructions for ascertaining the progress of the steps in the executing process from the progress report; and </claim-text>
+<claim-text>instructions for generating a user interface indicating the progress of the steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. An apparatus for providing a progress associated with an executing process, comprising: 
+<claim-text>means for receiving a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; </claim-text>
+<claim-text>means for ascertaining the progress of the steps in the executing process from the progress report; and </claim-text>
+<claim-text>means for generating a user interface indicating the progress of the steps in the executing process. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. An apparatus for providing a progress associated with an executing process, comprising: 
+<claim-text>a processor; and </claim-text>
+<claim-text>a memory, at least one of the processor and the memory being adapted for: 
+<claim-text>receiving a progress report in a progress reporting language, the progress reporting language indicating a progress of one or more steps in the executing process; </claim-text>
+<claim-text>ascertaining the progress of the steps in the executing process from the progress report; and </claim-text>
+<claim-text>generating a user interface indicating the progress of the steps in the executing process.</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005022A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005022A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005022A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005022A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005022A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005022A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005022A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

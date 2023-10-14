@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030002566A1-20030102-D00000.TIF SYSTEM "US20030002566A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030002566A1-20030102-D00001.TIF SYSTEM "US20030002566A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030002566A1-20030102-D00002.TIF SYSTEM "US20030002566A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030002566A1-20030102-D00003.TIF SYSTEM "US20030002566A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030002566</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09884585</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010619</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04K001/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>375</class>
+<subclass>147000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for shifting the phase of pseudorandom noise code in direct sequence spread spectrum communications</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>John</given-name>
+<middle-name>G.</middle-name>
+<family-name>McDonough</family-name>
+</name>
+<residence>
+<residence-us>
+<city>La Jolla</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Juncheng</given-name>
+<middle-name>C.</middle-name>
+<family-name>Liu</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Diego</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>TEXAS INSTRUMENTS INCORPORATED</name-1>
+<name-2></name-2>
+<address>
+<address-1>P O BOX 655474, M/S 3999</address-1>
+<city>DALLAS</city>
+<state>TX</state>
+<postalcode>75265</postalcode>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method for shifting the phase of a PN code sequence are provided, useful in communications networks where power can be conserved by powering-off the PN clock and PN generators during slotted mode sleep intervals. The system and method targets a family of time intervals, and stores phase shifting masks corresponding to these probable intervals. The PN code generated with the phase-shifting mask at power-up is sufficiently accurate to permit rapid resynchronization. Further, because the phase-shifting masks do not have to be calculated, processing time is minimized and the PN clock and generators can be powered-off for longer periods of time. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates generally to the field of direct sequence spread spectrum (DSSS) communications and, more particularly, with a system and method of phase shifting pseudorandom noise (PN) code for more efficient power conservation during slotted mode sleep intervals. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The following description of the related art comes primarily from the &ldquo;Background of the Invention&rdquo; Section of U.S. Pat. No. 5,491,718. The pan-European digital cellular radio system which is in use in Europe (Groupe Speciale Mobile or GSM) implements a discontinuous reception (DRX), or &ldquo;slotted paging mode&rdquo;, when operating in an idle mode. In this mode a radiotelephone, also referred to herein as a mobile station, does not continuously monitor a paging channel when in the idle mode. Instead, the mobile station is required to monitor the paging channel only during an assigned paging channel time slot. During all other paging channel time slots the mobile station can place itself into a low power mode of operation, such as by removing power from selected circuitry, thereby reducing power consumption and prolonging battery life. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> A convenient method to make power consumption comparisons for the DRX mode employs the duty cycle of receiver on to off (sleep) time. The lower the duty cycle, the less time the mobile station is required to be powered on. A reduction in the on time, or conversely an increase in the off or sleep time, provides a reduction in power consumption and an increase in battery life. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In GSM, the idle mode is based on the concept of multiframes, each of which is 235 milliseconds (ms) long. The mobile station is required to read one paging message every two to nine multiframes (470 ms to 2.1 seconds), as specified by the base station. In addition, each paging message consists of four frames, where a frame is 4.614 ms in duration. A mobile station is only required to receive one timeslot per frame. Therefore, the mobile station is required to receive only one paging message, of 18.46 ms (4&times;4.615 ms) duration, every 470 ms to 2.1 seconds. Of this 18.46 ms, the receiver circuitry is on for the minimum time, the duty cycle ranges from a maximum of 2.31 ms/470 ms&equals;3.9% to a minimum of 18.46 ms/2.1 seconds&equals;0.9%. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> As originally proposed for the US Code Division Multiple Access (CDMA) system, the mobile station must periodically receive at least one 20 ms frame within a slot cycle, as determined by a SLOT_CYCLE_INDEX value. The index is selected by the mobile station, except that the base station can set the maximum index to correspond to approximately one second cycle time (e.g., IS-95 uses 1.28 second). A typical, reasonable slot cycle for a mobile station is approximately 2.56 seconds. In addition, there exists a certain amount of overhead to receive a slotted page message. Based the above information, the duty cycle values are significantly greater than the minimum and maximum values achievable with the GSM system. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Because of continuous convolutional coding on the CDMA paging channel, the mobile station must receive at least a frame before the 20 ms frame, depending on the paging channel data rate. This time, in conjunction with various turn-on times in the mobile station receiver, results in a typical overhead of up to 100 ms. The total on-time of the mobile station thus becomes approximately 120 ms, resulting in a duty cycle between 20% and 30%, depending on the slot cycle length. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Furthermore, it is possible that the mobile station would be required to receive two paging channel slots. This can occur if the base station uses the MORE_PAGES bit in the SLOTTED PAGE MESSAGE, thereby requiring the mobile station to receive up to one additional slot. Also, the CDMA specification states that the mobile station may stop listening to the paging channel after reading the SLOTTED PAGE MESSAGE. There is no guarantee that this message is located at the beginning of the slot. As a result, it may happen that the mobile station must always listen to the entire slot. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> As presently specified for use, a CDMA mobile station includes a system time PN generator, also referred to herein as a &ldquo;short code&rdquo; as opposed to &ldquo;long code&rdquo; generator. The system time short code PN generator has a rollover period of 26.67 milliseconds, and is aligned with the frame timing (20 milliseconds) every 80 milliseconds. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Another feature of the CDMA system is the use of a Long Code for mobile unit identification. The Long Code is a PN sequence with period 2<highlight><superscript>42</superscript></highlight>&minus;1 that is used for scrambling on the Forward (base station to mobile) CDMA Channel and for spreading on the Reverse (mobile to base station) CDMA Channel. The Long Code uniquely identifies a mobile station on both the Forward and Reverse Traffic Channels. The Long Code also serves to provide limited privacy, and separates multiple Access Channels on the same CDMA channel. A Long Code Mask is a 42 bit binary number that creates the unique identity of the Long Code. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> A problem is created when it is desired to periodically shutoff a long code generator, such as when powering down the mobile station when operating in the slotted paging (DRX) mode described above, and to then restart the long code generator in the proper state when powering back up. Since the long code generator is intended to run continuously, it is essential that the long code generator be initialized to the proper state whenever it is started after a period of non-operation. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> One method has been proposed which would read the state of the long code generator just prior to powering down the mobile station. A complex matrix multiply operation is then applied to the long code to determine the correct state of the long code generator at a time in the future when the long code generator is to be reinitialized. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> However, this approach is computationally expensive. As a result, it may be necessary to &ldquo;WAKE UP&rdquo; the mobile station earlier than would be necessary if the complex matrix multiply operation is performed after the power down period. If the matrix multiply is performed before powering down, then the mobile station must remain in a powered up state for a period of time sufficient to accomplish the matrix multiply. In either case, the mobile station is powered on for a longer time. This causes the overall duty cycle and power consumption to increase, thus decreasing battery life. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> As noted in the Background Section of U.S. Pat. No. 5,228,054, Pseudo-noise or pseudorandom noise generators are commonly used for bandwidth spreading of a digital signal in a direct sequence spread spectrum communication system. In such systems, such as CDMA systems, the PN sequence is commonly generated by a Linear Sequence Shift Register (LSSR). </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> The LSSR is comprised of an N-stage shift register, with some intervening exclusive-OR gates to program a specific PN sequence. The location of the exclusive-OR gates is determined by the defining polynomial of the circuit which in turn, determines which one of the possible sequences will be generated. There are a total of 2<highlight><superscript>(N&minus;1)</superscript></highlight>&minus;1 polynomials for a generator of length N. Only a fraction, about 10%, produce a &ldquo;maximal&rdquo; length sequence. A &ldquo;maximal&rdquo; length sequence is of length (2<highlight><superscript>N</superscript></highlight>&minus;1). </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> For example, a generator with 15 stages and a maximal polynomial will produce a sequence that is 32,767 bits (or &ldquo;chips&rdquo;) long. In this example, the sequence will contain a single run of 15 ones in a row, and a single run of 14 zeroes in a row. All other runs of ones and zeroes are shorter in length. Every maximal length sequence generator with N stages produces a single run of N ones in a row and a single run of N&minus;1 zeroes in a row. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In many practical applications of PN sequence generators, a sequence length of 2<highlight><superscript>N</superscript></highlight>&minus;1 is inconvenient because these numbers contain few factors and are frequently prime numbers. This makes it difficult to synchronize a system which contains processes operating at a lower rate than the PN chip rate. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In a practical example, a PN sequence rate of 1.2288 MHz is desired along with a data modulation rate of 9600 bits per second. The information bits are exclusive-ORed with the PN sequence and the result is biphase modulated onto an RF carrier for transmission. This provides 128 PN &ldquo;chips&rdquo; per information bit. In another mode of operation, the PN rate would remain the same but the data rate would be reduced to 4800 bits per second or 256 PN &ldquo;chips&rdquo; per information bit. It would be desirable to synchronize the data modulation to the PN sequence repetition. However, if the sequence is of length 32767, i.e. 2<highlight><superscript>15</superscript></highlight>&minus;1, which has only the factors 7, 31 and 151, then the repetition interval o the PN code and the above two data rates will only coincide every 128 or 256 repetition intervals of the PN sequence. This coincidence occurs only every 3.4 or 6.8 seconds, respectively </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> However, pseudonoise signal generators (PNSGs) are not limited to LFSRs. An PNSG is typically composed of a series of N stages, each stage including a memory element or memory step, depending on whether the PNSG is implemented in hardware or software, whose inputs are linear combination (modulo 2) of the output memory element or step and previous memory element or step when viewed from a left-to-right perspective. The individual ones and zeroes (&ldquo;bits&rdquo;) of the output sequence of a PNSG, i.e., of a PN code, are sometimes referred to as &ldquo;chips&rdquo;. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic block diagram illustrating a specific example of an PNSG 1 for N&equals;4 (prior art). The PNSG 1 may be implemented in hardware, in which case <cross-reference target="DRAWINGS">FIG. 1</cross-reference> represents an LFSR, or it may be implemented in software, in which case <cross-reference target="DRAWINGS">FIG. 1</cross-reference> represents a structure for the logical flow of the method so implemented. Discussion below assumes software implementation. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In <cross-reference target="DRAWINGS">FIG. 1</cross-reference> can be seen the four memory steps <highlight><bold>50</bold></highlight>, <highlight><bold>52</bold></highlight>, <highlight><bold>54</bold></highlight>, <highlight><bold>56</bold></highlight>, as well as an adder <highlight><bold>58</bold></highlight> disposed between memory steps <highlight><bold>54</bold></highlight> and <highlight><bold>56</bold></highlight>. The output of memory step <highlight><bold>50</bold></highlight> is provided to the input of memory step <highlight><bold>52</bold></highlight>, the output of memory step <highlight><bold>52</bold></highlight> is provided to the input of memory step <highlight><bold>54</bold></highlight>, while the output of memory step <highlight><bold>54</bold></highlight> is provided to one input of adder <highlight><bold>58</bold></highlight>. The output of adder <highlight><bold>58</bold></highlight> is provided to the input of memory step <highlight><bold>56</bold></highlight>, with the output of the PNSG being the output <highlight><bold>60</bold></highlight> of memory step <highlight><bold>56</bold></highlight>. A feedback path <highlight><bold>60</bold></highlight> is also provided from the output <highlight><bold>60</bold></highlight> of memory step <highlight><bold>56</bold></highlight> to the input of memory step <highlight><bold>50</bold></highlight> and to the other input of adder <highlight><bold>58</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> The operation of the PNSG <highlight><bold>1</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> can be described by either a state diagram or a table. The &ldquo;state&rdquo; of the PNSG <highlight><bold>1</bold></highlight> is the value of the bits stored in the memory steps at a specific time before, or after, a given iteration. Thus, for PNSG 1, the state at time &ldquo;n&rdquo; may be expressed as S<highlight><subscript>n</subscript></highlight>&equals;s<highlight><subscript>1</subscript></highlight>s<highlight><subscript>2</subscript></highlight>s<highlight><subscript>3</subscript></highlight>s<highlight><subscript>4</subscript></highlight>, where s<highlight><subscript>1</subscript></highlight>, s<highlight><subscript>2</subscript></highlight>, s<highlight><subscript>3</subscript></highlight>, and s<highlight><subscript>4 </subscript></highlight>are the values of the bits stored in memory steps <highlight><bold>50</bold></highlight>, <highlight><bold>52</bold></highlight>, <highlight><bold>54</bold></highlight>, <highlight><bold>56</bold></highlight>, respectively. If the memory steps <highlight><bold>50</bold></highlight>, <highlight><bold>52</bold></highlight>, <highlight><bold>54</bold></highlight>, <highlight><bold>56</bold></highlight>, of PNSG 1 are initialized, at time t<highlight><subscript>o</subscript></highlight>, with the state S<highlight><subscript>o</subscript></highlight>&equals;0001, the output and subsequent states of the PNSG are shown in Table 1.  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="105PT" align="center"/>
+<colspec colname="2" colwidth="21PT" align="center"/>
+<colspec colname="3" colwidth="91PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="3" align="center">TABLE 1</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Clock Cycle</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>or Iteration</entry>
+<entry>State</entry>
+<entry>Output</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="105PT" align="char" char="."/>
+<colspec colname="2" colwidth="21PT" align="center"/>
+<colspec colname="3" colwidth="91PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>0</entry>
+<entry>0001</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>1</entry>
+<entry>1001</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>1101</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>3</entry>
+<entry>1111</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>4</entry>
+<entry>1110</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>5</entry>
+<entry>0111</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>6</entry>
+<entry>1010</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>7</entry>
+<entry>0101</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>8</entry>
+<entry>1011</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>9</entry>
+<entry>1100</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>10</entry>
+<entry>0110</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>11</entry>
+<entry>0011</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>12</entry>
+<entry>1000</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>13</entry>
+<entry>0100</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>14</entry>
+<entry>0010</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>15</entry>
+<entry>0001</entry>
+<entry>1</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> With respect to Table 1, note that after the 15th iteration the state of the PNSG reaches that of the initial or 0th iteration. In fact, the output and state sequences of the PNSG repeat with a period of 15. For the case of n&equals;4, this represents the maximum possible period since the all zeroes state never occurs. Thus, in general, a PNSG is capable of generating a sequence of period (or, length) 2<highlight><superscript>N</superscript></highlight>&minus;1, where N is the number </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Not all PNSG configurations generate a sequence with the largest possible period, but those that do are said to generate a maximal length sequence or m-sequence for short. For the purposes of the present invention, PNSGs that generate m-sequences are of primary interest and hence discussion herein focuses on PNSGs having this property. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In CDMA applications it is sometimes necessary to determine the state of a PN code generator such that, when such state is loaded, the output sequence will begin at some desired point in the sequence. For example, if the PNSG of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is initialized with S<highlight><subscript>0</subscript></highlight>&equals;1010 instead of S<highlight><subscript>0</subscript></highlight>&equals;0001, the state and output sequences are shown in Table 2.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="105PT" align="center"/>
+<colspec colname="2" colwidth="21PT" align="center"/>
+<colspec colname="3" colwidth="91PT" align="center"/>
+<thead>
+<row>
+<entry namest="1" nameend="3" align="center">TABLE 2</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry>Clock Cycle</entry>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry>or Iteration</entry>
+<entry>State</entry>
+<entry>Output</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="1" colwidth="105PT" align="char" char="."/>
+<colspec colname="2" colwidth="21PT" align="center"/>
+<colspec colname="3" colwidth="91PT" align="center"/>
+<tbody valign="top">
+<row>
+<entry>0</entry>
+<entry>1010</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>1</entry>
+<entry>0101</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>1011</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>3</entry>
+<entry>1100</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>4</entry>
+<entry>0110</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>5</entry>
+<entry>0011</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>6</entry>
+<entry>1000</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>7</entry>
+<entry>0100</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>8</entry>
+<entry>0010</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>9</entry>
+<entry>0001</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>10</entry>
+<entry>1001</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>11</entry>
+<entry>1101</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>12</entry>
+<entry>1111</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>13</entry>
+<entry>1110</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>14</entry>
+<entry>0111</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry>15</entry>
+<entry>1010</entry>
+<entry>0</entry>
+</row>
+<row><entry namest="1" nameend="3" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> A related problem in the area of CDMA is as follows. Supposed the state S<highlight><subscript>1 </subscript></highlight>of an PNSG is known at some particular time t<highlight><subscript>1</subscript></highlight>. Assume that the clock to the PNSG is inhibited for K cycles. It is desired to know what the PNSG state, S<highlight><subscript>2</subscript></highlight>, would be at time t<highlight><subscript>2</subscript></highlight>&equals;t<highlight><subscript>1</subscript></highlight>&plus;KT, where T is the clock period, had the operation of the PNSG not been inhibited. This situation occurs when a CDMA receiver is disabled for a known period of time, namely K clock cycles, to conserve power and thus extend battery life. It is necessary to quickly return the PNSG to the state it would have reached to avoid a time-consuming reacquisition and reinitialization process. In practice, however, the amount of processing required to determine the state S<highlight><subscript>2 </subscript></highlight>may preclude its computation in a reasonable </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> It would be advantageous if a pre-calculated phase-shifting mask could be used in phase shifting PN codes following a slotted mode sleep interval, to maximize to amount of time that code generator and clock circuits can be powered down. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> It would be advantageous if a predetermined family of phase-shifting masks could be saved in memory to phase shift PN codes in a practical range of sleep intervals. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> It would be advantageous if the phase-shifting mask could be selected from memory in response to the sleep interval. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Accordingly, a method for shifting the phase of a PN code is provided. As used herein, a PN code can be a long or short code as used in code division multiple access (CDMA) communications, or any other PN code with a periodic sequence. The method starts with a PN code having a first phase. The method comprises: determining a first time interval; selecting a stored or pre-calculated phase-shifting mask (or multipath mask) in response to the first time interval; shifting the PN code first phase with the phase-shifting mask; and, generating a PN code with a second phase, offset the first time interval from the PN code first phase. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> In the context of a DSSS receiver, the first time interval corresponds to a slotted mode interval, and a plurality of possible first time intervals exist. Likewise then, the phase-shifting mask is selected from a plurality of stored phase-shifting masks. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> The DSSS receiver accepts transmissions spread using the PN code, and the transmissions are despread using the PN code. The method further comprises: generating the PN code at a first chip rate. Then, a second time interval is selected which corresponds to the programmed sleep interval. Following the selection of a second time slotted mode sleep interval, the method further comprises: powering off the first chip rate clock; and, powering on the first chip rate clock. After awakening, the method determines the first time, or actual sleep interval, as the receiver may have been awakened before the programmed schedule. The phase mask is selected in response to the actual sleep interval. Following the generating of the PN code with the second phase, the generated PN code is resynchronized with the accepted transmissions spread using the PN code. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> A DSSS communications network receiver is also provided to accomplish the functions of the above-described process. Details of the receiver, and further details of the process, are provided below.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a schematic block diagram illustrating a specific example of an PNSG <highlight><bold>1</bold></highlight> for N&equals;4 (prior art). </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a schematic block diagram of a DSSS communications network receiver of the present invention. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a schematic block diagram illustrating in more detail the PN code generator of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is an illustration of the relationship between the time intervals and the phase shifting masks. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates the resolution of a group of stored phase-shifting masks. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is an illustration of an alternate resolution interval in a group of stored phase-shifting masks. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates the present invention method for shifting the phase of a pseudorandom noise (PN) code.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a schematic block diagram of a DSSS communications network receiver of the present invention. The receiver <highlight><bold>100</bold></highlight> comprises a memory <highlight><bold>102</bold></highlight> having a port on line <highlight><bold>104</bold></highlight> to supply a phase-shifting mask. An application means <highlight><bold>106</bold></highlight> has an input on line <highlight><bold>108</bold></highlight> to accept a first time interval. The application means <highlight><bold>106</bold></highlight> cross-references the first time interval to a phase-shifting mask, and has an output connected to the memory port on line <highlight><bold>110</bold></highlight> to request the phase-shifting mask. The application means <highlight><bold>106</bold></highlight> can be implemented in hardware. Alternately, the application means <highlight><bold>106</bold></highlight> is a software program of machine executable instructions stored in a memory, operated on by a microprocessor (not shown). </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> A pseudorandom noise (PN) code generator <highlight><bold>112</bold></highlight> has a first input connected to the memory <highlight><bold>102</bold></highlight> on line <highlight><bold>104</bold></highlight> to accept the phase-shifting mask. The PN code generator <highlight><bold>112</bold></highlight> offsets, or shifts the phase of a PN code using the phase-shifting mask. The PN code generator <highlight><bold>112</bold></highlight> has an output on line <highlight><bold>148</bold></highlight> to supply the PN code with a second phase, offset from the PN code first phase. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a schematic block diagram illustrating in more detail the PN code generator <highlight><bold>112</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. The PN code generator <highlight><bold>112</bold></highlight> includes a sequential PN code generation section <highlight><bold>120</bold></highlight>, which is similar to the PNSG <highlight><bold>1</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, except that the XOR (exclusive-OR) logic gates are located in the feedback path, instead of between registers. The operation of the sequential PN code generation section <highlight><bold>120</bold></highlight> is similar to the generator described in the Background Section, above (<cross-reference target="DRAWINGS">FIG. 1</cross-reference>). The dotted lines are intended to indicate that the PN code generator <highlight><bold>112</bold></highlight> is not limited to any particular number of registers or bits in the PN code state. The sequential PN code generation section <highlight><bold>120</bold></highlight> generates the PN code at a first chip rate. In addition, the PN code generator <highlight><bold>112</bold></highlight> includes a phase-shifting section <highlight><bold>122</bold></highlight>. The PN code loaded in registers <highlight><bold>124</bold></highlight> through <highlight><bold>130</bold></highlight> can be considered the PN code first phase, and the PN states are generated with the aid of XOR gate <highlight><bold>132</bold></highlight>. The phase-shifting mask is received on line <highlight><bold>104</bold></highlight>. Note that in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the PN code generator <highlight><bold>120</bold></highlight> shows four stages (N&equals;4) for simplicity. More practically, N might equal 42 to generate long code or 15 to generate shot code for IS-95A, TIA/EIA-95-B, or IS-2000 communications. However, the invention is not limited to any particular value of N. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> A logical AND operation is performed between the phase-shifting mask and the PN code first phase. That is, elements <highlight><bold>134</bold></highlight> through <highlight><bold>140</bold></highlight> operate as AND gates. The bits in registers <highlight><bold>124</bold></highlight> through <highlight><bold>130</bold></highlight> are respectively ANDed with the bits in registers <highlight><bold>134</bold></highlight> through <highlight><bold>140</bold></highlight>. The outputs are sequentially XOred using XOR gates <highlight><bold>142</bold></highlight> through <highlight><bold>146</bold></highlight>. The results of the combining process are output on line <highlight><bold>148</bold></highlight> and stored in shift registers <highlight><bold>150</bold></highlight>. The PN code state in registers <highlight><bold>150</bold></highlight> can be considered the PN code second phase. The PN code second phase can be loaded into registers <highlight><bold>124</bold></highlight> through <highlight><bold>130</bold></highlight> of the sequential PN code generation section <highlight><bold>120</bold></highlight> as a starting point for sequential state generation or as the starting process of a new PN code phase shift state. Switch <highlight><bold>152</bold></highlight> is intended to represent the parallel shift operation of a complete word, after a complete word is generated. That is, if generator <highlight><bold>120</bold></highlight> is a 42 bit generator, shift register <highlight><bold>150</bold></highlight> will collect 42 bits before they are loaded into registers <highlight><bold>124</bold></highlight> through <highlight><bold>130</bold></highlight>. As explained below, some phase shift processes require the use of more than one phase-shifting mask, and more than one phase shift process. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> Alternately, the PN generator <highlight><bold>1</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> can be used in combination with the generator <highlight><bold>120</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. The generator <highlight><bold>1</bold></highlight> can be used in the normal, bit-by-bit sequential operation at the first bit rate. When an incremental phase shift is to be performed, the PN code first phase can be converted into a format with the equivalent phase for operation with the PN generator <highlight><bold>120</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. After the PN code second phase is generated, it is converted into a format equivalent phase for operation with the PN generator <highlight><bold>1</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, and the normal bit-by-bit incremental shift process can be resumed. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> Returning to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the memory <highlight><bold>102</bold></highlight> includes a plurality of phase-shifting masks in storage. As described below, the application means <highlight><bold>106</bold></highlight> cross-references a plurality of time intervals to the plurality of phase-shifting masks in memory <highlight><bold>102</bold></highlight>. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is an illustration of the relationship between the time intervals and the phase shifting masks. Returning to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the application means <highlight><bold>106</bold></highlight> determines a first time interval. In the context of CDMA communications, the first time interval is the actual sleep interval, or the amount of time the PN generator was actually shut off. As explained below, the spacing between time intervals may be insufficient to perfectly resolve the actual sleep interval. Typically, the application means accepts a second time interval which represents the intended sleep interval. However, the receiver <highlight><bold>100</bold></highlight> may be awaken earlier, or perhaps later than intended. In some aspects of the invention, a separate mask is stored corresponding to each increment in the range of first time intervals, as shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. Alternately, fewer masks are stored, for example, one mask for each doubling of the second time interval. Then, the first time interval is obtained by using a combination of masks. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Both the first and second time intervals are proportionally related to the first chip rate. It should be understood, however, that calibration errors and low resolution timing mechanisms may prevent a perfect correlation between the first chip rate and interval timing. In some aspect of the invention, the plurality of first time intervals have a resolution of x, where x is equal the first chip rate. In alternate aspects of the invention, the plurality of first time intervals have a resolution of q times the first chip rate, where q is an integer. In this aspects of the invention, it may be impossible to exactly match the first time interval to the actual sleep interval, and the assumption is made that the error can be compensated for in other mechanisms, such as a searcher. The advantage of a low resolution interval is a fewer number of phase-shifting masks in storage. Returning to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, in some aspects of the invention, a sleep clock <highlight><bold>154</bold></highlight> provides the low resolution clock period, proportionally related to the first chip rate, to the application means <highlight><bold>106</bold></highlight>. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates the resolution of a group of stored phase-shifting masks. The sequential PN code generation section (<highlight><bold>120</bold></highlight>, see <cross-reference target="DRAWINGS">FIG. 2</cross-reference>) generates the PN code with (2<highlight><superscript>N</superscript></highlight>&minus;1) states, and a period m equal to (2<highlight><superscript>N</superscript></highlight>&minus;1) times the first chip rate. Alternately stated, each PN code state, or phase-shifting mask includes N bits, and a total of (2<highlight><superscript>N</superscript></highlight>&minus;1) masks can be formed. The first time interval is selected in the range between zero and m, with a resolution of x. Generating a PN code with a second phase, offset a second time interval from the PN code first phase includes generating a PN code with a second phase that is offset with respect to time in units of x. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> In some aspects of the invention, the period m may be a long period of time, much longer than any possible slotted mode sleep interval of interest. Therefore, it may be sufficient to generate a limited number of masks where the most significant bit of interest is not in the N bit place. That is, only phase-shifting masks that describe relatively short intervals of time, or relatively small phase shifts. As a result, it may be unnecessary to generate the phase-shifting masks where the higher order bits are of interest. Likewise, the lower order bits of the phase-shifting masks may represent times that are insignificantly small compared to calibration errors. Therefore, fewer than (2<highlight><superscript>N</superscript></highlight>&minus;1) masks are typically needed to describe a practical range of time intervals, even when the resolution of the time interval is in units of the first chip rate. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> In some aspects of the invention, it is not necessary to use lower-order bit (small time interval) masks. As shown, mask 1 consists of &ldquo;e&rdquo; bits in bit positions 0, 1, 2, and 3. The &ldquo;e&rdquo; is intended to represent a &ldquo;0&rdquo; bit spread by the PN code. The &ldquo;f&rdquo; bit in the bit position 4 is intended to represent a &ldquo;1&rdquo; bit spread by the PN code. In this example mask 1 represents the smallest time interval x of interest. It is assumed that bits positions 0 through 3 are insignificant. For example, these bits may represent a synchronization error that is easily resolved. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> Mask 2 is the phase-shifting mask corresponding to the next significant time interval 2x, larger than the time interval corresponding to mask 1. Mask 3 corresponds to the next time interval 3x and mask four the next 4x. This relationship continues out to mask n, which corresponds to time interval nx. Thus, there is a mask for every time interval, and a minimal amount of processing time is required to calculate the PN code second phase. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is an illustration of an alternate resolution interval in a group of stored phase-shifting masks. The present invention is not limited to any particular value. In one aspect of the invention a more limited number of masks are required in storage. The ability of the receiver <highlight><bold>100</bold></highlight> to use a mask from memory, instead of calculating one, saves processing time. However, by storing a limited number of masks, the penalty in memory use is minimized. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> If the interval between stored masks is different than the resolution of the time interval, then the PN code first phase must be shifted with a plurality of masks. Shifting the PN code first phase includes iteratively shifting the PN code first phase with each of the plurality of selected phase-shifting masks, forming intermediate PN code phases until the PN code second phase is achieved. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> More specifically, <cross-reference target="DRAWINGS">FIG. 6</cross-reference> shows that, beginning at bit position 4, a mask is stored for every bit position. Thus, mask 1 represents time interval x, mask 2 represents time interval 2x, mask 3 represents time interval 4x, and mask 4 represents time interval 8x. Thus, a mask is stored for every bit position of interest. When none of the plurality of first intervals match the actual sleep interval, the actual sleep interval can be obtained by summing. Thus, the actual sleep interval is obtained by summing a plurality of the phase-shifting masks in storage. More specifically, when there are log<highlight><subscript>2 </subscript></highlight>(n) time intervals between x and nx, then log<highlight><subscript>2 </subscript></highlight>(n) masks are stored. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> The mask sets depicted in <cross-reference target="DRAWINGS">FIGS. 5 and 6</cross-reference> represent the opposite ends of the practical extremes in mask storage. In <cross-reference target="DRAWINGS">FIG. 5, a</cross-reference> mask is stored for every incremental time interval in the range of time intervals between x and nx. Only one mask operation is required, so the processing time is minimal. In <cross-reference target="DRAWINGS">FIG. 6, a</cross-reference> much smaller number of masks are stored, however, several masks, and therefore several mask operations, may be required to obtain the desired time interval. For example, if the time interval to be resolved corresponds to 3x, and only masks corresponding the time intervals of x, 2x, 4x, . . . are stored, then two masks must be used. That is, the x and the 2x masks. Therefore, the PN code first phase is shifted with a first operation using mask <highlight><bold>1</bold></highlight> and a second operation using mask 2 (the order does not matter). Worst case, a time interval could be selected that would require log<highlight><subscript>2 </subscript></highlight>(n) mask operations. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> Alternately, a compromise can be enacted between the extremes represented by <cross-reference target="DRAWINGS">FIGS. 5 and 6</cross-reference>. Then, the group of masks in storage would be greater than the number represented in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, but less than the number represented in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. As a result, processing time (the number of likely mask operations) would be reduced at the expense of mask storage. In one aspect of the invention, masks are stored which correspond to time intervals that the system is likely to require, or to an often used time interval, or the last used time interval. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Returning to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the receiver <highlight><bold>100</bold></highlight> receives transmissions that are spread with the PN code. Note, that the transmissions can be spread with both long and short codes, and present invention describes a mechanism for shifting phase with either of these code types. The receiver <highlight><bold>100</bold></highlight> further comprises a first <highlight><bold>160</bold></highlight> having an output on line <highlight><bold>162</bold></highlight> connected to the PN code generator <highlight><bold>112</bold></highlight>. The first chip rate clock <highlight><bold>160</bold></highlight> is powered-off at the beginning of the first time period, and powered-on again at the finish of the first time period. The first chip rate clock, and other circuitry not shown, is shut to conserve power during the sleep mode interval. A switch <highlight><bold>164</bold></highlight> represents the disconnection of the first chip rate clock <highlight><bold>160</bold></highlight> from the power source <highlight><bold>166</bold></highlight>. A controller <highlight><bold>168</bold></highlight>, including a low power sleep mode clock, supplies commands to operate the switch <highlight><bold>164</bold></highlight> and supplies the first time interval to the application means on line <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Also shown is a searcher section <highlight><bold>170</bold></highlight> having an input connected to PN code generator output on line <highlight><bold>148</bold></highlight> to accept the PN code with the second phase shift. The searcher section <highlight><bold>170</bold></highlight> resynchronizes the accepted transmissions with the generated PN code, following the power-on of the first chip rate clock <highlight><bold>160</bold></highlight>. As can be appreciated by those skilled in the art, the time required for resynchronization is approximately proportional to the error between the PN code second phase and the phase of the PN code used to spread the transmissions. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> There are many advantages of being able to adjust the code sequence from any state to any other state. For example, constraints are reduced on when modems can go to sleep or when they can wake up. The time it takes to adjust the long code state is proportional to log (slot interval), which is very small and relatively constant for typical slot cycles used in mobile telephone network. For example, assuming LFSR state advances at a rate of 1,228,800 states per second, Table 3 shows the maximum adjustment time versus number of required 42-bit mask operations using masks which process the adjustment 4 bits at a time. With six 42-bit mask operations, slot cycles at 1.28 s, 2.56 s, 5.12 s, 10.24 s and 20.48 s are covered. The reduction in cycle adjustment time permits tighter control of the wake up time and maximizes the power savings. In addition, it can also be used in situations where long code state adjustment is desired. For example, during the initial timing acquisition, a DSSS mobile telephone system is required to synchronize to a mobile telephone network system time with a given long code state valid at some time in the future. By advancing the long code states with an adjustment amount compatible to the modem design, a faster acquisition becomes possible. Note that although 4 bits are used in this example, it could will be set for 3, 5 or any other number of bits. With the trade-off of number of masks needed for storage with the number of masks required for processing being left for the particular system requirments.  
+<table-cwu id="TABLE-US-00003">
+<number>3</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="7">
+<colspec colname="1" colwidth="63PT" align="left"/>
+<colspec colname="2" colwidth="28PT" align="right"/>
+<colspec colname="3" colwidth="21PT" align="left"/>
+<colspec colname="4" colwidth="35PT" align="right"/>
+<colspec colname="5" colwidth="21PT" align="left"/>
+<colspec colname="6" colwidth="28PT" align="right"/>
+<colspec colname="7" colwidth="21PT" align="left"/>
+<thead>
+<row>
+<entry namest="1" nameend="7" align="center">TABLE 3</entry>
+</row>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>&lsqb;Maximum</entry>
+<entry>1.707</entry>
+<entry>sec</entry>
+<entry>27.307</entry>
+<entry>sec</entry>
+<entry>436.9</entry>
+<entry>sec</entry>
+</row>
+<row>
+<entry>achievable&rsqb;</entry>
+</row>
+<row>
+<entry>adjustment time</entry>
+</row>
+<row>
+<entry>Number of required</entry>
+<entry>5</entry>
+<entry></entry>
+<entry>6</entry>
+<entry></entry>
+<entry>7</entry>
+<entry></entry>
+</row>
+<row>
+<entry>42-bit mask</entry>
+</row>
+<row>
+<entry>operations</entry>
+</row>
+<row><entry namest="1" nameend="7" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 7</cross-reference> illustrates the present invention method for shifting the phase of a pseudorandom noise (PN) code. Although the method is presented as a sequence of numbered steps for clarity, no order should be inferred from the numbering unless explicitly stated. The method of <cross-reference target="DRAWINGS">FIG. 7</cross-reference> includes aspects of the invention which are enabled through a combination of software applications of machine executable instructions stored in memory and a microprocessor, or combinations or hardware and software applications. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> The method begins at Step <highlight><bold>200</bold></highlight>. Step <highlight><bold>202</bold></highlight> accepts a PN code with a first phase. Step <highlight><bold>204</bold></highlight> accepts a first time interval. Step <highlight><bold>206</bold></highlight> selects a phase-shifting mask in response to the first time interval. Step <highlight><bold>208</bold></highlight> shifts the first PN code first phase with the phase-shifting mask. Step <highlight><bold>210</bold></highlight> generates a PN code with a second phase, offset the first time interval from the PN code first phase. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> In some aspects of the invention, accepting a first time interval in Step <highlight><bold>204</bold></highlight> includes determining a first time interval from among a plurality of first time intervals. Likewise, selecting a phase-shifting mask in response to the first time interval in Step <highlight><bold>206</bold></highlight> includes selecting a phase-shifting mask from a plurality of phase-shifting masks. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> In some aspects of the invention further steps are included. Step <highlight><bold>201</bold></highlight> generates the PN code at a first chip rate. Step <highlight><bold>203</bold></highlight> accepts a second time interval proportionally related to the first chip rate. Further, accepting a second time interval in Step <highlight><bold>203</bold></highlight> typically includes selecting a second time interval from among a plurality of second time intervals, that are also proportionally related to the first chip rate. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> In some aspects of the invention, determining a first time interval from among a plurality of first time intervals in Step <highlight><bold>204</bold></highlight> includes selecting a first time interval from among a plurality of first time intervals that are offset from each other by predetermined periods of time. Then, selecting a phase-shifting mask from among a plurality of phase-shifting masks in Step <highlight><bold>206</bold></highlight> includes selecting a phase-shifting mask from among a plurality of phase-shifting masks that are offset from each other by PN code phase shifts corresponding to the plurality of first time intervals. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> In some aspects of the invention, generating the PN code with the first chip rate in Step <highlight><bold>201</bold></highlight> includes generating a PN code with (2<highlight><superscript>N</superscript></highlight>&minus;1) phases, and a period m equal to (2<highlight><superscript>N</superscript></highlight>&minus;1) times the first chip period. Then, selecting a second time interval in Step <highlight><bold>205</bold></highlight> includes selecting a second time interval in the range between m and zero, with a resolution of x. The resolution x can be in units of the first chip period or q times the first chip period, where q is an integer. Generating the PN code with a second phase, offset a first time interval from the PN code first phase in Step <highlight><bold>210</bold></highlight> includes generating a PN code with a second phase that is offset with respect to time in units of x. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> In some aspects, selecting a phase-shifting mask in response to the selected second time interval in Step <highlight><bold>206</bold></highlight> includes selecting a plurality of phase-shifting masks. Then, shifting the PN code first phase with a phase-shifting mask in Step <highlight><bold>208</bold></highlight> includes iteratively shifting the PN code first phase with each of the plurality of selected phase-shifting masks. </paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> In some aspects of the invention, a direct sequence spread spectrum (DSSS) receiver with a memory is included. Selecting a first time interval in Step <highlight><bold>204</bold></highlight> includes selecting a first time interval in the range between x and nx. Then, the method includes further steps. Step <highlight><bold>200</bold></highlight><highlight><italic>a </italic></highlight>stores nx phase-shifting masks in memory, corresponding to the plurality of first time periods between x and nx, where each first time period has a resolution of x. Then, selecting a phase-shifting mask in Step <highlight><bold>206</bold></highlight> includes selecting a phase-shifting mask from the nx phase-shifting masks stored in memory. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> Alternately, Step <highlight><bold>200</bold></highlight><highlight><italic>a </italic></highlight>stores log<highlight><subscript>2 </subscript></highlight>(n) phase-shifting masks in memory corresponding to log<highlight><subscript>2 </subscript></highlight>(n) intermediate time intervals between x and nx. Step <highlight><bold>205</bold></highlight> sums intermediate first time intervals to form a first time interval sum. Selecting a phase-shifting mask in Step <highlight><bold>206</bold></highlight> includes selecting phase-shifting masks from memory corresponding to each of the intermediate time intervals in the first time interval sum. Shifting the PN code first phase with phase-shifting mask in Step <highlight><bold>208</bold></highlight> includes shifting the PN code first phase with the phase-shifting masks selected from memory. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> In some aspects of the invention, the DSSS receiver accepts transmissions spread using the first PN code, and the DSSS receiver includes a first chip rate clock. The method comprises further steps. Step <highlight><bold>201</bold></highlight><highlight><italic>a </italic></highlight>synchronizes the accepted transmissions with the generated PN code. Following the accepting of a second time interval in Step <highlight><bold>203</bold></highlight>, Step <highlight><bold>203</bold></highlight><highlight><italic>a </italic></highlight>powers-off the first chip rate clock during a slotted mode sleep interval. Step <highlight><bold>203</bold></highlight><highlight><italic>b </italic></highlight>powers-on the first chip rate clock after the selected second period of time. Following the generating of the PN code with the second phase in Step <highlight><bold>210</bold></highlight>, Step <highlight><bold>212</bold></highlight> resynchronizes the generated PN code with the accepted transmissions. </paragraph>
+<paragraph id="P-0072" lvl="0"><number>&lsqb;0072&rsqb;</number> A system and method for shifting the phase of a PN code sequence have been presented above. The system and method target a family of highly probable time intervals, and stores phase-shifting masks corresponding to these probable intervals. A few examples of such a process have been given for illustration, but other embodiments and variations will undoubtedly occur to those skilled in the art. </paragraph>
+<paragraph id="P-0073" lvl="7"><number>&lsqb;0073&rsqb;</number> We claim </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for shifting the phase of a pseudorandom noise (PN) code, the method comprising: 
+<claim-text>accepting a PN code with a first phase; </claim-text>
+<claim-text>determining a first time interval; </claim-text>
+<claim-text>selecting a phase-shifting mask in response to the first time interval; </claim-text>
+<claim-text>shifting the PN code first phase with the phase-shifting mask; and </claim-text>
+<claim-text>generating a PN code with a second phase, offset by the first time interval from the PN code first phase. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein determining a first time interval includes accepting a first time interval from among a plurality of first time intervals. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein selecting a phase-shifting mask in response to the first time interval includes selecting a phase-shifting mask from a plurality of phase-shifting masks. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> further comprising: 
+<claim-text>generating the PN code at a first chip period; </claim-text>
+<claim-text>accepting a second interval proportionally related to the first chip period. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein accepting a second time interval includes accepting a second time interval from among a plurality of second time intervals. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference> wherein determining a first time interval from among a plurality of first time intervals includes determining a first time interval from among a plurality of first time intervals that are offset from each other by predetermined periods of time; and 
+<claim-text>wherein selecting a phase-shifting mask from among a plurality of phase-shifting masks includes the sub-step of selecting a phase-shifting mask from among a plurality of phase-shifting masks that are offset from each other by PN code phase shifts each one corresponding to one of said first time intervals. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein generating the PN code with the first chip period includes generating a PN code with (2<highlight><superscript>N</superscript></highlight>&minus;1) states, and a period m equal to (2<highlight><superscript>N</superscript></highlight>&minus;1) times the first chip period; 
+<claim-text>wherein determining a first time interval includes selecting a first time interval in the range between zero and m, with a resolution of x; and </claim-text>
+<claim-text>wherein generating a PN code with a second phase, offset a second time interval from the PN code first phase includes generating a PN code with a second phase that is offset with respect to time in units of x. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein x is the first chip period. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein x is equal to the first chip period times q, where q is an integer. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> wherein selecting a phase-shifting mask in response to the first time interval includes selecting a plurality of phase-shifting masks; and 
+<claim-text>wherein shifting the PN code first phase with a phase-shifting mask includes iteratively shifting the PN code first phase with each phase-shifting mask from the plurality of selected phase-shifting masks. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> in which a direct sequence spread spectrum (DSSS) receiver with a memory is included, wherein determining a first time interval includes determining a first time interval in the range between x and nx; and 
+<claim-text>and the method further comprising: 
+<claim-text>storing n phase-shifting masks in memory, corresponding to the plurality of first time periods between x and nx; and </claim-text>
+<claim-text>wherein selecting a phase-shifting mask includes selecting a phase-shifting mask from the n phase-shifting masks stored in memory. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> in which a direct sequence spread spectrum (DSSS) receiver with a memory is included, wherein determining a first time interval includes determining a first time interval from a plurality of first time intervals in the range between x and nx; and 
+<claim-text>and the method further comprising: 
+<claim-text>storing log<highlight><subscript>2 </subscript></highlight>(n) phase-shifting masks in memory corresponding to log<highlight><subscript>2 </subscript></highlight>(n) intermediate time intervals between x and nx; </claim-text>
+<claim-text>summing intermediate first time intervals to form a first time interval sum; </claim-text>
+<claim-text>wherein selecting a phase-shifting mask includes selecting phase-shifting masks from memory corresponding to each of the intermediate time intervals in the first time interval sum; and </claim-text>
+<claim-text>wherein shifting the PN code first phase with phase-shifting mask includes shifting the PN code first phase with the phase-shifting masks selected from memory. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, wherein the number of masks used for storage and the number of masks required for processing being adjustable. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> in which the DSSS receiver accepts transmissions spread using the first PN code, and in which the DSSS receiver includes a first chip rate clock; 
+<claim-text>the method further comprising: 
+<claim-text>synchronizing the accepted transmissions with the generated PN code; </claim-text>
+<claim-text>following the selecting of a second time interval, powering-off the first chip rate clock during a slotted mode sleep interval; </claim-text>
+<claim-text>powering-on the first chip rate clock; and </claim-text>
+<claim-text>wherein determining the first time interval includes determining the sleep time interval that the first rate clock was powered-off; and </claim-text>
+<claim-text>the method further comprising: 
+<claim-text>following the generating of the PN code with the second phase, resynchronizing the generated PN code with the accepted transmissions. </claim-text>
+</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. In a direct sequence spread spectrum (DSSS) communications network, a receiver comprising: 
+<claim-text>a memory having a port to supply a phase-shifting mask; </claim-text>
+<claim-text>an application means to determine a first time interval, the application means cross-referencing the first time interval to the phase-shifting mask, the application means having an output connected to the memory port to request the phase-shifting mask; and </claim-text>
+<claim-text>a pseudorandom noise (PN) code generator having a first input connected to the memory to accept the phase-shifting mask, the PN code generator offsetting a PN code with the phase-shifting mask, the PN code generator having an output to supply the PN code with a second phase, offset from the PN code first phase. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the memory includes a plurality of phase-shifting masks; and 
+<claim-text>wherein the application means cross-references a plurality of time intervals to the plurality of phase-shifting masks in memory. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> wherein the PN code generator generates the PN code at a first chip period; 
+<claim-text>wherein the application means determines a first time interval proportionally related to the first chip period; and </claim-text>
+<claim-text>wherein the memory supplies a phase-shifting mask that is offset by a PN code phase shift proportionally related to the first time interval. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> wherein the PN code generator generates the PN code with (2<highlight><superscript>N</superscript></highlight>&minus;1) states, and a period m equal to (2<highlight><superscript>N</superscript></highlight>&minus;1) times the first chip period; 
+<claim-text>wherein the application means determines a first time interval from among a plurality of time intervals in the range between zero and m, with a resolution of x; and </claim-text>
+<claim-text>wherein the PN code generator generates a PN code with a second phase, offset from the PN code first phase with a phase shift, expressed as time in units of x. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein x is equal to the first chip period. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> further comprising: 
+<claim-text>a sleep clock having an output connected to the application means with a period of q times the first chip period, where q is an integer; and </claim-text>
+<claim-text>wherein the application means plurality of time intervals have a resolution of x equal to the sleep clock period. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein the application means includes a plurality of first time intervals in the range between x and nx; and 
+<claim-text>the memory includes n phase shift masks corresponding to the plurality of first time periods between x and nx. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein the application means includes a plurality of time intervals in the range between x and nx; 
+<claim-text>wherein the application means selects a plurality of log<highlight><subscript>2 </subscript></highlight>(n) time intervals to form a first interval sum; </claim-text>
+<claim-text>wherein the memory includes log<highlight><subscript>2 </subscript></highlight>(n) phase-shifting masks corresponding to log<highlight><subscript>2 </subscript></highlight>(nx) intermediate time intervals between x and nx; and </claim-text>
+<claim-text>wherein the application means selects a plurality of phase-shifting masks from memory corresponding to a plurality of time intervals in the first time interval sum; </claim-text>
+<claim-text>wherein the memory supplies the selected phase-shifting masks to the PN code generator; and </claim-text>
+<claim-text>wherein the PN code generator iteratively shifts the PN code first phase with each of the plurality of selected phase-shifting masks to supply the PN code second phase. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> in which transmissions are accepted spread with the PN code, and the receiver further comprising: 
+<claim-text>a first chip rate clock having an output connected to the PN code generator, the first chip rate clock being powered-off at the beginning of the first time period, and being powered-on at the finish of the first time period; and </claim-text>
+<claim-text>a searcher section having an input connected to PN code generator output to accept the PN code with the second phase shift, the searcher section resynchronizing the accepted transmissions with the generated PN code, following the power-on of the first chip rate clock. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The receiver of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein the application means accepts a second time interval corresponding to a slotted sleep mode interval, wherein the application means programs the PN code generator to be powered off for the second time interval; and 
+<claim-text>wherein the application means determines the first time interval in response the actual time that the PN code generator was powered-off. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. In a direct sequence spread spectrum (DSSS) communications network where transmissions are spread with a PN code, a method for conserving power in a slotted mode of operation, the method comprising: 
+<claim-text>storing a plurality of phase-shifting masks; </claim-text>
+<claim-text>generating a synchronized pseudorandom noise (PN) code to despread transmissions; </claim-text>
+<claim-text>accepting a slotted mode sleep second time interval from a plurality of second time intervals; </claim-text>
+<claim-text>beginning the sleep mode at a first phase of the PN code; </claim-text>
+<claim-text>ending the sleep interval; </claim-text>
+<claim-text>determining the first time interval between the beginning and the end of the sleep interval; </claim-text>
+<claim-text>selecting a phase-shifting mask from storage in response to the first time interval; </claim-text>
+<claim-text>offsetting the PN code first phase with the phase-shifting mask; </claim-text>
+<claim-text>generating the PN code with a second phase; and </claim-text>
+<claim-text>resynchronizing the generated PN code to despread transmissions.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030002566A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030002566A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030002566A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030002566A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

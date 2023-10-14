@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005026A1-20030102-D00000.TIF SYSTEM "US20030005026A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005026A1-20030102-D00001.TIF SYSTEM "US20030005026A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005026A1-20030102-D00002.TIF SYSTEM "US20030005026A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005026A1-20030102-D00003.TIF SYSTEM "US20030005026A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005026</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09898978</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010702</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>103000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method of launching low-priority tasks</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Fred</given-name>
+<middle-name>A.</middle-name>
+<family-name>Bower</family-name>
+<name-suffix>III</name-suffix>
+</name>
+<residence>
+<residence-us>
+<city>Hillsboro</city>
+<state>OR</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+</address>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>IBM CORPORATION</name-1>
+<name-2>IP LAW DEPT, ED02-905</name-2>
+<address>
+<address-1>15450 SW KOLL PARKWAY</address-1>
+<city>BEAVERTON</city>
+<state>OR</state>
+<postalcode>97006-6063</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A driver is provided to manage launching of tasks at different levels of priority and within the parameters of the firmware interface. The driver includes two anchors for managing the tasks, a dispatcher and an agent. The dispatcher operates at a medium priority level and manages communication from a remote administrator. The agent functions to receive communications from the dispatcher by way of a shared data structure and to launch lower priority level tasks in respond to the communication. The shared data structure stores communications received from the dispatcher. Upon placing the communication in the shared data structure, the dispatcher sends a signal to the agent indicating that a communication is in the data structure for reading by the agent. Following reading of the communication in the data structure, the agent launches the lower priority level task and sends a signal to the data structure indicating the status of the task. Accordingly, a higher level task maintains its level of operation and spawns lower level tasks through the dispatcher in conjunction with the agent. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Technical Field </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention relates to a driver operating in a firmware environment. More specifically, the driver manages launching of tasks at different priority levels while maintaining a predetermined level of operation. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Prior Art Firmware is software that is stored in hardware, such that the software is retained even after power to the hardware ceases. At boot time, the firmware of a computer or computer system stores and uses information describing a computer&apos;s processors, nodes, memory and other devices. The firmware operates on a parallel platform to the operating system. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In prior art computers, the firmware enabled system interrupts to occur in order to launch different applications at different priority levels. The prior art systems require a greater amount of functionality to accommodate system interrupts. Some firmware interface environments disable system interrupts to reduce the amount of functionality required to operate the machines in the system. The Intel Extensible Firmware Interface (EFI) is one firmware environment which reduces functionality required to operate the machine by disabling interrupts. In addition to disabling system interrupts, tasks within the EFI may temporarily increase their priority level of operation, but they are not allowed to decrease the priority level. Accordingly, tasks operating within the EFI environment, or similar platforms, are not permitted to execute system interrupts to execute tasks that may be operating at different levels of priority and may increase priority levels. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> There are two types of operating programs within the EFI: a driver and an application. The driver provides a set of resources, i.e. programming interfaces. Once a driver is loaded within the firmware environment, it remains in the system for future application. The driver is not permitted to load other drivers after its initialization has completed. In addition, the EFI also prohibits the ability to load applications from a resident driver. An application is an executable program that is loaded, executed and expires. During run time, the application can load other drivers and applications. Accordingly, the application is executed for loading a driver to operate within the firmware environment and within the protocols of the system. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> There is therefore a need to launch a driver that will prioritize execution of different priority levels of tasks within the confines of the EFI firmware environment. The driver must be launched by an application that will allow it to remain resident within the firmware and will provide all the required protocols for operating independently and without the need to launch secondary drivers. Accordingly, it is desirable to design a driver that will allow lower priority level applications to be launched without executing a system interrupt and without changing the priority level of a higher level application already in use. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> This invention comprises a driver for operating in a firmware environment. The driver manages launching of tasks at different priority levels while maintaining a predetermined level of operation. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> A first aspect of the invention is a method of spawning a lower priority level task from a higher level priority task. A dispatcher is utilized for receiving messages from a remote administrator. An agent is utilized for launching a lower priority task. Upon receiving a message to spawn a lower priority task, the dispatcher places the message in a shared data structure. The dispatcher then sets a flag for signaling to the agent receipt of the message. The agent launches the lower priority task in response to the message and resets the flag for future task assignments. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> A second aspect of the invention is a computer system which includes a message manager to receive messages from a remote administrator, and a task manager to launch a lower priority task in response to a message received from the message manager. In addition, a data structure is provided to communicate the message from the message manager to the task manager. A dispatcher manager is provided to forward the instruction from the message manager to the data structure. In addition, a flag is provided to signal to the task manager receipt of the instruction in the data structure. Following the launch of the lower priority task, the task manager resets the flag. During the communication and launching of the lower priority task, a higher priority task maintains its level of operation. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> A third aspect of the invention is an article comprising a computer-readable signal bearing medium. In the medium, the article includes means for receiving messages from a remote administrator and means for launching lower priority level tasks in response to the messages. The message receiving means stores the message in a data structure. A flag is provided by the message receiving means to signal receipt of instructions by the data structure to the launching means. A higher priority task maintains its level of operation during launch of the lower priority task. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Other features and advantages of this invention will become apparent from the following detailed description of the presently preferred embodiment of the invention, taken in conjunction with the accompanying drawings.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of the driver according to the preferred embodiment of this invention, and is suggested for printing on the first page of the issued patent. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow chart illustrating the process of initializing the driver. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart illustrating the process of launching a lower priority task. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+</section>
+<section>
+<heading lvl="1">Overview </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In a low-level operating environment, system interrupts may be disabled to reduce the amount of functionality required to operate the machine. This environment allows operating functions to increase their specific level of operation, but does not allow them to decrease their level of operation. The method and system of the preferred embodiment employ a shared data structure in conjunction with a communication tool to allow a higher priority task to launch lower priority tasks. Accordingly, this allows for a higher priority task to maintain a specific level of operation. </paragraph>
+</section>
+<section>
+<heading lvl="1">Technical Background </heading>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Specific extensible firmware environments are known to operate at a low level without the use of system interrupts. The Intel EFI is one such firmware environment. In addition to disabling interrupts, the firmware places additional limitations in its functionality. For example, the firmware limits a task to one of three priority levels, low, medium and high. A given task may temporarily increase its priority level of operation if it is operating at a low or medium priority level, but it is not allowed to decrease its level of operation. In addition, the only place the firmware enables a driver to load other firmware modules is in its initialization code. Accordingly, a driver to enable launching of lower priority tasks must work within the confines of the firmware protocols. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The driver must provide for a higher priority task to maintain operation at a higher level of operation, i.e. high or medium level in a three tier environment. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram <highlight><bold>10</bold></highlight> illustrating the flow of communication in the diagnostic device driver of the preferred embodiment. The two primary components of the driver are a dispatcher <highlight><bold>20</bold></highlight> for receiving messages from a remote administrator <highlight><bold>30</bold></highlight>, and an agent <highlight><bold>40</bold></highlight> for launching lower level tasks. The remote administrator <highlight><bold>30</bold></highlight> exists within the firmware and is responsible for running diagnostics. The dispatcher <highlight><bold>20</bold></highlight> receives messages from the remote administrator <highlight><bold>30</bold></highlight> and responds to receipt of the messages. Upon receiving a communication from the remote administrator <highlight><bold>30</bold></highlight>, the dispatcher <highlight><bold>20</bold></highlight> communicates receipt to a data structure <highlight><bold>50</bold></highlight>. Accordingly, the dispatcher <highlight><bold>20</bold></highlight> functions as a communication tool from the remote administrator <highlight><bold>30</bold></highlight> to the data structure <highlight><bold>50</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> The dispatcher <highlight><bold>20</bold></highlight> operates at a medium priority level and functions to receive and respond to messages from a remote administrator <highlight><bold>30</bold></highlight>, and to place the messages in the shared data structure <highlight><bold>50</bold></highlight>. Within the restrictions of the firmware environment, the dispatcher is unable to load tests. The dispatcher <highlight><bold>20</bold></highlight> does not execute operations, rather it functions as a communication tool for a higher level task desiring to launch a lower level task. In the confines of the system design, the higher level task cannot lower its priority level. Therefore, the higher level task must communicate the desire to spawn a lower priority level task. The agent <highlight><bold>40</bold></highlight> is resident at a lower priority level to act as a command dispatcher and to launch applications and load drivers <highlight><bold>45</bold></highlight> at lower priority levels. Accordingly, the dispatcher <highlight><bold>20</bold></highlight> is employed to assist in the spawning of tasks at a lower priority level of operation than the higher level task. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The data structure <highlight><bold>50</bold></highlight> is shared between the dispatcher <highlight><bold>20</bold></highlight> and the agent <highlight><bold>40</bold></highlight>. The shared memory provides a basis for communication between the higher level task and the agent <highlight><bold>40</bold></highlight>. The shared data structure <highlight><bold>50</bold></highlight> is a communication base shared by the two components. The agent <highlight><bold>40</bold></highlight> operates at a lower priority level than the dispatcher <highlight><bold>20</bold></highlight>. Upon receiving messages from the remote administrator <highlight><bold>30</bold></highlight>, the dispatcher <highlight><bold>20</bold></highlight> communicates receipt with the shared data structure <highlight><bold>50</bold></highlight>. The shared data structure <highlight><bold>50</bold></highlight> communicates receipt of a communication from the dispatcher to the agent <highlight><bold>40</bold></highlight>. A flag <highlight><bold>55</bold></highlight> is utilized as a communication tool from the shared data structure <highlight><bold>50</bold></highlight> to the agent <highlight><bold>40</bold></highlight>. Accordingly, the dispatcher <highlight><bold>20</bold></highlight> and the agent <highlight><bold>40</bold></highlight> are the two major components of the diagnostic driver utilizing the flag <highlight><bold>55</bold></highlight> as the communication tool therebetween. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> The agent <highlight><bold>40</bold></highlight> functions to launch lower level tasks in a loop. The agent <highlight><bold>40</bold></highlight> launches a lower level task only when prompted to do so by an event triggered by a higher level task. The agent <highlight><bold>40</bold></highlight> functions to perform a desired activity on behalf of the higher level task, while allowing the higher level task to maintain operation at its specified level. The flag <highlight><bold>55</bold></highlight> is instituted to awaken the agent <highlight><bold>40</bold></highlight> when a spawning of a lower level task is desired. Upon receiving the flag <highlight><bold>55</bold></highlight>, the agent <highlight><bold>40</bold></highlight> reads the message placed in the shared data structure by the dispatcher <highlight><bold>20</bold></highlight>. The flag <highlight><bold>55</bold></highlight> is a signal for the agent <highlight><bold>40</bold></highlight> to read the shared data structure <highlight><bold>50</bold></highlight> at a particular position. The agent <highlight><bold>40</bold></highlight> then launches the requested task at the lower priority level. Once the lower level task <highlight><bold>60</bold></highlight> has been launched, the agent <highlight><bold>40</bold></highlight> resets the flag <highlight><bold>55</bold></highlight>. Accordingly, the agent <highlight><bold>40</bold></highlight> remains in an inactive state until such time as a flag <highlight><bold>55</bold></highlight> is set by the placement of a command message in the shared data structure <highlight><bold>50</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow chart <highlight><bold>200</bold></highlight> illustrating implementation of the structure of the preferred embodiment. The firmware only permits drivers to load other firmware modules in its initialization code, it does not permit a driver to load other drivers after the driver&apos;s initialization has completed. Within these confines, the agent in the form of an application is the first module to be loaded <highlight><bold>210</bold></highlight>. An application can load other applications and drivers during run time. The agent application is responsible for loading the remaining components of the structure, including the dispatcher <highlight><bold>220</bold></highlight>. The remote administrator is existent within the firmware, and does not require any loading by the agent application. The remote administrator represents a control entity within the firmware and is responsible for running diagnostics and a path to the user interface. During loading of the dispatcher driver <highlight><bold>220</bold></highlight>, the dispatcher and the remote administrator handshake <highlight><bold>230</bold></highlight>, thereby making both the dispatcher and the remote administrator aware of their functions. Additionally, the dispatcher and the agent handshake <highlight><bold>240</bold></highlight> making both anchors aware of their related functions. In a preferred embodiment, the order of the handshaking steps <highlight><bold>230</bold></highlight> and <highlight><bold>240</bold></highlight> is interchangeable and is not critical to the function of the driver. The agent application acts as a command dispatcher for the diagnostic test following installation as a driver. This allows the dispatcher to spawn sub-tests at a lower priority. Accordingly, loading the structure in the form of drivers and adhering to the firmware guidelines allows the drivers within the structure to operate in stages. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart <highlight><bold>300</bold></highlight> illustrating the process of launching a lower priority level task from a higher level priority task. The remote administrator sends a message to the dispatcher <highlight><bold>310</bold></highlight> indicating the need to launch a lower priority level task. The dispatcher communicates receipt of the message from the remote administrator by placing a message in the shared data structure <highlight><bold>320</bold></highlight>. Upon receiving a message from the shared dispatcher, the shared data structure sends a signal to the agent <highlight><bold>330</bold></highlight> indicating the need to launch a lower priority level task. The agent receives the signal and reads the instructions placed in the shared data structure. Following receipt of the instructions, the agent spawns the requested lower priority level task <highlight><bold>340</bold></highlight>. Once the lower priority level task has been launched, the agent sends a signal to the data structure <highlight><bold>350</bold></highlight> indicating launching of the lower priority level task. The agent remains idle until the next time it receives a signal <highlight><bold>330</bold></highlight> from the shared data structure to launch a lower priority level task. Accordingly, the process employed for launching lower priority level tasks from a higher priority level tasks allows the agent to remain in memory in an inactive state until events cause the agent to become active. </paragraph>
+</section>
+<section>
+<heading lvl="1">Advantages Over the Prior Art </heading>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Prior art systems are designed to accommodate system interrupts to permit spawning of different tasks at different levels of operation. To either avoid the use of system interrupts, or in an environment where system interrupts are disabled, the invention permits the launching of lower priority level tasks without requiring the need to invoke a system interrupt or await a pause in the higher level task&apos;s operations. </paragraph>
+</section>
+<section>
+<heading lvl="1">Alternative Embodiments </heading>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> It will be appreciated that, although specific embodiments of the invention have been described herein for purposes of illustration, various modifications may be made without departing from the spirit and scope of the invention. In particular, the scope of the invention is not limited to a three level system. The invention may be incorporated into a system with fewer or greater priority levels of operations. In addition, the invention may be incorporated into a system designed to accommodate system interrupts. Accordingly, this would allow the system to continue operation by disabling interrupts and incorporating the driver herein to enable launching of lower priority level tasks during operation of a higher priority level task. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> In addition to operation of the system, the method of installing the driver is merely a preferred method of installing the components of the driver. However, there may be alternative methods of installation which would allow the components of the driver to function within the design parameters of the system firmware. Additionally, the agent does not necessarily have to be a cooperative agent application. Accordingly, the scope of protection of this invention is limited only by the following claims and their equivalents. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">We claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for spawning a lower priority task from a higher priority task comprising: 
+<claim-text>(a) receiving a message from a remote administrator; and </claim-text>
+<claim-text>(b) launching a lower priority task. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of launching said lower priority task includes an agent. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of receiving said message from said remote administrator includes a dispatcher. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, further comprising said dispatcher placing said message in a data structure. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further comprising said dispatcher setting a flag for signaling receipt of said message. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the step of launching said lower priority task includes an agent, said agent receiving said flag and reading said data structure. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising said agent resetting said flag. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the step of launching said lower priority task includes responding to said message. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said higher priority task includes maintaining a level of operation. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A computer system comprising: 
+<claim-text>a higher priority task; </claim-text>
+<claim-text>a remote administrator; </claim-text>
+<claim-text>a message manager to receive a message from said administrator; and </claim-text>
+<claim-text>a task manager to launch a lower priority task. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said message manager is a dispatcher. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said task manager is an agent. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, further comprising a dispatcher manager to place said message in a data structure. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein said data structure stores said message received from said dispatcher manager. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, further comprising a flag to indicate to said task manager receipt of said message in said data structure. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein said task manager reads said message in said data structure and launches said lower priority task in response to said flag. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein said task manager resets said flag following launch of said lower priority task. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein said higher priority task maintains a level of operation. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. An article comprising: 
+<claim-text>a computer-readable signal bearing medium; </claim-text>
+<claim-text>means in the medium for receiving a message from a remote administrator; and </claim-text>
+<claim-text>means in the medium for launching a lower priority task. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein the medium is selected from the group consisting of: a recordable data storage medium, and a modulated carrier signal. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, wherein said message receiving means stores said message in a data structure. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further comprising said message receiving means indicating by a flag receipt of said message in said data structure to said launching means. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, wherein said launching means resets said flag following launching of said lower priority task. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, further comprising means in the medium for maintaining a level of operation by a higher priority level task. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. A method for spawning a lower priority task from a higher priority task comprising: 
+<claim-text>(c) receiving a message from a remote administrator; </claim-text>
+<claim-text>(d) storing said message in a data structure; </claim-text>
+<claim-text>(e) setting a flag to indicate receipt of said message; and </claim-text>
+<claim-text>(f) launching a lower priority task in response to said message. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference>, further comprising maintaining a level of operation by said higher priority task.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005026A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005026A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005026A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005026A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

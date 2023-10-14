@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030001973A1-20030102-D00000.TIF SYSTEM "US20030001973A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030001973A1-20030102-D00001.TIF SYSTEM "US20030001973A1-20030102-D00001.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030001973</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895965</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04N009/74</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>348</class>
+<subclass>590000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>348</class>
+<subclass>582000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Color key preservation during sample rate conversion</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Jens</given-name>
+<middle-name>A.</middle-name>
+<family-name>Roever</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Cupertino</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Corporate Patent Counsel</name-1>
+<name-2>U.S. Philips Corporation</name-2>
+<address>
+<address-1>580 White Plains Road</address-1>
+<city>Tarrytown</city>
+<state>NY</state>
+<postalcode>10591</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The color-keyed regions of a color-keyed image are extracted from the color-keyed image, and the color-keyed regions and the non-color-keyed regions are independently scaled. The independently scaled regions are subsequently merged to form a scaled color-key image with clearly distinguished color-keyed regions and non-color-keyed regions. To minimize the blurring of edges in the non-color-key regions, the non-color-key colors are extended into color-keyed regions after the color-keyed information is extracted from the color-keyed image. To minimize the encroachment of the scaled color-keyed regions into the scaled non-color-keyed regions of the scaled color-key image, the edges of the scaled color-key regions are sharpened by defining the color-keyed region as the region wherein each scaled/filtered color-key value exceeds a non-zero threshold value. To facilitate the use of existing memory and structure in images that are encoded using three components per pixel, such as RGB, YUV, etc., the extracted color-keyed regions are stored in the memory structure that is typically used to store an optional fourth component, such as a transparency or texture parameter. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> This invention is related to the field of image processing, and in particular to the processing of image data that contains a key that identifies regions for inserting other image data. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Color keying, or chroma keying, is used when certain regions of an image or graphics window are to be replaced by different image or graphic information in a later processing step. For example, a &ldquo;bluescreen&rdquo; is often used as a background for a television announcer when the announcer is being recorded. A background image, corresponding, for example to &ldquo;file footage&rdquo; from a related story, is subsequently inserted into the image containing the announcer, to form a composite image containing the announcer in the foreground and the file footage in the background. Corresponding regions of the file footage background are inserted wherever the bluescreen color is detected in the image of the announcer. The particular color that is chosen as the replaced background color is termed a color key, and is generally selected to be easily distinguishable from colors that would be expected in the foreground image. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Luminance keying operates similarly, wherein the brightness level of regions of an image define whether to insert a replacement image in each region. Chapter <highlight><bold>9</bold></highlight> of the text &ldquo;VIDEO DEMYSTIFIED&rdquo;, by Keith Jack, &copy;HighText Interactive, Inc., San Diego, Calif., presents various techniques for luminance and color keying, and is incorporated by reference herein. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Because color keying is more commonly used for forming a composite image of individual background and foreground image data, and for each of reference, the term color keying is used herein to refer to the process of distinguishing between regions of an image based on a value associated with one or more components of the data elements that form the image. In like manner, the term color-keyed is used herein to identify the scheme used to provide a means for identifying the insertion region of an image, even though any of a variety of techniques may be employed to provide this identification. The term color-keyed image is used to define the image that contains regions that are to be replaced, and the term background image is used to define the image that contains the replacement data, even though the inserted data may not form a &lsquo;background&rsquo;, per se. That is, for example, the color-keyed image may include a non-key colored background and a foreground object that contains the color key value. The insertion of the data from the &ldquo;background image&rdquo; in this example, effects an insertion of foreground image information into the color-keyed image. The term composite image is used herein to define the image that contains the insertion of the background image into the color-keyed regions of the color-keyed image. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> As the field of image processing and image manipulation continues to expand, the need for flexible color keying schemes continues to grow. In particular, a need exists for allowing images from different data sources, at potentially different image scales, to be combined. A straightforward solution is to modify the scale of the background image to correspond to the scale of the color-keyed image, and then effect the color keyed merging. If the scale, or available resolution, of the desired output image is different from that of the color-keyed image, the composite image is appropriately scaled. Note, however that this scheme limits the effective resolution of the background image to the resolution of the color-keyed image, regardless of whether the available output resolution is finer than that of the color-keyed image. Preferably, each of the color-keyed image and the background image would be scaled to the desired output image scale before being merged, so that image resolution is not lost by constraining the resolution of the background image to match the resolution of the color-keyed image, or vice versa. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Changing the scale of a color-keyed image, however, may have an adverse effect on the identification of color-keyed regions. Most image scalers, commonly termed sample rate converters, include filters that provide each output sample as a weighted average of multiple input samples in the vicinity of the output sample. For example, if the image is being up-sampled, wherein more output samples are produced than input samples, each output sample value is based on an interpolation of the input sample values in the vicinity of the location of the output sample. If the image is being down-sampled, each output sample is an average of the input samples in the vicinity of the location of the output sample. This interpolation or averaging, which is required to prevent discontinuities and other anomalies in the scaled image data, provides an output value that is a blending of multiple neighboring input values. As such, values along the edges of color-keyed regions will be blended with values in the non-color-keyed regions, and the blended value will likely be a non-color-keyed value that is not present in the original image. If a composite image is filtered, there will be some color blending at the edges of the objects, but because the blended color is based on the colors on each side of the edge, it merely appears as a less-sharp edge. In the example of a blue-colored screen behind an announcer who is purposely not wearing this shade of blue, however, the blended value at the edge of the announcer will be a somewhat-blue color that differs from the color key value, and differs from the colors of the announcer&apos;s clothing or skin. The effect of this non-color-key bluish color at the edges of the color-keyed region is a visually apparent &lsquo;outline&rsquo; of the announcer when the background image replaces the regions that match the color key value, but does not replace the non-color-key bluish color at the edges. </paragraph>
+</section>
+<section>
+<heading lvl="1">BRIEF SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> It is an object of this invention to provide an apparatus and method that allows for the scaling and/or filtering of a color-keyed image that allows the replacement of the color-keyed regions with background image information, without introducing visible artifacts. It is a further object of this invention to provide an apparatus and method that allows for the scaling and/or filtering of a color-keyed image without introducing visible artifacts using existing video processing memory and structures. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> These objects and others are achieved by extracting the color-keyed regions from a color-keyed image, and independently scaling the color-keyed regions and the non-color-keyed regions. The independently scaled regions are subsequently merged to form a scaled color-key image with clearly distinguished color-keyed regions and non-color-keyed regions. To minimize the blurring of edges in the non-color-key regions, the non-color-key colors are extended into color-keyed regions after the color-keyed information is extracted from the color-keyed image. To minimize the encroachment of the scaled color-keyed regions into the scaled non-color-keyed regions of the scaled color-key image, the edges of the scaled color-key regions are sharpened by defining the color-keyed region as the region wherein each scaled/filtered color-key value exceeds a non-zero threshold value. To facilitate the use of existing memory and structure in images that are encoded using three components per pixel, such as RGB, YUV, etc., the extracted color-keyed regions are stored in the memory structure that is typically used to store an optional fourth component, such as a transparency or texture parameter. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The invention is explained in further detail, and by way of example, with reference to the accompanying diagrams wherein: </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates an example block diagram of an image processing system in accordance with this invention. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an example flow diagram of an color-key image scaling and merging process in accordance with this invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Throughout the drawings, the same reference numerals indicate similar or corresponding features or functions. </paragraph>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates an example block diagram of an image processing system <highlight><bold>100</bold></highlight> in accordance with this invention. The image processing system <highlight><bold>100</bold></highlight> is configured to independently scale the color-key regions and the non-color-key regions in a color-keyed image <highlight><bold>101</bold></highlight>, and to merge these independently scaled images to form a scaled color-key image <highlight><bold>161</bold></highlight>. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> A key extract and replace module <highlight><bold>120</bold></highlight> segregates the color-keyed image <highlight><bold>101</bold></highlight> into a color-key-extracted image <highlight><bold>121</bold></highlight> that contains only non-color-keyed picture elements (pixels) and a color-key-only image <highlight><bold>122</bold></highlight> that contains only color-keyed pixels. Each of these images <highlight><bold>121</bold></highlight>, <highlight><bold>122</bold></highlight> are independently scaled, via one or more sample rate converters <highlight><bold>130</bold></highlight>, <highlight><bold>140</bold></highlight> to produce scaled images <highlight><bold>131</bold></highlight> and <highlight><bold>141</bold></highlight>, respectively. A merge device <highlight><bold>160</bold></highlight> merges these scaled images <highlight><bold>131</bold></highlight>, <highlight><bold>141</bold></highlight> to produce the scaled color-keyed image <highlight><bold>161</bold></highlight>. Although for ease of understanding, separate sample rate converters <highlight><bold>130</bold></highlight>, <highlight><bold>140</bold></highlight> are illustrated, the same sample rate converter can be used to scale each of the images <highlight><bold>121</bold></highlight>, <highlight><bold>122</bold></highlight>. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> As is common in the art, a sample rate converter <highlight><bold>130</bold></highlight>, <highlight><bold>140</bold></highlight> typically includes a filter that determines each output sample as a function of multiple input samples in the vicinity of the output sample, as discussed above. As such, the edges of the color-keyed regions and the non-color-keyed regions in each of the scaled key-only <highlight><bold>122</bold></highlight> and key-extracted <highlight><bold>121</bold></highlight> images from a conventional sample rate converter <highlight><bold>130</bold></highlight>, <highlight><bold>140</bold></highlight> will contain blended color values. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In a preferred embodiment of this invention, two techniques are employed to minimize the blending along the edges of the scaled color-keyed and non-color-keyed regions. The edges of the scaled non-color-keyed region in the scaled color-key-extracted image <highlight><bold>131</bold></highlight> retain the color value of the edges of the unscaled non-color-keyed regions in color-key-extracted image <highlight><bold>121</bold></highlight>. And, the scaled color-keyed regions in the scaled color-key-only image <highlight><bold>141</bold></highlight> are sharpened to avoid encroachment into the scaled non-color-keyed regions of scaled color-key-extracted image <highlight><bold>131</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> To retain the color value of the edges of the non-color-keyed regions in the scaled key-extracted image <highlight><bold>131</bold></highlight>, the pixel value used to replace the color-key value in the key-extracted image <highlight><bold>121</bold></highlight> is preferably selected such that the filter in the converter <highlight><bold>130</bold></highlight> has minimal effect on the color value. If, for example, a null, or zero, value is used as the replacement, then the values of the scaled pixels along the edge of the non-color-key regions of image <highlight><bold>131</bold></highlight> will be diminished as the zero values in the prior color-key region of image <highlight><bold>121</bold></highlight> are used in the determination of these scaled pixels. In a preferred embodiment, to avoid the distortion of the color values along the edge of the non-color-key regions of the image <highlight><bold>131</bold></highlight>, the value of the non-color-key region of the image <highlight><bold>121</bold></highlight> is extended into the prior color-key region of image <highlight><bold>121</bold></highlight>. By extending the color value at the edges of the non-color-key regions into the prior color-key regions, the output pixel value that forms image <highlight><bold>131</bold></highlight> is solely dependent upon the values contained in the non-color-key regions of image <highlight><bold>121</bold></highlight>. In a preferred embodiment, to minimize computational complexity, the value that replaces each color-key pixel in the image <highlight><bold>121</bold></highlight> is the value of the horizontally-closest non-color-key pixel. That is, for each horizontal line of the image <highlight><bold>121</bold></highlight>, each non-color-key value at the edge of the color-keyed region is extended half-way into the adjacent prior color-keyed region, from the left and the right of the prior color-keyed region of image <highlight><bold>101</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Other techniques for estimating a color in the color-keyed regions of image <highlight><bold>101</bold></highlight> for forming the key-extracted image <highlight><bold>121</bold></highlight> so as to minimize the distortion of color value at the edge of the non-color-keyed regions of the image <highlight><bold>131</bold></highlight>, including interpolation and averaging, will be evident to one of ordinary skill in the art in view of this disclosure. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In an alternative embodiment, a uniquely identifiable value is used as the color-key-replacement value for the color-keyed pixels in the image <highlight><bold>121</bold></highlight>, and the sample rate converter <highlight><bold>130</bold></highlight> is specifically configured to ignore pixels having this unique value in the determination of an output pixel value for forming the image <highlight><bold>131</bold></highlight>. The uniquely identifiable value is selected as one that is not likely to appear in the non-color-keyed regions of image <highlight><bold>121</bold></highlight>, so as to unambiguously identify the color-keyed regions. In such an embodiment, the unique color-key-replacement value may be selected to be the same value as the color-key value, thereby obviating the need to &ldquo;replace&rdquo; the pixel values in the color-keyed regions of the image <highlight><bold>121</bold></highlight>, per se. Inclusion of the replacement step, however, provides the flexibility of using independent color-key values and color-key-replacement values in the images <highlight><bold>101</bold></highlight> and <highlight><bold>121</bold></highlight>, respectively. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> In accordance with this aspect of the invention, because the color value within the extracted color-keyed region of image <highlight><bold>121</bold></highlight> is either a color from the edge of the non-color-keyed region, or a color value that is ignored during the scaling process, the edges of the non-color-keyed regions in the scaled image <highlight><bold>131</bold></highlight> will exhibit minimal distortion from a blending of the color-key color into the non-color-keyed regions. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> To avoid the encroachment of the scaled color-key regions of image <highlight><bold>141</bold></highlight> into the scaled non-color-key regions <highlight><bold>131</bold></highlight> when forming the scaled color-keyed image <highlight><bold>161</bold></highlight>, the edges of the scaled color-key regions of image <highlight><bold>141</bold></highlight> are sharpened by comparing each scaled pixel value to a non-zero threshold value. The color-key-only image <highlight><bold>122</bold></highlight> contains zero values except in each color-key region. As noted above, the filtering that is associated with a scaling process of a sample rate converter <highlight><bold>140</bold></highlight> will diminish the value of the pixels in the vicinity of the edges of a region, because the pixel value is determined based on neighboring zero-valued pixels, producing a &lsquo;blurred&rsquo; edge that contains a blended color value. By comparing each pixel value in the scaled color-key-only image <highlight><bold>141</bold></highlight> to a non-zero threshold value, a well-defined edge of the scaled color-key regions is created. That is, at an edge, the pixel values will taper-off from a value corresponding to the color-key to the value corresponding to the non-color-key. By defining the color-key region as the region containing pixels above a given threshold value, the pixels at the end of the taper adjacent the non-color-key region will not be included in the color-key region that is merged with the non-color-key regions of the scaled color-key-extracted image <highlight><bold>131</bold></highlight>. Other techniques for sharpening the edges of the scaled color-key regions of the scaled color-key-only image <highlight><bold>141</bold></highlight> will be evident to one of ordinary skill in the art. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In a preferred embodiment of this invention, memory space and structures that are common in conventional image processing systems are utilized wherever feasible. For example, many image processing systems are configured to support color spaces that include up to four components for each pixel value. For example, most graphic systems use three-components to define the color of a pixel, and another component to define, for example, the transparency, or opacity, of the color. Often, this fourth component is unused for conventional image processing tasks, such as the merging of existing images. If the keyed image <highlight><bold>101</bold></highlight> is in a conventional three-component color space, such as RGB (red (R), green (G), and blue (B) components) or YUV (luminance (Y) and two chrominance (U, V) components), and the processing system is configured to support four components per pixel, the key-only image <highlight><bold>122</bold></highlight> is stored as the fourth-component, commonly termed the alpha (A) component. By storing the key-only image <highlight><bold>122</bold></highlight> as the fourth-component of a conventional image processing memory structure, a number of advantages are achieved. The sample rate converter in a conventional four-component color space system is generally configured to scale each of the component values independently. Therefore, by storing the color-key-only image <highlight><bold>122</bold></highlight> as the fourth component value, the sample rate conversion process corresponding to the converter <highlight><bold>140</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is automatically provided by the conventional sample rate converter <highlight><bold>130</bold></highlight> that scales the color-key-extracted image <highlight><bold>121</bold></highlight>. Also, by storing the color-key-only image as the fourth component value of a conventional memory structure, the color-key-only image <highlight><bold>122</bold></highlight> and scaled color-key-only image <highlight><bold>141</bold></highlight> will occupy existing memory space and structures, and no additional memory is required for this embodiment of the invention. These and other system optimizations will be evident to one of ordinary skill in the art in view of this disclosure, and additional options are presented below. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an example flow diagram of color-key image scaling and merging process in accordance with this invention. This flow diagram is presented for illustration and ease of understanding. One of ordinary skill in the art will recognize that different sequences and steps may be employed to produce a similar result. For ease of understanding, the following description includes references to items in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; each of the items in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> have an initial digit of &ldquo;1&rdquo;, while the items of <cross-reference target="DRAWINGS">FIG. 2</cross-reference> have an initial digit of &ldquo;2&rdquo;. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> At step <highlight><bold>210</bold></highlight>, the memory space that is allocated to store the color-key-only image <highlight><bold>122</bold></highlight> is cleared. Each pixel in the color-keyed image <highlight><bold>101</bold></highlight> is processed, via the loop <highlight><bold>220</bold></highlight>-<highlight><bold>229</bold></highlight> to identify and replace each color-key pixel. If, at <highlight><bold>222</bold></highlight>, the pixel value corresponds to the color-key value, the corresponding pixel in the color-key-only image <highlight><bold>122</bold></highlight> is marked as such, at <highlight><bold>224</bold></highlight>. Any of a number of techniques can be applied to mark each pixel of each color-key region. In a preferred embodiment wherein a fourth component of the conventional pixel color space is used, the corresponding fourth component value is set to a maximum value for each color-key pixel, and to a minimum value for each non-color-key pixel. Alternatively, a single bit could be used to mark each corresponding pixel in the color-key-only image <highlight><bold>122</bold></highlight>. In some formats, the fourth component of the encoding comprises a single bit. For example, a common format for encoding a three-component pixel value, such as red-green-blue (RGB) components, is to encode each component as a five-bit value. This encoding leaves a single bit available, when the pixel value is stored in a sixteen-bit word. This remaining single bit is often used to distinguish opaque and transparent colors, and the four component encoding is termed RGBa, and corresponds to a 5-5-5-1 bit encoding of the &ldquo;R&rdquo;, &ldquo;G&rdquo;, &ldquo;B&rdquo;, and &ldquo;a&rdquo; component values. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The color-key value in the keyed image <highlight><bold>101</bold></highlight> is replaced in the key-extracted image <highlight><bold>121</bold></highlight>. Note that, in a preferred embodiment, the same memory space is used to store the keyed image <highlight><bold>101</bold></highlight> and the key-extracted image <highlight><bold>121</bold></highlight>. That is, the color-key pixels in the keyed image <highlight><bold>101</bold></highlight> are replaced, and the non-color-key pixels are unchanged, thereby modifying the keyed image <highlight><bold>101</bold></highlight> to produce the key-extracted image <highlight><bold>121</bold></highlight>, rather than creating the key-extracted image <highlight><bold>121</bold></highlight> as a separate image. The value chosen to replace the color-key value, as discussed above, is preferably the closest non-color-key value to the color-key pixel. Other replacement values may also be used. For example, to avoid needing a &ldquo;look-ahead&rdquo; function for determining a closest non-color-key value as the replacement value, a &ldquo;last&rdquo; non-color pixel value before the color-key region on each line of the image may be used as the replacement value. Alternatively, as also discussed above, if the scaling process <highlight><bold>130</bold></highlight> is configured to ignore the color-key value, step <highlight><bold>226</bold></highlight> is eliminated. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> After all pixels in the keyed image are processed to create a color-key-only image <highlight><bold>122</bold></highlight> and a color-key-extracted image <highlight><bold>121</bold></highlight> (or modified <highlight><bold>101</bold></highlight>), the color-key-only image <highlight><bold>122</bold></highlight> and the color-key-extracted image <highlight><bold>121</bold></highlight> (<highlight><bold>101</bold></highlight>) are scaled, at <highlight><bold>230</bold></highlight>, <highlight><bold>240</bold></highlight>. As noted above, if the color-key-only image <highlight><bold>122</bold></highlight> is stored as the fourth component of a conventional image data structure, the steps <highlight><bold>230</bold></highlight>, <highlight><bold>240</bold></highlight> are accomplished as a single step using a conventional four-component scaler. If a single bit value is used to identify the color-key regions of an image, the value of a scaled pixel at the edge of the color-key region is determined by comparing the &ldquo;phase&rdquo; of the scaled pixel (i.e. the location of the scaled pixel relative to the color-key and non-color-key pixels to the left and right of the scaled pixel) to a threshold value. For example, a threshold of 0.5 would correspond to a conventional &ldquo;rounding&rdquo; of the value to the nearest pixel. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Each pixel location in the scaled color-key-only <highlight><bold>141</bold></highlight> and scaled color-key-extracted <highlight><bold>131</bold></highlight> images is processed, via the loop <highlight><bold>250</bold></highlight>-<highlight><bold>259</bold></highlight> to produce the scaled color-keyed image <highlight><bold>161</bold></highlight>. As in the input process, the same memory space that is used to contain the scaled color-key-extracted image <highlight><bold>131</bold></highlight> is used to contain the scaled color-keyed image <highlight><bold>161</bold></highlight>. That is, the merged output image <highlight><bold>161</bold></highlight> is formed by leaving the scaled color-key-extracted pixel values in the image <highlight><bold>131</bold></highlight> unchanged, and overwriting the pixel locations in the image <highlight><bold>131</bold></highlight> corresponding to the color-key pixels in the scaled color-key-only image <highlight><bold>141</bold></highlight> with the color-key value. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> At <highlight><bold>252</bold></highlight>, the value of the pixel in the scaled color-key-only image <highlight><bold>141</bold></highlight> is retrieved from memory, and compared to a threshold value, at <highlight><bold>254</bold></highlight>. If the value of the pixel exceeds the threshold, the color-key value is stored in the corresponding pixel location in the scaled color-key-extracted image <highlight><bold>131</bold></highlight>, at <highlight><bold>256</bold></highlight>, thereby forming a merged color-key image <highlight><bold>161</bold></highlight>. Pixel values below the threshold are ignored, and the corresponding pixel locations in the color-key-extracted image <highlight><bold>131</bold></highlight> are unaffected, thereby minimizing the encroachment of the scaled color-key regions in the scaled color-key-only image <highlight><bold>141</bold></highlight> into the non-color-key regions of the merged color-key image <highlight><bold>161</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The foregoing merely illustrates the principles of the invention. It will thus be appreciated that those skilled in the art will be able to devise various arrangements which, although not explicitly described or shown herein, embody the principles of the invention and are thus within its spirit and scope. For example, each of the techniques employed to minimize the blending of pixel values at the edges of the non-color-key regions can be independently, and optionally, employed. For example, if the potential encroachment of the color-key region into the non-color-key regions is not deemed significant, the thresholding step <highlight><bold>150</bold></highlight> can be eliminated. Similarly, if the diminishment of the intensity of the colors along the edges of the non-color-key regions is not deemed significant, the values of the extracted color-key regions can be set to zero, or other color-neutral (i.e. gray) value, rather than having to determine the nearest non-color-key value as the substitute value. In like manner, if the scaled color-key regions in the scaled color-key-only image <highlight><bold>141</bold></highlight> is assured to encroach the non-color-key regions, by setting a very low, or zero, threshold value, and effectively cover any blended edges of the non-color-key regions, the color-keyed image <highlight><bold>101</bold></highlight> can be scaled directly, without replacing the color-key values, eliminating the step <highlight><bold>226</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. These and other system configuration and optimization features will be evident to one of ordinary skill in the art in view of this disclosure, and are included within the scope of the following claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">I claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. An image processing system comprising: 
+<claim-text>a key extractor that is configured to create a key-only image from a keyed image, 
+<claim-text>the keyed image having one or more key regions that are configured to identify regions in the keyed image that are intended to be replaced by other image information, and </claim-text>
+<claim-text>the key-only image having identified regions corresponding to the key regions of the keyed image; </claim-text>
+</claim-text>
+<claim-text>a scaler that is configured to independently scale the keyed image and the key-only image to produce a scaled keyed image and a scaled key-only image; and </claim-text>
+<claim-text>a merger that is configured to merge the scaled keyed image and the scaled key-only image. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The image processing system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein 
+<claim-text>the scaler includes a filter that provides output pixel values forming the scaled images as a blend of multiple input pixel values, and </claim-text>
+<claim-text>the key extractor is further configured to replace pixel values in the one or more key regions with a substitute value that is intended to minimize blending at edges of non-key regions caused by key pixel values within the key regions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The image processing system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein 
+<claim-text>the substitute value of each replaced pixel value corresponds to one of: 
+<claim-text>a value of a nearest non-key pixel value, </claim-text>
+<claim-text>a value of a horizontally-nearest non-key pixel value, </claim-text>
+<claim-text>a value of a prior determined non-key pixel value, </claim-text>
+<claim-text>a neutral value, and </claim-text>
+<claim-text>a predetermined value. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The image processing system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein 
+<claim-text>the scaler includes a filter that provides output pixel values forming the scaled images as a blend of multiple input pixel values, and </claim-text>
+<claim-text>is configured to blend only input pixel values that do not correspond to a defined key-replacement value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The image processing system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein 
+<claim-text>the merger is configured to merge the scaled keyed image and the scaled key-only image by comparing each pixel value in the scaled key-only image to a threshold value and replacing a corresponding pixel value in the scaled key image with a defined key value if the pixel value exceeds the threshold value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The image processing system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein 
+<claim-text>the scaler is configured to compare a phase of a pixel at an edge of the one or more key regions in the scaled key-only image to a threshold value, to determine a value for the pixel in the scaled key-only image. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The image processing system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein 
+<claim-text>the keyed image is encoded using a three-component color-space, </claim-text>
+<claim-text>the key-only image is encoded as a fourth component corresponding to the keyed three-component color-space, and </claim-text>
+<claim-text>the scaler is configured to simultaneously scale the keyed image and the key-only image via a four-component color-space scaling. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The image processing system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein 
+<claim-text>the keyed image corresponds to a color-keyed image. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method of scaling a keyed image comprising: 
+<claim-text>creating a key-only image corresponding to key regions in the keyed image, </claim-text>
+<claim-text>scaling the key-only image to form a scaled key-only image, </claim-text>
+<claim-text>scaling the keyed image to form a scaled keyed image, and </claim-text>
+<claim-text>merging the scaled key-only image and the scaled keyed image. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, further including: 
+<claim-text>replacing pixel values in the key regions in the key image to minimize distortion of edges of non-key regions during the scaling of the keyed image. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein 
+<claim-text>the pixel values in the key regions are replaced by values of pixels beyond the key regions. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein 
+<claim-text>merging the scaled key-only image and the scaled keyed image includes: 
+<claim-text>comparing each pixel value of a plurality of pixel values in the scaled key-only image with a threshold value, and </claim-text>
+<claim-text>replacing a corresponding pixel value in the scaled keyed image with a defined key value. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein 
+<claim-text>scaling the key-only image includes 
+<claim-text>comparing a phase of each pixel at an edge of the key regions to a threshold value to determine a corresponding value for each pixel at the edge of the key regions. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, further including: 
+<claim-text>storing the key-only image as a fourth component of a four component color-space that includes the keyed image as three components of the four component color-space, and wherein 
+<claim-text>scaling the key-only image and the keyed image is effected as a simultaneous scaling of a four component color-space. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, further including: 
+<claim-text>sharpening edges within the scaled key-only image before merging the scaled key-only image and the scaled keyed image. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein 
+<claim-text>the keyed image corresponds to a color-keyed image.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030001973A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030001973A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

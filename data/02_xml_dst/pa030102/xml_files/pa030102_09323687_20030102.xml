@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005410A1-20030102-D00000.TIF SYSTEM "US20030005410A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005410A1-20030102-D00001.TIF SYSTEM "US20030005410A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005410A1-20030102-D00002.TIF SYSTEM "US20030005410A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005410A1-20030102-D00003.TIF SYSTEM "US20030005410A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005410A1-20030102-D00004.TIF SYSTEM "US20030005410A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005410A1-20030102-D00005.TIF SYSTEM "US20030005410A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005410</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09323687</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>19990602</filing-date>
+<continued-prosecution-application>This is a publication of a continued prosecution application (CPA) filed under 37 CFR 1.53(d).</continued-prosecution-application>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F009/45</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>717</class>
+<subclass>114000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>XML PARSER FOR COBOL</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>GARY L.</given-name>
+<family-name>HARLESS</family-name>
+</name>
+<residence>
+<residence-us>
+<city>ANNANDALE</city>
+<state>VA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>American Management Systems, Inc. of Fairfax, VA.</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>STAAS &amp; HALSEY LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>700 11TH STREET, NW</address-1>
+<address-2>SUITE 500</address-2>
+<city>WASHINGTON</city>
+<state>DC</state>
+<postalcode>20001</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">An XML Parser for COBOL that creates a structure, or table, identifying where in a given data stream a specific data element is located and the length of the element. For each data element tag in the XML data stream, the parser creates a row in a table containing the Tag Name, Field Length, and Field Size of the data element. Once the entire XML data stream has been processed, the parser returns the table containing the position and length of all data elements in the XML data stream. Thus, instead of receiving a virtually unintelligible (by COBOL) data stream, the COBOL program is given a table that serves as a table of contents, if you will, of the data elements in the message. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention is directed to an apparatus including software and a method for parsing XML messages into data readable by programs written in the COBOL language. </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> XML (eXtensible Markup Language) was originally conceived as the &ldquo;big brother&rdquo; of HTML (HyperText Markup Language). It is designed to enable the use of SGML (the international standard metalanguage for markup languages, ISO 8879:1986) on the World Wide Web. XML, in effect, extends HTML and can be used to create entirely new languages or grammars. XML itself is not a single markup language: it&apos;s a metalanguage allowing the design of personalized markup languages. A regular markup language, such as HTML defines a way to describe information in a certain class of documents. XML allows the creation of customized markup languages for many classes of documents. The following example may prove useful: </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Variable definition in HTML: </paragraph>
+<paragraph id="P-0004" lvl="2"><number>&lsqb;0004&rsqb;</number> &lt;p&gt;P200 Laptop </paragraph>
+<paragraph id="P-0005" lvl="2"><number>&lsqb;0005&rsqb;</number> &lt;br&gt;Friendly Computer Shop </paragraph>
+<paragraph id="P-0006" lvl="2"><number>&lsqb;0006&rsqb;</number> &lt;br&gt;$1438 </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Same variable definition in XML: </paragraph>
+<paragraph id="P-0008" lvl="2"><number>&lsqb;0008&rsqb;</number> &lt;product&gt;</paragraph>
+<paragraph id="P-0009" lvl="2"><number>&lsqb;0009&rsqb;</number> &lt;model&gt;P200Laptop&lt;/model&gt;</paragraph>
+<paragraph id="P-0010" lvl="2"><number>&lsqb;0010&rsqb;</number> &lt;dealer&gt;Friendly Computer Shop&lt;/dealer&gt;</paragraph>
+<paragraph id="P-0011" lvl="2"><number>&lsqb;0011&rsqb;</number> &lt;price&gt;$1438&lt;/price&gt;</paragraph>
+<paragraph id="P-0012" lvl="2"><number>&lsqb;0012&rsqb;</number> &lt;/product&gt;</paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> XML is a public project of the XML Working Group of the World Wide Web Consortium (W3C) which approved the XML v1.0 specification on Feb. 10, 1998. The reader is invited to review the XML material (including the specification) published by the W3C on their web site: http://www.w3.org/XML, the disclosure of which, to the extent necessary, is hereby incorporated by reference. The W3C maintains the specification along with other current documentation at their web site. Version 1.0 of the, XML specification is published at: hhttp://www.w3.org:TR/PR-xml-971208. It is anticipated that the specification for XML will develop over time. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> A parser is a program that takes a data stream in one format and transforms the data stream into another format. For example, parsers exist that take an XML stream and produce an object list that can be used by a variety of object oriented languages, including JAVA and C<highlight><superscript>&plus;&plus;</superscript></highlight>. At the present time, the inventors of the present invention are unaware of any such parser for COBOL, a procedural language which requires a static variable definition including the type and size of the variable. XML, on the other hand, uses string lengths that can be variable in length and records which may be defined with optional fields. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> XML defines a schema or style sheet that gets applied to a message. Such a schema or style sheet is termed a Document Type Definition (DTD). The phrase document type refers to both the vocabulary and the constraints on vocabulary usage. The following example may prove useful: </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> DTD section: </paragraph>
+<paragraph id="P-0017" lvl="2"><number>&lsqb;0017&rsqb;</number> &lt;&excl;ELEMENT CUST (NAME,DOB&quest;,SSN)&gt;</paragraph>
+<paragraph id="P-0018" lvl="2"><number>&lsqb;0018&rsqb;</number> &lt;&excl;ELEMENT NAME (FIRST,MIDDLE&quest;,LAST)&gt;</paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> XML Message using the foregoing DTD: </paragraph>
+<paragraph id="P-0020" lvl="2"><number>&lsqb;0020&rsqb;</number> &lt;CUST&gt;&lt;NAME&gt;&lt;FIRST&gt;John&lt;/FIRST&gt;&lt;MIDDLE&gt;R </paragraph>
+<paragraph id="P-0021" lvl="2"><number>&lsqb;0021&rsqb;</number> &lt;/MIDDLE&gt;&lt;LAST&gt;Doe&lt;/LAST&gt;&lt;/NAME&gt;&lt;DOB&gt;032665 </paragraph>
+<paragraph id="P-0022" lvl="2"><number>&lsqb;0022&rsqb;</number> &lt;/DOB&gt;&lt;SSN&gt;123456789&lt;/SSN&gt;&lt;/CUST&gt;</paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> As stated above, parsers are known for a variety of object oriented languages, e.g., JAVA, C&plus;&plus;, etc. Parsing XML for such object oriented languages is relatively easy as the data structure, i.e., grammar, in XML is well suited for the object oriented paradigm. Using the sample XML message, such a parser may produce the following Object Tree:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="63PT" align="left"/>
+<colspec colname="1" colwidth="154PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&lt;CUST&gt;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="77PT" align="left"/>
+<colspec colname="1" colwidth="140PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&lt;NAME&gt;</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="91PT" align="left"/>
+<colspec colname="1" colwidth="126PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&lt;FIRST&gt;John</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&lt;MIDDLE&gt;R</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&lt;LAST&gt;Doe</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="2">
+<colspec colname="OFFSET" colwidth="77PT" align="left"/>
+<colspec colname="1" colwidth="140PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>&lt;DOB&gt;032665</entry>
+</row>
+<row>
+<entry></entry>
+<entry>&lt;SSN&gt;123456789</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Using this object tree, Object Oriented languages can access the customers first name by referring to CUST.NAME.FIRST to obtain &ldquo;John.&rdquo;</paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Procedural languages such as COBOL are not easily able to understand object trees. In general, COBOL needs messages that are defined as static structures of data elements with each data element having a fixed data type and size. To process the sample XML message and extract the customers first name and middle initial, the XML message must be transformed into a typed data structure, such as the following: </paragraph>
+<paragraph id="P-0026" lvl="2"><number>&lsqb;0026&rsqb;</number> CUSTOMER-TAG ALPHA6 </paragraph>
+<paragraph id="P-0027" lvl="2"><number>&lsqb;0027&rsqb;</number> NAME-TAG ALPHA6 </paragraph>
+<paragraph id="P-0028" lvl="2"><number>&lsqb;0028&rsqb;</number> FIRST-NAME-TAG ALPHA7 </paragraph>
+<paragraph id="P-0029" lvl="2"><number>&lsqb;0029&rsqb;</number> FIRST-NAME ALPHA4 </paragraph>
+<paragraph id="P-0030" lvl="2"><number>&lsqb;0030&rsqb;</number> FIRST-NAME-END ALPHA8 </paragraph>
+<paragraph id="P-0031" lvl="2"><number>&lsqb;0031&rsqb;</number> MID-NAME-TAG ALPHA8 </paragraph>
+<paragraph id="P-0032" lvl="2"><number>&lsqb;0032&rsqb;</number> MID-NAME ALPHA1 </paragraph>
+<paragraph id="P-0033" lvl="2"><number>&lsqb;0033&rsqb;</number> MID-NAME-END ALPHA9 </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Such a data structure would be valid for only a specific message as data structures in XML employ variable length string fields and some fields may be defined as optional (using the &ldquo;&quest;&rdquo; character as in the sample DTD section). For this to be useful, the data structure must then be filled in with the data. In other words, the XML data must be referenced into this structure. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The flexibility of XML has makes it difficult to create a usable XML parser for languages which use strict variable declarations. This is especially true for COBOL. The present inventors have discovered a new way to parse messages, in XML and other SGML derivative grammars, into a format usable by COBOL and other procedural languages. This is useful for the numerous legacy systems that exist in COBOL. Such legacy systems perform their assigned functions in an efficient and cost effective manner making replacement thereof an unattractive and expensive option. However, the interfaces for such systems are in need of updating to provide graphical user interfacing and the ability to use modern communication standards including the Internet and soon XML. Thus, the ability to transform XML data into data readable by COBOL based systems would be extremely useful and the output of such a transformation in and of itself would be useful, concrete and tangible based, in part, on the avoidance of having to reprogram the entire legacy system in an object oriented language suited to using raw XML data. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> An object of the present invention is to provide a parser that parses messages in an SGML derivative language to a format usable by a non-object oriented language that uses strict variable declarations. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Another object of the present invention is to provide an XML parser for COBOL. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> A more specific object of the present invention is to provide an XML Parser for COBOL that creates a structure, or table, identifying where in a given data stream a specific data element is located and the length of the element. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Additional objects and advantages of the invention will be set forth in part in the description which follows, and, in part, will be obvious from the description, or may be learned by practice of the invention. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> The objects of the present invention are met in a parser for XML messages that produces a data structure identifying individual data elements in an XML message stream by location and length. The parser passes this data structure along with the original XML message to the calling routine. The calling routine uses the data structure as an index to access data in the original XML message stream. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Objects of the present invention are also met in an XML Parser for COBOL that creates a structure, or table, identifying where in a given data stream a specific data element is located and the length of the element. For each data element tag in the XML data stream, the parser creates a row in a table containing the Tag Name, Field Length, and Field Size of the data element. Once the entire XML data stream has been processed, the parser returns the table containing the position and length of all data elements in the XML data stream. Thus, instead of receiving a virtually unintelligible (by COBOL) data stream, the COBOL program is given a table that serves as a table of contents, if you will, of the data elements in the message. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The objects and advantages of the present invention, which will be subsequently apparent, reside in the details of construction and operation as more fully hereinafter described and claimed, reference being had to the accompanying drawings forming a part hereof, wherein like numerals refer to like parts throughout.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of an general purpose computer system suitable for embodying an XML parser in accordance with the present invention. </paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a data flow diagram of an XML parser in accordance with a preferred embodiment of the present invention. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart of a parsing process in the XML parser in accordance with the preferred embodiment of the present invention. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow chart of an extract tag process in the XML parser in accordance with the preferred embodiment of the present invention. </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart of an extract data process in the XML parser in accordance with the preferred embodiment of the present invention. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flow chart of a copybook for use with an XML parser in accordance with the preferred embodiment of the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Reference will now be made in detail to the preferred embodiment of the present invention, examples of which are illustrated in the accompanying drawings, wherein like reference numerals refer to like elements throughout. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> The detailed description which follows is presented in terms of general processes, procedures and symbolic representations of operations of data bits within a computer memory, associated computer processors, networks, and network devices. The process descriptions and representations used herein are the means used by those skilled in the data processing art to most effectively convey the substance of their work to others skilled in the art. Processes are here, and generally, conceived to be a self-consistent sequence of steps or actions leading to a desired result. Thus, the term &ldquo;process&rdquo; is generally used to refer to a series of operations performed by a processor, be it a central processing unit of a computer or a processing unit of a network device, and as such, encompasses such terms of art as &ldquo;procedures&rdquo;, &ldquo;functions&rdquo;, &ldquo;subroutines&rdquo; and &ldquo;programs.&rdquo;</paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> In general, the sequence of steps in the process require physical manipulation of physical quantities. Usually, though not necessarily, these quantities take the form of electrical or magnetic signals capable of being stored, transferred, combined, compared or otherwise manipulated. Those of ordinary skill in the art conveniently refer to these signals as &ldquo;bits&rdquo;, &ldquo;values&rdquo;, &ldquo;elements&rdquo;, &ldquo;symbols&rdquo;, &ldquo;characters&rdquo;, &ldquo;terms&rdquo;, &ldquo;numbers&rdquo;, or the like. It should be recognized that these and similar terms are to be associated with the appropriate physical quantities and are merely convenient labels applied to these quantities. In general, the present invention relates to method steps, software, and associated hardware configured to process electrical or other physical signals to generate other desired physical signals. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The apparatus set forth in the present application may be specifically constructed for the required purposes or it may comprise a general purpose computer or other network device selectively activated or reconfigured by a computer program stored in the computer. The processes presented herein are not inherently related to any particular computer or other apparatus. In particular, various general purpose machines may be used with programs in accordance with the teachings herein, or it may prove more convenient to construct more specialized apparatus to perform the required method steps. While the present invention can certainly be realized on a so-called personal computer, including those employing the INTEL PENTIUM&reg; architecture, any data processing device capable of performing the required operation may be used, including computers ranging from hand-held devices to main-frames. In the context of COBOL programs, it will be recognized that most COBOL code resides on mid-size to main-frame computers. When used herein, means-plus-function language, in accordance with 35 U.S.C. &sect;112(6), typically encompasses a central processing unit (CPU) with associated software causing it to perform the described functions in conjunction with the CPU&apos;s associated hardware. </paragraph>
+<paragraph id="P-0053" lvl="0"><number>&lsqb;0053&rsqb;</number> With respect to the software described herein, one of ordinary skill in the art will recognize that there exists a variety of platforms and languages for creating software for performing the processes outlined herein. One of ordinary skill in the art also recognizes that the choice of the exact platform and language is often dictated by the specifics of the actual system constructed, such that what may work for one type of general purpose computer may not be efficient on another type of general purpose computer. In practice, the present invention can be realized utilizing COBOL. Of course, this is only one example and other development platforms can be used depending upon the exact implementation of the present invention. </paragraph>
+<paragraph id="P-0054" lvl="0"><number>&lsqb;0054&rsqb;</number> One of ordinary skill in the art to which this invention belongs will have an understanding of XML and the ability to program in COBOL. It being recognized that such practitioners do not require specific details of the software, but rather find process descriptions more desirable (due to the variety of suitable hardware and software platforms), such specifics are not discussed to avoid obscuring the invention. </paragraph>
+<paragraph id="P-0055" lvl="0"><number>&lsqb;0055&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a general purpose computer system suitable for embodying an XML parser in accordance with the present invention. A general purpose computer <highlight><bold>10</bold></highlight>, such a personal computer utilizing an INTEL x86 compatible chipset, operates in accordance with software and firmware stored on a computer readable medium <highlight><bold>12</bold></highlight> (shown separate from the computer <highlight><bold>10</bold></highlight> for convenience only). The computer readable medium <highlight><bold>12</bold></highlight> may comprise, for example, a floppy disk, a hard disk, an optical disk (such as a CD-ROM, DVD, or MO), RAM, VRAM, DRAM, SRAM, ROM, EPROM, EEPROM, or a variety of networks and devices from which the computer <highlight><bold>10</bold></highlight> can retrieve data. Such a network is shown by way of example as being the Internet <highlight><bold>14</bold></highlight>. It is well known that the Internet is really a collection of interconnected network devices, such as a server <highlight><bold>16</bold></highlight> (which may also be a personal computer utilizing an INTEL x86 compatible chipset or any number of well-known special purpose devices) with associated computer readable medium <highlight><bold>18</bold></highlight>. The server <highlight><bold>16</bold></highlight> provides data to and receives data from the computer <highlight><bold>10</bold></highlight> via the Internet <highlight><bold>14</bold></highlight>. </paragraph>
+<paragraph id="P-0056" lvl="0"><number>&lsqb;0056&rsqb;</number> An XML parser in accordance with the present invention could be embodied in either the computer <highlight><bold>10</bold></highlight> or the server <highlight><bold>16</bold></highlight>. Typically, COBOL programs are used in conjunction with larger systems which may form the server <highlight><bold>16</bold></highlight> or be connected thereto such that the actual location of the XML parser is a matter left up to the actual programmer. </paragraph>
+<paragraph id="P-0057" lvl="0"><number>&lsqb;0057&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a data flow diagram of an XML parser in accordance with a preferred embodiment of the present invention. An XML parser for COBOL <highlight><bold>20</bold></highlight> (simply just XML parser <highlight><bold>20</bold></highlight>) receives an XML message <highlight><bold>22</bold></highlight> for processing. Using a method described herein after, the XML parser <highlight><bold>20</bold></highlight> analyzes the XML message <highlight><bold>22</bold></highlight> and produces a data element table <highlight><bold>24</bold></highlight> referencing the data elements in the XML message <highlight><bold>22</bold></highlight> by tag name, offset and size. The data element table <highlight><bold>24</bold></highlight> is constructed in a format readable by a COBOL program <highlight><bold>26</bold></highlight>. The COBOL program <highlight><bold>26</bold></highlight> may be any process or routine requiring access to XML messages. The COBOL program <highlight><bold>26</bold></highlight> may be the program which activates or calls the XML parser <highlight><bold>20</bold></highlight>, using a data access process <highlight><bold>26</bold></highlight><highlight><italic>a</italic></highlight>, or such activities may actually be handled by some intermediate routine or even automatically activated upon receipt of an XML message. The COBOL program <highlight><bold>26</bold></highlight> uses the data element table <highlight><bold>24</bold></highlight> to retrieve a data element <highlight><bold>28</bold></highlight> from the original XML message <highlight><bold>22</bold></highlight>. </paragraph>
+<paragraph id="P-0058" lvl="0"><number>&lsqb;0058&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart of a parsing process in the XML parser in accordance with a preferred embodiment of the present invention. The process starts in step S<highlight><bold>1</bold></highlight>. The XML Parser <highlight><bold>20</bold></highlight> receives an input <highlight><bold>30</bold></highlight> comprising three elements: a length of the XML message, the XML message itself, and an empty data element table. The parsing of the XML message is driven by the length of the message itself. Next in step S<highlight><bold>2</bold></highlight>, a Table-Sub variable is set to &ldquo;0&rdquo; while a String-Sub variable is set to &ldquo;1.&rdquo; The String-Sub variable holds the amount of characters the process has processed and the Table-Sub variable indicates the number of tags processed. </paragraph>
+<paragraph id="P-0059" lvl="0"><number>&lsqb;0059&rsqb;</number> Thereafter in steps S<highlight><bold>3</bold></highlight> through S<highlight><bold>7</bold></highlight>, the process examines each character in the message until the length of the message is reached. As part of this loop, each character is first checked for the XML begin tag token, the &ldquo;&lt;&rdquo; sign in step S<highlight><bold>4</bold></highlight>. When the begin tag token is encountered, specific logic is performed to extract the XML tag in step S<highlight><bold>5</bold></highlight>. If the character in the message is not the begin tag token, the character is the beginning of an actual data value and logic is performed, in step S<highlight><bold>6</bold></highlight>, to update the data element table with the Offset and Size of the data value. Once the tag or data is extracted, the process performs a return, in step S<highlight><bold>7</bold></highlight>, to step S<highlight><bold>4</bold></highlight>. </paragraph>
+<paragraph id="P-0060" lvl="0"><number>&lsqb;0060&rsqb;</number> Once all items are extracted the End-Tag is added to the data element table <highlight><bold>24</bold></highlight> in step S<highlight><bold>8</bold></highlight> and a return to the calling module is made in step S<highlight><bold>9</bold></highlight>. </paragraph>
+<paragraph id="P-0061" lvl="0"><number>&lsqb;0061&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow chart of an extract tag process S<highlight><bold>5</bold></highlight> in the XML parser in accordance with a preferred embodiment of the present invention. The extract tag process starts in step S<highlight><bold>10</bold></highlight> when called in step S<highlight><bold>5</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. Thereafter, in step S<highlight><bold>11</bold></highlight>, &ldquo;1&rdquo; is added to the String-Sub variable. </paragraph>
+<paragraph id="P-0062" lvl="0"><number>&lsqb;0062&rsqb;</number> In step S<highlight><bold>12</bold></highlight>, the first character after the begin tag token is examined to determine if it is a &ldquo;/&rdquo;. The &ldquo;/&rdquo; character indicates that the tag is actually marking the end of a data value, referred to as an end-tag hereafter. For example, in the XML message &ldquo;&lt;FIRST&gt;Bob&lt;/FIRST&gt;&rdquo;, &lt;FIRST&gt; is the begin-tag and &lt;/FIRST&gt; is the end-tag. The XML parser extracts and excludes end-tags from the table because they have no significance to the way that COBOL programs process the XML message. If the tag is not an end-tag, the tag value is stored in the data element table. </paragraph>
+<paragraph id="P-0063" lvl="0"><number>&lsqb;0063&rsqb;</number> If the first character is a &ldquo;/&rdquo; the process goes to step S<highlight><bold>13</bold></highlight> and an &ldquo;Y&rdquo; is moved to an End-Tag-Flag. On the other hand if the first character is not a &ldquo;/&rdquo;, the process goes to step S<highlight><bold>14</bold></highlight> and an &ldquo;N&rdquo; is moved to an End-Tag-Flag. In either event, the process goes to step S<highlight><bold>15</bold></highlight> and the value of the variable String-Sub is moved to a variable Start-Tag-Sub (as a pointer to the start of the tag) and a &ldquo;0&rdquo; is moved to a Tag-length variable. The Tag-Length variable indicates the length of the tag being extracted. </paragraph>
+<paragraph id="P-0064" lvl="0"><number>&lsqb;0064&rsqb;</number> Thereafter, in steps S<highlight><bold>16</bold></highlight> through S<highlight><bold>18</bold></highlight> the input string is extracted by moving through the string and extracting characters until the &ldquo;&gt;&rdquo; character is encountered. For each character extracted the String-Sub variable is increased by &ldquo;1&rdquo; and a Tag-Length variable is increased by &ldquo;1&rdquo;. </paragraph>
+<paragraph id="P-0065" lvl="0"><number>&lsqb;0065&rsqb;</number> Once the tag has been extracted in steps S<highlight><bold>16</bold></highlight> through S<highlight><bold>18</bold></highlight>, the process goes to step S<highlight><bold>19</bold></highlight> and the End-Tag-Flag is checked. If the End-Tag-Flag is set to &ldquo;Y,&rdquo; the process goes to step S<highlight><bold>21</bold></highlight>, a &ldquo;1&rdquo; is added to the String-Sub variable and the process ends in step S<highlight><bold>22</bold></highlight>. If the End-Tag-Flag is set to &ldquo;N,&rdquo; the process goes to step S<highlight><bold>20</bold></highlight> and the tag is extracted. Specifically, a &ldquo;1&rdquo; is added to the Table-Sub variable and the string, starting at the character pointed to by the Start-Tag-Sub variable with a length indicated by the Tag-Length variable, the tag is moved to the location indicated by the Table-Sub variable. Thereafter, the process goes to step S<highlight><bold>21</bold></highlight>, a &ldquo;1&rdquo; is added to the String-Sub variable and the process ends in step S<highlight><bold>22</bold></highlight>. </paragraph>
+<paragraph id="P-0066" lvl="0"><number>&lsqb;0066&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart of an extract data process S<highlight><bold>6</bold></highlight> in the XML parser in accordance with a preferred embodiment of the present invention. The extract data process starts in step S<highlight><bold>30</bold></highlight> when called in step S<highlight><bold>6</bold></highlight> shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. In step S<highlight><bold>31</bold></highlight> the current position (indicated by the String-Sub variable) in the XML message is stored in the current data element table entry as the Offset. More specifically, the table entry indicated by the Table-Sub variable is updated to reflect the offset of the element. </paragraph>
+<paragraph id="P-0067" lvl="0"><number>&lsqb;0067&rsqb;</number> Next, in steps S<highlight><bold>32</bold></highlight> through S<highlight><bold>33</bold></highlight>, the characters in the message are examined until the begin tag token &ldquo;&lt;&rdquo; is encountered, indicating the end of the current data value. For each character examined the String-Sub variable is incremented by &ldquo;1.&rdquo; Then in step S<highlight><bold>34</bold></highlight> the length of the data value (Data-Elem-Length) is calculated and stored in the current data element table entry as the Size. The process ends in step S<highlight><bold>35</bold></highlight>. </paragraph>
+<paragraph id="P-0068" lvl="0"><number>&lsqb;0068&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a flow chart of a copybook routine for use with an XML parser in accordance with a preferred embodiment of the present invention. Referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference> it is noted that the COBOL Program <highlight><bold>26</bold></highlight> has a data access portion <highlight><bold>26</bold></highlight><highlight><italic>a</italic></highlight>. The Data Access portion <highlight><bold>26</bold></highlight><highlight><italic>a </italic></highlight>of the COBOL Program <highlight><bold>26</bold></highlight> can be formed using a generic COBOL copybook as described in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. The code to use the copybook routine is:  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="1">
+<colspec colname="1" colwidth="217PT" align="left"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="1" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry>COPY ZRCXML01 REPLACING</entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="3">
+<colspec colname="OFFSET" colwidth="14PT" align="left"/>
+<colspec colname="1" colwidth="91PT" align="left"/>
+<colspec colname="2" colwidth="112PT" align="left"/>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>THE-DATA-TAG</entry>
+<entry>BY FIRST-NAME-TAG</entry>
+</row>
+<row>
+<entry></entry>
+<entry>THE-DESTINATION-FIELD</entry>
+<entry>BY CUSTOMER-FIRST-NAME</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="2" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0069" lvl="0"><number>&lsqb;0069&rsqb;</number> In the example shown in <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> FIRST-NAME-TAG has a value of &ldquo;FIRST&rdquo;. The copybook routine searches the data element table produced by the XML Parser using the FIRST-NAME-TAG as the key. When the search key is found, a COBOL MOVE statement is performed using the Offset and Size related to the Tag Name to place the data element value into a field specified by the COBOL Program <highlight><bold>26</bold></highlight>. In this example, the COBOL Program field is CUSTOMER-FIRST-NAME and the result of executing the code contained in the copybook is that CUSTOMER-FIRST-NAME is equal to &ldquo;Bob&rdquo;. </paragraph>
+<paragraph id="P-0070" lvl="0"><number>&lsqb;0070&rsqb;</number> Referring to <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, the copybook routine starts in Step S<highlight><bold>40</bold></highlight> with the initiation of a search of the data element table <highlight><bold>24</bold></highlight>. For each element, a check is made in step S<highlight><bold>41</bold></highlight> to determine if the element is the element being sought. If the correct element is found, the process goes to step S<highlight><bold>42</bold></highlight> and the content is moved to the destination field specified when calling the copybook and the process ends. If the element is not in the data element table <highlight><bold>24</bold></highlight> a default element is moved to the destination field in step S<highlight><bold>43</bold></highlight> and the process ends. </paragraph>
+<paragraph id="P-0071" lvl="0"><number>&lsqb;0071&rsqb;</number> The many features and advantages of the invention are apparent from the detailed specification and, thus, it is intended by the appended claims to cover all such features and advantages of the invention which fall within the true spirit and scope of the invention. For example, the present invention is not in any way limited to the initial version of XML, but is adaptable for use with all future versions. The present invention has been described with respect to a parser that is operative on well formed XML data streams, those of ordinary skill in the art will recognize that various methods exist for dealing with non-well formatted data streams containing errors. Error handling routines are, generally, within the ability of one of ordinary skill in the art to construct and are beyond the focus of the present invention, accordingly such details are omitted. The present invention is directed toward parsing the data in an XML message, one of ordinary skill in the art will recognize that similar apparatus and methods may be employed to parse the DTDs. Further, since numerous modifications and changes will readily occur to those skilled in the art, it is not desired to limit the invention to the exact construction and operation illustrated and described, and accordingly all suitable modifications and equivalents may be resorted to, falling within the scope of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. An XML parser for COBOL comprising: 
+<claim-text>computer processor means for processing data; </claim-text>
+<claim-text>first means for receiving XML data; and </claim-text>
+<claim-text>second means for analyzing the XML data and producing a data element table indexing the location of tags in the XML data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. An XML parser for COBOL, as set forth in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said second means produces a table having a first field referencing a tag names; a second field referencing an offset of the data referenced by the tag; and a third field referencing a size of the data referenced by the tag. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. An XML parser for COBOL, as set forth in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said second means produces a table in a format native to COBOL. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method of parsing XML data comprising: 
+<claim-text>receiving XML data; </claim-text>
+<claim-text>analyzing the XML data identifying tags and associated data; and </claim-text>
+<claim-text>producing a data element table indexing the location of tags in the XML data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein the step of producing a data element table comprises: 
+<claim-text>forming a table, readableby a COBOL program, having a first field referencing a tag name; a second field referencing an offset of the data referenced by the tag; and a third field referencing a size of the data referenced by the tag. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A computer readable medium encoded with software for use with a COBOL program to permit the COBOL programs to access data in XML, the software causing a computer to perform the actions of: 
+<claim-text>receiving XML data; </claim-text>
+<claim-text>analyzing the XML data identifying tags and associated data; </claim-text>
+<claim-text>producing a data element table indexing the location of tags in the XML data; and </claim-text>
+<claim-text>interfacing with the COBOL program and when a data element of the XML data is requested accessing the data element table to determine a location of the requested data element, retrieving the requested data element from the determined location and moving the requested data element into a location specified by the COBOL program. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A computer readable medium encoded with a data structure comprising: 
+<claim-text>a table, readable by a COBOL program, having: 
+<claim-text>a first field referencing tag names in an XML message; </claim-text>
+<claim-text>a second field referencing an offset of the data referenced by the tag; and </claim-text>
+<claim-text>a third field referencing a size of the data referenced by the tag; </claim-text>
+</claim-text>
+<claim-text>whereby a COBOL program can access the data in the XML message. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A parser for a programming language requiring static definition of variables, the parser comprising: 
+<claim-text>computer processor means for processing data; </claim-text>
+<claim-text>first means for receiving data with data elements formed in a mark-up language; and </claim-text>
+<claim-text>second means for analyzing the data and producing a data element table in a format usable by the programming language indexing the location of data elements in the data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A parser as set forth in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein said second means produces a table, directly readable by the programming language, having a first field identifying the data elements; a second field referencing an offset of the data elements; and a third field referencing a size of the data elements. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A method of parsing XML comprising: 
+<claim-text>receiving an XML data stream, a length of the XML data stream, and an empty data element table; and </claim-text>
+<claim-text>analyzing the XML data stream one character at a time by performing the following actions: 
+<claim-text>when a begin tag character is encountered, extracting the next series of characters as a tag and updating a data element table to reflect any begin tags; and </claim-text>
+<claim-text>when an end tag character is encountered, extracting the next series of characters as a data element and updating a data element table to point to the data as indexed by an associated tag. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method, as set forth in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the begin tag character is a &ldquo;&lt;&rdquo; and the end tag character is a &ldquo;&gt;&rdquo; and step of extracting the next series of character as a tag comprises: 
+<claim-text>determining if the character after the &ldquo;&lt;&rdquo; is a &ldquo;/&rdquo;, indicating that the tag is an end tag; </claim-text>
+<claim-text>if the tag is not an end tag, extracting the subsequent characters until the end of the string or a &ldquo;&gt;&rdquo; is encountered; and </claim-text>
+<claim-text>moving the extracted tag into the data element table. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. A method, as set forth in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the step of extracting the next series of character as a data element comprises: 
+<claim-text>moving the offset of the data element into the data element table in association with the related tag; </claim-text>
+<claim-text>extracting the characters of the data element until the end of the string or a begin tag character is encountered; </claim-text>
+<claim-text>calculating the length of the data element; and </claim-text>
+<claim-text>moving the length of the data element into the data element table in association with the related tag. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A computer readable medium encoded with a data structure comprising: 
+<claim-text>a table, readable by a programming language requiring static definition of variables, having: 
+<claim-text>a first field referencing tag names in an XML message; </claim-text>
+<claim-text>a second field referencing an offset of the data referenced by the tag; and </claim-text>
+<claim-text>a third field referencing a size of the data referenced by the tag; </claim-text>
+</claim-text>
+<claim-text>whereby the programming language can access the data in the XML message.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005410A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005410A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005410A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005410A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005410A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005410A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

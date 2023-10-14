@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004948A1-20030102-D00000.TIF SYSTEM "US20030004948A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004948A1-20030102-D00001.TIF SYSTEM "US20030004948A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004948A1-20030102-D00002.TIF SYSTEM "US20030004948A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004948A1-20030102-D00003.TIF SYSTEM "US20030004948A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004948A1-20030102-D00004.TIF SYSTEM "US20030004948A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004948</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09895234</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>010000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for retrieving data from disk in a network environment</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Patrick</given-name>
+<middle-name>Joseph</middle-name>
+<family-name>Bohrer</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Bishop</given-name>
+<middle-name>Chapman</middle-name>
+<family-name>Brock</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Coupland</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Elmootazbellah</given-name>
+<middle-name>Nabil</middle-name>
+<family-name>Elnozahy</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Ramakrishnan</given-name>
+<family-name>Rajamony</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Austin</city>
+<state>TX</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<assignee-type>02</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Joseph P. Lally</name-1>
+<name-2>DEWAN &amp; LALLY, L.L.P.</name-2>
+<address>
+<address-1>P.O. Box 684749</address-1>
+<city>Austin</city>
+<state>TX</state>
+<postalcode>78768-4749</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method of retrieving data from a disk includes determining the network transfer rate of a network connection between a client and a server. A first portion of the requested data is retrieved from the disk responsive to a data request received by the server from the client via a network connection and transmission of the first portion of data to the client via the network is initiated. The time required to transmit the first portion of data to the client is calculated based upon the network transfer rate and a determination of when to retrieve a subsequent portion of the requested data from disk is made based, in part, on whether the calculated time is expired. The determination of when to retrieve subsequent portions of data from disk may be further based on a desire to minimize a system parameter such as memory usage or disk energy consumption and heat dissipation. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Present Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention generally relates to the field of data processing networks and more particularly to a system and method for improving the performance of networked systems by considering the network transfer rate as a parameter in determining how to retrieve data from a disk. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. History of Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> In the field of data processing networks, servers are widely used to provide distributed access to applications and data from clients that are connected to the network. In a web server, data is typically fetched from the disk and sent back to the client using a Transmission Control Protocol (TCP) connection. In such an environment, the data transfer rate over the network between the server and the client (referred to herein as the network transfer rate) is a function of the connection bandwidth. The connection bandwidth is typically variable and depends on the properties of the link between the client and the server. Thus, the server may simultaneously have a high data-transfer rate to a first client and a slow data transfer rate to a second client. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Typically, when a client request for data is received by a web server, the server software starts to fetch all of the blocks that comprise the requested file or data. Fetching the requested data in its entirety may have undesirable consequences. Since the data is fetched from disk at a data rate (the disk transfer rate) that may be significantly higher than the network transfer rate, much of the fetched data will have to be buffered or stored in scarce server memory until the server can transmit the data over the network. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In addition, the requested data is rarely stored on in contiguous physical positions on the disk or disks. Accessing data from a disk in physically discontinuous locations requires physical movement of the disk head, which is slow, consumes a lot of energy and dissipates a lot of heat, all of which are undesirable. The energy consumed and heat dissipated by the movement of disk heads is increasingly becoming a critical factor in the design of data centers. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Therefore it would desirable to implement a system and method for accessing data from disk in response to a network request in which the network transfer rate is factored into by the disk scheduling mechanism to optimize the data retrieval over a desired parameter such as throughput, memory consumption, or energy consumption. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The problems identified are addressed in large part by a system and method of retrieving data from a disk that includes determining the network transfer rate of a network connection between a client and a server. A first portion of the requested data is retrieved from the disk responsive to a data request received by the server from the client via a network connection and transmission of the first portion of data to the client via the network is initiated. The time required to transmit the first portion of data to the client is calculated based upon the network transfer rate and a determination of when to retrieve a subsequent portion of the requested data from disk is made based, in part, on whether the calculated time is expired. The determination of when to retrieve subsequent portions of data from disk may be further based on a desire to minimize a system parameter such as memory usage or disk energy consumption and heat dissipation.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Other objects and advantages of the invention will become apparent upon reading the following detailed description and upon reference to the accompanying drawings in which: </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a data processing network; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of selected features of the network of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is an illustration of portions the disk of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flow diagram illustrating a method of retrieving data from disk according to an embodiment of the invention; and </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow diagram illustrating a method of retrieving data from disk according to an embodiment of the invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> While the invention is susceptible to various modifications and alternative forms, specific embodiments thereof are shown by way of example in the drawings and will herein be described in detail. It should be understood, however, that the drawings and detailed description presented herein are not intended to limit the invention to the particular embodiment disclosed, but on the contrary, the intention is to cover all modifications, equivalents, and alternatives falling within the spirit and scope of the present invention as defined by the appended claims. </paragraph>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Turning now to the drawings, <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates selected components of a data processing system <highlight><bold>100</bold></highlight> according to one embodiment of the present invention. In the depicted embodiment, network <highlight><bold>100</bold></highlight> includes one or more clients <highlight><bold>102</bold></highlight> that are configured to transmit data requests to a server <highlight><bold>106</bold></highlight> over a network <highlight><bold>104</bold></highlight> to which each of the devices is connected. Network <highlight><bold>104</bold></highlight> may comprise a local area network (LAN) implemented using Ethernet or another suitable network technology. In another embodiment, network <highlight><bold>104</bold></highlight> may represent a wide area network or the Internet and may include a variety of network routers, hubs, gateways, and intermediate servers. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Network <highlight><bold>104</bold></highlight> and each of the attached clients <highlight><bold>102</bold></highlight> and server <highlight><bold>106</bold></highlight> typically support the Transmission Control Protocol/Internet Protocol (TCP/IP) suite of protocols. TCP/IP provides the foundation and framework for many computer networks including the Internet. TCP/IP is extensively documented in a variety of publications including M. Murhammer et al., <highlight><italic>TCP/IP Tutorial and Technical Overview, </italic></highlight>available online at www.redbooks.ibm.com (&num;GG24-3376-05) and incorporated by reference herein. In a TCP/IP environment, each client <highlight><bold>102</bold></highlight> may communicate with server <highlight><bold>106</bold></highlight> via a dedicated TCP connection. The various TCP connections between client <highlight><bold>102</bold></highlight> and server <highlight><bold>106</bold></highlight> are indicated in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> by reference numerals <highlight><bold>110</bold></highlight>, <highlight><bold>112</bold></highlight>, and <highlight><bold>114</bold></highlight>. Each TCP connection may have a characteristic data transfer rate or network transfer rate that is indicative of the rate at which data is exchanged between the corresponding client <highlight><bold>102</bold></highlight> and server <highlight><bold>106</bold></highlight>. The data transfer rate of each TCP connection depends on the properties of the connection. Typically, web sever <highlight><bold>106</bold></highlight> knows or can derive the network transfer rate of each of its TCP connections based upon data transfer statistics. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Network <highlight><bold>100</bold></highlight> as depicted in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> further includes data storage device(s) indicated by reference numeral <highlight><bold>108</bold></highlight>. Storage <highlight><bold>108</bold></highlight> is connected to and accessible from server <highlight><bold>106</bold></highlight>. In one embodiment, storage <highlight><bold>108</bold></highlight> may be an integrated component of server <highlight><bold>106</bold></highlight>. In other embodiments, storage <highlight><bold>108</bold></highlight> may be implemented as a storage area network (SAN). A SAN is a high speed network, comparable to a Local Area Network (LAN), comprised of interconnected storage devices such as disk drives that allows the establishment of direct connections between storage devices and servers. A SAN can be shared between multiple servers <highlight><bold>106</bold></highlight> or dedicated to one server. For additional information regarding SANs, the interested reader is referred to Ravi K. Khattar et al., <highlight><italic>Introduction to Storage Area Network, SAN </italic></highlight>(IBM 1999), which is accessible from the URL http://www.redbooks.ibm.com/redbooks/SG245470.html and incorporated by reference herein. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Generally speaking, the invention contemplates optimizing the retrieval of data from storage <highlight><bold>108</bold></highlight>. More specifically, the invention includes a system and method in which the network transfer rate(s) of one or more client/server connections is used as a control parameter in retrieving data from storage <highlight><bold>108</bold></highlight> in response to a request from a client <highlight><bold>102</bold></highlight>. The network transfer rate may be used to optimize data retrieval over various parameters including memory usage, data retrieval performance, and storage device energy consumption and heat dissipation. Regardless of the parameter or parameters that are optimized, using the network transfer rate as a control parameter in retrieving data from disk reflects that increasingly prevalent reality of client/sever networks. Moreover, the present invention recognizes the central importance of disk storage devices in the modern network scheme in which data presentation is primarily the task of the desktop or network computer (i.e., clients <highlight><bold>102</bold></highlight>), data processing is primarily allocated to the application server <highlight><bold>106</bold></highlight>, and data storage is allocated to storage <highlight><bold>108</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Portions of the present invention may be implemented as a sequence of instructions (i.e., computer software) executable by a microprocessor or other suitable computing device. The instructions are typically stored in or on a computer program product or computer readable medium such as a system memory, ROM, flash memory, hard disk, floppy diskette, CD ROM, DVD, or magnetic tape. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> block diagram of selected portions of server <highlight><bold>106</bold></highlight> and storage <highlight><bold>108</bold></highlight> is presented to emphasize features of the present invention. In the depicted embodiment, server <highlight><bold>106</bold></highlight> and storage <highlight><bold>108</bold></highlight> include a network interface <highlight><bold>202</bold></highlight>, an operating system <highlight><bold>204</bold></highlight>, a disk scheduler <highlight><bold>206</bold></highlight>, and at least one physical disk <highlight><bold>208</bold></highlight>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Network interface <highlight><bold>202</bold></highlight> enables operating system <highlight><bold>204</bold></highlight> to receive packets of information from and send packets to clients <highlight><bold>102</bold></highlight> via network <highlight><bold>104</bold></highlight>. Typically, a client requests are delivered over network <highlight><bold>104</bold></highlight> as one or more information packets, each packet with its own set of protocol specific packet headers. The packet headers may include information regarding the source and destination of the corresponding packet, the validity of the packet, and other implementation specific network information. In a TCP/IP network embodiment, for example, each packet includes a TCP header that is used to verify the integrity of the packet and an IP header that indicates the packets network destination address. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In one embodiment, network interface <highlight><bold>202</bold></highlight> comprises hardware commonly referred to as a network interface card (NIC). In this embodiment, the NIC is typically responsible for capturing packets addressed to server <highlight><bold>106</bold></highlight>, processing a level header such as the Media Access Control (MAC) header in an Ethernet implementation, and providing the remainder of each packet to operating system <highlight><bold>204</bold></highlight>. In other embodiments, the NIC may include dedicated hardware for processing additional levels of the network protocol headers. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Operating system <highlight><bold>204</bold></highlight> provides an environment in which applications on server <highlight><bold>106</bold></highlight> can execute and communicate with other devices over the network. Operating system <highlight><bold>204</bold></highlight> may be a Unix-based operating system such as the AIX&reg; operating system from IBM although the invention is not intended to be limited to Unix operating systems. In one embodiment, operating system <highlight><bold>204</bold></highlight> includes facilities or code enabling communication over a TCP/IP compliant network. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> If a request issued by client <highlight><bold>102</bold></highlight> is a request for data residing on storage <highlight><bold>108</bold></highlight>, operating system <highlight><bold>204</bold></highlight> and disk scheduler <highlight><bold>206</bold></highlight> work in conjunction to retrieve the requested data from storage <highlight><bold>108</bold></highlight>. In a conventional server/storage arrangement, the operating system is unaware of the manner in which data is stored on physical disk <highlight><bold>208</bold></highlight>. Typically, data files of any significant size are not stored in physically contiguous storage locations of physical disk <highlight><bold>208</bold></highlight>. Instead, portions of a data file may be distributed over various tracks of physical disk <highlight><bold>208</bold></highlight>. The disk scheduler is responsible for determining the physical location(s) of data on the physical disk and for ordering or scheduling the retrieval of the data. If the data is located on multiple tracks, the disk scheduler is responsible for moving the recording head to the appropriate tracks in the appropriate order. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> In a conventional server/storage configuration, the operating system typically treats each file request as a single request to retrieve the entire file immediately. The operating system may convert the file request into a set of request for logical blocks and pass the set of logical blocks to disk scheduler, which is responsible for mapping the requested logical blocks to physical blocks on the disk. Neither the operating system nor the disk scheduler is typically configured to consider the network transfer rate of the link between the requesting client and the server when retrieving the requested data from disk. Thus, in a conventionally designed network, a client request for data is handled substantially identically whether the request is received over a slow connection or a fast connection. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Operating system <highlight><bold>204</bold></highlight> and disk scheduler <highlight><bold>206</bold></highlight> according to the present invention, however, are configured to retrieve data from disk in response to a client request based, at least in part, on the network transfer rate of the network connection between the server and the client. By configuring operating system <highlight><bold>204</bold></highlight> and disk scheduler <highlight><bold>206</bold></highlight> to account for the network transfer rate, which is typically significantly lower than the disk transfer rate, the retrieval of information from disk can be better optimized over various parameters including memory usage, power consumption, and performance. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Referring now to <cross-reference target="DRAWINGS">FIG. 3, a</cross-reference> conceptualized depiction of a portion of physical disk <highlight><bold>208</bold></highlight> is presented to illustrate an example of optimized data retrieval according to the present invention. In the depicted illustration, physical disk <highlight><bold>208</bold></highlight> includes various tracks <highlight><bold>302</bold></highlight>, each identified by a unique letter. The track <highlight><bold>302</bold></highlight> &ldquo;A&rdquo; is physically adjacent to track <highlight><bold>302</bold></highlight> &ldquo;X,&rdquo; which is adjacent track <highlight><bold>302</bold></highlight> &ldquo;B,&rdquo; and so forth. Consider a scenario in which a client <highlight><bold>102</bold></highlight> requests a file from server <highlight><bold>106</bold></highlight> and the blocks comprising requested file are stored on storage <highlight><bold>108</bold></highlight> and, more specifically, on track <highlight><bold>302</bold></highlight> &ldquo;A&rdquo; and track <highlight><bold>302</bold></highlight> &ldquo;B&rdquo; of physical disk <highlight><bold>208</bold></highlight>. In a conventional server/storage environment, the operating system would treat the file request as a single request for all of the blocks that comprise the file and pass the request on to the disk scheduler a request for a set of logical blocks. To satisfy this request, the disk scheduler would convert or map the requested logical blocks to physical block locations. The disk scheduler would then physically move the recording heading to block &ldquo;A&rdquo;, retrieve the information from block &ldquo;A&rdquo;, move the head to block &ldquo;B&rdquo;, and then retrieve the information from block &ldquo;B&rdquo;. This method of retrieving data in response to a client request in a web-based environment is more than likely inefficient because the rate at which data is retrieved from storage <highlight><bold>108</bold></highlight> to server <highlight><bold>106</bold></highlight> is almost certainly greater than the rate at which the data can be transmitted to client <highlight><bold>102</bold></highlight>. Therefore, an opportunity exists during the retrieval of data from storage <highlight><bold>108</bold></highlight> to improve the usage of one or more system resources. More specifically, under the assumption that server <highlight><bold>106</bold></highlight> and storage <highlight><bold>108</bold></highlight> are able to determine the network transfer rate of each connection between server <highlight><bold>106</bold></highlight> and client(s) <highlight><bold>102</bold></highlight>, the system could use this network transfer rate information to improve the data retrieval process by, for example, conserving system memory in server <highlight><bold>106</bold></highlight>, minimizing the energy consumed and heat dissipated by the physical disk, or optimizing for performance (speed) of retrieval. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates a method <highlight><bold>400</bold></highlight> by which a client request for data in a network environment is processed according to an embodiment of the invention in which it is desirable to optimize server memory allocation. In this embodiment, it is presumed that server <highlight><bold>106</bold></highlight> may be handling a variety of requests and tasks and that server <highlight><bold>106</bold></highlight> may be memory constrained. In the depicted embodiment, client <highlight><bold>102</bold></highlight> sends a request for data to server <highlight><bold>106</bold></highlight>. The request for data may by be transmitted between client <highlight><bold>102</bold></highlight> and server <highlight><bold>106</bold></highlight> as a set of frames or packets over a TCP connection. The data request is received (block <highlight><bold>402</bold></highlight>) by server <highlight><bold>106</bold></highlight>. The data request may consist of or include a request for a data file residing on storage <highlight><bold>108</bold></highlight>. Moreover, portions of the requested file may reside on two or more physical tracks <highlight><bold>302</bold></highlight> of disk <highlight><bold>208</bold></highlight>. In accordance with the present invention, operating system <highlight><bold>204</bold></highlight> resolves (block <highlight><bold>404</bold></highlight>) the file request into a set of requests for the logical blocks corresponding to the requested file and passes the logical block requests to disk scheduler <highlight><bold>206</bold></highlight>. Disk scheduler <highlight><bold>206</bold></highlight> then maps or converts (block <highlight><bold>405</bold></highlight>) the logical block requests into a set of requests for the physical blocks <highlight><bold>302</bold></highlight> of storage <highlight><bold>108</bold></highlight> that comprise the requested file. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Data from the first block <highlight><bold>302</bold></highlight> of disk <highlight><bold>208</bold></highlight> is then retrieved (block <highlight><bold>406</bold></highlight>) and stored in the server memory. Transmission of the first block of data to client <highlight><bold>102</bold></highlight> over network <highlight><bold>104</bold></highlight> is then initiated (block <highlight><bold>407</bold></highlight>). In addition, the network transfer time is determined (block <highlight><bold>408</bold></highlight>) based on the network transfer rate of the appropriate client/server connection. In an embodiment of the invention emphasizing server memory allocation, it is desirable to retrieve data from disk <highlight><bold>208</bold></highlight> before it is absolutely needed by server <highlight><bold>106</bold></highlight> only if there is sufficient unused server system memory. Because data from second and subsequent blocks <highlight><bold>302</bold></highlight> of storage <highlight><bold>208</bold></highlight> will not be needed until the first block is transmitted to client <highlight><bold>102</bold></highlight> over network <highlight><bold>104</bold></highlight>, the depicted embodiment of the invention is configured to delay the retrieval of data from subsequent blocks if server memory is unavailable. Thus, after retrieving the first block, server <highlight><bold>106</bold></highlight> enters a loop during the time the block is being transmitted over network <highlight><bold>104</bold></highlight> to client <highlight><bold>102</bold></highlight> (as determined in decision block <highlight><bold>411</bold></highlight>). Within the loop, the server memory allocation is monitored (block <highlight><bold>412</bold></highlight>). If the server detects excess memory capacity in block <highlight><bold>414</bold></highlight>, the server may retrieve (block <highlight><bold>416</bold></highlight>) the next block of data from storage <highlight><bold>108</bold></highlight>. If the server detects that there is no excess memory, however, it will delay the retrieval of the second and subsequent data blocks until the data is absolutely needed (i.e., until the transfer time for the first or preceding block of data is expired and the block has been transmitted over network <highlight><bold>104</bold></highlight> to the requesting client <highlight><bold>102</bold></highlight>). After the transfer time for the preceding block is complete, the next block of data is retrieved in block <highlight><bold>418</bold></highlight> (if it has not already been retrieved in block <highlight><bold>416</bold></highlight>) and the transmission of the block over the network is initiated in block <highlight><bold>420</bold></highlight>. In this manner, the depicted embodiment of the invention is able to optimize a system resource, namely, server memory, by using the network transfer rate to determine when data is needed and retrieving data from disk before it is needed only if the system is able to accommodate it. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> In one embodiment, the server may include a predetermined and preferably programmable threshold value of available memory upon which the determination in block <highlight><bold>414</bold></highlight> is based. If the available server memory exceeds the predetermined value, then the retrieval of subsequent blocks of data from disk can be initiated. Otherwise, the system will postpone data retrieval from disk until required by the network. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Turning now to <cross-reference target="DRAWINGS">FIG. 5, a</cross-reference> second embodiment of the invention is depicted in which the data retrieval process is structured to optimize (i.e., minimize) energy consumption and heat dissipation by disk <highlight><bold>208</bold></highlight>. In this embodiment, the server and disk scheduler are configured to retrieve data from disk based, at least in part, upon the current position of the disk head. As will be familiar to those skilled in the field of hard disk design, the physical movement of the read/write head is responsible for a significant portion of the energy consumed and heat generated by the disk. Minimizing these parameters is becoming increasingly important for web-based applications in which there may be one or more machine stacks entirely populated with disks. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> As depicted in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, the initial blocks of file request handling process <highlight><bold>500</bold></highlight> are substantially analogous to the initial blocks of the file request handling process <highlight><bold>400</bold></highlight> depicted in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. More specifically, process <highlight><bold>500</bold></highlight> includes the receipt (block <highlight><bold>502</bold></highlight>) by server <highlight><bold>106</bold></highlight> of a file request from a client <highlight><bold>102</bold></highlight> via network <highlight><bold>104</bold></highlight>. The file request is resolved (block <highlight><bold>504</bold></highlight>) into its component logical blocks and mapped into the corresponding physical blocks (block <highlight><bold>505</bold></highlight>). The data from the first physical block is then retrieved from disk and the transmission of the data to the client is initiated (block <highlight><bold>506</bold></highlight>). The transfer time is determined (block <highlight><bold>508</bold></highlight>) based upon the network transfer rate of the corresponding client/server connection. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The server then enters a loop during the pendency of the calculated transfer time (as determined in block <highlight><bold>511</bold></highlight>) in which the read/write head position is monitored (block <highlight><bold>512</bold></highlight>) with respect to the physical position of data blocks yet to be retrieved from disk to memory. If disk scheduler <highlight><bold>206</bold></highlight> determines that the physical location of a pending block is closer to the current position of the read/write head than the physical location of the next sequentially ordered block, the retrieval of data from the block that is closer may be prioritized over the retrieval of data from the next sequential block to minimize the physical movement of the read/write head. Thus, a decision is made in block <highlight><bold>514</bold></highlight> whether there is data on a track that is physically closer to the current head position than the track that would be next accessed if the request were processed sequentially. If there is data that is closer to the current head position and the system does not yet require the next sequentially ordered block of data (because the first block of data is still transmitting to the client), the server may retrieve (block <highlight><bold>515</bold></highlight>) the data that is closer to its current head position before continuing to retrieve data sequentially. When the transfer time expires, the next sequential portion of data is retrieved (block <highlight><bold>516</bold></highlight>) from disk and the transmission of the data over the network is initiated (block <highlight><bold>518</bold></highlight>). </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> The concept of prioritizing data retrieval to minimize disk head movement and heat dissipation and conserve energy may be expanded to include scenarios in which two or more file requests are pending simultaneously. Referring back to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, consider a first file request initiated at time T<highlight><bold>0</bold></highlight> (in seconds) for a file that includes data on Track A and Track B. The network transfer rate is determined to be 1 track/10 seconds. The system will begin retrieving the data from track A. The second file request occurs at time T<highlight><bold>5</bold></highlight> for data that is located on tracks X and Y. Because the data on track X is closer to the current position of the read/write head than the data on track B and because the server does not need the data from track B until T<highlight><bold>10</bold></highlight>, the system may prioritize the retrieval of data from track X over the retrieval of data from track B based on the current position of the read/write head and the network transfer rate. In this manner, the system produces reduced travel of the read/write head. More specifically, instead of traveling from track A to track B, back to track X, and then over to track Y. The system would move the head from track A to track B to track X to track Y thereby improving throughput and minimizing head movement, energy consumption, and heat dissipation without negatively affecting network performance. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> While two examples have been presented to illustrate specific examples of the optimization of handling retrieval of data from disks in response to network file requests, the present invention is not limited to optimizing the illustrated parameters. More generally, the invention contemplates accounting for the relatively slow network transfer rate in determining when data is required to be retrieved from disk. The invention is intended include the optimization of any appropriate parameter based at least in part upon the network transfer rate. In addition, the invention may include the optimization of a group of two or more parameters simultaneously. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Thus, it will be apparent to those skilled in the art having the benefit of this disclosure that the present invention contemplates optimizing data retrieval from disk in response to a network file request based upon the network transfer rate. It is understood that the form of the invention shown and described in the detailed description and the drawings are to be taken merely as presently preferred examples. It is intended that the following claims be interpreted broadly to embrace all the variations of the preferred embodiments disclosed. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of retrieving data from a disk, comprising: 
+<claim-text>determining the network transfer rate of a network connection between a client and a server; </claim-text>
+<claim-text>responsive to a data request received by the server from the client via a network connection, retrieving a first portion of the requested data from the disk; </claim-text>
+<claim-text>initiating transmission of the first portion of data to the client via the network; </claim-text>
+<claim-text>calculating the time required to transmit the first portion of data to the client based upon the network transfer rate; and </claim-text>
+<claim-text>retrieving a subsequent portion of the requested data from disk based, at least in part, on whether the calculated time is expired. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein determining the network transfer rate comprises determining the network transfer rate of a TCP connection between the client and the server. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein retrieving a first portion of the requested data comprises retrieving data from a first block of the disk. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein determining when to retrieve a subsequent portion of the requested data from disk includes delaying retrieval of the subsequent portion until the calculated time is expired to minimize the server system memory required to complete the file request. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein determining when to retrieve the subsequent portion of the requested data includes determining when to retrieve the subsequent portion based at least in part on the distance between the current head position and the disk location of the subsequent portion of data. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein determining when to retrieve a subsequent portion of the requested data from disk includes monitoring the position of the disk head while the first portion of data is being transmitted to the client. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, further comprising determining the disk location of the subsequent portion of data associated with the first request and determining the disk location of a portion of data associated with a second file request. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference>, further comprising retrieving the portion of data associated with the second file request if the data is closer to the current head position than the data associated with the subsequent portion of the first file request. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, further comprising retrieving the subsequent portion of data associated with the first file request after the calculated time expires. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A computer program product comprising a computer readable medium containing computer executable instructions for retrieving data from disk comprising: 
+<claim-text>computer code means for determining the network transfer rate of a network connection between a client and a server; </claim-text>
+<claim-text>computer code means for retrieving a first portion of the requested data from the disk responsive to a data request received by the server from the client via a network connection; </claim-text>
+<claim-text>computer code means for initiating transmission of the first portion of data to the client via the network; </claim-text>
+<claim-text>computer code means for calculating the time required to transmit the first portion of data to the client based upon the network transfer rate; and </claim-text>
+<claim-text>computer code means for retrieving a subsequent portion of the requested data from disk based, at least in part, on whether the calculated time is expired. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the code means for determining the network transfer rate comprises code means for determining the network transfer rate of a TCP connection between the client and the server. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the code means for retrieving a first portion of the requested data comprises code means for retrieving data from a first block of the disk. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the code means for determining when to retrieve a subsequent portion of the requested data from disk includes code means for delaying retrieval of the subsequent portion until the calculated time is expired to minimize the server system memory required to complete the file request. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the code means for determining when to retrieve the subsequent portion of the requested data includes code means for determining when to retrieve the subsequent portion based at least in part on the distance between the current head position and the disk location of the subsequent portion of data. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the code means for determining when to retrieve a subsequent portion of the requested data from disk includes code means for monitoring the position of the disk head while the first portion of data is being transmitted to the client. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, further comprising computer code means for determining the disk location of the subsequent portion of data associated with the first request and computer code means for determining the disk location of a portion of data associated with a second file request. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer program product of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, further comprising computer code means for retrieving the portion of data associated with the second file request if the data is closer to the current head position than the data associated with the subsequent portion of the first file request. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A data processing system, comprising: 
+<claim-text>at least one disk; </claim-text>
+<claim-text>a server connected to a network and having access to the disk, wherein the server is further connected to a client via a TCP connection; </claim-text>
+<claim-text>wherein the system includes: 
+<claim-text>computer code means for determining the network transfer rate of a network connection between a client and a server; </claim-text>
+<claim-text>computer code means for retrieving a first portion of the requested data from the disk responsive to a data request received by the server from the client via a network connection; </claim-text>
+<claim-text>computer code means for initiating transmission of the first portion of data to the client via the network; </claim-text>
+<claim-text>computer code means for calculating the time required to transmit the first portion of data to the client based upon the network transfer rate; and </claim-text>
+<claim-text>computer code means for determining when to retrieve a subsequent portion of the requested data from disk based, at least in part, on whether the calculated time is expired. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the code means for retrieving a first portion of the requested data comprises code means for retrieving data from a first block of the disk. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the code means for determining when to retrieve a subsequent portion of the requested data from disk includes code means for delaying retrieval of the subsequent portion until the calculated time is expired to minimize the server system memory required to complete the file request. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the code means for determining when to retrieve the subsequent portion of the requested data includes code means for determining when to retrieve the subsequent portion based at least in part on the distance between the current head position and the disk location of the subsequent portion of data. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the code means for determining when to retrieve a subsequent portion of the requested data from disk includes code means for monitoring the position of the disk head while the first portion of data is being transmitted to the client. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further comprising computer code means for determining the disk location of the subsequent portion of data associated with the first request and computer code means for determining the disk location of a portion of data associated with a second file request. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, further comprising computer code means for retrieving the portion of data associated with the second file request if the data is closer to the current head position than the data associated with the subsequent portion of the first file request.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004948A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004948A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004948A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004948A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004948A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

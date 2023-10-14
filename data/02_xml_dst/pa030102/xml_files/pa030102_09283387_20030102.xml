@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030001849A1-20030102-P00001.TIF SYSTEM "US20030001849A1-20030102-P00001.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-P00002.TIF SYSTEM "US20030001849A1-20030102-P00002.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-P00003.TIF SYSTEM "US20030001849A1-20030102-P00003.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-P00004.TIF SYSTEM "US20030001849A1-20030102-P00004.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-D00000.TIF SYSTEM "US20030001849A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-D00001.TIF SYSTEM "US20030001849A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-D00002.TIF SYSTEM "US20030001849A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-D00003.TIF SYSTEM "US20030001849A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-D00004.TIF SYSTEM "US20030001849A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030001849A1-20030102-D00005.TIF SYSTEM "US20030001849A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030001849</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09283387</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>19990331</filing-date>
+<continued-prosecution-application>This is a publication of a continued prosecution application (CPA) filed under 37 CFR 1.53(d).</continued-prosecution-application>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F015/16</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>345</class>
+<subclass>503000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>METHOD AND SYSTEM FOR GRAPHICS RENDERING USING HARDWARE-EVENT-TRIGGERED EXECUTION OF CAPTURED GRAPHICS HARDWARE INSTRUCTIONS</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>ROBERT J.</given-name>
+<family-name>DEVINS</family-name>
+</name>
+<residence>
+<residence-us>
+<city>ESSEX JUNCTION</city>
+<state>VT</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>PAUL M.</given-name>
+<family-name>SCHANELY</family-name>
+</name>
+<residence>
+<residence-us>
+<city>ESSEX JUNCTION</city>
+<state>VT</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>CONNOLLY BOVE LODGE &amp; HUTZ LLP</name-1>
+<name-2></name-2>
+<address>
+<address-1>SUITE 800</address-1>
+<address-2>1990 M STREET NW</address-2>
+<city>WASHINGTON</city>
+<state>DC</state>
+<postalcode>20036-3425</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A computer-implemented method and system for performing graphics rendering on demand on a graphics subsystem, with only nominal host system operations being required. High-level specifications of graphics operations in a computer program are captured as I/O hardware programs in a memory. A graphics processor in the subsystem issues instructions in the captured programs to a graphics accelerator, which executes the instructions to perform graphics operations. The graphics accelerator has a status indicator containing status information relating to hardware events incident to the graphics operations. Under the control of instructions in the captured program, the graphics processor monitors the status indicator, and either issues, or delays issuing, the instructions in the captured programs, depending upon the status information in the indicator. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">CROSS REFERENCE TO RELATED APPLICATIONS </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> Applicant&apos;s Cross Reference No. BU9-98-199, Attorney Docket No. 1806/057, assigned to International Business Machines Corporation, having a common inventorship.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates to computer graphics systems, and in particular to a method and system for increasing graphics rendering speed and efficiency by offloading rendering operations from a host processor onto a register-based graphics subsystem which can perform graphics rendering on demand with only nominal host processor operations being required. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Generally, computer graphic images are produced by transferring pixel definitions (intensity and color), stored in a memory location known as a frame buffer, to a display screen. Presently, most display systems are raster-based, which means that a value stored in the frame buffer determines the intensity and color of an electron beam at a given pixel, as the beam scans the phosphor-coated inner surface of a display screen at a suitable frequency. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The process of transforming a set of image definitions in program code into a set of pixel values which can be physically displayed on a CRT, and subsequently scanning the pixel values onto a CRT, is often referred to as &ldquo;rendering&rdquo;. In rendering, a processor must take specifications of graphical primitives, which are the basic building blocks for more complex images, from within an application program and convert them into pixel definitions. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Application programs requiring graphics operations to be performed typically call basic rendering functions for rendering primitives, such as lines, circles and polygons. These basic rendering functions are written in low-level code and reside in a graphics library. A set of basic rendering functions is known as an Application Programmer&apos;s Interface (API), and allows programmers to write graphics applications in a high-level language such as C or Fortran in terms of these basic functions, without the need for writing low-level code. Some standardized and commercially-available API&apos;s include OpenGL, PHIGS (Programmers Hierarchical Graphics Standard), and GKS (Graphical Kernel System). </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> In order for an image to be rendered, the high-level API specifications within an application program must be interpreted and reduced to hardware-level code. Then, this hardware-level code must be executed to perform the actual physical I/O operations required to fill or modify a frame buffer. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> Even with simple images, these tasks can consume significant portions of processor time and system memory. However, graphics applications are becoming increasingly more sophisticated, requiring complex, realistic images to be rendered in color, with lighting, shadow and the like. If certain images are required to be generated repetitively, for example, in the case of a video game, the high demands on processor time and system memory can slow image rendering and frustrate users. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Thus, an approach to rendering is called for that can offload repetitive tasks from a host processor, freeing it to perform other necessary tasks. Specifically, host processor cycles and memory would be conserved, and rendering speed increased, if the host processor operations required to generate hardware-executable instructions from high-level API specifications in a graphics application program could be performed just once for an image required to be rendered repetitively, and the hardware-executable instructions could subsequently be executed on demand to render the image. Such an approach is not known to exist in the prior art. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> In the aforesaid related application (Applicant&apos;s Cross Reference No. BU9-98-199, Attorney Docket No. 1806/057, assigned to International Business Machines Corporation, having a common inventorship), which is herein incorporated by reference, there is disclosed a method and system for capturing in a memory as an executable program, the hardware instructions to graphics hardware generated by the basic rendering functions called by a graphics application program. Once the hardware instructions are captured, they can be executed on a graphics subsystem to render an image upon demand with only nominal host processor operations being required. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> Host processor cycles would further be conserved if hardware interrupt servicing related to graphics operations normally performed by a host processor could be offloaded to a graphics subsystem in a programmable way, i.e., by specifying within a graphics application program, particular hardware interrupt handling routines to be performed by a graphics subsystem rather than the host processor. The method and system according to the related application described above enables such an approach to hardware interrupt handling in graphics operations, which is not known to exist in the prior art. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> The present invention provides a method and system for offloading rendering tasks from a host processor to a graphics subsystem which can perform the rendering tasks on demand. A memory is provided which contains captured I/O hardware programs generated by high-level specifications of graphics operations in a computer program. The captured programs are generated and stored in the memory according to the method and system disclosed in the related application described above. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> There is further provided a graphics processor which fetches instructions in the captured program and issues them to a graphics accelerator, which executes the intructions to perform graphics operations. The graphics accelerator includes status registers containing status information relating to the graphics operations performed by the accelerator. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> A captured program may include instructions for causing the graphics processor to monitor the status information in a status register, and delay issuing instructions in the captured program to the accelerator until specified status information is present in the status register. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The ability to cause the captured programs to execute responsively to the status information allows a programmer to link graphics operations to specific hardware events represented by the status information. Thus, a programmer can code a graphics application to execute graphics operations without initiating host processor hardware interrupt handling routines, by monitoring the status indicator in the graphics accelerator and issuing hardware I/O instructions in the captured programs based on the status information in the indicator. Host processor cycles and memory are thereby conserved, and the efficiency of graphics operations is increased.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a general overview of a prior art graphics rendering system; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows the basic software and hardware components of a system for implementing the present invention; </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows the flow of a capture routine according to the present invention; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows an example of an application program utilizing the present invention; and </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> shows an example of an application program utilizing the present invention.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE INVENTION </heading>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a conceptual overview of a prior art graphics rendering system. In the system shown in <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> host operating system <highlight><bold>5</bold></highlight> has graphics device driver software <highlight><bold>7</bold></highlight>, which, in response to high-level graphics rendering specifications in graphics application program <highlight><bold>8</bold></highlight>, issues low-level instructions to graphics accelerator <highlight><bold>30</bold></highlight> in graphics subsystem <highlight><bold>6</bold></highlight>. Under the control of the graphics device driver <highlight><bold>7</bold></highlight>, accelerator <highlight><bold>30</bold></highlight> writes pixel definitions to frame buffer <highlight><bold>35</bold></highlight>, which are scanned onto display device <highlight><bold>40</bold></highlight> to physically render an image. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In the system shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the hardware interrupts associated with graphics I/O operations are handled by the host processor in a conventional way. For example, in response to a hardware interrupt generated by display device <highlight><bold>40</bold></highlight>, an interrupt service routine executed by the host may perform software polling of status flags in a device interface to determine the source of the interrupt and the type of servicing required by the device, which is usually to transfer the device more data. Alternatively, hardware polling or hardware vectoring may be used to handle the interrupt. In any case, the host system must do work to service the interrupt, and the graphics application must wait while the host system services the interrupt. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> By contrast, <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows basic software and hardware components in a method and system for graphics rendering according to the present invention, which, as explained in detail hereinafter, enables host processor work related to hardware interrupt processing to be offloaded to a graphics subsystem <highlight><bold>10</bold></highlight>, comprising a random access memory <highlight><bold>20</bold></highlight>, a custom graphics processor known as a Display List Processor (DLP) <highlight><bold>25</bold></highlight>, an accelerator <highlight><bold>30</bold></highlight> having a status register <highlight><bold>100</bold></highlight> (to simplify the discussion, status register <highlight><bold>100</bold></highlight> represents what are, in the preferred embodiment, a plurality of status registers), a frame buffer <highlight><bold>25</bold></highlight>, and a display device <highlight><bold>40</bold></highlight>, such as a CRT. The DLP <highlight><bold>25</bold></highlight> is capable of fetching hardware instructions stored in memory <highlight><bold>20</bold></highlight>, and issuing the instructions to control the accelerator <highlight><bold>30</bold></highlight>. The DLP <highlight><bold>25</bold></highlight> is further capable of polling status bits in the status register <highlight><bold>100</bold></highlight>, and of delaying the issuing of instructions in the memory <highlight><bold>20</bold></highlight> until specified status information is present in status register <highlight><bold>100</bold></highlight>. The accelerator <highlight><bold>30</bold></highlight> includes high-speed registers that enable pixel definitions to be written to the frame buffer <highlight><bold>35</bold></highlight> in accordance with the instructions issued by DLP <highlight><bold>25</bold></highlight>. The pixel definitions are then scanned from the frame buffer <highlight><bold>35</bold></highlight> onto the display device <highlight><bold>40</bold></highlight> to produce an image. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> Referring now to both <cross-reference target="DRAWINGS">FIG. 2</cross-reference> and <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, computer-executable instructions for effecting the features of the present invention are implemented in the graphics device driver <highlight><bold>15</bold></highlight>. The device driver <highlight><bold>15</bold></highlight> includes a capture routine <highlight><bold>50</bold></highlight> and an API set <highlight><bold>17</bold></highlight>, which includes basic rendering functions for rendering primitives, and further includes I/O directives for causing the DLP <highlight><bold>25</bold></highlight> to monitor the status register <highlight><bold>100</bold></highlight> in accelerator <highlight><bold>30</bold></highlight>, and delay execution of instructions in memory <highlight><bold>20</bold></highlight> until the status register contains specified status information. Each of the functions in the API comprises a sequence of computer-executable instructions at the hardware level. In the case of the I/O directives for causing the DLP <highlight><bold>25</bold></highlight> to delay execution of instructions in the memory <highlight><bold>20</bold></highlight>, these hardware-level instructions comprise register read/mask/compare primitives the DLP executes to monitor status register <highlight><bold>100</bold></highlight>, to decide whether to move on to the next instruction in the memory or not. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> The functions in the API <highlight><bold>17</bold></highlight> may be invoked by instructions within higher-level programs, by specifying a function by its unique mnemonic identifier and passing it the appropriate user-defined parameters. For example, &ldquo;wait_for_vsync&rdquo; might represent a high-level call to a function within API <highlight><bold>17</bold></highlight> comprising instructions to the DLP <highlight><bold>25</bold></highlight> to delay execution of a captured program until status register <highlight><bold>100</bold></highlight> indicates that a &ldquo;vsync&rdquo; signal has been received from display device <highlight><bold>40</bold></highlight>, indicating that the device is doing vertical retrace. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Capture routine <highlight><bold>50</bold></highlight> comprises computer-executable instructions for responding to instructions within a higher-level application program <highlight><bold>45</bold></highlight> executing on a host system <highlight><bold>5</bold></highlight>, identifying a sequence of API function calls <highlight><bold>47</bold></highlight> to be pre-stored in a random access memory <highlight><bold>20</bold></highlight> as hardware instructions. The instructions within the higher-level program typically are coded by a programmer in an application program requiring graphics to be rendered, in order to invoke the advantageous features provided by the present invention. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The instructions in the higher-level application program <highlight><bold>45</bold></highlight> invoking the features of the invention comprise a &ldquo;Begin_Program&rdquo; <highlight><bold>46</bold></highlight> and &ldquo;End_Program&rdquo; <highlight><bold>48</bold></highlight> identifying pair, which enclose or bound a sequence of API function calls <highlight><bold>47</bold></highlight>, coded by a programmer as calls by mnemonic identifier (along with required parameters) to particular functions within the API set <highlight><bold>17</bold></highlight> provided in the device driver <highlight><bold>15</bold></highlight>. The Begin_Program/End_Program bounding pair identify an API sequence to be pre-stored in a memory <highlight><bold>20</bold></highlight> as hardware instructions. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> When a Begin_Program instruction <highlight><bold>46</bold></highlight> in an application program <highlight><bold>45</bold></highlight> is executed, a function call is issued to the capture routine <highlight><bold>50</bold></highlight> in the device driver code <highlight><bold>15</bold></highlight>. <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows the basic flow of the capture routine. The sequence shown is initiated by a Begin_Program instruction <highlight><bold>46</bold></highlight> within an application program <highlight><bold>45</bold></highlight>. First, as shown in block <highlight><bold>55</bold></highlight>, the capture routine sets a flag instructing the device driver <highlight><bold>15</bold></highlight> to store hardware instructions generated by API function calls <highlight><bold>47</bold></highlight> in memory <highlight><bold>20</bold></highlight>, rather than executing the hardware instructions by issuing them to accelerator <highlight><bold>30</bold></highlight>. Thus, as shown in block <highlight><bold>60</bold></highlight>, API function calls <highlight><bold>47</bold></highlight> following the Begin_Program instruction <highlight><bold>46</bold></highlight> are evaluated to generate the corresponding hardware instructions, by passing programmer-specified parameters to the appropriate API in API library <highlight><bold>17</bold></highlight>, and storing the API in memory <highlight><bold>20</bold></highlight>. The API comprises fully machine-executable register instructions performing the particular function specified by the programmer in the call parameters. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> The capture routine <highlight><bold>50</bold></highlight> performs the operations indicated in block <highlight><bold>60</bold></highlight> for each API function call <highlight><bold>47</bold></highlight>. Then, as shown in block <highlight><bold>65</bold></highlight>, when the application program <highlight><bold>45</bold></highlight> issues an End_Program instruction <highlight><bold>48</bold></highlight>, the capture routine resets the flag set by the Begin_Program instruction <highlight><bold>46</bold></highlight>, and registers the collective stored, hardware-executable instructions with the host system <highlight><bold>5</bold></highlight> as an executable program, using a unique mnemonic identifier, &ldquo;id&rdquo;, arbitrarily assigned by the programmer in the Begin_Program instruction <highlight><bold>46</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> Once a bounded API sequence <highlight><bold>47</bold></highlight> is captured as an executable program on memory <highlight><bold>20</bold></highlight>, it can be executed on demand by the graphics subsystem <highlight><bold>10</bold></highlight> by specifying its assigned mnemonic, &ldquo;id&rdquo;, in an Execute_Program instruction <highlight><bold>49</bold></highlight>. The Execute_Program instruction causes the DLP <highlight><bold>25</bold></highlight> to read the hardware instructions corresponding to &ldquo;id&rdquo; stored in memory <highlight><bold>20</bold></highlight>, and issue the instructions to accelerator <highlight><bold>30</bold></highlight>. The instructions may direct the accelerator <highlight><bold>30</bold></highlight> to render an image defined by a captured program, by writing pixel information to frame buffer <highlight><bold>40</bold></highlight>, and may include instructions directing the DLP <highlight><bold>25</bold></highlight> to monitor status register <highlight><bold>100</bold></highlight> and delay the issuing of instructions in the memory <highlight><bold>20</bold></highlight> until specified status information is present in status register <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The present invention may be used to offload both periodic graphics operations and serial graphics operations from a host processor onto a graphics subsystem. Accelerator <highlight><bold>30</bold></highlight> includes status registers (represented generically by status register <highlight><bold>100</bold></highlight>) which contain status information relating to graphics operations performed by the accelerator under the control of instructions in a captured program. The status registers also include status information relating to events on a hardware device external to accelerator <highlight><bold>30</bold></highlight>, such as a display device <highlight><bold>40</bold></highlight>. Hardware event interrupts associated with operations performed by captured programs are not delivered to the host system. Instead, by using the DLP <highlight><bold>25</bold></highlight> to monitor the status registers in the accelerator and issue instructions in the captured programs based on the status information, a programmer can link graphics operations to specific hardware events represented by the status information. Thus, a programmer can code a graphics application to execute graphics operations without initiating host processor hardware interrupt handling routines. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> The following is an illustrative example of an application of the present invention where a programmer wants to have the graphics subsystem <highlight><bold>10</bold></highlight>, rather than host system <highlight><bold>5</bold></highlight>, perform display buffer address swapping. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> Display buffer address swapping refers to a periodic process which occurs in graphics I/O operations. On computer screens (CRT&apos;s) or televisions, there is a timing signal called VSYNC, or VBLANK, which activates whenever the screen is doing vertical retrace and is effectively blank. It is desirable to execute graphics operations during this period in order to provide a smooth visual effect in the CRT display. Often, two graphics buffers are used to form displays: one buffer where the active pixel data is being fetched from, and one buffer where new pixels are being formed. At VSYNC, the buffers are swapped, so the new pixels are displayed, and the old display buffer is available for new pixels. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Swapping is a periodic function which happens every VSYNC. Swapping is accomplished by writing a new display buffer address into a register in the accelerator, which the display hardware reads to determine which is the current display buffer. Normally, swapping is performed by a host system <highlight><bold>5</bold></highlight>, and requires processor cycles to field a VSYNC interrupt and write the new buffer address. Offloading this task to the graphics subsystem <highlight><bold>10</bold></highlight> saves interrupt processing by the host processor. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> To effect the off loading, the programmer would typically work on a computer system including a host processor, memory, read/write disk storage, and I/O devices such as a keyboard and mouse allowing for user interaction with the operating system and software applications, including text editors for writing and editing software. The programmer would use a text editor to write or edit source code containing instructions recognizable by the device driver software of the present invention, for capturing a swapping program. To implement the present invention, the computer system would typically further require a graphics subsystem including the components illustrated in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> In the source code for capturing a swapping program, the programmer would typically write program instructions defining a Begin-Program/End-Program pair to bound a sequence of API functions for performing swapping. For example, pseudo-code for bounding a sequence of API functions for performing swapping might look as follows: 
+<image file="US20030001849A1-20030102-P00001.TIF" id="EMI-00001"></image>
+<image file="US20030001849A1-20030102-P00002.TIF" id="EMI-00002"></image>
+</paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> In this example, the instructions &ldquo;swap&equals;Begin_Program( )&rdquo; and &ldquo;End_Program( )&rdquo; define a sequence of API functions to be captured as an executable program on a memory <highlight><bold>20</bold></highlight>. When executed, the instructions will create a captured hardware-level program called &ldquo;swap&rdquo; which will perform display buffer address swapping without host processor intervention. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> For purposes of the following discussion, a captured program comprises a sequence of operations which may include executing operations of another captured program. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The execution of captured program &ldquo;swap&rdquo; is illustrated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. Diagram <highlight><bold>300</bold></highlight> shows the basic logic flow of &ldquo;swap&rdquo;, and is applicable to any captured program which performs an operation periodically. The program executes by continously polling for a triggering event in a hardware status register, as shown in the Read Status&rarr;Compare Event&rarr;Jump If Not Triggered sequence. If the polling shows that the triggering event has occurred, the operations to be performed at the event are executed, and then the program returns to the event trigger wait, by polling with the Read Status&rarr;Compare Event&rarr;Jump If Not Triggered sequence. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows the operations that occur under the control of the &ldquo;swap&rdquo; example program instructions, &ldquo;wait_for_vsync&rdquo; and &ldquo;write_pointer2_to_display&rdquo;. The current display buffer is frame buffer <highlight><bold>1</bold></highlight> (<highlight><bold>35</bold></highlight><highlight><italic>a</italic></highlight>), and the &ldquo;wait_for_vsync&rdquo; instruction in the &ldquo;swap&rdquo; program stored on memory <highlight><bold>20</bold></highlight> causes the DLP <highlight><bold>25</bold></highlight> to poll status register <highlight><bold>100</bold></highlight> in accelerator <highlight><bold>30</bold></highlight>. If status register <highlight><bold>100</bold></highlight> does not show that a VSYNC signal <highlight><bold>200</bold></highlight> has been received, polling continues, with the DLP <highlight><bold>25</bold></highlight> continously performing the Read Status&rarr;Compare Event&rarr;Jump If Not Triggered sequence. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> Then, during vertical retrace, display device <highlight><bold>40</bold></highlight> generates the VSYNC hardware interrupt <highlight><bold>200</bold></highlight>, which is registered in status register <highlight><bold>100</bold></highlight>. The polling by DLP <highlight><bold>25</bold></highlight> detects that VSYNC has been received, and consequently the DLP <highlight><bold>25</bold></highlight> issues the &ldquo;write_pointer2_to_display&rdquo; <highlight><bold>210</bold></highlight> instruction stored on memory <highlight><bold>20</bold></highlight> to the accelerator <highlight><bold>30</bold></highlight>, which executes the instruction to write the address of frame buffer <highlight><bold>2</bold></highlight> (<highlight><bold>35</bold></highlight><highlight><italic>b</italic></highlight>) to a register which is readable by display hardware. Frame buffer <highlight><bold>2</bold></highlight> becomes the current display buffer, and the pixels in frame buffer <highlight><bold>2</bold></highlight> are scanned onto display device <highlight><bold>40</bold></highlight> to produce an image. The &ldquo;swap&rdquo; routine restarts at the first wait_for_sync, writes the address of frame buffer <highlight><bold>1</bold></highlight> at the next VSYNC, and so on; the routine is repeated indefinitely. Thus, the &ldquo;swap&rdquo; routine performs display buffer address swapping without host processor intervention. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> The following is an illustrative example of an application of the present invention where a programmer wants to offload graphics operations which are serial onto a graphics subsystem <highlight><bold>10</bold></highlight>. </paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> The display of text is typically a serial operation which is performed by copying the character patterns, or bitmaps, from font storage to the active display, under the control of a program specifying which characters are to be displayed. Characters are moved by a BLT (bit-logical-transfer) engine in the accelerator <highlight><bold>30</bold></highlight>. The BLT operations are serial; i.e., each BLT operation must complete before the next one can be started. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> Normally, host processor work is required in BLT operations, for fielding a hardware interrupt generated by the completion of a BLT operation, and executing the instructions for specifying to the accelerator <highlight><bold>30</bold></highlight> which character to copy from font storage, and where in the frame buffer <highlight><bold>35</bold></highlight> the character is to be placed. Captured programs can offload these tasks from the host processor to more efficiently display a block of characters, as illustrated in the following pseudo-code: 
+<image file="US20030001849A1-20030102-P00003.TIF" id="EMI-00003"></image>
+<image file="US20030001849A1-20030102-P00004.TIF" id="EMI-00004"></image>
+</paragraph>
+<paragraph id="P-0044" lvl="0"><number>&lsqb;0044&rsqb;</number> In this example, the instructions moveblock&equals;Begin_Program( ) and &ldquo;End_Program( )&rdquo; define a sequence of API functions to be captured as an executable program on a memory <highlight><bold>20</bold></highlight>. When executed, the instructions will create a captured hardware-level program called &ldquo;moveblock&rdquo; which will move a block of text characters without host processor intervention. </paragraph>
+<paragraph id="P-0045" lvl="0"><number>&lsqb;0045&rsqb;</number> The execution of captured program &ldquo;moveblock&rdquo; is illustrated in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. Diagram <highlight><bold>400</bold></highlight> shows the basic logic flow of &ldquo;moveblock&rdquo;, and is applicable to any captured program which performs an operation serially. The program executes by performing an initial operation of N&plus;1 serial operations, and then polling for a first triggering event in a hardware status register, as shown in the Read Status&rarr;Compare Event&rarr;Jump If Not Triggered sequence. If the polling shows that the triggering event has occurred, the operations to be performed at the event are executed, and then the program begins polling for the next triggering event. When all the triggering events have occurred and all the operations dependent on those triggering events have been executed, the program ends. </paragraph>
+<paragraph id="P-0046" lvl="0"><number>&lsqb;0046&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> shows the operations that occur under the control of the &ldquo;moveblock&rdquo; example program instructions, &ldquo;wait_for_blt_complete&rdquo; and &ldquo;execute_blt(&ldquo;B&rdquo;)&rdquo;. <cross-reference target="DRAWINGS">FIG. 5</cross-reference> represents the conditions after the character &ldquo;A&rdquo; has been copied from font storage <highlight><bold>205</bold></highlight> to the frame buffer <highlight><bold>35</bold></highlight> by accelerator <highlight><bold>30</bold></highlight>, under the control of the instructions in captured program &ldquo;moveblock&rdquo; in memory <highlight><bold>20</bold></highlight>, issued by DLP <highlight><bold>25</bold></highlight>. The first &ldquo;wait for_blt_complete&rdquo; instruction caused DLP <highlight><bold>25</bold></highlight> to poll for the &ldquo;BLT complete&rdquo; signal in status register <highlight><bold>100</bold></highlight>, by continously performing the Read Status&rarr;Compare Event&rarr;Jump If Not Triggered sequence. Then, when accelerator <highlight><bold>30</bold></highlight> completed the BLT operation for character &ldquo;A&rdquo;, it registered this status in status register <highlight><bold>100</bold></highlight>. The polling by DLP <highlight><bold>25</bold></highlight> detected the &ldquo;BLT complete&rdquo; signal, and consequently DLP <highlight><bold>25</bold></highlight> issued the next instruction in the &ldquo;moveblock&rdquo; captured program, &ldquo;execute_blt(&ldquo;B&rdquo;)&rdquo; (<highlight><bold>215</bold></highlight>). </paragraph>
+<paragraph id="P-0047" lvl="0"><number>&lsqb;0047&rsqb;</number> An approach similar to that described in this example could be used, for example, to efficiently scroll pages of text on a display screen without host processor intervention. In addition, this approach could be used to perform serial rendering operations such as line drawing, or to synchronize the rendering of components of a complex scene using simpler subscenes rendered by captured programs. The foregoing feature is described in detail in the related application mentioned above. </paragraph>
+<paragraph id="P-0048" lvl="0"><number>&lsqb;0048&rsqb;</number> The inventive concept described in the foregoing is not limited to graphics operations. It is appropriate for any system that requires repeated activity at periodic times. For example, a communications device such as a Universal Asynchronous Receiver Transmitter (UART) could include a captured program that is launched whenever the receiver data buffer is full. Such a program could unload the data into a larger memory buffer, and post an interrupt to the host processor whenever the larger memory buffer is full. This technique would effectively increase the UART buffer size without requiring new hardware. </paragraph>
+<paragraph id="P-0049" lvl="0"><number>&lsqb;0049&rsqb;</number> Moreover, a UART data transmission program could be set up similarly to the &ldquo;moveblock&rdquo; example above. A captured program could poll for the condition of the transmitter buffer being empty. Then, another captured program that moves data from a memory buffer to the transmitter buffer could be launched, without host intervention. Only when the memory buffer was depleted would the captured program interrupt the host, to request more transmit data. </paragraph>
+<paragraph id="P-0050" lvl="0"><number>&lsqb;0050&rsqb;</number> As described earlier, the present invention may advantageously be embodied as computer-executable instructions within a graphics device driver of a graphics subsystem. For implementation, the device driver code may reside on any computer-usable medium at a suitable location, for example, in a computer memory as a fully-linked subroutine of a host operating system. When not being actively implemented, the code may reside on portable computer-usable media such as tape, floppy disks, hard disks, CD-ROMs and the like. </paragraph>
+<paragraph id="P-0051" lvl="0"><number>&lsqb;0051&rsqb;</number> The foregoing description of the invention illustrates and describes the present invention. Additionally, the disclosure shows and describes only the preferred embodiments of the invention, but it is to be understood that the invention is capable of use in various other combinations, modifications, and environments and is capable of changes or modifications within the scope of the inventive concept as expressed herein, commensurate with the above teachings, and/or the skill or knowledge of the relevant art. The embodiments described hereinabove are further intended to explain best modes known of practicing the invention and to enable others skilled in the art to utilize the invention in such, or other, embodiments and with the various modifications required by the particular applications or uses of the invention. Accordingly, the description is not intended to limit the invention to the form disclosed herein. Also, it is intended that the appended claims be construed to include alternative embodiments. </paragraph>
+<paragraph id="P-0052" lvl="0"><number>&lsqb;0052&rsqb;</number> The foregoing description of the invention illustrates and describes the present invention. Additionally, the disclosure shows and describes only the preferred embodiments of the invention, but as aforementioned, it is to be understood that the invention is capable of use in various other combinations, modifications, and environments and is capable of changes or modifications within the scope of the inventive concept as expressed herein, commensurate with the above teachings, and/or the skill or knowledge of the relevant art. The embodiments described hereinabove are further intended to explain best modes known of practicing the invention and to enable others skilled in the art to utilize the invention in such, or other, embodiments and with the various modifications required by the particular applications or uses of the invention. Accordingly, the description is not intended to limit the invention to the form disclosed herein. Also, it is intended that the appended claims be construed to include alternative embodiments. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A graphics system comprising: 
+<claim-text>a memory containing a captured I/O hardware program generated by high-level specifications of graphics operations in a computer program; </claim-text>
+<claim-text>a graphics processor for issuing instructions in the captured program in response to status information read by said graphics processor, said status information relating to the execution of a graphics operation; and </claim-text>
+<claim-text>a graphics accelerator which receives and executes said instructions to perform said graphics operation, said accelerator having a status indicator containing said status information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said captured program includes instructions for causing said graphics processor to monitor said status indicator and delay issuing instructions in said captured programs until specified status information is present in said status indicator. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein said specified status information relates to the completion of a specified graphics operation. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference> wherein said status information relates to an event on a hardware device external to said accelerator. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein said specified graphics operation is repeated periodically. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein said event occurs periodically. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein said graphics operation is one of a plurality of operations which are performed serially. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein said event is one of a plurality of events which occur serially. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A method for performing graphics operations comprising: 
+<claim-text>capturing in a memory as an executable program, I/O hardware instructions generated by high-level specifications of graphics operations in a computer program; </claim-text>
+<claim-text>utilizing a graphics processor to issue instructions in the captured program in response to status information read by said graphics processor, said status information relating to the execution of a graphics operation; </claim-text>
+<claim-text>utilizing a graphics accelerator to receive and execute said instructions to perform said graphics operation, said graphics accelerator having a status indicator containing said status information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein said captured program includes instructions for causing said graphics processor to monitor said status indicator and delay issuing instructions in said captured programs until specified status information is present in said status indicator. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein said specified status information relates to the completion of a specified graphics operation. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein said status information relates to an event on a hardware device external to said accelerator. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein said specified graphics operation is repeated periodically. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein said event occurs periodically. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein said graphics operation is one of a plurality of operations which are performed serially. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The graphics system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference> wherein said event is one of a plurality of events which occur serially. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. A computer-usable medium tangibly embodying computer-executable program code, for implementing a method for performing graphics operations, said code comprising instructions for: 
+<claim-text>capturing an I/O hardware program generated by high-level specifications of graphics operations in a computer program, wherein said captured program includes instructions for: 
+<claim-text>causing a graphics processor to monitor a status indicator in a graphics accelerator for status information relating to a graphics operation, and to delay issuing instructions in said captured programs for performing graphics operations to said graphics accelerator until said status indicator contains specified status information. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The computer-usable medium of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> wherein said specified status information relates to the completion of a specified graphics operation. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The computer-usable medium of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference> wherein said status information relates to an event on a hardware device external to said accelerator. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The computer-usable medium of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein said specified graphics operation is repeated periodically. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The computer-usable medium of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein said event occurs periodically. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer-usable medium of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein said graphics operation is one of a plurality of operations which are performed serially. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The computer-usable medium of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein said event is one of a plurality of events which occur serially. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. A method for offloading hardware interrupt processing from a host system to a subsystem comprising: 
+<claim-text>capturing in a memory as an executable program, hardware instructions generated by high-level specifications of operations in a computer program; </claim-text>
+<claim-text>utilizing a subsystem processor to issue said captured instructions from said memory to subsystem hardware; </claim-text>
+<claim-text>wherein said subsystem hardware includes a status indicator containing status information relating to an operation on said subsystem hardware; and </claim-text>
+<claim-text>said subsystem processor monitors said status indicator and issues said captured instructions in response to said status information. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> wherein said captured programs include an instruction for causing said subsystem processor to delay issuing instructions in said captured programs until said status indicator contains specified status information. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> wherein said specified status information relates to the completion of a specified operation. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein said specified operation is repeated periodically. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein said operation is one of a plurality of operations which are performed serially.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030001849A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030001849A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030001849A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030001849A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030001849A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030001849A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

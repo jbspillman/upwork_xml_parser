@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004667A1-20030102-D00000.TIF SYSTEM "US20030004667A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004667A1-20030102-D00001.TIF SYSTEM "US20030004667A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004667A1-20030102-D00002.TIF SYSTEM "US20030004667A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004667A1-20030102-D00003.TIF SYSTEM "US20030004667A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004667A1-20030102-D00004.TIF SYSTEM "US20030004667A1-20030102-D00004.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004667</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09892666</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G01R035/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>702</class>
+<subclass>107000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for minimizing delay variation in double data rate strobes</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>John</given-name>
+<middle-name>F.</middle-name>
+<family-name>Zumkehr</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Orange</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>ANTONELLI TERRY STOUT AND KRAUS</name-1>
+<name-2></name-2>
+<address>
+<address-1>SUITE 1800</address-1>
+<address-2>1300 NORTH SEVENTEENTH STREET</address-2>
+<city>ARLINGTON</city>
+<state>VA</state>
+<postalcode>22209</postalcode>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method in which delay strobe variation in a double data rate device is calibrated by first individually calibrating all slave strobe delay devices at system startup. Thereafter, a master strobe delay device is activated periodically to determine an incremental delay adjustment. This incremental delay adjustment is then used to by the slave strobe delay devices to modify the calibration value performed by the slave strobe delay devices upon startup. In this manner, individual on-die variations are compensated for each slave strobe delay device and variations due to voltage and temperature changes are compensated for without effecting the normal operation of the slave strobe devices. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The invention relates to a system and method for minimizing delay variation between multiple double data rate strobes. More particularly, the present invention enables the calibration of circuits used to transfer data from memory to a memory controller upon system startup to control for on-die variations in the circuits and to periodically re-calibrate the circuits to compensate for voltage and temperature variations seen during operation of the circuit with minimal interference in the normal transfer of data from memory to the memory controller. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> In the rapid development of computers many advancements have been seen in the areas of processor speed, throughput, communications, and fault tolerance. Microprocessor speed is measured in cycles per second or hertz. Today&equals;s high-end 32-bit microprocessors operate at over 1.7 Ghz (gigahertz), 1.7 billion cycles per second, and in the near future this is expected to go substantially higher 2.6 and 3.3 Ghz and beyond. At this sort of cycle speed a clock would have to generate a pulse or cycle at least ten times each billionth of a second and usually significantly faster. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> With processors operating at such higher rates it is necessary to supply data to the processor when required from memory at a comparable rate otherwise a bottle neck is formed and the processor spends much of its time waiting for data. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> One method, as shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, utilized to improve the transfer rate of memory utilizes Double Data Rate (DDR) devices to transfer data at both the leading edge of a clock cycle and the trailing edge of the clock cycle. These DDR devices have a source-synchronous clocking protocol to transfer data from the memory to the memory controller. Data (DQ) <highlight><bold>110</bold></highlight> from memory is captured by the memory controller using a clock (DQS) <highlight><bold>100</bold></highlight> supplied by the memory devices. However, in order to avoid DQ <highlight><bold>110</bold></highlight> errors which may occur when the DQS <highlight><bold>100</bold></highlight> signal levels change, each DQS <highlight><bold>100</bold></highlight> from memory is delayed, as shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> in the delayed DQS <highlight><bold>120</bold></highlight> signal, so that data can be clocked in the center of the valid data window. The precision of the strobe delay <highlight><bold>130</bold></highlight> is important because any variation in the strobe delay <highlight><bold>130</bold></highlight> translates into added setup/hold time for the memory controller. If the setup/hold time is too large, the system becomes unworkable. This is especially true as DDR technology moves to faster speeds. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> There are several methods available to generate a precise delay. Most all of these methods involve a delay element that can be calibrated to a precise delay for the DQS <highlight><bold>100</bold></highlight> signal. The calibration adjusts controls in the delay element so that a precise delay strobe <highlight><bold>130</bold></highlight> can be given regardless of the microcircuit process parameters, temperature, and voltage. How these delay strobes <highlight><bold>130</bold></highlight> are calibrated will determine how much variation can occur. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> One method employed to calibrate the delay strobe <highlight><bold>130</bold></highlight> uses a master/slave approach where a master delay element is continuous calculating the control settings needed by the slave delay elements. The master is never used to delay actual strobes from the DDR devices because it is used exclusively for updating the slave delay element controls. The slaves are used for the actual strobe delay, but are never used for calibration since that it would reduce availability for memory transactions. This creates a problem if there is on-die variation that causes the characteristics of the master delay element to be different from that of the slave delay element. The master may be precisely set to the desired delay but the slaves can vary enough to cause a problem for higher speed DDR devices. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> One solution to this problem would be to calibrate each delay line individually without a master/slave scheme. On-die variation in process parameters would be taken into account as well as the current voltage and temperature giving a precise delay. However, the voltage and temperature of the delay line will change as the circuit is operated and the delay will no longer be at the precise delay that is needed by the DDR device. To compensate for this, periodically the delay elements could be re-calibrated to the correct control setting, but this would prevent memory read transactions from occurring during re-calibration. If temperature and voltage vary frequently, it may be necessary to do more calibrations, which will further reduce the availability to memory which reduces performance of the system. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Therefore, what is needed is a system and method in which the delay strobe <highlight><bold>130</bold></highlight> be calibrated to take into consideration on-die variations in individual circuits as well as variations which occur due to changes in voltage and temperature. This system and method should have minimal, if any, impact in transfer operations to and from memory. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> The foregoing and a better understanding of the present invention will become apparent from the following detailed description of exemplary embodiments and the claims when read in connection with the accompanying drawings, all forming a part of the disclosure of this invention. While the foregoing and following written and illustrated disclosure focuses on disclosing example embodiments of the invention, it should be clearly understood that the same is by way of illustration and example only and the invention is not limited thereto. The spirit and scope of the present invention are limited only by the terms of the appended claims. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> The following represents brief descriptions of the drawings, wherein: </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a diagram of the signal seen in a DDR device; </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a hardware block diagram illustrating the interconnection between a master strobe delay device and slave strobe delay devices utilized in example embodiment of the present invention; </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a hardware diagram of a master or slave strobe delay device employed in an example embodiment of the present invention; and </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart of the process employed in an example embodiment of the present invention to calibrate the strobe delay <highlight><bold>130</bold></highlight>. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Before beginning a detailed description of the subject invention, mention of the following is in order. When appropriate, like reference numerals and characters may be used to designate identical, corresponding or similar components in differing figure drawings. Further, in the detailed description to follow, exemplary sizes/models/values/ranges may be given, although the present invention is not limited to the same. As a final note, well-known components of computer networks may not be shown within the FIGs. for simplicity of illustration and discussion, and so as not to obscure the invention. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a hardware block diagram illustrating the interconnection between a master strobe delay device <highlight><bold>200</bold></highlight> and slave strobe delay devices <highlight><bold>210</bold></highlight> utilized in example embodiment of the present invention. In this embodiment of the present invention a hybrid approach to calibrating the strobe delay <highlight><bold>130</bold></highlight> signal is used by initially calibrating each slave strobe delay device <highlight><bold>210</bold></highlight> individually at system startup to compensate for on-die process variation and then using a master strobe delay device <highlight><bold>200</bold></highlight> to compensate for minor changes in the strobe delay <highlight><bold>130</bold></highlight> signal caused by changes in temperature and voltage. These on-die process variations are due to minuscule variations seen in the circuit manufacturing process. These on-die process variations have become more significant as clock cycle periods have decreased due to increases in the number of cycles per second (CPS) seen in processor and memory speed. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, the master strobe delay device <highlight><bold>200</bold></highlight> is used to measure the incremental change that has occurred in the slave strobe delay devices <highlight><bold>210</bold></highlight> due to voltage and temperature that is then used to incrementally adjust the slave strobe delay devices <highlight><bold>210</bold></highlight> accordingly via an incremental delay adjustment signal <highlight><bold>220</bold></highlight>. As will be discussed in further detail in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, the slave strobe devices <highlight><bold>210</bold></highlight> and the master strobe device <highlight><bold>200</bold></highlight> are similar except for the incremental delay adjustment signal <highlight><bold>220</bold></highlight> being supplied by the master strobe delay device <highlight><bold>200</bold></highlight> to each of the slave strobe delay devices <highlight><bold>210</bold></highlight> and the absence of a DQ output signal <highlight><bold>230</bold></highlight> from the master strobe delay device <highlight><bold>200</bold></highlight> which is provided by the slave strobe delay devices <highlight><bold>210</bold></highlight>. Further, the master strobe delay device <highlight><bold>200</bold></highlight> differs from the slave strobe devices <highlight><bold>210</bold></highlight> by not receiving a DQS <highlight><bold>100</bold></highlight> signal. Otherwise, the master strobe delay device <highlight><bold>200</bold></highlight> and the slave strobe delay devices <highlight><bold>210</bold></highlight> are similar so that any variation seen by the master strobe delay device <highlight><bold>200</bold></highlight> due to temperature or voltage changes would be the same as those seen by the slave strobe delay devices <highlight><bold>210</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 2</cross-reference>, it should be noted that one master strobe delay device <highlight><bold>200</bold></highlight> is connected to six slave strobe delay devices <highlight><bold>210</bold></highlight> via the incremental delay adjustment <highlight><bold>220</bold></highlight> signal. However, as would be appreciated by one of ordinary skill and art, the number of slave strobe delay devices <highlight><bold>210</bold></highlight> connected to the master strobe delay device <highlight><bold>200</bold></highlight> may vary based upon design requirements. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a hardware diagram of a slave strobe delay device <highlight><bold>210</bold></highlight> employed in an example embodiment of the present invention. As previously discussed the slave strobe delay device <highlight><bold>210</bold></highlight> is similar to the master strobe delay device <highlight><bold>200</bold></highlight> with noted exceptions. The slave strobe delay device <highlight><bold>210</bold></highlight> receives a DQS <highlight><bold>100</bold></highlight> signal and selects it or an inverted output signal <highlight><bold>320</bold></highlight> via Multiplexer <highlight><bold>300</bold></highlight>. Multiplexer <highlight><bold>300</bold></highlight> selects input to variable delay element from the normal source (DQS <highlight><bold>100</bold></highlight>) or from a feedback (inverted signal <highlight><bold>320</bold></highlight>) to form an oscillator needed for calibration. The output from multiplexer <highlight><bold>300</bold></highlight> is transmitted to variable delay output <highlight><bold>305</bold></highlight> which upon system startup and contains the individual adjustment required for this particular slave strobe delay device <highlight><bold>210</bold></highlight> to generate strobe delay <highlight><bold>130</bold></highlight>. The output from variable delay element <highlight><bold>305</bold></highlight> is input to splitter <highlight><bold>310</bold></highlight> which generates two signals. The first signal <highlight><bold>315</bold></highlight> is output to frequency counter <highlight><bold>335</bold></highlight> and even flops <highlight><bold>340</bold></highlight>, <highlight><bold>350</bold></highlight>, <highlight><bold>360</bold></highlight>, and <highlight><bold>370</bold></highlight> which will be discussed in further detail ahead. The second signal <highlight><bold>320</bold></highlight> is an inverted signal which is input to multiplexer <highlight><bold>300</bold></highlight> and odd flops <highlight><bold>338</bold></highlight>, <highlight><bold>345</bold></highlight>, <highlight><bold>355</bold></highlight>, and <highlight><bold>365</bold></highlight> which will be discussed in further detail ahead. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, frequency counter <highlight><bold>335</bold></highlight> measures the frequency of the oscillator formed by using the slave strobe delay device <highlight><bold>210</bold></highlight>. By determining the frequency of the slave strobe delay device <highlight><bold>210</bold></highlight> oscillator, the current delay value of the slave strobe delay device <highlight><bold>210</bold></highlight> can be determined at system startup. The output from frequency counter <highlight><bold>335</bold></highlight> is input to delay control unit <highlight><bold>330</bold></highlight> where incremental delay adjustment <highlight><bold>220</bold></highlight> is also input from the master strobe delay device <highlight><bold>200</bold></highlight>. It should be noted that the master strobe delay device <highlight><bold>200</bold></highlight> determines the incremental delay adjustment utilizing its own frequency counter <highlight><bold>335</bold></highlight>. The delay control unit <highlight><bold>330</bold></highlight> then adds the incremental delay adjustment <highlight><bold>220</bold></highlight> to the value received from the frequency counter <highlight><bold>335</bold></highlight> and inputs that to the variable delay element <highlight><bold>305</bold></highlight> so that the appropriate strobe delay <highlight><bold>130</bold></highlight> can be determined. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, it should be noted that DQ signal <highlight><bold>110</bold></highlight> is also input to slave strobe delay device <highlight><bold>210</bold></highlight> and comprises four bits. Bit <highlight><bold>3</bold></highlight> of DQ <highlight><bold>110</bold></highlight> is input to odd flop <highlight><bold>338</bold></highlight> and even flop <highlight><bold>340</bold></highlight>. Bit <highlight><bold>2</bold></highlight> of DQ <highlight><bold>110</bold></highlight> is input to odd flop <highlight><bold>345</bold></highlight> and even flop <highlight><bold>350</bold></highlight>. Bit <highlight><bold>1</bold></highlight> of DQ <highlight><bold>110</bold></highlight> is input to odd flop <highlight><bold>355</bold></highlight> and even flop <highlight><bold>360</bold></highlight>. DQ even (DQ EV) bit signal <highlight><bold>375</bold></highlight> and DQ odd (DQ OD) bit signal <highlight><bold>380</bold></highlight> are output and are represented by DQ output signal <highlight><bold>230</bold></highlight>, shown in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Before proceeding into a detailed discussion of the logic used by the embodiments of the present invention it should be mentioned that the flowchart shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> contains software, firmware, hardware, processes or operations that correspond, for example, to code, sections of code, instructions, commands, objects, hardware or the like, of a computer program that is embodied, for example, on a storage medium such as floppy disk, CD Rom, EP Rom, RAM, hard disk, etc. Further, the computer program can be written in any language such as, but not limited to, for example C&plus;&plus; or Assembler. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a flowchart of the process employed in an example embodiment of the present invention to calibrate the strobe delay <highlight><bold>130</bold></highlight>. Processing begins in operation <highlight><bold>400</bold></highlight> upon initial power up of the computer system. Thereafter, processing proceeds to operation <highlight><bold>410</bold></highlight> where each individual slave strobe delay device <highlight><bold>210</bold></highlight> is calibrated to determine strobe delay <highlight><bold>130</bold></highlight> as previously discussed in reference to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. Processing then proceeds to operation <highlight><bold>420</bold></highlight> where it is determined whether it is time for the master strobe delay device <highlight><bold>200</bold></highlight> to re-calibrate its associated slave strobe delay devices <highlight><bold>210</bold></highlight> by outputting an incremental delay adjustment signal <highlight><bold>220</bold></highlight>. The determination of whether it is time for a master re-calibration operation to occur in operation <highlight><bold>420</bold></highlight> is based upon the lapse of a predetermined time interval. As would be appreciated by one of ordinary skill in the art, the determination of how much time must elapsed for such re-calibration to occur is based on the design of the circuit. If it is not time for the master strobe delay device <highlight><bold>200</bold></highlight> to perform a re-calibration, then processing loops back to operation <highlight><bold>420</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Still referring to <cross-reference target="DRAWINGS">FIG. 4</cross-reference>, if in operation <highlight><bold>420</bold></highlight> it is determined that a re-calibration is needed then processing proceeds to operation <highlight><bold>430</bold></highlight>. In operation <highlight><bold>430</bold></highlight> the master strobe delay device <highlight><bold>200</bold></highlight> determines the incremental delay adjustment signal <highlight><bold>220</bold></highlight> as previously discussed in reference to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. The previous control value for the variable delay element <highlight><bold>305</bold></highlight> is compared against the current control value for the variable delay element <highlight><bold>305</bold></highlight> for the master strobe delay for the master delay device <highlight><bold>200</bold></highlight> to determine the incremental delay adjustment <highlight><bold>220</bold></highlight>. As previously discussed, since the master strobe delay device <highlight><bold>200</bold></highlight> is similar to the slave strobe delay devices <highlight><bold>210</bold></highlight> any change due to temperature and voltage changes in the variable delay element <highlight><bold>305</bold></highlight> for the master strobe delay device <highlight><bold>200</bold></highlight> should be the same for the slave strobe delay devices <highlight><bold>210</bold></highlight>. Thereafter, processing proceeds to operation <highlight><bold>440</bold></highlight> where it is determined if the incremental delay adjustment signal <highlight><bold>220</bold></highlight> is not equal to zero. If the incremental delay adjustment signal <highlight><bold>220</bold></highlight> is equal to zero then processing loops back to operation <highlight><bold>420</bold></highlight>. However, if the incremental delay adjustment <highlight><bold>220</bold></highlight> is not equal to zero then processing proceeds to operation <highlight><bold>450</bold></highlight>. In operation <highlight><bold>450</bold></highlight>, the incremental delay adjustment signal <highlight><bold>220</bold></highlight> is transmitted to the slave strobe delay devices <highlight><bold>210</bold></highlight> so that their respective variable delay elements <highlight><bold>305</bold></highlight> may be adjusted. Thereafter, processing loops back to operation <highlight><bold>420</bold></highlight>. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The benefit resulting from the present invention is that a simple, reliable system and method is provided for calibration of DDR devices. This system and method of calibration can compensate for on-die variations in circuits due to minuscule variations in manufacturing of the circuit. Further, this system and method can periodically re-calibrate the slave strobe delay devices without interrupting their normal operations through the use of a master strobe delay device. This re-calibration function enables the adjustment of a delay strobe <highlight><bold>130</bold></highlight> caused by voltage and temperature changes. Therefore, a high degree of accuracy is assured for delay strobe <highlight><bold>130</bold></highlight>. Further, the system and method allow for lower power usage delay elements to be used instead of more power demanding differential delays because the delays can be updated more often for voltage changes using the master strobe delay device. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> While we have shown and described only a few examples herein, it is understood that numerous changes and modifications as known to those skilled in the art could be made to the example embodiment of the present invention. Therefore, we do not wish to be limited to the details shown and described herein, but intend to cover all such changes and modifications as are encompassed by the scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">I claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of determining a delay strobe time for a DDR device, comprising: 
+<claim-text>calibrating a plurality of slave strobe delay devices during system startup contained in the DDR device to determine a variable delay element; </claim-text>
+<claim-text>determining an incremental delay adjustment by a master strobe delay device at a predetermined time interval; </claim-text>
+<claim-text>transmitting the incremental delay adjustment to the plurality of slave strobe delay devices at the predetermined time interval when the incremental delay adjustment is not equal to zero; and </claim-text>
+<claim-text>updating the variable delay element contained in the plurality of slave strobe delay devices using the incremental delay adjustment received from the master strobe delay device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein the master strobe delay device is connected to a plurality of slave strobe devices and are similar in design except for the slave strobe delay device receives the incremental delay adjustment from the master strobe delay device and the master strobe delay device does not output data. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method recited in <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein the calibrating a plurality of slave strobe delay devices during system startup contained in the DDR device to determine a variable delay is performed by a frequency counter. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method recited in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein the frequency counter measures the frequency of an oscillator formed by using the slave strobe delay device and determines a current delay value of the slave strobe delay device at system startup. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method recited in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein updating the variable delay element contained in the plurality of slave strobe delay devices using the incremental delay adjustment received from the master strobe delay device, further comprises: 
+<claim-text>adding the incremental delay adjustment to the variable delay element; </claim-text>
+<claim-text>storing the variable delay element in the slave strobe device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method recited in <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, wherein the determining an incremental delay adjustment by a master strobe delay device at a predetermined time interval is performed by a frequency counter. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method recited in <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein the frequency counter measures the frequency of an oscillator formed by using the master strobe delay device and determines a current delay value of the slave strobe delay device at the predetermined interval. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A computer program for determining a delay strobe time for a DDR device, comprising: 
+<claim-text>calibrating a plurality of slave strobe delay devices during system startup contained in the DDR device to determine a variable delay element; </claim-text>
+<claim-text>determining an incremental delay adjustment by a master strobe delay device at a predetermined time interval; </claim-text>
+<claim-text>transmitting the incremental delay adjustment to the plurality of slave strobe delay devices at the predetermined time interval when the incremental delay adjustment is not equal to zero; and </claim-text>
+<claim-text>updating the variable delay element contained in the plurality of slave strobe delay devices using the incremental delay adjustment received from the master strobe delay device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The computer program recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein the master strobe delay device is connected to a plurality of slave strobe devices and are similar in design except for the slave strobe delay device receives the incremental delay adjustment from the master strobe delay device and the master strobe delay device does not output data. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The computer program recited in <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein the calibrating a plurality of slave strobe delay devices during system startup contained in the DDR device to determine a variable delay is performed by a frequency counter. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The computer program recited in <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference>, wherein the frequency counter measures the frequency of an oscillator formed by using the slave strobe delay device and determines a current delay value of the slave strobe delay device at system startup. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer program recited in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein updating the variable delay element contained in the plurality of slave strobe delay devices using the incremental delay adjustment received from the master strobe delay device, further comprises: 
+<claim-text>adding the incremental delay adjustment to the variable delay element; </claim-text>
+<claim-text>storing the variable delay element in the slave strobe device. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer program recited in <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the determining an incremental delay adjustment by a master strobe delay device at a predetermined time interval is performed by a frequency counter. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. A computer program recited in <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the frequency counter measures the frequency of an oscillator formed by using the master strobe delay device and determines a current delay value of the slave strobe delay device at the predetermined interval. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. A system for determining a delay strobe time for a DDR device, comprising: 
+<claim-text>a plurality of slave strobe delay devices calibrated at system startup to compensate for on-die variations in each individual salve strobe device of the plurality of slave strobe delay devices and storing the result of the calibration in a variable delay element; and </claim-text>
+<claim-text>a master strobe delay device connected to the plurality of slave strobe delay devices to determine an incremental delay adjustment at a predetermined time interval and when the incremental delay adjustment is not zero to transmit the incremental delay adjustment to each of the plurality of slave strobe delay devices, wherein upon receipt of the incremental delay adjustment by the plurality of slave strobe delay devices each slave strobe device will update the variable delay element using the incremental delay adjustment. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system recited in <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein the master strobe delay device and the plurality of slave strobe devices are similar in design except for the slave strobe delay device receives the incremental delay adjustment from the master strobe delay device and the master strobe delay device does not output data. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system recited in <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference>, wherein the master strobe delay device and the slave strobe delay device each have a frequency counter to determine a variable delay. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system recited in <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein the frequency counter measures the frequency of an oscillator formed by using the slave strobe delay device or the master strobe delay device and determines a current delay value of the slave strobe delay device or the master strobe delay device. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The system recited in <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference>, wherein the slave strobe delay devices each slave strobe device will update the variable delay element using the incremental delay adjustment.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>4</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004667A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004667A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004667A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004667A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004667A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

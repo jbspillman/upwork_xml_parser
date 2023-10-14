@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005252A1-20030102-D00000.TIF SYSTEM "US20030005252A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005252A1-20030102-D00001.TIF SYSTEM "US20030005252A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005252A1-20030102-D00002.TIF SYSTEM "US20030005252A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005252A1-20030102-D00003.TIF SYSTEM "US20030005252A1-20030102-D00003.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005252</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10044394</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020111</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F013/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>167000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Managing latencies in accessing memory of computer systems</title-of-invention>
+</technical-information>
+<continuity-data>
+<continuations>
+<continuation-in-part-of>
+<parent-child>
+<child>
+<document-id>
+<doc-number>10044394</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20020111</document-date>
+</document-id>
+</child>
+<parent>
+<document-id>
+<doc-number>09896043</doc-number>
+<document-date>20010628</document-date>
+<country-code>US</country-code>
+</document-id>
+</parent>
+<parent-status>PENDING</parent-status>
+</parent-child>
+</continuation-in-part-of>
+</continuations>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Kenneth</given-name>
+<middle-name>M.</middle-name>
+<family-name>Wilson</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Robert</given-name>
+<middle-name>B.</middle-name>
+<family-name>Aglietti</family-name>
+</name>
+<residence>
+<residence-us>
+<city>San Jose</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>HEWLETT-PACKARD COMPANY</name-1>
+<name-2>Intellectual Property Administration</name-2>
+<address>
+<address-1>P.O. Box 272400</address-1>
+<city>Fort Collins</city>
+<state>CO</state>
+<postalcode>80527-2400</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">The present invention, in various embodiments, provides techniques for managing latencies in accessing memory of computer systems. In one embodiment, upon accessing the memory system for a piece of data used by a first process, a latency manager determines the access time to acquire the piece of data in the memory system. The latency manager then compares the determined access time to a threshold. If the determined access time is greater than the threshold, the latency manager triggers an interrupt for the operating system to switch threads or processes so that execution of the first process is postponed and execution of a second process starts. Various embodiments include the latency manager is polled for the access time when the processor is stalled, the latency manager triggers a process switch when a particular memory subsystem is accessed, etc. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<cross-reference-to-related-applications>
+<heading lvl="1">RELATED CASE </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> This application is a continuation-in-part of copending application Ser. No. 09/896,043 by Wilson et al., entitled &ldquo;Memory Table and Memory Manager for Use in Memory Management,&rdquo; filed Jun. 28, 2001.</paragraph>
+</cross-reference-to-related-applications>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates generally to managing computer memory systems and, more specifically, to managing latencies in memory accesses. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Currently, in various situations, a processor or operating system accessing memory does not know the access time, e.g., the time it takes to acquire the data from the memory system. Processor time and other resources can be wasted due to this memory access time because during this time the processor is idled waiting for the access data. Further, the access time can be very long such as in case of a memory page miss in which a slow device like a hard disc is accessed. In some approaches, a process seeking the access data keeps waiting for the data until the allocated wait time runs out, at that time the process is put in the background. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Based on the foregoing, it is clearly desirable that mechanisms be provided to solve the above deficiencies and related problems. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The present invention, in various embodiments, provides techniques for managing latencies in accessing memory of computer systems. In one embodiment, upon accessing the memory system for a piece of data used by a first process, a latency manager determines the access time to acquire the piece of data in the memory system. The latency manager then compares the determined access time to a threshold. If the determined access time is greater than the threshold, the latency manager notifies the operating system to switch threads or processes so that execution of the first process is postponed and execution of a second process starts. Various embodiments include the latency manager is polled for the access time when the processor is stalled, the latency manager triggers a process switch when a particular memory subsystem is accessed, etc. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The present invention is illustrated by way of example, and not by way of limitation, in the figures of the accompanying drawings in which like reference numerals refer to similar elements and in which: </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a first system upon which techniques of the invention may be implemented; </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a second system upon which techniques of the invention may be implemented; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> shows a third system upon which techniques of the invention may be implemented. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE VARIOUS EMBODIMENTS </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> In the following description, for the purposes of explanation, numerous specific details are set forth in order to provide a thorough understanding of the present invention. However, it will be apparent to one skilled in the art that the invention may be practiced without these specific details. In other instances, well-known structures and devices are shown in block diagram form in order to avoid obscuring the invention. </paragraph>
+</section>
+<section>
+<heading lvl="1">Hardware Overview </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> shows a processor system <highlight><bold>100</bold></highlight> upon which techniques of the invention may be implemented. System <highlight><bold>100</bold></highlight> includes, in relevant part, a central processing unit (CPU) <highlight><bold>102</bold></highlight>, a memory system <highlight><bold>104</bold></highlight>, and a hard disc <highlight><bold>130</bold></highlight>. CPU <highlight><bold>102</bold></highlight> in turns includes a processor <highlight><bold>105</bold></highlight> and cache memory <highlight><bold>108</bold></highlight>, while memory system <highlight><bold>104</bold></highlight> includes a memory controller <highlight><bold>110</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, and level-2 memory <highlight><bold>125</bold></highlight>. Memory system <highlight><bold>104</bold></highlight> is commonly referred to as main memory from which program instructions are executed and program data are manipulated. Memory controller <highlight><bold>110</bold></highlight> includes latency manager <highlight><bold>112</bold></highlight>. Level-2 memory <highlight><bold>125</bold></highlight> is shown outside of system <highlight><bold>104</bold></highlight> to illustrate that accessing level-2 memory <highlight><bold>125</bold></highlight> takes relatively longer than accessing level-1 memory <highlight><bold>120</bold></highlight>. System <highlight><bold>100</bold></highlight> normally runs by an operating system <highlight><bold>170</bold></highlight> resided in level-1 memory <highlight><bold>120</bold></highlight>. Processor <highlight><bold>105</bold></highlight>, cache memory <highlight><bold>108</bold></highlight>, memory controller <highlight><bold>110</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, level-2 memory <highlight><bold>125</bold></highlight>, hard disc <highlight><bold>130</bold></highlight>, and operating system <highlight><bold>170</bold></highlight> are common computer components. Each of cache <highlight><bold>108</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, level-2 memory <highlight><bold>125</bold></highlight>, and hard disc <highlight><bold>130</bold></highlight> may be referred to as a memory subsystem since each stores data for system <highlight><bold>100</bold></highlight>. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> In one embodiment, data in system <highlight><bold>100</bold></highlight> is accessed in a specific order, such as, from a fast memory subsystem (e.g., cache) to a slow memory subsystem (e.g., hard disc, personal computer memory card international association (PCMCIA) card, etc). However, techniques of the invention are not limited to that order, but are applicable in any other order such as a random order, an order independent from the access time of the memory subsystems, a non-sequential order, e.g., an order in which one subsystem is not necessarily always followed by the same subsystem, etc. For illustration purposes, upon a memory access for a piece of data, the data is accessed (searched) in the order of cache <highlight><bold>108</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, level-2 memory <highlight><bold>125</bold></highlight>, and hard disc <highlight><bold>130</bold></highlight>. If the data is missed (e.g., not found) in cache <highlight><bold>108</bold></highlight>, then it is searched in level-i memory <highlight><bold>120</bold></highlight>. If it is missed in level-1 memory <highlight><bold>120</bold></highlight>, then it is searched in level-2 memory <highlight><bold>125</bold></highlight>. If it is missed in level-2 memory <highlight><bold>125</bold></highlight>, then it is searched in hard disc <highlight><bold>130</bold></highlight>, etc. Generally, a time to access each memory subsystem ranges from a minimum time t<highlight><subscript>min </subscript></highlight>to a maximum time t<highlight><subscript>max</subscript></highlight>, and any time between this t<highlight><subscript>min </subscript></highlight>to t<highlight><subscript>max </subscript></highlight>range, including an average time t<highlight><subscript>ave</subscript></highlight>, can be used as an access time for that subsystem. Selecting a time, e.g., t<highlight><subscript>min</subscript></highlight>, t<highlight><subscript>ave</subscript></highlight>, or t<highlight><subscript>max </subscript></highlight>as an access time for a memory subsystem varies depending on various factors including the goals and priorities of system designers designing the system. If the time to access cache <highlight><bold>108</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, level-2 memory <highlight><bold>125</bold></highlight>, and hard disc <highlight><bold>130</bold></highlight> is designated as times t<highlight><bold>1</bold></highlight>, t<highlight><bold>2</bold></highlight>, t<highlight><bold>3</bold></highlight>, and t<highlight><bold>4</bold></highlight>, then, in one embodiment, times t<highlight><bold>1</bold></highlight>, t<highlight><bold>2</bold></highlight>, t<highlight><bold>3</bold></highlight>, and t<highlight><bold>4</bold></highlight> increase in that order, i.e., t<highlight><bold>4</bold></highlight>&gt;t<highlight><bold>3</bold></highlight>&gt;t<highlight><bold>2</bold></highlight>&gt;t<highlight><bold>1</bold></highlight>. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> In this document, the configuration of system <highlight><bold>100</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is used only as an example; the techniques disclosed herein may be implemented in other configurations of a processing system. For example, cache <highlight><bold>108</bold></highlight> can be part of processor <highlight><bold>105</bold></highlight>, CPU <highlight><bold>102</bold></highlight>, memory system <highlight><bold>104</bold></highlight>, etc; there may be more than one processor <highlight><bold>105</bold></highlight> in CPU <highlight><bold>102</bold></highlight> and/or more than one CPU <highlight><bold>102</bold></highlight>; there may be various levels of cache, memory, hard disc, and other storage devices that constitute memory system <highlight><bold>104</bold></highlight>; memory latency manager <highlight><bold>112</bold></highlight> may be in CPU <highlight><bold>102</bold></highlight>&apos;s instruction fetch unit, load/store unit, bus interface, main memory controller, or other locations for latency manager <highlight><bold>112</bold></highlight> to acquire or estimate enough information to determine the access time for a piece of data. </paragraph>
+</section>
+<section>
+<heading lvl="1">Latency Manager </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> In the <cross-reference target="DRAWINGS">FIG. 1</cross-reference> example, latency manager <highlight><bold>112</bold></highlight> resides in memory controller <highlight><bold>110</bold></highlight>. However, in general, latency manger <highlight><bold>112</bold></highlight> is placed in the data path of the access data, e.g., between processor <highlight><bold>105</bold></highlight> and the memory subsystems that store the data, including, for example, cache <highlight><bold>108</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, level-2 memory, hard disc <highlight><bold>130</bold></highlight>, memory in PCMCIA cards, etc. Placing latency manager <highlight><bold>112</bold></highlight> in the data path is beneficial because latency manager <highlight><bold>112</bold></highlight> may efficiently acquires the data access time. In embodiments where latency manger <highlight><bold>112</bold></highlight> is not in the access data path, additional communications, such as messages or signals, are usually implemented to communicate the latencies with latency manager <highlight><bold>112</bold></highlight>. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In one embodiment, latency manager <highlight><bold>112</bold></highlight> stores a latency threshold t, and, upon a memory access for a piece of data of a first process, latency manager <highlight><bold>112</bold></highlight> determines the access time to acquire that particular piece of data. Latency manager <highlight><bold>112</bold></highlight> then compares the determined access time to threshold t<highlight><subscript>th</subscript></highlight>. If the determined access time is greater than threshold t<highlight><subscript>th</subscript></highlight>, then latency manager <highlight><bold>112</bold></highlight> provides that information to an appropriate intelligence to take appropriate actions. The intelligence could be any intelligent logic including hardware, software, firmware, such as CPU <highlight><bold>102</bold></highlight>, processor <highlight><bold>105</bold></highlight>, operating system <highlight><bold>107</bold></highlight>, software running on the processor, hardware or software managing the memory system, etc. In one embodiment, latency manager <highlight><bold>112</bold></highlight> provides the information to processor <highlight><bold>105</bold></highlight> and/or operating system <highlight><bold>170</bold></highlight> for them to take actions, such as to cause a performance monitor of memory subsystem <highlight><bold>104</bold></highlight> or of system <highlight><bold>100</bold></highlight> as a whole, to postpone execution of the first process/thread, to cause process switches, etc. Latency manager <highlight><bold>112</bold></highlight> may also directly cause such actions to be performed. In one embodiment and for illustration purposes, latency manager <highlight><bold>112</bold></highlight>&apos;s action triggers a process switch so that execution of the first process is postponed and execution of a second process may start. In one embodiment, latency manager <highlight><bold>112</bold></highlight> puts the first process in a sleeping queue or schedules that process out until it is ready to be executed again. In an alternative embodiment, latency manager <highlight><bold>112</bold></highlight> notifies or triggers an interrupt to operating system <highlight><bold>170</bold></highlight>. As soon as operating system <highlight><bold>170</bold></highlight> recognizes the reason for interrupt, operating system <highlight><bold>170</bold></highlight> responds by switching out the currently executing process to postpone execution of this process and allows execution of another process. However, if the determined access time is less than or equal to threshold t<highlight><subscript>th</subscript></highlight>, then latency manager <highlight><bold>112</bold></highlight> takes no special actions, e.g., allows system <highlight><bold>100</bold></highlight> to function as usual. In the above situations, postponing executing the first process prevents wasting resources due to waiting for the access data. As an example, if t<highlight><bold>4</bold></highlight>&gt;t<highlight><bold>3</bold></highlight>&gt;t<highlight><subscript>th</subscript></highlight>&gt;t<highlight><bold>2</bold></highlight>&gt;t<highlight><bold>1</bold></highlight>, then in response to a memory access in cache <highlight><bold>108</bold></highlight> or in level-1 memory <highlight><bold>120</bold></highlight>, latency manager <highlight><bold>112</bold></highlight> does not take special actions. However, in response to a memory access in level-2 memory <highlight><bold>125</bold></highlight> or in hard disc <highlight><bold>130</bold></highlight>, latency manager <highlight><bold>112</bold></highlight>&apos;s actions initiate a process switch. Those skilled in the art will recognize that a process is an executing program and may be used loosely as a &ldquo;task.&rdquo; Further, a thread is a part of a program that can execute independent of other parts. For illustration purposes, the term &ldquo;process&rdquo; used in this document refers to a process, a program, a thread, or their equivalences. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> In one embodiment, latency manager <highlight><bold>112</bold></highlight>&apos;s action causes a process switch when the access data is missed in a predetermined memory subsystem. This is conveniently implemented when the data is accessed in an order from a faster subsystem to a slower subsystem in which as the data is missed in one subsystem, the data is searched in a next slower subsystem up to a point where accessing a too slow subsystem would waste too much processor idle time. For example, let the search be in the order of cache <highlight><bold>108</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, level-2 memory <highlight><bold>125</bold></highlight>, and hard disc <highlight><bold>130</bold></highlight>, and it has been determined that accessing level-2 memory <highlight><bold>125</bold></highlight> takes too long for processor <highlight><bold>105</bold></highlight> to wait, then level-1 memory <highlight><bold>120</bold></highlight> is &ldquo;earmarked,&rdquo; such that when the access data is missed in level-1 memory subsystem <highlight><bold>120</bold></highlight>, a process switch is triggered. In this document, a &ldquo;slower&rdquo; subsystem has a longer access time while a &ldquo;faster&rdquo; subsystem has a shorter access time. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In one embodiment, upon a memory access, processor <highlight><bold>105</bold></highlight> continues performing its functions until it is stalled, such as when processor <highlight><bold>105</bold></highlight> completes its instruction queue and has no other instructions to execute. Processor <highlight><bold>105</bold></highlight> then polls latency manager <highlight><bold>112</bold></highlight> or other appropriate intelligence to determine the time it takes to complete the memory access. If the time taken to complete the memory access is greater than a predetermined time, e.g., the threshold t<highlight><subscript>th</subscript></highlight>, then a process switch is triggered. In this embodiment, processor time to poll latency manager <highlight><bold>112</bold></highlight> does not add costs to system <highlight><bold>100</bold></highlight> because processor <highlight><bold>105</bold></highlight>, being stalled and thus idled, would not otherwise execute any beneficial instructions. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> In one embodiment, a counter is used to determine whether to switch processes. In general, latency manager <highlight><bold>112</bold></highlight> knows whether a data access is about to occur, and, as soon as the data access starts, latency manager <highlight><bold>112</bold></highlight> enables the counter to count the time elapsed from the time the data access starts. This counted time thus keeps increasing as the data is being accessed in memory system <highlight><bold>104</bold></highlight>. When the counted time increases greater than threshold t<highlight><subscript>th</subscript></highlight>, a switch process is triggered. For illustrative purposes, the access time for cache <highlight><bold>108</bold></highlight>, level-1 memory <highlight><bold>120</bold></highlight>, and level-2 memory <highlight><bold>125</bold></highlight> is 10, 100, and 300 time units, respectively. Further, it is determined that a data access to level-2 memory <highlight><bold>125</bold></highlight> will cause a process switch. As soon as the counter counts past <highlight><bold>100</bold></highlight>, which is the maximum access time for level-1 memory <highlight><bold>120</bold></highlight>, and which is also the latency threshold t<highlight><subscript>th</subscript></highlight>, latency manager <highlight><bold>112</bold></highlight> triggers a process switch. In one embodiment, latency manager <highlight><bold>112</bold></highlight> is placed in processor <highlight><bold>105</bold></highlight>&apos;s outstanding memory access buffer (not shown), and each buffer includes a counter to keep track of how long a memory access has been outstanding. If one or more counters exceed latency threshold t<highlight><subscript>th</subscript></highlight>, then a process switch is triggered. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In various embodiments, a memory access may result in searching for the same data in multiple places, which is commonly referred to as parallel access since the same access is sent to different memory subsystems, e.g., to both a faster subsystem and a slower subsystem. Parallel memory access does not add cost to the system, but saves time in accessing the slower subsystem when the data is missed in the faster subsystem because the data is searched in the slower subsystem in parallel with searching in the faster subsystem. In one embodiment, the initial access time is that of the faster subsystem, and, when the access misses in the faster subsystem, the access time is that of the slower subsystem. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> A multiple memory access occurs in case of accessing multiple pieces of data. Normally, while the first access is in progress, the second access starts. In one embodiment, upon a multiple memory access, latency manger <highlight><bold>112</bold></highlight> uses the longest access time to determine a process switch. In such situations, for comparison to threshold t<highlight><subscript>th</subscript></highlight>, latency manager <highlight><bold>112</bold></highlight> is updated with a new access latency if this access latency is greater than the last latency stored in latency manager <highlight><bold>112</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> Alternatively, latency manager <highlight><bold>112</bold></highlight> is loaded with a new access latency upon each miss in a memory subsystem. For example, before the first memory access, latency manager <highlight><bold>112</bold></highlight> is loaded with t<highlight><bold>1</bold></highlight>, e.g., the access time for cache <highlight><bold>108</bold></highlight>. Latency manager <highlight><bold>112</bold></highlight> may also be initialized with a value 0 because, in one embodiment, as long as the predicted access time is less than t<highlight><subscript>th</subscript></highlight>, latency manager <highlight><bold>112</bold></highlight> does not take special actions. When the memory access misses in cache <highlight><bold>108</bold></highlight>, latency manager <highlight><bold>112</bold></highlight> is loaded with access time t<highlight><bold>2</bold></highlight> of level-1 memory <highlight><bold>120</bold></highlight>. When the memory access misses in level-1 memory <highlight><bold>120</bold></highlight>, latency manager <highlight><bold>112</bold></highlight> is loaded with access time t<highlight><bold>3</bold></highlight> of level-2 memory <highlight><bold>125</bold></highlight>, and when the memory access misses in level-2 memory <highlight><bold>125</bold></highlight>, latency manager <highlight><bold>112</bold></highlight> is loaded with access time t<highlight><bold>4</bold></highlight> of hard disc <highlight><bold>130</bold></highlight>, etc. </paragraph>
+</section>
+<section>
+<heading lvl="1">Variations </heading>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> shows a system <highlight><bold>200</bold></highlight> upon which techniques of the invention may be implemented. System <highlight><bold>200</bold></highlight> is described in details in copending application Ser. No. 09/896,043, of which this application is a continuation-in-part (above). In this system <highlight><bold>200</bold></highlight>, cache <highlight><bold>208</bold></highlight>, physical memory <highlight><bold>220</bold></highlight>, swap memory <highlight><bold>228</bold></highlight>, hard disc <highlight><bold>230</bold></highlight>, and their equivalences are considered memory subsystems. Each memory subsystem corresponds to an access time, e.g., time tt<highlight><bold>1</bold></highlight>, tt<highlight><bold>2</bold></highlight>, tt<highlight><bold>3</bold></highlight>, tt<highlight><bold>4</bold></highlight> for cache <highlight><bold>208</bold></highlight>, physical memory <highlight><bold>220</bold></highlight>, swap memory <highlight><bold>228</bold></highlight>, and hard disc <highlight><bold>230</bold></highlight>, respectively. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> A latency manager, e.g., latency manager <highlight><bold>212</bold></highlight> (not shown), which is comparable to latency manager <highlight><bold>112</bold></highlight> in system <highlight><bold>100</bold></highlight>, may be implemented in system <highlight><bold>200</bold></highlight>. Latency manager <highlight><bold>212</bold></highlight> works by itself or with memory manager <highlight><bold>265</bold></highlight> and/or memory table <highlight><bold>268</bold></highlight> to perform latency manager <highlight><bold>212</bold></highlight>&apos;s functions consistent with the techniques disclosed herein. In one embodiment, latency manager <highlight><bold>212</bold></highlight> is advantageously resided in memory manager <highlight><bold>265</bold></highlight> or memory table <highlight><bold>268</bold></highlight> because both of them are usually in the data path and contain information related to the access data, the access times to the memory subsystems, etc. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In one embodiment, it is predetermined that accessing some particular subsystems that have a long access time, e.g., swap memory <highlight><bold>228</bold></highlight>, hard disc <highlight><bold>230</bold></highlight>, etc., would cause a process switch. In this embodiment, latency manager <highlight><bold>212</bold></highlight> includes information, such as logical bits, to determine whether such a process switch is desirable. For example, each memory subsystem corresponds to a bit, and the bits corresponding to cache <highlight><bold>208</bold></highlight> and physical memory <highlight><bold>220</bold></highlight> are set to a logical zero to indicate that accessing data in these memory subsystems do not cause a process switch. Similarly, the bits corresponding to swap memory <highlight><bold>228</bold></highlight> and hard disc <highlight><bold>230</bold></highlight> are set to a logical one to indicate that accessing data in these memory subsystems do cause a process switch. When it is determined that a subsystem of memory system <highlight><bold>204</bold></highlight> is about to be accessed, latency manager <highlight><bold>212</bold></highlight> reviews the bit corresponding to that subsystem to determine a process switch. For example, if the bit is at a logical high, then latency manager <highlight><bold>212</bold></highlight> sends a signal that can trigger a process switch; otherwise, no special action is desirable. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> Techniques of the invention are advantageously used in system <highlight><bold>200</bold></highlight> because memory system <highlight><bold>204</bold></highlight>, with the implementation of memory manger <highlight><bold>265</bold></highlight>, in various embodiments manages its memory subsystems independent of processor <highlight><bold>205</bold></highlight> and operating system <highlight><bold>270</bold></highlight>. As a result, access times to memory subsystems of memory system <highlight><bold>204</bold></highlight>, e.g., tt<highlight><bold>1</bold></highlight>, tt<highlight><bold>2</bold></highlight>, tt<highlight><bold>3</bold></highlight>, tt<highlight><bold>4</bold></highlight>, etc., are further hidden from processor <highlight><bold>205</bold></highlight> and operating system <highlight><bold>270</bold></highlight>. This can cause long idle processor time. Latency manager <highlight><bold>212</bold></highlight>, working with memory manger <highlight><bold>265</bold></highlight> and memory table <highlight><bold>268</bold></highlight> can provide relevant access times to processor <highlight><bold>205</bold></highlight> and operating system <highlight><bold>270</bold></highlight>. Together, they make appropriate decisions, e.g., switching processes to prevent wasting idle processor time. </paragraph>
+</section>
+<section>
+<heading lvl="1">Other Considerations </heading>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Causes for process switches and trigger threshold tt vary depending on various factors. For example, different types of memory subsystems or different types of instructions may have different trigger thresholds. In one embodiment, threshold t<highlight><subscript>th </subscript></highlight>is greater than the time to access level-1 memory and cache subsystems. This threshold t<highlight><subscript>th </subscript></highlight>is determined based on various factors such as what is a realistic time for a memory access, the cost of switching the processes, the cost of wasting idleprocessor time, etc. A particular instruction may or may not trigger a process switch. In one embodiment, a store instruction, e.g., writing data to memory, does not cause a process switch because the processor does not wait for the results of such an instruction. Consequently, threshold t<highlight><subscript>th </subscript></highlight>is set to a very high value so that no process switch will occur. Conversely, a load instruction, e.g., getting data from memory, can cause a process switch, and thus the trigger threshold t<highlight><subscript>th </subscript></highlight>can be set accordingly, e.g., greater than t<highlight><bold>1</bold></highlight> and t<highlight><bold>2</bold></highlight> and lesser than t<highlight><bold>3</bold></highlight> and t<highlight><bold>4</bold></highlight> as in the above example. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> Access times t<highlight><bold>1</bold></highlight>, t<highlight><bold>2</bold></highlight>, t<highlight><bold>3</bold></highlight>, t<highlight><bold>4</bold></highlight>, tt<highlight><bold>1</bold></highlight>, tt<highlight><bold>2</bold></highlight>, tt<highlight><bold>3</bold></highlight>, tt<highlight><bold>4</bold></highlight>, and threshold t<highlight><subscript>th </subscript></highlight>may be measured in absolute time values such as nano seconds, micro seconds, etc., or in terms of system <highlight><bold>100</bold></highlight>&apos;s cycles or frequencies. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Generally, mechanisms are provided to prevent unwanted process switches in situations such as initiating a second switch (e.g., interrupt) due to data remained from the first switch, initiating a second counter for a second process switch while a first process switch is in progress, etc. In one embodiment, the memory access latency stored in latency manager <highlight><bold>112</bold></highlight> is cleared when the latency manager interrupt is triggered, threshold t<highlight><subscript>th </subscript></highlight>is updated, a process is switched, etc. In an alternative embodiment, processor <highlight><bold>105</bold></highlight> ignores a second switch while the first switch is in progress. </paragraph>
+</section>
+<section>
+<heading lvl="1">Computer System Overview </heading>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram showing a computer system <highlight><bold>300</bold></highlight> upon which embodiments of the invention may be implemented. For example, computer system <highlight><bold>300</bold></highlight> may be implemented to include system <highlight><bold>100</bold></highlight>, system <highlight><bold>200</bold></highlight>, latency managers <highlight><bold>112</bold></highlight>, <highlight><bold>212</bold></highlight>, etc. In one embodiment, computer system <highlight><bold>300</bold></highlight> includes a processor <highlight><bold>304</bold></highlight>, random access memories (RAMs) <highlight><bold>308</bold></highlight>, read-only memories (ROMS) <highlight><bold>312</bold></highlight>, a storage device <highlight><bold>316</bold></highlight>, and a communication interface <highlight><bold>320</bold></highlight>, all of which are connected to a bus <highlight><bold>324</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> Processor <highlight><bold>304</bold></highlight> controls logic, processes information, and coordinates activities within computer system <highlight><bold>300</bold></highlight>. In one embodiment, processor <highlight><bold>304</bold></highlight> executes instructions stored in RAMs <highlight><bold>308</bold></highlight> and ROMs <highlight><bold>312</bold></highlight>, by, for example, coordinating the movement of data from input device <highlight><bold>328</bold></highlight> to display device <highlight><bold>332</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> RAMs <highlight><bold>308</bold></highlight>, usually being referred to as main memory, temporarily store information and instructions to be executed by processor <highlight><bold>304</bold></highlight>. Information in RAMs <highlight><bold>308</bold></highlight> may be obtained from input device <highlight><bold>328</bold></highlight> or generated by processor <highlight><bold>304</bold></highlight> as part of the algorithmic processes required by the instructions that are executed by processor <highlight><bold>304</bold></highlight>. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> ROMs <highlight><bold>312</bold></highlight> store information and instructions that, once written in a ROM chip, are read-only and are not modified or removed. In one embodiment, ROMs <highlight><bold>312</bold></highlight> store commands for configurations and initial operations of computer system <highlight><bold>300</bold></highlight>. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Storage device <highlight><bold>316</bold></highlight>, such as floppy disks, disk drives, or tape drives, durably stores information for used by computer system <highlight><bold>300</bold></highlight>. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> Communication interface <highlight><bold>320</bold></highlight> enables computer system <highlight><bold>300</bold></highlight> to interface with other computers or devices. Communication interface <highlight><bold>320</bold></highlight> may be, for example, a modem, an integrated services digital network (ISDN) card, a local area network (LAN) port, etc. Those skilled in the art will recognize that modems or ISDN cards provide data communications via telephone lines while a LAN port provides data communications via a LAN. Communication interface <highlight><bold>320</bold></highlight> may also allow wireless communications. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Bus <highlight><bold>324</bold></highlight> can be any communication mechanism for communicating information for use by computer system <highlight><bold>300</bold></highlight>. In the example of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, bus <highlight><bold>324</bold></highlight> is a media for transferring data among processor <highlight><bold>304</bold></highlight>, RAMs <highlight><bold>308</bold></highlight>, ROMs <highlight><bold>312</bold></highlight>, storage device <highlight><bold>316</bold></highlight>, communication interface <highlight><bold>320</bold></highlight>, etc. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Computer system <highlight><bold>300</bold></highlight> is typically coupled to an input device <highlight><bold>328</bold></highlight>, a display device <highlight><bold>332</bold></highlight>, and a cursor control <highlight><bold>336</bold></highlight>. Input device <highlight><bold>328</bold></highlight>, such as a keyboard including alphanumeric and other keys, communicates information and commands to processor <highlight><bold>304</bold></highlight>. Display device <highlight><bold>332</bold></highlight>, such as a cathode ray tube (CRT), displays information to users of computer system <highlight><bold>300</bold></highlight>. Cursor control <highlight><bold>336</bold></highlight>, such as a mouse, a trackball, or cursor direction keys, communicates direction information and commands to processor <highlight><bold>304</bold></highlight> and controls cursor movement on display device <highlight><bold>332</bold></highlight>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Computer system <highlight><bold>300</bold></highlight> may communicate with other computers or devices through one or more networks. For example, computer system <highlight><bold>300</bold></highlight>, using communication interface <highlight><bold>320</bold></highlight>, may communicate through a network <highlight><bold>340</bold></highlight> to another computer <highlight><bold>344</bold></highlight> connected to a printer <highlight><bold>348</bold></highlight>, or through the world wide web <highlight><bold>352</bold></highlight> to a web server <highlight><bold>356</bold></highlight>. The world wide web <highlight><bold>352</bold></highlight> is commonly referred to as the &ldquo;Internet.&rdquo; Alternatively, computer system <highlight><bold>300</bold></highlight> may access the Internet <highlight><bold>352</bold></highlight> via network <highlight><bold>340</bold></highlight>. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> Computer system <highlight><bold>300</bold></highlight> may be used to implement the techniques described above. In various embodiments, processor <highlight><bold>304</bold></highlight> performs the steps of the techniques by executing instructions brought to RAMs <highlight><bold>308</bold></highlight>. In alternative embodiments, hard-wired circuitry may be used in place of or in combination with software instructions to implement the described techniques. Consequently, embodiments of the invention are not limited to any one or a combination of software, hardware, or circuitry. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> Instructions executed by processor <highlight><bold>304</bold></highlight> may be stored in and carried through one or more computer-readable media, which refer to any medium from which a computer reads information. Computer-readable media may be, for example, a floppy disk, a hard disk, a zip-drive cartridge, a magnetic tape, or any other magnetic medium, a CD-ROM, or any other optical medium, paper-tape, punch-cards, or any other physical medium having patterns of holes, a RAM, a ROM, an EPROM, or any other memory chip or cartridge. Computer-readable media may also be coaxial cables, copper wire, fiber optics, acoustic, or light waves, etc. For example, the instructions to be executed by processor <highlight><bold>304</bold></highlight> are in the form of one or more software programs and are initially stored in a CD-ROM being interfaced with computer system <highlight><bold>300</bold></highlight> via bus <highlight><bold>324</bold></highlight>. Computer system <highlight><bold>300</bold></highlight> loads these instructions in RAMs <highlight><bold>308</bold></highlight>, executes some instructions, and sends some instructions via communication interface <highlight><bold>320</bold></highlight>, a modem, and a telephone line to a network (e.g. <highlight><bold>340</bold></highlight>, the Internet <highlight><bold>352</bold></highlight>, etc). A remote computer, receiving data through a network cable, executes the received instructions and send the data to computer system <highlight><bold>300</bold></highlight> to be stored in storage device <highlight><bold>316</bold></highlight>. </paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> In the foregoing specification, the invention has been described with reference to various embodiments thereof. However, it will be evident that modifications and changes may be made thereto without departing from the broader spirit and scope of the invention. For example, to trigger a process switch, it is not necessary that an access time of a memory subsystem is greater than the threshold; the access time can be close to or equal to the threshold, etc. The techniques disclosed herein may be implemented as a method, an apparatus, a system, a device, or their equivalences, a computer-readable medium, etc. Accordingly, the specification and drawings are to be regarded as illustrative rather than as restrictive. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for managing a memory system having a plurality of subsystems, comprising the steps of: 
+<claim-text>upon accessing the subsystems for a piece of data used by a first process, 
+<claim-text>determining the access time to acquire the piece of data in the memory system; </claim-text>
+<claim-text>comparing the determined access time to a threshold; and </claim-text>
+<claim-text>taking an action based on the results of the comparing step; </claim-text>
+</claim-text>
+<claim-text>wherein accessing the subsystems is in a non-sequential order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein data blocks containing the piece of data is placed in the memory system based on information selected in one or a combination of: 
+<claim-text>a movement pattern of data in a data block, </claim-text>
+<claim-text>a structure of the memory system, and </claim-text>
+<claim-text>a cache-level architecture in the memory system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for at least one subsystem; and </claim-text>
+<claim-text>using the entries to locate the access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the memory table working with a memory manager managing the data blocks independent of an operating system working with the memory system and independent of a processor working with the memory system. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for the memory system; and </claim-text>
+<claim-text>the memory table using a physical address of a memory page corresponding to the piece of access data to convert to a location address corresponding to an entry pointing to the location of the piece of access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A method for managing a memory system, comprising the steps of: 
+<claim-text>upon accessing the memory system for a piece of data used by a first process, 
+<claim-text>a processor working with the memory system continuing its functions until it is stalled; </claim-text>
+<claim-text>comparing the time taken to complete the memory access to a threshold; and </claim-text>
+<claim-text>if the time taken to complete the memory access is close to, equal to, or greater than the threshold, then taking an action. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein the action is selected in one or a combination of 
+<claim-text>postponing executing the first process and allowing executing a second process; </claim-text>
+<claim-text>causing the first process to be switched to a second process; and </claim-text>
+<claim-text>causing a performance monitor on the memory system or on a system using the memory subsystem. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising the step of polling a latency manager for the time taken to complete the memory access; the latency manger being part of managing the memory system. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> further comprising the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for at least one subsystem; and </claim-text>
+<claim-text>using the entries to locate the access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference> wherein the memory table working with a memory manager managing the data blocks independent of a processor working with the memory system and independent of an operating system working with the memory system. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A method for managing a memory system, comprising the steps of: 
+<claim-text>upon accessing the memory system for a piece of data used by a first process 
+<claim-text>counting a time elapsed from the time the data access starts; the counted time being increased as the data is being accessed; </claim-text>
+<claim-text>comparing the counted time to a threshold; and </claim-text>
+<claim-text>if the counted time is close to, equal to, or greater than the </claim-text>
+<claim-text>threshold, then taking an action selected in one or a combination of 
+<claim-text>postponing executing the first process and allowing executing a second process; </claim-text>
+<claim-text>causing the first process to be switched to a second process; and </claim-text>
+<claim-text>causing a performance monitor on the memory system or on a system using the memory system. </claim-text>
+</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> further comprising the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for at least one memory subsystem; and </claim-text>
+<claim-text>using the entries to locate the access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. A computer-readable medium embodying instructions for a computer to perform a method for managing a memory system having a plurality of subsystems, the method comprising the steps of: 
+<claim-text>upon accessing the subsystems for a piece of data used by a first process, 
+<claim-text>determining the access time to acquire the piece of data in the memory system; </claim-text>
+<claim-text>comparing the determined access time to a threshold; and </claim-text>
+<claim-text>taking an action based on the results of the comparing step; </claim-text>
+</claim-text>
+<claim-text>wherein accessing the subsystems is in a non-sequential order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein data blocks containing the piece of data is placed in the memory system based on information selected in one or a combination of: 
+<claim-text>a movement pattern of data in a data block, </claim-text>
+<claim-text>a structure of the memory system, and </claim-text>
+<claim-text>a cache-level architecture in the memory system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the method further comprising the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for at least one subsystem; and </claim-text>
+<claim-text>using the entries to locate the access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the memory table working with a memory manager managing the data blocks independent of an operating system working with the memory system and independent of a processor working with the memory system. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the method further comprises the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for the memory system; and </claim-text>
+<claim-text>the memory table using a physical address of a memory page corresponding to the piece of access data to convert to a location address corresponding to an entry pointing to the location of the piece of access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. A computer-readable medium embodying instructions for a computer to perform a method for managing a memory system, the method comprising the steps of: 
+<claim-text>upon accessing the memory system for a piece of data used by a first process, 
+<claim-text>a processor working with the memory system continuing its functions until it is stalled; </claim-text>
+<claim-text>comparing the time taken to complete the memory access to a threshold; and </claim-text>
+<claim-text>if the time taken to complete the memory access is close to, equal to, or greater than the threshold, then taking an action. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein the method further comprises the step of polling a latency manager for the time taken to complete the memory access; the latency manger being part of managing the memory system. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein the method further comprises the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for at least one subsystem; and </claim-text>
+<claim-text>using the entries to locate the access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. A computer-readable medium embodying instructions for a computer to perform a method for managing a memory system, the method comprising the steps of: 
+<claim-text>upon accessing the memory system for a piece of data used by a first process, 
+<claim-text>counting a time elapsed from the time the data access starts; the counted time being increased as the data is being accessed; </claim-text>
+<claim-text>comparing the counted time to a threshold, and </claim-text>
+<claim-text>if the counted time is close to, equal to, or greater than the </claim-text>
+<claim-text>threshold, then taking an action selected in one or a combination of 
+<claim-text>postponing executing the first process and allowing executing a second process; </claim-text>
+<claim-text>causing the first process to be switched to a second process; and </claim-text>
+<claim-text>causing a performance monitor on the memory system or on a system using the memory subsystem. </claim-text>
+</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The computer-readable medium of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the method further comprises the steps of: 
+<claim-text>using a memory table having entries pointing to data blocks storing data for at least one memory subsystem; and </claim-text>
+<claim-text>using the entries to locate the access data. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. An apparatus for managing a memory system having a plurality of subsystems, comprising: 
+<claim-text>means for, upon accessing the subsystems for a piece of data used by a first process, 
+<claim-text>determining the access time to acquire the piece of data in the memory system; </claim-text>
+<claim-text>comparing the determined access time to a threshold; and </claim-text>
+<claim-text>taking an action based on the results of the comparing step; </claim-text>
+</claim-text>
+<claim-text>wherein accessing the subsystems is in a non-sequential order. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein data blocks containing the piece of data is placed in the memory system based on information selected in one or a combination of: 
+<claim-text>a movement pattern of data in a data block, </claim-text>
+<claim-text>a structure of the memory system, and </claim-text>
+<claim-text>a cache-level architecture in the memory system. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> further comprising a memory table having entries pointing to data blocks storing data for at least one subsystem; the entries being used to locate the access data. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> wherein the memory table working with a memory manager managing the data blocks independent of an operating system working with the memory system and independent of a processor working with the memory system. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> further comprising a memory table having entries pointing to data blocks storing data for the memory system; the memory table using a physical address of a memory page corresponding to the piece of access data to convert to a location address corresponding to an entry pointing to the location of the piece of access data. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. An apparatus for managing a memory system, comprising: 
+<claim-text>upon accessing the memory system for a piece of data used by a first process, 
+<claim-text>a processor for working with the memory system and for continuing its functions until it is stalled; </claim-text>
+<claim-text>means for comparing the time taken to complete the memory access to a threshold; and </claim-text>
+<claim-text>means for taking an action if the time taken to complete the memory access is close to, equal to, or greater than the threshold. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> further comprising means for polling a latency manager for the time taken to complete the memory access; the latency manger being part of managing the memory system. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The apparatus of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> further comprising a memory table having entries pointing to data blocks storing data for at least one subsystem; the entries being used to locate the access data. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. An apparatus for managing a memory system, comprising: 
+<claim-text>upon accessing the memory system for a piece of data used by a first process, 
+<claim-text>means for counting a time elapsed from the time the data access starts; the counted time being increased as the data is being accessed; </claim-text>
+<claim-text>means for comparing the counted time to a threshold, and if the counted time is close to, equal to, or greater than the threshold, means for taking an action selected in one or a combination of 
+<claim-text>postponing executing the first process and allowing executing a second process; </claim-text>
+<claim-text>causing the first process to be switched to a second process; and </claim-text>
+<claim-text>causing a performance monitor on the memory system or on a system using the memory subsystem. </claim-text>
+</claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The apparatus of claim <highlight><bold>31</bold></highlight> further comprising a memory table having entries pointing to data blocks storing data for at least one memory subsystem; the entries being used to locate the access data.</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>2</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005252A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005252A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005252A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005252A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

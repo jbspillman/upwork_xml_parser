@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004722A1-20030102-D00000.TIF SYSTEM "US20030004722A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004722A1-20030102-D00001.TIF SYSTEM "US20030004722A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004722A1-20030102-D00002.TIF SYSTEM "US20030004722A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004722A1-20030102-D00003.TIF SYSTEM "US20030004722A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004722A1-20030102-D00004.TIF SYSTEM "US20030004722A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004722A1-20030102-D00005.TIF SYSTEM "US20030004722A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004722</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894898</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G10L015/18</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>704</class>
+<subclass>257000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method of dynamically altering grammars in a memory efficient speech recognition system</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>John</given-name>
+<middle-name>W.</middle-name>
+<family-name>Butzberger</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Menlo Park</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Horacio</given-name>
+<middle-name>E.</middle-name>
+<family-name>Franco</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Menlo Park</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Leonardo</given-name>
+<family-name>Neumeyer</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Palo Alto</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Jing</given-name>
+<family-name>Zheng</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Redwood city</city>
+<state>CA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>THOMASON, MOSER &amp; PATTERSON, LLP</name-1>
+<name-2>Attorneys at Law</name-2>
+<address>
+<address-1>SUITE 100</address-1>
+<address-2>595 SHREWSBURY AVENUE</address-2>
+<city>SHREWSBURY</city>
+<state>NJ</state>
+<postalcode>07702</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A method of speech recognition that uses hierarchical data structures that include a top level grammar and various related subgrammars, such as word, phone, and state subgrammars. A speech signal is acquired, and a probabilistic search is performed using the speech signal as an input, and using the (unexpanded) grammars and subgrammars as possible inputs. Memory is allocated to a subgrammar when a transition to that subgrammar is made during the probabilistic search. The subgrammar may then be expanded and evaluated, and the probability of a match between the speech signal and an element of the subgrammar for which memory has been allocated may be computed. Because unexpanded grammars and subgrammars take up very little memory, this method enables systems to recognize and process a larger vocabulary that would otherwise be possible. This method also permits grammars and subgrammars to be added, deleted, or selected by a remote computer while the speech recognition system is operating, allowing speech recognition systems to have a nearly unlimited vocabulary. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The invention relates generally to speech recognition and, more specifically, to memory allocation in speech recognition systems to facilitate the use of dynamically alterable grammars. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Description of the Related Art </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> Many different speech recognition products have become commercially available recently. These products range from powerful dictation software that runs on personal computers, to much simpler systems that can recognize only a few words or commands. Most of these products use well-known speech recognition techniques and algorithms in which a speech signal is first sampled, and certain features or characteristics of the sampled signal are measured. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The English language is usually modeled as consisting of about 40 different sounds called phonemes, or phones. After a speech signal has been sampled and measured, a decoder (such as a Viterbi decoder or a Stack decoder) is typically used to match the measurements with the most likely phonemes. A &ldquo;dictionary&rdquo; is then used to combine the phonemes into words. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> The words included in a speech recognition system&apos;s dictionary may be derived from data structures called &ldquo;grammars&rdquo; and &ldquo;subgrammars.&rdquo; For example, a &ldquo;days of the week&rdquo; grammar might include the words Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, and Sunday. Each word in a grammar is in turn commonly represented as the sequence of phonemes corresponding to the word&apos;s dictionary pronunciation. For example, one pronunciation of the word &ldquo;Monday&rdquo; might be represented by the five phonemes /m/, /ah/, /n/, /d/, and /ey/. Each phoneme is in turn typically represented by a three state Hidden Markov Model (HMM). </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The quality of speech recognition systems has improved dramatically over the past several years; however, these systems usually require a significant amount of computer memory and processing power. Although this may not be a problem where powerful personal computers are used for speech recognition, it does limit the capabilities of speech recognition systems used in portable devices, which are currently only able to recognize a few words or commands. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> Speech recognition systems require so much memory in part because of the way that the various grammars and subgrammars&mdash;the words, phones, and states&mdash;are stored and searched during operation of the system. These systems typically compile, expand, flatten, and optimize all of the grammars used by the speech recognition system into a large, single level data structure that must be stored in memory before the speech recognition system can operate. The generation of a large, single level data structure before run-time may allow certain types of speech recognition systems (such as systems used for dictation) to operate more quickly; however, this technique prevents grammars and subgrammars from being added to a speech recognition system at run-time. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> Accordingly, there remains a need in the art for speech recognition system that uses memory efficiently, and that allows grammars and subgrammars to be dynamically alterable, i.e., added or replaced while the system is operating. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> A method of speech recognition that uses hierarchical data structures that include a top level grammar and various related subgrammars, such as word, phone, and state subgrammars. Unlike typical speech recognition systems, these grammars and subgrammars are not compiled, expanded and flattened into a single large data structure before run-time. Instead, a speech signal is acquired, and a search is performed using the speech signal as an input, and using the (unexpanded) grammars and subgrammars as possible inputs. Memory is allocated to a subgrammar when a transition to that subgrammar is made during the search. The subgrammar may then be expanded and evaluated, and the probability of a match between the speech signal and an element of the subgrammar for which memory has been allocated may be computed. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> Because unexpanded grammars and subgrammars take up very little memory, this method enables systems with limited amounts of memory to recognize and process a larger vocabulary that would not otherwise be possible. This technique also permits grammars and subgrammars to be added, deleted, or selected (such as by a remote computer) while the speech recognition system is operating, allowing speech recognition systems to have a nearly unlimited vocabulary.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> So that the manner in which the above recited features of the present invention are attained and can be understood in detail, a more particular description of the invention, briefly summarized above, may be had by reference to the embodiments thereof which are illustrated in the appended drawings. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of an illustrative speech recognition system that operates in accordance with the present invention; </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flow chart illustrating a method for allocating memory in a speech recognition system; </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart illustrating a method for expanding and evaluating grammars and subgrammars in a speech recognition system; </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> shows a communications link between a speech recognition device and a remote computer or server; and </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart illustrating a method for downloading or otherwise accessing grammars and subgrammars while a speech recognition system is operating.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram illustrating a preferred speech recognition system <highlight><bold>101</bold></highlight>. This system <highlight><bold>101</bold></highlight> may be implemented in a portable device such as a hand held computer, a portable phone, or an automobile. It may also be implemented in a stationary device such as a desktop personal computer or an appliance. The speech recognition system <highlight><bold>101</bold></highlight> illustratively comprises a speech recognition front end <highlight><bold>103</bold></highlight>, a speech recognition engine <highlight><bold>105</bold></highlight>, a processor <highlight><bold>107</bold></highlight>, and a memory <highlight><bold>109</bold></highlight>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> The speech recognition front end <highlight><bold>103</bold></highlight> receives and samples spoken input, and then measures and extracts features or characteristics of the spoken input that are used later in the speech recognition process. The speech recognition engine <highlight><bold>105</bold></highlight> includes a search algorithm (such as a Viterbi search algorithm) and acoustic models (such as models of individual phonemes or models of groups of phonemes) used in the speech recognition process. The processor <highlight><bold>107</bold></highlight> and associated memory <highlight><bold>109</bold></highlight> together operate as a computer to control the operation of the front end <highlight><bold>103</bold></highlight> and the speech recognition engine <highlight><bold>105</bold></highlight>. The memory <highlight><bold>109</bold></highlight> stores the grammars <highlight><bold>111</bold></highlight> and subgrammars <highlight><bold>113</bold></highlight> that are used by the system <highlight><bold>101</bold></highlight> to process speech. Memory <highlight><bold>109</bold></highlight> also stores the software <highlight><bold>115</bold></highlight> that is used to implement the methods of the present invention. Both the speech recognition front end <highlight><bold>103</bold></highlight> and the speech recognition engine <highlight><bold>105</bold></highlight> may be implemented in hardware, software, or combination of hardware and software. Both may also use any techniques or algorithms known to those skilled in the art for performing speech recognition. All of the elements <highlight><bold>103</bold></highlight>-<highlight><bold>109</bold></highlight> may communicate with each other as required. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> In a preferred embodiment, the grammars <highlight><bold>111</bold></highlight> and subgrammars <highlight><bold>113</bold></highlight> used by the speech recognition system <highlight><bold>101</bold></highlight> may be written by a programmer in a compact form, such as the Backus-Naur Form (BNF). For example, a top-level grammar that includes four words might be written as: </paragraph>
+<paragraph id="P-0021" lvl="2"><number>&lsqb;0021&rsqb;</number> Word subgrammar ::&equals;&lt;word <highlight><bold>1</bold></highlight>&gt; &lt;word <highlight><bold>2</bold></highlight>&gt; &lt;word <highlight><bold>3</bold></highlight>&gt; &lt;word <highlight><bold>4</bold></highlight>&gt;</paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> If &ldquo;word 1&rdquo; is a word that includes three phonemes, than a phoneme subgrammar associated with word <highlight><bold>1</bold></highlight> might be written as: </paragraph>
+<paragraph id="P-0023" lvl="2"><number>&lsqb;0023&rsqb;</number> (Word <highlight><bold>1</bold></highlight>) phoneme subgrammar ::&equals;&lt;phoneme <highlight><bold>1</bold></highlight>&gt; &lt;phoneme <highlight><bold>2</bold></highlight>&gt; &lt;phoneme <highlight><bold>3</bold></highlight>&gt;</paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> Similarly, if &ldquo;phoneme 1&rdquo; can be represented as a three-state Hidden Markov Model, then a state subgrammar associated with phoneme <highlight><bold>1</bold></highlight> might be written as: </paragraph>
+<paragraph id="P-0025" lvl="2"><number>&lsqb;0025&rsqb;</number> (Phoneme <highlight><bold>1</bold></highlight>) state subgrammar ::&equals;&lt;state <highlight><bold>1</bold></highlight>&gt; &lt;state <highlight><bold>2</bold></highlight>&gt; &lt;state <highlight><bold>3</bold></highlight>&gt;</paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> The grammar and its related subgrammars may then be converted from the Backus-Naur form shown above to compact data structures that hierarchically link the grammar and the various subgrammars. For example, &ldquo;word 1&rdquo; in the word subgrammar would have a link to its associated phoneme subgrammar; similarly, &ldquo;phoneme 1&rdquo; in the word <highlight><bold>1</bold></highlight> phoneme subgrammar would have a link to its associated state subgrammar. Each element in a subgrammar would also be linked to other elements in that subgrammar by element-to-element transition probabilities. That is, each word in a word subgrammar would be linked to other words in that subgrammar by word-to-word transition probabilities; each phoneme in a phoneme subgrammar would be linked to other phonemes in that subgrammar by phoneme-to-phoneme into transition probabilities; and finally, each state in a state subgrammar would be linked to other states in that subgrammar by state-to-state transition probabilities. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a flowchart illustrating a method, implemented as software <highlight><bold>115</bold></highlight> and executed by the processor <highlight><bold>107</bold></highlight>, for allocating memory in the speech recognition system <highlight><bold>101</bold></highlight>. In this method, the speech recognition system <highlight><bold>101</bold></highlight> acquires a set of data structures that contain a top level grammar <highlight><bold>111</bold></highlight> and one or more subgrammars <highlight><bold>113</bold></highlight> related to the grammar (step <highlight><bold>201</bold></highlight>). The top level grammar would typically be a word grammar or a higher-level grammar that includes one or more word subgrammars. The top-level grammar and the subgrammars are preferably hierarchically related as discussed above. </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> Next, the speech recognition system acquires a speech signal (step <highlight><bold>203</bold></highlight>). The speech signal may be a sampled, subsampled, filtered or modified speech signal as is typically required by speech recognition systems, and may be acquired and processed using a speech recognition front end as discussed above regarding <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> A probabilistic search is then performed using a speech signal as an input and using the grammar and subgrammar data structures as possible inputs (step <highlight><bold>205</bold></highlight>). This step may be performed with a speech recognition engine <highlight><bold>105</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> or with a general-purpose processor that uses any desired probabilistic search algorithm. In a preferred embodiment, a Viterbi beam search is used. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The speech recognition system <highlight><bold>101</bold></highlight> is configured such that the probabilistic search algorithm has an expectation of what the spoken input might be. For example, a speech recognition system might be used to supply flight arrival information. In response to a request for a flight number, the system would expect the speaker to say a number, not a day of the week or city name. In this way, the probabilistic search algorithm will have made a &ldquo;transition&rdquo; to a grammar or subgrammar of flight numbers. The system would then allocate memory to expand the grammar or subgrammar (step <highlight><bold>207</bold></highlight>) so that a probability of a match can be calculated between a speech signal and one or more elements of the subgrammar for which memory has been allocated (step <highlight><bold>209</bold></highlight>). While the system is operating, the system could then obtain another set of data structures that contain another grammar and one or more subgrammars related to the grammar (step <highlight><bold>211</bold></highlight>). Steps <highlight><bold>203</bold></highlight>-<highlight><bold>209</bold></highlight> could then be repeated. Of course, if memory has already been allocated for a desired grammar or subgrammar, there would be no need to allocate additional memory and step <highlight><bold>207</bold></highlight> may be skipped. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart illustrating a method for expanding and evaluating grammars and subgrammers. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> A grammar or a subgrammar is expanded by allocating memory for related elements that are lower in the hierarchy until the state level is reached (steps <highlight><bold>304</bold></highlight> and <highlight><bold>303</bold></highlight>). For example, when a word is allocated in memory, an initial phoneme for the word and an initial state for the initial phoneme are allocated in memory. The state is then evaluated by comparing the state with information obtained from the speech signal (step <highlight><bold>305</bold></highlight>). If there is a possible match (step <highlight><bold>307</bold></highlight>) and there are other states in the phoneme (step <highlight><bold>311</bold></highlight>), memory is allocated for the next state in the phoneme (step <highlight><bold>313</bold></highlight>), and that next state is then evaluated (step <highlight><bold>305</bold></highlight>). If there is no possible match between the state and information obtained from the speech signal, the state may be removed or de-allocated from memory (step <highlight><bold>309</bold></highlight>). A dynamically adjustable, threshold may be used to determine the probability of a state match. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> If there are no other states in a phoneme, the phoneme itself is evaluated. If there is a possible match between the phoneme and information contained in the speech signal (step <highlight><bold>317</bold></highlight>) and there are other phonemes in the word (step <highlight><bold>321</bold></highlight>), memory is allocated for the next phoneme (step <highlight><bold>323</bold></highlight>). Steps <highlight><bold>301</bold></highlight>-<highlight><bold>315</bold></highlight> are then repeated for the next phoneme. If there is no possible match between the phoneme and information obtained from the speech signal, the phoneme may be removed or de-allocated from memory (step <highlight><bold>319</bold></highlight>). A dynamically adjustable threshold may be used to determine the probability of a phoneme match. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> If there are no other phonemes in the word, the word itself is evaluated (step <highlight><bold>325</bold></highlight>). If there are successor words to be evaluated (step <highlight><bold>329</bold></highlight>), memory is allocated for the next word (step <highlight><bold>331</bold></highlight>), and steps <highlight><bold>301</bold></highlight>-<highlight><bold>325</bold></highlight> are then repeated for that word. If there are no successor words to be evaluated, the evaluation is complete and the word or words are deallocated from memory (step <highlight><bold>327</bold></highlight>). A word may also be deallocated from memory when there is no possible match between the word and the received speech signal. A dynamically adjustable threshold may be used to determine the probability of a word match. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Because the preferred grammars and subgrammars do not need to be expanded and flattened into a single large data structure before run-time, grammars and subgrammars can be added, deleted, or replaced while the speech recognition system is operating. In one embodiment of the invention shown in <cross-reference target="DRAWINGS">FIG. 4, a</cross-reference> remote server or computer <highlight><bold>401</bold></highlight> could be used to supply new grammars to a speech recognition device <highlight><bold>403</bold></highlight> via a communications link <highlight><bold>405</bold></highlight> whenever required. the link <highlight><bold>405</bold></highlight> may be wired, wireless or some form of network data distribution link. Server <highlight><bold>401</bold></highlight> could also be used to select grammars that are already loaded onto the speech recognition device <highlight><bold>403</bold></highlight>. The speech recognition device <highlight><bold>403</bold></highlight> could be a portable device such as a phone, automobile, or handheld computer; it could also be a stationary device such as a desktop computer or appliance. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> The device <highlight><bold>403</bold></highlight> would operate in accordance with the method of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> to reallocate memory as grammars and subgrammars are received from the server <highlight><bold>401</bold></highlight>. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart illustrating a method of downloading grammars and subgrammars. This ability of a speech recognition device (such as device <highlight><bold>403</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>) to add and delete grammars at run-time may be useful in a prompt and response system in which a person is asked to make a series of choices, or with a browser application that allows a person to make choices or selections by speaking. For example, a prompt and response system or an Internet browser could be used to help a person find a restaurant. In such systems or applications, data structures that contain a grammar and one or more subgrammars related to the grammar are first downloaded to or otherwise accessed by a speech recognition device (step <highlight><bold>501</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>). The data structures might be included in the code that defines a particular web page, or they might otherwise be associated with one or more web pages. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> In the example discussed above, the downloaded data structures might include a grammar that includes a list of restaurant types, such as fast food, pizza, Mexican food, Chinese food, etc. These various choices might then be presented to a person audibly (through a speaker), visually (on a screen), or both audibly and visually. The speech recognition device would then receive spoken input from the person; for example, the person might say the word &ldquo;pizza&rdquo; (step <highlight><bold>503</bold></highlight>). The device would then recognize the spoken input (step <highlight><bold>505</bold></highlight>), and if necessary another set of data structures would be downloaded or otherwise accessed (step <highlight><bold>507</bold></highlight>). For example, the device might download a grammar that includes a list of all of the pizza restaurants in the area. Steps <highlight><bold>503</bold></highlight>-<highlight><bold>507</bold></highlight> could then be repeated as necessary. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> While foregoing is directed to the preferred embodiment of the present invention, other and further embodiments of the invention may be devised without departing from the basic scope thereof, and the scope thereof is determined by the claims that follow. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method for allocating memory in a speech recognition system comprising the steps of: 
+<claim-text>acquiring a first set of data structures that contain a grammar, a word subgrammar, a phone subgrammar and a state subgrammar, each of the subgrammars related to the grammar; </claim-text>
+<claim-text>acquiring a speech signal; </claim-text>
+<claim-text>performing a probabilistic search using the speech signal as an input, and using the grammar and the subgrammars as possible inputs; and </claim-text>
+<claim-text>allocating memory for one of the subgrammars when a transition to that subgrammar is made during the probabilistic search. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the probabilistic search is a Viterbi beam search. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the set of data structures is sent through a communication channel by a remote computer. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the set of data structures is included in code that defines a web page. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference> wherein the set of data structures is associated with one or more web pages. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the set of data structures is selected by a remote computer. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein the set of data structures is generated by the speech recognition system using information provided at least in part by a remote computer. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising the step of acquiring a second set of data structures that contain a second grammar, a second word subgrammar, a second phone subgrammar, and a second state subgrammar, each of the second subgrammars related to the second grammar. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the second set of data structures replaces the first set of data structures. </claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference> wherein the second set of data structures is acquired while the speech recognition system is operating. </claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. In a speech recognition system, a method for recognizing speech comprising the steps of: 
+<claim-text>acquiring a first set of data structures that contain a grammar, a word subgrammar, a phone subgrammar and a state subgrammar, each of the subgrammars related to the grammar; </claim-text>
+<claim-text>acquiring a speech signal; </claim-text>
+<claim-text>performing a probabilistic search using the speech signal as an input, and using the grammar and the subgrammars as possible inputs; </claim-text>
+<claim-text>allocating memory for one of the subgrammars when a transition to that subgrammar is made during the probabilistic search; and </claim-text>
+<claim-text>computing a probability of a match between the speech signal and an element of the subgrammar for which memory has been allocated. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> wherein the probabilistic search is a Viterbi beam search. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference> further comprising the step of acquiring a second set of data structures that contain a second grammar, a second word subgrammar, a second phone subgrammar, and a second state subgrammar, each of the second subgrammars related to the second grammar. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the second set of data structures replaces the first set of data structures. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein the second set of data structures is acquired while the speech recognition system is operating. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the second set of data structures is included in code that defines a web page. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein the second set of data structures is associated with one or more web pages. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. In a speech recognition system, a method for recognizing speech comprising the steps of: 
+<claim-text>acquiring a first set of data structures that contain a top level grammar and a plurality subgrammars, each of the subgrammars hierarchically related to the grammar and to each other; </claim-text>
+<claim-text>acquiring a speech signal; </claim-text>
+<claim-text>performing a probabilistic search using the speech signal as an input, and using the top level grammar and the subgrammars as possible inputs; </claim-text>
+<claim-text>allocating memory for specific subgrammars when transitions to those specific subgrammars are made during the probabilistic search; and </claim-text>
+<claim-text>computing probabilities of matches between the speech signal and elements of the subgrammars for which memory has been allocated. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 18</dependent-claim-reference> wherein the top level grammar includes one or more word subgrammars, the word subgrammars including words that are related according to word-to-word transition probabilities. </claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein each word in a word subgrammar includes one or more phone subgrammars, the phone subgrammars including phones that are related according to phone-to-phone transition probabilities. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference> wherein each phone in a phone subgrammar includes one or more state subgrammars, the state subgrammars including states that are related according to state-to-state transition probabilities. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein the probabilities of matches between the speech signal and elements of the subgrammars for which memory has been allocated are computed using one or more probability distributions associated with each state. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein when a word is allocated in memory, an initial phone for the word and an initial state for the initial phone are also allocated in memory. </claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference> wherein one or more subsequent states are allocated in memory until the end of the phone is reached, the allocation based on a transition probability at each state. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> wherein one or more subsequent phones are allocated in memory until the end of the word is reached, the allocation based on a transition probability at each phone. </claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein when a state probability falls below a state threshold, the state is deallocated from memory. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein the state threshold is dynamically adjusted. </claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein when a phone probability falls below a phone threshold, the phone is deallocated from memory. </claim-text>
+</claim>
+<claim id="CLM-00029">
+<claim-text><highlight><bold>29</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 28</dependent-claim-reference> wherein the phone threshold is dynamically adjusted. </claim-text>
+</claim>
+<claim id="CLM-00030">
+<claim-text><highlight><bold>30</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference> wherein when a word probability falls below a word threshold, the word is deallocated from memory. </claim-text>
+</claim>
+<claim id="CLM-00031">
+<claim-text><highlight><bold>31</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 30</dependent-claim-reference> wherein the word threshold is dynamically adjusted. </claim-text>
+</claim>
+<claim id="CLM-00032">
+<claim-text><highlight><bold>32</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference> wherein when all the states associated with a phone are deallocated from memory, the phone is deallocated from memory. </claim-text>
+</claim>
+<claim id="CLM-00033">
+<claim-text><highlight><bold>33</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00033">claim 32</dependent-claim-reference> wherein when all the phones associated with a word are deallocated from memory, the word is deallocated from memory. </claim-text>
+</claim>
+<claim id="CLM-00034">
+<claim-text><highlight><bold>34</bold></highlight>. A method for allocating memory in a speech recognition system comprising the steps of: 
+<claim-text>acquiring a set of data structures that contain a grammar and one or more subgrammars related to the grammar; </claim-text>
+<claim-text>acquiring a speech signal; </claim-text>
+<claim-text>performing a probabilistic search using the speech signal as an input, and using the grammar and the subgrammars as possible inputs; and </claim-text>
+<claim-text>allocating memory for a selected one or more of the subgrammars when a transition to the selected subgrammar is made during the probabilistic search. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00035">
+<claim-text><highlight><bold>35</bold></highlight>. In a speech recognition system, a method for recognizing speech comprising the steps of: 
+<claim-text>(a) acquiring a set of data structures that contain a grammar and one or more subgrammars related to the grammar; </claim-text>
+<claim-text>(b) receiving spoken input; </claim-text>
+<claim-text>(c) using one or more of the data structures to recognize the spoken input; </claim-text>
+<claim-text>(d) while the speech recognition system is operating, acquiring a second set of data structures that contain a second grammar and one or more subgrammars related to the second grammar; and </claim-text>
+<claim-text>(e) repeating steps (b) and (c), using the second set of data structures in step (c). </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00036">
+<claim-text><highlight><bold>36</bold></highlight>. In a speech recognition system, a method for recognizing speech comprising the steps of: 
+<claim-text>(a) acquiring from a first remote computer a set of data structures that contain a grammar and one or more subgrammars related to the grammar; </claim-text>
+<claim-text>(b) receiving spoken input; </claim-text>
+<claim-text>(c) using one or more of the data structures to recognize the spoken input; </claim-text>
+<claim-text>(d) while the speech recognition system is operating, acquiring a second set of data structures from the first remote computer or from a second remote computer, the second set of data structures containing a second grammar and one or more subgrammars related to the second grammar; and </claim-text>
+<claim-text>(e) repeating steps (b) and (c), using the second set of data structures in step (c).</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004722A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004722A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004722A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004722A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004722A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004722A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

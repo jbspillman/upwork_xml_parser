@@ -1,0 +1,1127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030004927A1-20030102-M00001.NB SYSTEM "US20030004927A1-20030102-M00001.NB" NDATA NB>
+<!ENTITY US20030004927A1-20030102-M00001.TIF SYSTEM "US20030004927A1-20030102-M00001.TIF" NDATA TIF>
+<!ENTITY US20030004927A1-20030102-M00002.NB SYSTEM "US20030004927A1-20030102-M00002.NB" NDATA NB>
+<!ENTITY US20030004927A1-20030102-M00002.TIF SYSTEM "US20030004927A1-20030102-M00002.TIF" NDATA TIF>
+<!ENTITY US20030004927A1-20030102-D00000.TIF SYSTEM "US20030004927A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030004927A1-20030102-D00001.TIF SYSTEM "US20030004927A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030004927A1-20030102-D00002.TIF SYSTEM "US20030004927A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030004927A1-20030102-D00003.TIF SYSTEM "US20030004927A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030004927A1-20030102-D00004.TIF SYSTEM "US20030004927A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030004927A1-20030102-D00005.TIF SYSTEM "US20030004927A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030004927</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>10162829</doc-number>
+</application-number>
+<application-number-series-code>10</application-number-series-code>
+<filing-date>20020605</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F007/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>707</class>
+<subclass>001000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Method and apparatus for profile score threshold setting and updating</title-of-invention>
+</technical-information>
+<continuity-data>
+<continuations>
+<continuation-of>
+<parent-child>
+<child>
+<document-id>
+<doc-number>10162829</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20020605</document-date>
+</document-id>
+</child>
+<parent>
+<document-id>
+<doc-number>09432005</doc-number>
+<document-date>19991102</document-date>
+<country-code>US</country-code>
+</document-id>
+</parent>
+<parent-status>GRANTED</parent-status>
+<parent-patent>
+<document-id>
+<doc-number>6430559</doc-number>
+<country-code>US</country-code>
+</document-id>
+</parent-patent>
+</parent-child>
+</continuation-of>
+</continuations>
+</continuity-data>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Chengxiang</given-name>
+<family-name>Zhai</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Pittsburgh</city>
+<state>PA</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<correspondence-address>
+<name-1>Blaney Harper</name-1>
+<name-2>Jones, Day, Reavis &amp; Pogue</name-2>
+<address>
+<address-1>51 Louisana Avenue, NW</address-1>
+<city>Washington</city>
+<state>DC</state>
+<postalcode>20001</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A novel approach for filtering documents involves the use of delivery ratio threshold setting technique to set an initial profile score threshold and the use of beta-gamma regulation for dynamic threshold updating. A group of documents is scored pursuant to a user profile. The score for each document is indicative of the relevance of the corresponding document to the user profile. The score can be compared with a profile score threshold to decide if the document should be accepted or rejected. According to one aspect of the invention, the initial threshold is set to a score threshold that approximates an expected ratio of acceptable documents calibrated with respect to a set of reference documents. According to another aspect of the invention, the score threshold can be updated based on the accumulated example documents, user&apos;s relevance judgment, and the user&apos;s utility function. The accumulated example documents are first scored against a profile and a ranked list of scored documents is obtained. Each position at the ranked list corresponds to a candidate score threshold as well as a utility value computed based on the relevance status of the example documents. From these candidate threshold points, an optimal utility threshold and a zero utility threshold are determined. Using the optimal utility threshold and the zero utility threshold, a new utility threshold is calculated by interpolating between estimates of the optimal utility threshold and the zero utility threshold. This new utility threshold is used for subsequent information retrieval and filtering. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to the field of computerized information search and retrieval systems. More specifically, this invention relates to a method and apparatus for setting and updating the score threshold of a user profile. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Given the vast amount of information accessible by computer systems, particularly on distributed databases, more efficient methods of information retrieval are continually needed. Often the use of search tools returns a large volume of data, much of which may not be relevant to the user&apos;s ultimate needs. The user is forced to parse through large volumes of information to find ultimately that which is relevant. It is therefore desirable to develop a system whereby a corpus or a dynamic stream of documents is sufficiently filtered such that only relevant information is returned to the user. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Profile-based filtering involves the interaction of a document or group of documents with a user profile. A stream of incoming documents is compared with certain criteria, contained in a user profile, and then either rejected or ultimately provided to the user. Conceptually, a user profile (i.e., a binary document classifier) consists of three key elements: a term vector, inverse document frequency or &ldquo;IDF&rdquo; statistics, and a score threshold. The first two elements are used to assign a score to the document, and the third is used to make the decision of whether to accept or reject the document as relevant or not relevant to the user&apos;s search parameters. The process of profiling is distinct from database searching in that profiling evaluates and selects or rejects individual documents as they stream in rather than evaluating all documents of a database and then selecting the best scoring ones as in traditional database searching. </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The basic approach to profile-based filtering involves a two-step procedure. For each document-profile pair, a relevance score is computed. That score is then applied to a profile score threshold to make the binary decision to accept or reject the document for the profile. It is important that the profile score threshold be low enough such that it allows sufficient amounts of relevant documents to be returned to the user. However, if the profile score threshold is set too low, a large number of documents will be returned, necessitating further filtering. For any user profile, the optimal threshold should represent the best tradeoff between accepting more relevant documents and avoiding accepting non-relevant documents, where the best tradeoff is determined by the user&apos;s utility preference. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Setting the profile score threshold can be divided into two separate parts: (a) an initial score threshold setting, before there are any relevance judgments from the user, and (b) updating the score threshold, at any point when relevance judgments are fed back into the system. Updating the profile score threshold adapts the filtering process to the user&apos;s specific requirements and thus provides a more effective means of information retrieval. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Consequently, in view of the need for more efficient searching techniques and filtering methods, a method by which the profile score threshold may be initially set and then updated during use is highly desirable. A properly set profile score threshold enables the user to search a group of documents in a comprehensive manner, such that fewer relevant documents are missed by the user, but likewise may prevent the user from becoming inundated with a large number of documents. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> An approach for initially setting the profile score threshold and updating the profile score threshold during use in a profile-based filtering system is described. The initial threshold is set based on an expected acceptance ratio of documents specified by the user. To set an initial threshold, a set of reference documents (i.e., a reference database) is selected. Each reference document is scored against the profile and all the reference documents are sorted by their scores. The initial threshold is then set to such a score that the ratio of reference documents with a score above it and those with a score below it equals the expected acceptance ratio. When user relevance feedback is available, the threshold can be updated based on a specific utility function specified by the user. To update a threshold, first a set of historical example documents is identified for any profile. Each example document is scored against the profile and all the example documents are sorted by their scores. Assuming each example document score as a possible candidate threshold, a utility value can be computed for the candidate threshold. Using the utilities at each candidate threshold, the point of highest utility and the point of zero utility are then determined. An updated utility threshold is then calculated by interpolating between the threshold at the point of highest utility and the threshold at the point of zero utility, according to the formulas disclosed herein. The updated utility threshold is then used for subsequent information retrieval.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a flow chart that illustrates a method according to the present invention for retrieving relevant information from a corpus or a stream of documents. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a graph that illustrates a method according to the present invention for setting an initial threshold of a user profile in an information retrieval/filtering system. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a flow chart that illustrates a method according to the present invention for updating the utility threshold of a user profile in an information retrieval/filtering system. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a graph that illustrates the parameters of the present invention used for updating the utility threshold. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a block diagram of a computer system on which embodiments of the invention may be implemented.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DESCRIPTION OF THE PREFERRED EMBODIMENT </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> The approach for retrieving information in accord with the invention involves the use of any profile scoring mechanism along with two threshold setting methods referred to as delivery ratio threshold setting and &ldquo;beta-gamma&rdquo; regulation respectively. The profile scoring mechanism assigns a score to any document with respect to the profile. The score represents the relevance of the document to a user criteria defined by the profile. The delivery ratio threshold setting technique sets an initial score threshold for a profile by approximating a specified ratio of documents to be delivered or accepted for a profile. The approximation is based on a set of reference documents that approximate the documents which will be processed. The beta-gamma regulation technique selects a new profile threshold &thgr;&prime; by interpolating between estimates of the &ldquo;optimal&rdquo; threshold &thgr;<highlight><subscript>opt </subscript></highlight>and the &ldquo;zero&rdquo; threshold &thgr;<highlight><subscript>zero </subscript></highlight>over the relevance judgments and the historical training data the system has accrued at any given point. The updated profile score threshold is used in subsequent filtering applications to provide a more accurate and more efficient method of information retrieval. Such an updating of threshold may be as frequent as needed. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The approach for retrieving information using delivery ratio threshold setting for initial profile score threshold setting and using beta-gamma regulation for profile score threshold updating according to an embodiment of the invention is now described in more detail with reference to FIGS. <highlight><bold>1</bold></highlight>-<highlight><bold>5</bold></highlight>. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates the general method for retrieving relevant information from a corpus of documents <highlight><bold>101</bold></highlight>. According to one embodiment of the invention, a document is a text file containing one or more strings of characters or other symbols that are used to form more complex constructs. For example, strings of characters may form words, phrases, sentences, and paragraphs. The constructs contained in the documents are not limited to constructs or forms associated with any particular language. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In this embodiment, the user profile <highlight><bold>102</bold></highlight> incorporates a term vector <highlight><bold>103</bold></highlight> and a score threshold <highlight><bold>104</bold></highlight>. The term vector <highlight><bold>103</bold></highlight> is used to generate a score in step <highlight><bold>105</bold></highlight> for each document in the corpus of documents <highlight><bold>101</bold></highlight>. The score threshold <highlight><bold>104</bold></highlight> is used for deciding to accept or reject documents in step <highlight><bold>106</bold></highlight> with respect to each document based upon the scoring obtained in step <highlight><bold>105</bold></highlight>. If the score of a document is above the score threshold, the document will be accepted, otherwise, it will be rejected. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> In the preferred embodiment, the corpus of documents <highlight><bold>101</bold></highlight> is processed one document at a time. For each document, noun phrases and individual words are extracted as indexing terms, so as to obtain a term vector. In an alternative embodiment, the corpus of document <highlight><bold>101</bold></highlight> can be segmented into small subsets of &ldquo;chunks&rdquo; of documents. A chunk of documents can be processed together to increase efficiency. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The scoring in step <highlight><bold>105</bold></highlight> is performed using standard statistical analysis techniques such as vector space-type scoring. In a vector space-type scoring system, a score is generated by comparing the similarity between a profile (or query) Q and the document D and evaluating their shared and disjoint terms over an orthogonal space of all terms. For example, the similarities score can be computed by the following formula:  
+<math-cwu id="MATH-US-00001">
+<number>1</number>
+<math>
+<mrow>
+  <mrow>
+    <mi>S</mi>
+    <mo>&it;</mo>
+    <mrow>
+      <mo>(</mo>
+      <mrow>
+        <msub>
+          <mi>Q</mi>
+          <mi>i</mi>
+        </msub>
+        <mo>,</mo>
+        <msub>
+          <mi>D</mi>
+          <mi>j</mi>
+        </msub>
+      </mrow>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+  <mo>=</mo>
+  <mrow>
+    <mfrac>
+      <mrow>
+        <msub>
+          <mi>Q</mi>
+          <mi>i</mi>
+        </msub>
+        <mo>&CenterDot;</mo>
+        <msub>
+          <mi>D</mi>
+          <mi>j</mi>
+        </msub>
+      </mrow>
+      <mrow>
+        <mo>|</mo>
+        <mi>Q</mi>
+        <mo>|</mo>
+        <mrow>
+          <mo>&CenterDot;</mo>
+          <mrow>
+            <mo>|</mo>
+            <mi>D</mi>
+            <mo>|</mo>
+          </mrow>
+        </mrow>
+      </mrow>
+    </mfrac>
+    <mo>=</mo>
+    <mfrac>
+      <mrow>
+        <munderover>
+          <mo>&Sum;</mo>
+          <mrow>
+            <mi>k</mi>
+            <mo>=</mo>
+            <mn>1</mn>
+          </mrow>
+          <mi>t</mi>
+        </munderover>
+        <mo>&it;</mo>
+        <mstyle>
+          <mtext>&emsp;</mtext>
+        </mstyle>
+        <mo>&it;</mo>
+        <mrow>
+          <mo>(</mo>
+          <mrow>
+            <msub>
+              <mi>q</mi>
+              <mrow>
+                <mi>i</mi>
+                <mo>&it;</mo>
+                <mstyle>
+                  <mtext>&emsp;</mtext>
+                </mstyle>
+                <mo>&it;</mo>
+                <mi>k</mi>
+              </mrow>
+            </msub>
+            <mo>&CenterDot;</mo>
+            <msub>
+              <mi>d</mi>
+              <mrow>
+                <mi>i</mi>
+                <mo>&it;</mo>
+                <mstyle>
+                  <mtext>&emsp;</mtext>
+                </mstyle>
+                <mo>&it;</mo>
+                <mi>k</mi>
+              </mrow>
+            </msub>
+          </mrow>
+          <mo>)</mo>
+        </mrow>
+      </mrow>
+      <mrow>
+        <msqrt>
+          <mrow>
+            <munderover>
+              <mo>&Sum;</mo>
+              <mrow>
+                <mi>k</mi>
+                <mo>=</mo>
+                <mn>1</mn>
+              </mrow>
+              <mi>t</mi>
+            </munderover>
+            <mo>&it;</mo>
+            <msubsup>
+              <mi>q</mi>
+              <mrow>
+                <mi>i</mi>
+                <mo>&it;</mo>
+                <mstyle>
+                  <mtext>&emsp;</mtext>
+                </mstyle>
+                <mo>&it;</mo>
+                <mi>k</mi>
+              </mrow>
+              <mn>2</mn>
+            </msubsup>
+          </mrow>
+        </msqrt>
+        <mo>&CenterDot;</mo>
+        <msqrt>
+          <mrow>
+            <munderover>
+              <mo>&Sum;</mo>
+              <mrow>
+                <mi>k</mi>
+                <mo>=</mo>
+                <mn>1</mn>
+              </mrow>
+              <mi>t</mi>
+            </munderover>
+            <mo>&it;</mo>
+            <msubsup>
+              <mi>d</mi>
+              <mrow>
+                <mi>i</mi>
+                <mo>&it;</mo>
+                <mstyle>
+                  <mtext>&emsp;</mtext>
+                </mstyle>
+                <mo>&it;</mo>
+                <mi>k</mi>
+              </mrow>
+              <mn>2</mn>
+            </msubsup>
+          </mrow>
+        </msqrt>
+      </mrow>
+    </mfrac>
+  </mrow>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00001" file="US20030004927A1-20030102-M00001.NB"/>
+<image id="EMI-M00001" wi="216.027" he="47.03265" file="US20030004927A1-20030102-M00001.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0018" lvl="7"><number>&lsqb;0018&rsqb;</number> where Q<highlight><subscript>i </subscript></highlight>refers to terms in the profile and D<highlight><subscript>j </subscript></highlight>refers to terms in the document. The vector space-type scoring technique can be illustrated on the following sample set of profiles and documents:  
+<table-cwu id="TABLE-US-00001">
+<number>1</number>
+<table frame="none" colsep="0" rowsep="0">
+<tgroup align="left" colsep="0" rowsep="0" cols="6">
+<colspec colname="OFFSET" colwidth="21PT" align="left"/>
+<colspec colname="1" colwidth="49PT" align="left"/>
+<colspec colname="2" colwidth="14PT" align="center"/>
+<colspec colname="3" colwidth="63PT" align="center"/>
+<colspec colname="4" colwidth="14PT" align="center"/>
+<colspec colname="5" colwidth="56PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+<entry></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="5" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry>Terms</entry>
+<entry>Q<highlight><subscript>1</subscript></highlight></entry>
+<entry>Q<highlight><subscript>2</subscript></highlight></entry>
+<entry>D<highlight><subscript>1</subscript></highlight></entry>
+<entry>D<highlight><subscript>2</subscript></highlight></entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+<entry>dog</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>2</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>cat</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>1</entry>
+</row>
+<row>
+<entry></entry>
+<entry>hat</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>bat</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>mat</entry>
+<entry>1</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>hut</entry>
+<entry>&mdash;</entry>
+<entry>1</entry>
+<entry>2</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>cut</entry>
+<entry>&mdash;</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry></entry>
+<entry>luck</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>3</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>buck</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>1</entry>
+<entry>&mdash;</entry>
+</row>
+<row>
+<entry></entry>
+<entry>muck</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>&mdash;</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry></entry>
+<entry namest="OFFSET" nameend="5" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0019" lvl="7"><number>&lsqb;0019&rsqb;</number> In this table, the Terms column lists a union of all the terms contained in the two documents D<highlight><subscript>1 </subscript></highlight>and D<highlight><subscript>2</subscript></highlight>. The scores of D<highlight><subscript>1 </subscript></highlight>and D<highlight><subscript>2 </subscript></highlight>refer to the frequency of those terms as they appear in the documents. The scores of Q<highlight><subscript>1 </subscript></highlight>and Q<highlight><subscript>2 </subscript></highlight>refer to frequency of the terms as they appear in the query. The similarity score of the query Q<highlight><subscript>1 </subscript></highlight>to document D<highlight><subscript>1 </subscript></highlight>is computed as:  
+<math-cwu id="MATH-US-00002">
+<number>2</number>
+<math>
+<mrow>
+  <mrow>
+    <msub>
+      <mi>S</mi>
+      <mi>G</mi>
+    </msub>
+    <mo>&it;</mo>
+    <mrow>
+      <mo>(</mo>
+      <mrow>
+        <msub>
+          <mi>Q</mi>
+          <mn>1</mn>
+        </msub>
+        <mo>,</mo>
+        <msub>
+          <mi>D</mi>
+          <mn>1</mn>
+        </msub>
+      </mrow>
+      <mo>)</mo>
+    </mrow>
+  </mrow>
+  <mo>=</mo>
+  <mfrac>
+    <mrow>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mn>1</mn>
+          <mo>&CenterDot;</mo>
+          <mn>2</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+      <mo>+</mo>
+      <mrow>
+        <mo>(</mo>
+        <mrow>
+          <mn>1</mn>
+          <mo>&CenterDot;</mo>
+          <mn>1</mn>
+        </mrow>
+        <mo>)</mo>
+      </mrow>
+    </mrow>
+    <mrow>
+      <msqrt>
+        <mrow>
+          <msup>
+            <mn>1</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mn>1</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mn>1</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mn>1</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mn>1</mn>
+            <mn>2</mn>
+          </msup>
+        </mrow>
+      </msqrt>
+      <mo>&CenterDot;</mo>
+      <msqrt>
+        <mrow>
+          <msup>
+            <mn>2</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mn>1</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mn>2</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <msup>
+            <mn>3</mn>
+            <mn>2</mn>
+          </msup>
+          <mo>+</mo>
+          <mn>1</mn>
+        </mrow>
+      </msqrt>
+    </mrow>
+  </mfrac>
+</mrow>
+</math>
+<mathematica-file id="MATHEMATICA-00002" file="US20030004927A1-20030102-M00002.NB"/>
+<image id="EMI-M00002" wi="216.027" he="19.93005" file="US20030004927A1-20030102-M00002.TIF" imf="TIFF" ti="MF"/>
+</math-cwu>
+</paragraph>
+<paragraph id="P-0020" lvl="7"><number>&lsqb;0020&rsqb;</number> Also, the similarity of the profile Q<highlight><subscript>1 </subscript></highlight>to document D<highlight><subscript>2 </subscript></highlight>is computed as: S<highlight><subscript>G</subscript></highlight>(Q<highlight><subscript>1</subscript></highlight>, D<highlight><subscript>1</subscript></highlight>)&equals;0.12. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> As can be seen from the above example, the similarity score of profile Q<highlight><subscript>1 </subscript></highlight>to document D<highlight><subscript>1 </subscript></highlight>is higher than the similarity score of profile Q<highlight><subscript>1 </subscript></highlight>to document D<highlight><subscript>2</subscript></highlight>. As a result, the similarity score provides a relative measure of the relevance of a document to the profile. A highly-scored document is more likely to be relevant to a profile than a low-scoring one. Therefore, a high score threshold would only allow a few high-scoring documents to be accepted. Most of these high-scoring documents may be expected to be relevant to the profile. On the other hand, a low score threshold would allow more documents to be accepted. However, the ratio of actually relevant documents among these documents&mdash;referred to as precision&mdash;may be low. The correct threshold can only be determined according to the user&apos;s actual preference concerning the number amount of documents accepted as well as the expected precision of the accepted documents. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates an embodiment of the invention used to set an initial score threshold <highlight><bold>104</bold></highlight>. A set of reference documents is identified as reference database. The profile term vector is used to assign a score to each reference document. The reference documents are sorted by their scores to generate a sorted list of reference documents. The expected delivery ratio provided by the user determines a cutoff point at the list. Assuming that the user expects to accept a fraction r of documents from the corpus of documents(e.g., 10%), the cutoff point will be the k-th document in the ranked list, where K&equals;r&times;N, and N equals the number of documents in the reference database. The score at the cutoff point is taken as the assigned threshold. In special cases when K&lt;1 or when K&gt;N, heuristic extrapolation is applied. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> The thresholding operation in step <highlight><bold>106</bold></highlight> determines whether a document will be delivered to the user in step <highlight><bold>107</bold></highlight>. Documents yielding a score from step <highlight><bold>105</bold></highlight> above the score threshold <highlight><bold>104</bold></highlight> are accepted as relevant in step <highlight><bold>106</bold></highlight> and delivered to the user in step <highlight><bold>107</bold></highlight>. Conversely, documents yielding a score below the score threshold <highlight><bold>104</bold></highlight> are rejected as not relevant and discarded. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In step <highlight><bold>108</bold></highlight>, relevance feedback for each accepted document is then obtained based upon the user&apos;s particular needs. The documents that the system has already processed serve as a training corpus for updating the user profile <highlight><bold>102</bold></highlight> in step <highlight><bold>110</bold></highlight> for the filtering of subsequent documents in the corpus of documents <highlight><bold>101</bold></highlight>. This updating of the user profile <highlight><bold>102</bold></highlight> in step <highlight><bold>110</bold></highlight> can be done as frequently as needed. The frequency of updating can be determined based on the amount of new delivered documents or the time elapse since last updating. Optionally, profile editor <highlight><bold>109</bold></highlight> may be used to update user profile <highlight><bold>102</bold></highlight> directly without regard to the results obtained in step <highlight><bold>107</bold></highlight>. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> In the preferred embodiment, the user profile <highlight><bold>102</bold></highlight> is updated in step <highlight><bold>110</bold></highlight> by expanding the term vector <highlight><bold>103</bold></highlight> and re-estimating, according to the present invention, the score threshold <highlight><bold>104</bold></highlight>. To expand the term vector <highlight><bold>103</bold></highlight>, standard Rocchio feedback maybe used, where the centroid vector of the relevant document vectors is computed and the terms are ranked according to their centroid weight. Preferably, however, the K best-ranked terms are assigned a uniform weight before they are merged into the current term vector <highlight><bold>103</bold></highlight>. K grows heuristically with the number of relevant documents N available for training, according to the function: K&equals;10&plus;10&middot;log(N&plus;1). </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates an embodiment of the present invention used to update the score threshold <highlight><bold>104</bold></highlight> in step <highlight><bold>110</bold></highlight>. In step <highlight><bold>201</bold></highlight>, documents from a reference dataset (or initial training set) are scored against the profile vector, and are sorted according to their scores. At each position in the ranked list, a utility value U<highlight><subscript>i </subscript></highlight>can be computed by assuming a threshold that is equal to the score of the document at that position. Therefore, each position yields a candidate score threshold and a corresponding utility value. Thereafter, the &ldquo;optimal&rdquo; utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>is determined in step <highlight><bold>203</bold></highlight>, and the &ldquo;zero&rdquo; utility threshold &thgr;<highlight><subscript>zero </subscript></highlight>is determined in step <highlight><bold>204</bold></highlight>. The optimal utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>is the threshold that yields the highest utility over the accumulated training data. The zero utility threshold &thgr;<highlight><subscript>zero </subscript></highlight>is the highest threshold below the optimal utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>that gives a non-positive utility over the training data under the assumption that all documents that were rejected are non-relevant. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Using the optimal utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>and the zero utility threshold zero, a new profile utility threshold &thgr;&prime; is then calculated in step <highlight><bold>205</bold></highlight> by interpolating between the empirical optimal utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>and the zero utility threshold &thgr;<highlight><subscript>zero </subscript></highlight>over the historical training data the system has accrued at any given point. As documents are filtered using this process, they are added to the historical training data for the system. In this way, the optimum utility is updated as new documents are evaluated. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> The interpolation between the optimal and zero utility threshold using a constant parameter &agr;, may be calculated according to the following evaluation formula: </paragraph>
+<paragraph lvl="0"><in-line-formula>&thgr;&equals;&agr;&middot;&thgr;<highlight><subscript>zero</subscript></highlight>&plus;(1&minus;&agr;)&middot;&thgr;<highlight><subscript>opt </subscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0028" lvl="7"><number>&lsqb;0028&rsqb;</number> The parameter &agr; can be empirically set to any value between zero and one (alpha-regulation). In the preferred embodiment, &agr; is expressed as a function of two further parameters, &bgr; and &ggr; (beta-gamma function <highlight><bold>206</bold></highlight>), as reflected in the following calculation: </paragraph>
+<paragraph lvl="0"><in-line-formula>&agr;&equals;&bgr;(1&minus;&bgr;)&middot;<highlight><italic>e</italic></highlight><highlight><superscript>&minus;&ggr;&middot;M </superscript></highlight></in-line-formula></paragraph>
+<paragraph id="P-0029" lvl="7"><number>&lsqb;0029&rsqb;</number> in which M equals the number of training documents upon which the relevance feedback in step <highlight><bold>108</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is performed. In the preferred embodiment, the new profile utility threshold &thgr;&prime; replaces the previous score threshold <highlight><bold>104</bold></highlight> and is used along with the newly expanded term vector <highlight><bold>103</bold></highlight> to filter any subsequent documents in steps <highlight><bold>105</bold></highlight> and <highlight><bold>106</bold></highlight>. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> In writing the parameter &agr; in terms of &bgr; and &ggr; in the beta-gamma function <highlight><bold>306</bold></highlight>, both aspects of the bias present in the optimal utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>calculation are captured. First, &bgr; represents a score bias correction factor that compensates for the relatively higher scores of relevant documents in the training corpus. Second, &ggr; expresses that the estimated optimal utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>approximates the true optimal utility threshold more closely when more judged training examples are available. The parameter &ggr; is the inverse of the number of documents at which the profile utility threshold is placed at approximately the midpoint of the range between the optimal utility threshold &thgr;<highlight><subscript>opt </subscript></highlight>and the zero utility threshold &thgr;<highlight><subscript>zero</subscript></highlight>. If fewer than {fraction (1/&ggr;)} training examples are available, the profile utility threshold will be somewhat lower. By contrast, if more than {fraction (1/&ggr;)} training examples are available, the profile utility threshold will be somewhat higher. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates how a choice of the parameter &agr; determines a cutoff point between the points of optimal and zero utility and how the parameters &bgr; and &ggr; help to dynamically adjust parameter &agr; according to the number M of judged documents in the training database. Given a ranked list of all of the documents in the training database sorted by their scores, their relevance, and a specific utility criterion, the utility value at each different cutoff position can be plotted. Each cutoff position corresponds to a utility threshold. </paragraph>
+</section>
+<section>
+<heading lvl="1">HARDWARE OVERVIEW </heading>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a block diagram which illustrates a computer system <highlight><bold>300</bold></highlight> upon which an embodiment of the invention may be implemented. Computer system <highlight><bold>300</bold></highlight> includes a bus <highlight><bold>302</bold></highlight> or other communication mechanism for communicating information, and a processor <highlight><bold>304</bold></highlight> coupled with bus <highlight><bold>302</bold></highlight> for processing information. Computer system <highlight><bold>300</bold></highlight> also includes a main memory <highlight><bold>306</bold></highlight>, such as a random access memory (RAM) or other dynamic storage device, coupled to bus <highlight><bold>302</bold></highlight> for storing information and instructions to be executed by processor <highlight><bold>304</bold></highlight>. Main memory <highlight><bold>306</bold></highlight> also may be used for storing temporary variables or other intermediate information during execution of instructions to be executed by processor <highlight><bold>304</bold></highlight>. Computer system <highlight><bold>300</bold></highlight> further includes a read only memory (ROM) <highlight><bold>308</bold></highlight> or other static storage device coupled to bus <highlight><bold>302</bold></highlight> for storing static information and instructions for processor <highlight><bold>304</bold></highlight>. A storage device <highlight><bold>310</bold></highlight>, such as a magnetic disk or optical disk, is provided and coupled to bus <highlight><bold>302</bold></highlight> for storing information and instructions. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Computer system <highlight><bold>300</bold></highlight> maybe coupled via bus <highlight><bold>302</bold></highlight> to a display <highlight><bold>312</bold></highlight>, such as a cathode ray tube (CRT), for displaying information to a computer user. An input device <highlight><bold>314</bold></highlight>, including alphanumeric and other keys, is coupled to bus <highlight><bold>302</bold></highlight> for communicating information and command selections to processor <highlight><bold>304</bold></highlight>. Another type of user input device is cursor control <highlight><bold>316</bold></highlight>, such as a mouse, a trackball, or cursor direction keys for communicating direction information and command selections to processor <highlight><bold>304</bold></highlight> and for controlling cursor movement on display <highlight><bold>312</bold></highlight>. This input device typically has two degrees of freedom in two axes, a first axis (e.g. x) and a second axis (e.g., y), which allows the device to specify positions in a plane. </paragraph>
+<paragraph id="P-0034" lvl="0"><number>&lsqb;0034&rsqb;</number> The invention is related to the use of computer system <highlight><bold>300</bold></highlight> to retrieving information using beta-gamma regulation of threshold updating. According to one embodiment of the invention, retrieving information using beta-gamma regulation of threshold updating is provided by computer system <highlight><bold>300</bold></highlight> in response to processor <highlight><bold>304</bold></highlight> executing sequences of instructions contained in main memory <highlight><bold>306</bold></highlight>. Such instructions may be read into main memory <highlight><bold>306</bold></highlight> from another computer-readable medium, such as storage device <highlight><bold>310</bold></highlight>. However, the computer-readable medium is not limited to devices such as storage device <highlight><bold>310</bold></highlight>. For example, the computer-readable medium may include a floppy disk, a flexible disk, hard disk, magnetic tape, or any other magnetic medium, a CD-ROM, any other optical medium, a RAM, a PROM, and EPROM, a FLASH-EPROM, any other memory chip or cartridge, or any other medium from which a computer can read. Execution of the sequences of instructions contained in main memory <highlight><bold>306</bold></highlight> causes processor <highlight><bold>304</bold></highlight> to perform the process steps previously described. In alternative embodiments, hard-wired circuitry may be used in place of or in combination with software instructions to implement the invention. Thus, embodiments of the invention are not limited to any specific combination of hardware circuitry and software. </paragraph>
+<paragraph id="P-0035" lvl="0"><number>&lsqb;0035&rsqb;</number> Computer system <highlight><bold>300</bold></highlight> also includes a communication interface <highlight><bold>318</bold></highlight> coupled to bus <highlight><bold>302</bold></highlight>. Communication interface <highlight><bold>318</bold></highlight> provides a two-way data communication coupling to a network link <highlight><bold>320</bold></highlight> that is connected to a local network <highlight><bold>322</bold></highlight>. For example, communication interface <highlight><bold>318</bold></highlight> may be an integrated services digital network (ISDN) card or a modem to provide a data communication connection to a corresponding type of telephone line. As another example, communication interface <highlight><bold>318</bold></highlight> may be a local area network (LAN) card to provide a data communication connection to a compatible LAN. Wireless links may also be implemented. In any such implementation, communication interface <highlight><bold>318</bold></highlight> sends and receives electrical, electromagnetic or optical signals which carry digital data streams representing various types of information. </paragraph>
+<paragraph id="P-0036" lvl="0"><number>&lsqb;0036&rsqb;</number> Network link <highlight><bold>320</bold></highlight> typically provides data communication through one or more networks to other data devices. For example, network link <highlight><bold>320</bold></highlight> may provide a connection through local network <highlight><bold>322</bold></highlight> to a host computer <highlight><bold>324</bold></highlight> or to data equipment operated by an Internet Service Provider (ISP) <highlight><bold>326</bold></highlight>. ISP <highlight><bold>326</bold></highlight> in turn provides data communication services through the world wide packet data communication network now commonly referred to as the &ldquo;Internet&rdquo; <highlight><bold>328</bold></highlight>. Local network <highlight><bold>322</bold></highlight> and Internet <highlight><bold>328</bold></highlight> both use electrical, electromagnetic or optical signals which carry digital data streams. The signals through the various networks and the signals on network link <highlight><bold>320</bold></highlight> and through communication interface <highlight><bold>318</bold></highlight>, which carry the digital data to and from computer system <highlight><bold>300</bold></highlight>, are exemplary forms of carrier waves transporting the information. </paragraph>
+<paragraph id="P-0037" lvl="0"><number>&lsqb;0037&rsqb;</number> Computer system <highlight><bold>300</bold></highlight> can send messages and receive data, including program code, through the network(s), network link <highlight><bold>320</bold></highlight> and communication interface <highlight><bold>318</bold></highlight>. In the Internet <highlight><bold>328</bold></highlight> for example, a server <highlight><bold>330</bold></highlight> might transmit a requested code for an application program through Internet <highlight><bold>328</bold></highlight>, ISP <highlight><bold>326</bold></highlight>, local network <highlight><bold>322</bold></highlight> and communication interface <highlight><bold>318</bold></highlight>. In accordance with the invention, one such downloaded application provides for the retrieval of information using chunks of text as described herein. </paragraph>
+<paragraph id="P-0038" lvl="0"><number>&lsqb;0038&rsqb;</number> The received code may be executed by processor <highlight><bold>304</bold></highlight> as it is received, and/or stored in storage device <highlight><bold>310</bold></highlight>, or other non-volatile storage for later execution. In this manner, computer system <highlight><bold>300</bold></highlight> may obtain application code in the form of a carrier wave. </paragraph>
+<paragraph id="P-0039" lvl="0"><number>&lsqb;0039&rsqb;</number> To measure the effectiveness of the present invention over simple linear interpolation (ie., alpha regulation), 49 user profiles were used to filter about 250 megabytes of 1988 Associate Press news articles. A set of 1987 Wall Street Journal documents were used as an initial reference database. The initial threshold is set for all the profiles with a delivery ratio of 0.0005 using the present invention. The utility function used in the evaluation is the utility function UF1 defined below: </paragraph>
+<paragraph lvl="0"><in-line-formula><highlight><italic>UF</italic></highlight>1&equals;3*<highlight><italic>R&minus;</italic></highlight>2<highlight><italic>*N </italic></highlight></in-line-formula></paragraph>
+<paragraph id="P-0040" lvl="0"><number>&lsqb;0040&rsqb;</number> where, R is the number of relevant documents accepted and N is the number of non-relevant documents accepted. </paragraph>
+<paragraph id="P-0041" lvl="0"><number>&lsqb;0041&rsqb;</number> Three experiments were conducted. In one experiment, the initial threshold was kept without updating. The other two experiments update the threshold using the present invention in two different ways&mdash;one uses the alpha regulation and the other uses the beta-gamma regulation. Updating frequency is such that a profile will be updated whenever there are four new documents accepted for the profile. The UF1 utility value for each profile and their average are shown in the following table.  
+<table-cwu id="TABLE-US-00002">
+<number>2</number>
+<table frame="none" colsep="0" rowsep="0" pgwide="1">
+<tgroup align="left" colsep="0" rowsep="0" cols="6">
+<colspec colname="1" colwidth="35PT" align="center"/>
+<colspec colname="2" colwidth="49PT" align="center"/>
+<colspec colname="3" colwidth="49PT" align="center"/>
+<colspec colname="4" colwidth="49PT" align="center"/>
+<colspec colname="5" colwidth="49PT" align="center"/>
+<colspec colname="6" colwidth="49PT" align="center"/>
+<thead>
+<row>
+<entry></entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+<row>
+<entry></entry>
+<entry></entry>
+<entry></entry>
+<entry>improve</entry>
+<entry>&bgr;-&ggr; regulation</entry>
+<entry>improve</entry>
+</row>
+<row>
+<entry></entry>
+<entry>baseline</entry>
+<entry>&agr; regulation</entry>
+<entry>(&agr; reg.</entry>
+<entry>(&bgr; &equals; 0.1,</entry>
+<entry>(&bgr;-&ggr;reg.</entry>
+</row>
+<row>
+<entry>Profile &num;</entry>
+<entry>(no updating)</entry>
+<entry>(&agr; &equals; 0.3)</entry>
+<entry>over baseline)</entry>
+<entry>&ggr; &equals; 0.05)</entry>
+<entry>over baseline)</entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</thead>
+<tbody valign="top">
+<row>
+<entry></entry>
+</row>
+</tbody>
+</tgroup>
+<tgroup align="left" colsep="0" rowsep="0" cols="6">
+<colspec colname="1" colwidth="35PT" align="char" char="."/>
+<colspec colname="2" colwidth="49PT" align="char" char="."/>
+<colspec colname="3" colwidth="49PT" align="char" char="."/>
+<colspec colname="4" colwidth="49PT" align="char" char="."/>
+<colspec colname="5" colwidth="49PT" align="char" char="."/>
+<colspec colname="6" colwidth="49PT" align="char" char="."/>
+<tbody valign="top">
+<row>
+<entry>1</entry>
+<entry>&minus;14</entry>
+<entry>&minus;8</entry>
+<entry>6</entry>
+<entry>&minus;8</entry>
+<entry>6</entry>
+</row>
+<row>
+<entry>2</entry>
+<entry>&minus;15</entry>
+<entry>&minus;12</entry>
+<entry>3</entry>
+<entry>&minus;12</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry>3</entry>
+<entry>&minus;3</entry>
+<entry>1</entry>
+<entry>4</entry>
+<entry>&minus;11</entry>
+<entry>&minus;8</entry>
+</row>
+<row>
+<entry>4</entry>
+<entry>3</entry>
+<entry>1</entry>
+<entry>&minus;2</entry>
+<entry>1</entry>
+<entry>&minus;2</entry>
+</row>
+<row>
+<entry>5</entry>
+<entry>0</entry>
+<entry>15</entry>
+<entry>15</entry>
+<entry>27</entry>
+<entry>27</entry>
+</row>
+<row>
+<entry>6</entry>
+<entry>&minus;16</entry>
+<entry>&minus;4</entry>
+<entry>12</entry>
+<entry>&minus;4</entry>
+<entry>12</entry>
+</row>
+<row>
+<entry>7</entry>
+<entry>9</entry>
+<entry>1</entry>
+<entry>&minus;8</entry>
+<entry>26</entry>
+<entry>17</entry>
+</row>
+<row>
+<entry>8</entry>
+<entry>&minus;108</entry>
+<entry>&minus;5</entry>
+<entry>103</entry>
+<entry>&minus;5</entry>
+<entry>103</entry>
+</row>
+<row>
+<entry>9</entry>
+<entry>&minus;26</entry>
+<entry>1</entry>
+<entry>27</entry>
+<entry>&minus;3</entry>
+<entry>23</entry>
+</row>
+<row>
+<entry>10</entry>
+<entry>3</entry>
+<entry>6</entry>
+<entry>3</entry>
+<entry>46</entry>
+<entry>43</entry>
+</row>
+<row>
+<entry>11</entry>
+<entry>&minus;106</entry>
+<entry>&minus;4</entry>
+<entry>102</entry>
+<entry>&minus;25</entry>
+<entry>81</entry>
+</row>
+<row>
+<entry>12</entry>
+<entry>&minus;31</entry>
+<entry>5</entry>
+<entry>36</entry>
+<entry>&minus;3</entry>
+<entry>28</entry>
+</row>
+<row>
+<entry>13</entry>
+<entry>&minus;16</entry>
+<entry>&minus;13</entry>
+<entry>3</entry>
+<entry>&minus;10</entry>
+<entry>6</entry>
+</row>
+<row>
+<entry>14</entry>
+<entry>&minus;1</entry>
+<entry>3</entry>
+<entry>4</entry>
+<entry>2</entry>
+<entry>3</entry>
+</row>
+<row>
+<entry>15</entry>
+<entry>10</entry>
+<entry>&minus;3</entry>
+<entry>&minus;13</entry>
+<entry>&minus;5</entry>
+<entry>&minus;15</entry>
+</row>
+<row>
+<entry>16</entry>
+<entry>&minus;29</entry>
+<entry>&minus;2</entry>
+<entry>27</entry>
+<entry>&minus;2</entry>
+<entry>27</entry>
+</row>
+<row>
+<entry>17</entry>
+<entry>46</entry>
+<entry>32</entry>
+<entry>&minus;14</entry>
+<entry>60</entry>
+<entry>14</entry>
+</row>
+<row>
+<entry>18</entry>
+<entry>&minus;475</entry>
+<entry>&minus;24</entry>
+<entry>451</entry>
+<entry>&minus;24</entry>
+<entry>451</entry>
+</row>
+<row>
+<entry>19</entry>
+<entry>&minus;4</entry>
+<entry>&minus;6</entry>
+<entry>&minus;2</entry>
+<entry>&minus;6</entry>
+<entry>&minus;2</entry>
+</row>
+<row>
+<entry>20</entry>
+<entry>2</entry>
+<entry>6</entry>
+<entry>4</entry>
+<entry>10</entry>
+<entry>8</entry>
+</row>
+<row>
+<entry>21</entry>
+<entry>14</entry>
+<entry>8</entry>
+<entry>&minus;6</entry>
+<entry>35</entry>
+<entry>21</entry>
+</row>
+<row>
+<entry>23</entry>
+<entry>73</entry>
+<entry>4</entry>
+<entry>&minus;69</entry>
+<entry>110</entry>
+<entry>37</entry>
+</row>
+<row>
+<entry>24</entry>
+<entry>15</entry>
+<entry>&minus;3</entry>
+<entry>&minus;18</entry>
+<entry>&minus;7</entry>
+<entry>&minus;22</entry>
+</row>
+<row>
+<entry>25</entry>
+<entry>&minus;68</entry>
+<entry>&minus;5</entry>
+<entry>63</entry>
+<entry>&minus;16</entry>
+<entry>52</entry>
+</row>
+<row>
+<entry>26</entry>
+<entry>&minus;14</entry>
+<entry>2</entry>
+<entry>16</entry>
+<entry>&minus;4</entry>
+<entry>10</entry>
+</row>
+<row>
+<entry>27</entry>
+<entry>&minus;1</entry>
+<entry>3</entry>
+<entry>4</entry>
+<entry>3</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry>28</entry>
+<entry>&minus;26</entry>
+<entry>&minus;6</entry>
+<entry>20</entry>
+<entry>&minus;6</entry>
+<entry>20</entry>
+</row>
+<row>
+<entry>29</entry>
+<entry>&minus;9</entry>
+<entry>&minus;2</entry>
+<entry>7</entry>
+<entry>&minus;2</entry>
+<entry>7</entry>
+</row>
+<row>
+<entry>30</entry>
+<entry>&minus;2</entry>
+<entry>&minus;2</entry>
+<entry>0</entry>
+<entry>&minus;2</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>31</entry>
+<entry>&minus;3</entry>
+<entry>3</entry>
+<entry>6</entry>
+<entry>&minus;3</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>32</entry>
+<entry>&minus;24</entry>
+<entry>&minus;6</entry>
+<entry>18</entry>
+<entry>&minus;6</entry>
+<entry>18</entry>
+</row>
+<row>
+<entry>33</entry>
+<entry>&minus;8</entry>
+<entry>&minus;4</entry>
+<entry>4</entry>
+<entry>&minus;4</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry>34</entry>
+<entry>&minus;10</entry>
+<entry>&minus;10</entry>
+<entry>0</entry>
+<entry>&minus;10</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>35</entry>
+<entry>&minus;24</entry>
+<entry>&minus;8</entry>
+<entry>16</entry>
+<entry>&minus;8</entry>
+<entry>16</entry>
+</row>
+<row>
+<entry>36</entry>
+<entry>4</entry>
+<entry>4</entry>
+<entry>0</entry>
+<entry>0</entry>
+<entry>&minus;4</entry>
+</row>
+<row>
+<entry>37</entry>
+<entry>&minus;12</entry>
+<entry>&minus;2</entry>
+<entry>10</entry>
+<entry>&minus;2</entry>
+<entry>10</entry>
+</row>
+<row>
+<entry>38</entry>
+<entry>12</entry>
+<entry>5</entry>
+<entry>&minus;7</entry>
+<entry>1</entry>
+<entry>&minus;11</entry>
+</row>
+<row>
+<entry>39</entry>
+<entry>&minus;14</entry>
+<entry>&minus;10</entry>
+<entry>4</entry>
+<entry>&minus;10</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry>40</entry>
+<entry>21</entry>
+<entry>&minus;1</entry>
+<entry>&minus;22</entry>
+<entry>14</entry>
+<entry>&minus;7</entry>
+</row>
+<row>
+<entry>41</entry>
+<entry>&minus;9</entry>
+<entry>&minus;4</entry>
+<entry>5</entry>
+<entry>&minus;4</entry>
+<entry>5</entry>
+</row>
+<row>
+<entry>42</entry>
+<entry>7</entry>
+<entry>9</entry>
+<entry>2</entry>
+<entry>&minus;2</entry>
+<entry>&minus;9</entry>
+</row>
+<row>
+<entry>43</entry>
+<entry>&minus;30</entry>
+<entry>5</entry>
+<entry>35</entry>
+<entry>&minus;9</entry>
+<entry>21</entry>
+</row>
+<row>
+<entry>44</entry>
+<entry>2</entry>
+<entry>&minus;8</entry>
+<entry>&minus;10</entry>
+<entry>&minus;8</entry>
+<entry>&minus;10</entry>
+</row>
+<row>
+<entry>45</entry>
+<entry>&minus;10</entry>
+<entry>&minus;8</entry>
+<entry>2</entry>
+<entry>&minus;8</entry>
+<entry>2</entry>
+</row>
+<row>
+<entry>46</entry>
+<entry>&minus;187</entry>
+<entry>&minus;20</entry>
+<entry>167</entry>
+<entry>&minus;21</entry>
+<entry>166</entry>
+</row>
+<row>
+<entry>47</entry>
+<entry>0</entry>
+<entry>&minus;1</entry>
+<entry>&minus;1</entry>
+<entry>&minus;1</entry>
+<entry>&minus;1</entry>
+</row>
+<row>
+<entry>48</entry>
+<entry>&minus;16</entry>
+<entry>&minus;12</entry>
+<entry>4</entry>
+<entry>&minus;12</entry>
+<entry>4</entry>
+</row>
+<row>
+<entry>49</entry>
+<entry>7</entry>
+<entry>3</entry>
+<entry>&minus;4</entry>
+<entry>7</entry>
+<entry>0</entry>
+</row>
+<row>
+<entry>50</entry>
+<entry>&minus;16</entry>
+<entry>&minus;8</entry>
+<entry>8</entry>
+<entry>&minus;8</entry>
+<entry>8</entry>
+</row>
+<row>
+<entry>Average</entry>
+<entry>&minus;22.42857143</entry>
+<entry>&minus;1.714285714</entry>
+<entry>20.71428571</entry>
+<entry>1.448979592</entry>
+<entry>23.87755102</entry>
+</row>
+<row><entry namest="1" nameend="6" align="center" rowsep="1"></entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</table-cwu>
+</paragraph>
+<paragraph id="P-0042" lvl="0"><number>&lsqb;0042&rsqb;</number> These results show that threshold updating using the present invention (both the alpha regulation and the beta-gamma regulation) generally improves the utility values, and in some cases significantly, when compared with the performance without updating. The comparison between the alpha regulation and the beta-gamma regulation indicates that the beta-gamma regulation technique gives more stable utility performance and is more adaptive when a profile has the potential of achieving a high positive utility. For example, referring to topic 23, although the alpha regulation gives a very small utility, the beta-gamma regulation generates a very high positive utility. </paragraph>
+<paragraph id="P-0043" lvl="0"><number>&lsqb;0043&rsqb;</number> While this invention has been particularly described and illustrated with reference to particular embodiments thereof, it will be understood by those skilled in the art that changes in the above description or illustrations may be made with respect to form or detail without departing from the spirit or scope of the invention. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">I claim: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A computer-implemented method for filtering documents, comprising the steps of: 
+<claim-text>selecting a document profile and an expected document delivery ratio; </claim-text>
+<claim-text>scoring a reference set of documents according to said document profile; </claim-text>
+<claim-text>determining an assigned score threshold corresponding to said expected document delivery ratio; </claim-text>
+<claim-text>determining a utility function by calculating a utility for each of said documents in said reference set; </claim-text>
+<claim-text>determining a first utility threshold based on said utility function; </claim-text>
+<claim-text>determining a second utility threshold based on said utility function; </claim-text>
+<claim-text>interpolating between said first utility threshold and said second utility threshold to determine an updated score threshold; and </claim-text>
+<claim-text>filtering incoming documents based on said updated score threshold. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. A method as in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said interpolation is linear. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. A method as in <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said first utility threshold (&thgr;<highlight><subscript>opt</subscript></highlight>) is the highest utility over said reference set and said second utility threshold (&thgr;<highlight><subscript>zero</subscript></highlight>) is the highest utility below said first utility threshold that has a non-positive utility over said reference set. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. A method as in <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, wherein: 
+<claim-text>said interpolation is calculated according to the formula: </claim-text>
+<claim-text><in-line-formula>&thgr;&equals;&agr;&middot;&thgr;<highlight><subscript>zero</subscript></highlight>&plus;(1&minus;&agr;)&middot;&thgr;<highlight><subscript>opt </subscript></highlight></in-line-formula></claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. A method as in <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said parameter is calculated according to the formula: </claim-text>
+<claim-text><in-line-formula>&agr;&equals;&bgr;&plus;(1&minus;&bgr;)&middot;<highlight><italic>e</italic></highlight><highlight><superscript>&minus;&ggr;&middot;M </superscript></highlight></in-line-formula></claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. A system for filtering documents, comprising: 
+<claim-text>a computer coupled to a network wherein said computer receives documents over said network and transmits documents to an individual user over said network, wherein said user selects a document profile and an expected delivery ratio; and </claim-text>
+<claim-text>wherein said computer: 
+<claim-text>scores a reference set of documents according to said document profile; </claim-text>
+<claim-text>determines an assigned score threshold corresponding to said expected document delivery ratio; </claim-text>
+<claim-text>determines a utility function by calculating a utility for each of said documents in said reference set; </claim-text>
+<claim-text>determines a first utility threshold based on said utility function; </claim-text>
+<claim-text>determines a second utility threshold based on said utility function; </claim-text>
+<claim-text>interpolates between said first utility threshold and said second utility threshold to determine an updated score threshold; and </claim-text>
+<claim-text>filters incoming documents based on said updated score threshold. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A system as in <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said interpolation is linear. </claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A system as in <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference>, wherein said first utility threshold (&thgr;<highlight><subscript>opt</subscript></highlight>) is the highest utility over said reference set and said second utility threshold (&thgr;<highlight><subscript>zero</subscript></highlight>) is the highest utility below said first utility threshold that has a non-positive utility over said reference set. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. A system as in <dependent-claim-reference depends_on="CLM-00008">claim 8</dependent-claim-reference>, wherein: 
+<claim-text>said interpolation is calculated according to the formula: </claim-text>
+<claim-text><in-line-formula>&thgr;&equals;&agr;&middot;&thgr;<highlight><subscript>zero</subscript></highlight>&plus;(1&minus;&agr;)&middot;&thgr;<highlight><subscript>opt </subscript></highlight></in-line-formula></claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A system as in <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, wherein said parameter is calculated according to the formula: </claim-text>
+<claim-text><in-line-formula>&agr;&equals;&bgr;&plus;(1&minus;&bgr;)&middot;e<highlight><superscript>&minus;&ggr;&middot;M</superscript></highlight></in-line-formula></claim-text>
+<claim-text></claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>1</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030004927A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030004927A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030004927A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030004927A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030004927A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030004927A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

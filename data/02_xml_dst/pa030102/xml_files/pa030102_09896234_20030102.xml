@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005234A1-20030102-D00000.TIF SYSTEM "US20030005234A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005234A1-20030102-D00001.TIF SYSTEM "US20030005234A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005234A1-20030102-D00002.TIF SYSTEM "US20030005234A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005234A1-20030102-D00003.TIF SYSTEM "US20030005234A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005234A1-20030102-D00004.TIF SYSTEM "US20030005234A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005234A1-20030102-D00005.TIF SYSTEM "US20030005234A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005234</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896234</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010629</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F012/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>711</class>
+<subclass>140000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>System and method for optimizing bus bandwidth utilization by reducing read to write bubbles</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Zeev</given-name>
+<family-name>Sperber</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Zichron Yaakov</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Gabi</given-name>
+<family-name>Malka</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Haifa</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Gilad</given-name>
+<family-name>Shmueli</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Haifa</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+<inventor>
+<name>
+<given-name>Shmulik</given-name>
+<family-name>Branski</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>Haifa</city>
+<country-code>IL</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>KENYON &amp; KENYON</name-1>
+<name-2></name-2>
+<address>
+<address-1>ONE BROADWAY</address-1>
+<city>NEW YORK</city>
+<state>NY</state>
+<postalcode>10004</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">A system and method of optimizing system memory bus bandwidth in a computer system. The system prepares to receive first data from system memory in accordance with at least one read request by evicting previously stored second data to a write back buffer. The at least one read request is then issued consecutively to system memory via the system memory bus. After issuance of the at least one read request, at least one write request is issued consecutively to send the second data in the write back buffer to the system memory via the system memory bus. The consecutive issuance of read and write requests avoids read-to-write and write-to-read bubbles that occur when alternating read and write requests are issued to system memory. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">FIELD OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates to computer systems, and more particularly, but without limitation, relates to a system and method for optimizing memory bus bandwidth utilization in systems that have constant and balanced rates of read/write cycles. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND INFORMATION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Computer sub-systems such as three-dimensional (3D) graphics processors often include their own memory storage capacity implemented in one or more local memory caches (&ldquo;local caches&rdquo;). The local caches may store data such as the color and depth (Z) of a pixel or texture element (texel) and additionally may provide a storage queue for memory requests. Data stored in the local cache may be obtained via read requests, which are requests to extract data from a particular location in system memory. Data may also be expelled from the local cache back to system memory via write requests or write back requests which transfer the data to a particular location in system memory. Because the storage capacity of the local caches is generally limited, a request to read data from system memory (or a request for a future write) triggers a complementary request to evict (write back) data from the cache to make room for the data to be imported from system memory. Typically, the evicted data contains updated information that must be sent to system memory for storage. Therefore in such systems, read request cycles and requests for future writes are normally consecutively paired with write back cycles in the memory system bus traffic. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> The sequential flow of read and write pairings causes sub-optimal performance because the system bus that delivers the read/write requests to memory has a period of down time whenever it switches between a read cycle and a write cycle, known, depending on the case, as a read-to-write bubble or a write-to-read bubble. <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates the bubbles in between an exemplary series of read and write requests. It is noted that the performance penalty for the bubble, measured in memory cycles, varies depending on the type of dynamic random access memory implemented in the system bus, such as RDRAM (Rambus DRAM) or SDRAM (synchronous DRAM). </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> An additional time lag is introduced by the local cache when it is forced to wait for a write back eviction to execute before issuing a read request. <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates a conventional sequence for a read request in a memory request allocation system <highlight><bold>2</bold></highlight>. A read allocator <highlight><bold>10</bold></highlight> sends a read allocation request (step <highlight><bold>1</bold></highlight>) to local cache <highlight><bold>20</bold></highlight> to initiate a write back eviction process. The local cache <highlight><bold>20</bold></highlight>, in turn, prepares an entry for data that will be retrieved upon fulfillment of the read request by evicting cached data and sending a write request to memory (step <highlight><bold>2</bold></highlight>). The local cache <highlight><bold>20</bold></highlight> then waits for acknowledgment that the write request eviction has been executed. Upon receiving acknowledgment that the write request has been executed (step <highlight><bold>3</bold></highlight>), the read request issues to memory (step <highlight><bold>4</bold></highlight>).</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates exemplary traffic on a system memory bus that includes a series of consecutive read and write requests and time bubbles between the requests. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram that illustrates a sequence of events that occur to execute a conventional read request. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram that shows a 3D system according to an embodiment of the present invention </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram that illustrates a sequence of events that occur to execute a read request according to the present invention. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart of a method for optimizing memory bus bandwidth according to an embodiment of the present invention. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> is a graph that illustrates increasing bandwidth utilization as the number of read and write requests consecutively issued increases.</paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of an embodiment of a 3D system <highlight><bold>100</bold></highlight> according to the present invention. A 3D Pipeline <highlight><bold>105</bold></highlight>, which may be implemented as a graphics accelerator or processor, computes texel values, and issues both computed data and requests to read color and Z data directly to a local cache <highlight><bold>110</bold></highlight> in order to produce a screen mapping. The local cache <highlight><bold>110</bold></highlight> contains both logical and memory elements which are used to process the requests from the 3D Pipeline <highlight><bold>105</bold></highlight> and to store data for future use. As will be discussed in greater detail below, the local cache <highlight><bold>110</bold></highlight> can be configured to function in two modes, mode 1 and mode 2. The local cache <highlight><bold>110</bold></highlight> can interleave between mode 1 and mode 2, or alternatively, the cache can be functionally divided into two parts, one which stores data and requests in mode 1, and a second part which stores data and requests in mode 2. The memory resources of the local cache <highlight><bold>110</bold></highlight> are finite and limited in comparison to the memory resources of system memory <highlight><bold>150</bold></highlight>, which as noted above, may be implemented with Dynamic Random Access Memory (DRAM). </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> When the local cache <highlight><bold>110</bold></highlight> is full, new read requests trigger data evictions from the cache in order to prepare entries for new data associated with the new read and write allocation cycles. Under typical steady-state conditions, this data is evicted to system memory <highlight><bold>150</bold></highlight>, but in the system shown in <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, evicted data is sent to a write back buffer (&ldquo;WBB&rdquo;) <highlight><bold>130</bold></highlight>, which is a FIFO buffer having memory capacity to store several local cache <highlight><bold>110</bold></highlight> data evictions, along with the system memory addresses to which the data evictions are targeted. In one implementation, the WBB <highlight><bold>130</bold></highlight> has memory capacity to store four data evictions from the local cache <highlight><bold>110</bold></highlight>. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> Read and write requests are not sent directly from the local cache <highlight><bold>110</bold></highlight> to system memory <highlight><bold>150</bold></highlight> but are rather intercepted by a cycle arbitration control (&ldquo;CAC&rdquo;) <highlight><bold>120</bold></highlight>. Write requests are issued concurrently with the data evictions into the WBB <highlight><bold>130</bold></highlight>. Both the initial read requests that trigger the evictions and the write back (eviction) requests are monitored at the CAC <highlight><bold>120</bold></highlight>, which converts the read/write cycle pairs into a stream of consecutive read cycles followed by a stream of consecutive write cycles. The CAC <highlight><bold>120</bold></highlight> contains both a read request FIFO buffer and a write request FIFO buffer. The CAC <highlight><bold>120</bold></highlight> will issue a stored read cycle to system memory <highlight><bold>150</bold></highlight> before a write back cycle as long as the WBB <highlight><bold>130</bold></highlight> is not full (the CAC <highlight><bold>120</bold></highlight> also monitors the state of the WBB <highlight><bold>130</bold></highlight> via a &ldquo;snoop&rdquo; function). The write back cycles are then consecutively issued until all the data in the WBB <highlight><bold>130</bold></highlight> is sent to system memory <highlight><bold>150</bold></highlight>. However, since a read cycle can only issue if there is no outstanding write request targeted to the same memory location in the WBB <highlight><bold>130</bold></highlight>, the CAC <highlight><bold>120</bold></highlight> checks the WBB <highlight><bold>130</bold></highlight> entries before issuing a read cycle. If the WBB <highlight><bold>130</bold></highlight> does contain write cycles targeted to the same memory locations as the read cycles, the write cycles in the WBB <highlight><bold>130</bold></highlight> are issued before the read cycles. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> By incorporating the WBB <highlight><bold>130</bold></highlight> and the CAC <highlight><bold>120</bold></highlight>, the data for several write cycles is temporarily stored, allowing several read requests to issue consecutively to system memory, thus eliminating several read-to-write and write-to-read bubbles. After organizing the read and write requests into consecutive streams, the CAC <highlight><bold>120</bold></highlight> issues read and write requests to a memory interface <highlight><bold>140</bold></highlight>, which regulates interaction with system memory <highlight><bold>150</bold></highlight>. The interface issues the requests via DRAM bus <highlight><bold>145</bold></highlight> to system memory <highlight><bold>150</bold></highlight>. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates how, using the WBB <highlight><bold>130</bold></highlight> according to the present invention, issuance of read requests are no longer delayed by waiting for associated paired write back requests to execute. The 3D pipeline <highlight><bold>105</bold></highlight> sends a read allocation request (step <highlight><bold>1</bold></highlight>) to local cache <highlight><bold>110</bold></highlight> to trigger a write back eviction. In step <highlight><bold>2</bold></highlight>, the local cache <highlight><bold>110</bold></highlight> allocates an entry for the read request by evicting cached data to the WBB <highlight><bold>130</bold></highlight>. Simultaneously (also step <highlight><bold>2</bold></highlight>), the CAC <highlight><bold>120</bold></highlight> issues a read request to the memory interface <highlight><bold>140</bold></highlight>. After several cycles, the WBB <highlight><bold>130</bold></highlight> becomes filled to capacity. At this point, in step <highlight><bold>3</bold></highlight>, the CAC <highlight><bold>120</bold></highlight> begins to issue write request cycles to the memory interface and the WBB <highlight><bold>130</bold></highlight> also writes the data it has stored to the memory interface <highlight><bold>140</bold></highlight>. The write requests are passed on to system memory, which returns acknowledgment to the memory interface <highlight><bold>140</bold></highlight> upon execution of the write requests (step <highlight><bold>4</bold></highlight>). </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> A more detailed discussion of an embodiment of the method of optimizing bus bandwidth according to the present invention follows with reference to the flow chart shown in <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. The process begins (step <highlight><bold>200</bold></highlight>) when the 3D pipeline <highlight><bold>105</bold></highlight> sends a read (or write) allocation request to the local cache <highlight><bold>110</bold></highlight>. In step <highlight><bold>210</bold></highlight>, it is then determined whether the local cache is full. If the cache <highlight><bold>110</bold></highlight> is not full, the read or write allocation cycle is first queued in the local cache (in step <highlight><bold>215</bold></highlight>), which then, having available capacity, allocates an entry for a read cycle (step <highlight><bold>255</bold></highlight>). If the local cache <highlight><bold>110</bold></highlight> is full, in step <highlight><bold>220</bold></highlight>, data is selected for eviction. In step <highlight><bold>230</bold></highlight>, it is then determined whether the data selected for eviction is still being used by the 3D pipeline <highlight><bold>105</bold></highlight>. If the data is being used, the process stalls (step <highlight><bold>235</bold></highlight>) and cycles back to step <highlight><bold>220</bold></highlight>, and a further entry in the local cache is selected for eviction while a corresponding check is performed to determine whether the selected data is still in use (step <highlight><bold>230</bold></highlight>). If it is found that selected data is no longer is use, the CAC <highlight><bold>120</bold></highlight> performs a &ldquo;snoop&rdquo; function on the WBB <highlight><bold>130</bold></highlight> to check (step <highlight><bold>240</bold></highlight>) whether the requested allocation cycle is targeted to the same memory address as one of the requests in the WBB <highlight><bold>130</bold></highlight>. If so, according to one implementation, in step <highlight><bold>245</bold></highlight> all the data in the WBB <highlight><bold>130</bold></highlight> is issued to system memory <highlight><bold>150</bold></highlight>. In an alternative implementation, only the data that shares the targeted memory address with the read request is issued to system memory <highlight><bold>150</bold></highlight>. If, in step <highlight><bold>240</bold></highlight>, it is determined by the CAC <highlight><bold>120</bold></highlight> snoop operation that none of the data in the WBB <highlight><bold>130</bold></highlight> is targeted to the same memory location as the allocation request, the local cache <highlight><bold>110</bold></highlight> allocates an entry for the read request (step <highlight><bold>250</bold></highlight>). </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> The data that was selected for eviction is evicted to the WBB <highlight><bold>130</bold></highlight> (step <highlight><bold>260</bold></highlight>), if the data is &ldquo;dirty&rdquo; (step <highlight><bold>257</bold></highlight>), i.e., has been modified by the 3D pipeline <highlight><bold>105</bold></highlight>, and therefore requires to be stored in system memory in case the updated data is required again for further processing. In the steady-state, most data is dirty because color and Z data for each pixel continually change as a graphical object is redrawn. Clean data is not evicted by to the WBB <highlight><bold>130</bold></highlight> (step <highlight><bold>259</bold></highlight>) and may be overwritten. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> After a read request has been allocated, either via step <highlight><bold>250</bold></highlight> or step <highlight><bold>255</bold></highlight>, in step <highlight><bold>270</bold></highlight>, a determination is made as to whether a read request should be issued to the system memory bus <highlight><bold>145</bold></highlight> which depends upon the local cache mode pertaining to the allocation request. In mode 1, consecutive groups of read cycles are issued to memory followed by a consecutive group of write back requests, in an alternating manner. The number of consecutive requests depends on the length of the WBB <highlight><bold>130</bold></highlight>. For example, if the WBB is four entries long, four read requests, then four write requests, and then four read requests, etc. may be issued in succession. Mode 1 is typically employed where a transparent graphical object is being drawn and color data needs to be read from memory (in step <highlight><bold>275</bold></highlight>) and merged with background color. If the WBB <highlight><bold>130</bold></highlight> is filled to capacity (step <highlight><bold>280</bold></highlight>), the CAC <highlight><bold>120</bold></highlight> triggers the WBB to write the resulting merged color data back to system memory <highlight><bold>150</bold></highlight> (in step <highlight><bold>290</bold></highlight>), creating balanced groups of consecutive read and consecutive write traffic. Similarly, Z data may also be read and written back in succession following the color data. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> Mode 2 may be employed, for example, when pixels of an object to be drawn are part of an opaque object, obviating the need to read the color data for the pixels. However, a write request is issued to allocate an entry for a future write. In this case, read requests for color data should not be issued to memory in step <highlight><bold>270</bold></highlight>. To allocate space for the write request, the CAC <highlight><bold>120</bold></highlight> still triggers the WBB <highlight><bold>130</bold></highlight> to write color data back to the system memory <highlight><bold>150</bold></highlight> (in step <highlight><bold>290</bold></highlight>) in consecutive write back cycles if and when the WBB <highlight><bold>130</bold></highlight> is full (step <highlight><bold>280</bold></highlight>). The issuance of the write cycles is then followed by issuance of groups of consecutive read cycles and write cycles for Z data. According to this mode, if the WBB <highlight><bold>130</bold></highlight> is four entries long, eight write requests (four for color, and four for Z) are issued for every four read requests that are issued (four for Z). As noted above, the local cache <highlight><bold>110</bold></highlight> can be configured to alternate between Mode 1 and Mode 2 and issue requests to the CAC <highlight><bold>120</bold></highlight> according to the particular Mode in operation. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> During operation of either mode, once it is determined that the WBB <highlight><bold>130</bold></highlight> is full, the WBB <highlight><bold>130</bold></highlight> issues all the data it contains until it is cleared (via the loop in step <highlight><bold>295</bold></highlight>). After the WBB <highlight><bold>130</bold></highlight> clears, the flow cycles back to step <highlight><bold>200</bold></highlight> when a new read request is sent to the local cache <highlight><bold>110</bold></highlight>. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> shows a graph that plots rates of potential bandwidth utilization against the number of consecutive read and write cycles (burst length) sent to system memory <highlight><bold>150</bold></highlight> via the DRAM bus <highlight><bold>145</bold></highlight>. As shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>, when read and write cycles are alternatingly issued, i.e., the burst length is equal to one (1), the potential bandwidth utilization is 57%. When the burst length is two (2), the potential utilization rate jumps to 73% and at higher burst lengths the utilization rate increases albeit in smaller increments. At a burst length of four (4), the potential bandwidth utilization rate is 84%. In a given implementation of the present invention, a burst length of four (4) consecutive requests is optimal. It is noted that the optimal burst length depends upon system parameters such as, for example, the number of clock cycles in a read-to-write (or write-to read) bubble, the number of clock cycles required to issue a single read request, and the number of clock cycles used by the CAC arbiter <highlight><bold>120</bold></highlight>. It is understood that these parameters will differ depending on the system design and DRAM implementation, and that the implementations described should not be taken to be limiting. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> At higher burst lengths, in the example given, higher than four, performance difficulties caused by a lack of synchronization in the 3D pipeline <highlight><bold>105</bold></highlight> are more prominent than any gains due to increase in potential bus utilization. When the pipeline <highlight><bold>105</bold></highlight> issues read requests targeted for system memory <highlight><bold>150</bold></highlight>, the pipeline expects the requested data to return within a specific time period, after a set of calculations have been made, to establish texel values. If too many read requests are issued consecutively, the precise timing relationship between the request for and the retrieval of data may be thrown off, resulting in stalling in the 3D pipeline. It is intended that such stalling behavior be avoided whenever possible while attaining improvements in bandwidth utilization. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In the foregoing description, the method and system of the invention have been described with reference to a number of examples that are not to be considered limiting. Rather, it is to be understood and expected that variations in the principles of the method and apparatus herein disclosed may be made by one skilled in the art, and it is intended that such modifications, changes, and/or substitutions are to be included within the scope of the present invention as set forth in the appended claims. Furthermore, while the mechanisms described can be embodied in hardware within a computer processor, the invention is not necessarily limited thereby, and the programmed logic that implements the mechanisms can be separately embodied and stored on a storage medium, such as read-only-memory (ROM) readable by a general or special purpose programmable computer, for configuring the computer when the storage medium is read by the computer to perform the functions described above. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A method of optimizing system memory bus bandwidth comprising: 
+<claim-text>preparing to receive first data from a system memory in accordance with at least one read request by evicting, if a local cache is full, previously stored second data to a write back buffer; </claim-text>
+<claim-text>issuing the at least one read request to the system memory via a system memory bus; and </claim-text>
+<claim-text>after issuance of the at least one read request, issuing at least one write request to send the second data in the write back buffer to the system memory via the system memory bus. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>issuing each of the at least one read request consecutively before issuance of any of the at least one write request; and </claim-text>
+<claim-text>after issuance of the at least one read request, issuing each of the at least one write request consecutively before issuance of further read requests. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising: 
+<claim-text>selecting a portion of the second data for eviction; </claim-text>
+<claim-text>determining if the portion of the second data is still in use; and </claim-text>
+<claim-text>if it is determined that the portion of the second data is still in use: 
+<claim-text>stalling issuance of the portion of the second data; and </claim-text>
+<claim-text>selecting a further portion of the second data for eviction. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00003">claim 3</dependent-claim-reference>, further comprising: 
+<claim-text>determining if any of the second data in the write back buffer is targeted to a memory location in system memory equivalent to a memory location to which one of the at least one read request is targeted; and </claim-text>
+<claim-text>if it is determined that any of the second data is targeted to a memory location equivalent to a memory location to which one of the at least one read requests is targeted: 
+<claim-text>issuing at least one write request to send the second data associated with the shared memory location to system memory. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, further comprising: 
+<claim-text>if is determined that none of the second data is targeted to a memory location in system memory equivalent to a memory location to which one of the at least one read request is targeted: 
+<claim-text>allocating entries in the local cache for the first data; and </claim-text>
+<claim-text>if the second data has been updated, evicting the second data to the write back buffer. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight> The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein a number of the at least one read request consecutively issued is equivalent to a number of second data entries stored by the write back buffer. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, further comprising: 
+<claim-text>if a local cache is not full: 
+<claim-text>preparing to receive first data from a system memory in accordance with at least one read request by queueing the at least one read request in the local cache; and </claim-text>
+<claim-text>allocating entries in the local cache for the first data. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, further comprising: 
+<claim-text>during issuance of the at least one read request, storing the at least one write request in a cycle arbitration control, the cycle arbitration control scheduling placement of read and write requests onto the system memory bus, the cycle arbitration control including a write FIFO buffer. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00005">claim 5</dependent-claim-reference>, further comprising: 
+<claim-text>before issuance of the at least one read request, determining whether a read request cycle should be issued in accordance with a local cache mode; </claim-text>
+<claim-text>determining if the write back buffer is full; and </claim-text>
+<claim-text>if it is determined that the write back buffer is full, issuing the second data in the write back buffer to system memory until the write back buffer clears. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00009">claim 9</dependent-claim-reference>, further comprising: 
+<claim-text>if the local cache mode is mode 1, sending the at least one read request to system memory before determining whether the write back buffer is full. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. A computer system coupled to system memory comprising: 
+<claim-text>a 3D pipeline; </claim-text>
+<claim-text>a local cache coupled to the 3D pipeline, the local cache receiving instructions from the 3D pipeline to prepare to receive first data from the system memory in accordance with at least one read request, the local cache evicting, if a local cache is full, previously stored second data to accommodate the first data; </claim-text>
+<claim-text>a write back buffer coupled to the local cache, the write back buffer receiving and storing the second data evicted from the local cache; and </claim-text>
+<claim-text>a system memory bus coupled to the local cache and the write back buffer; </claim-text>
+<claim-text>wherein the local cache issues at least one read request to the system memory via the system memory bus and after issuance of the at least one read request, the local cache issues at least one write request to send the second data in the write back buffer to the system memory via the system memory bus. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 11</dependent-claim-reference>, further comprising: 
+<claim-text>a cycle arbitration control coupled to the local cache, the write back buffer and the system memory bus, the cycle arbitration control intercepting all at least one read requests and at least one write requests issued by the local cache targeted to the system memory, the cycle arbitration control including a read request FIFO buffer and a write request FIFO buffer; </claim-text>
+<claim-text>wherein the cycle arbitration control issues each of the at least one read request consecutively to the system memory via the system memory bus before issuance of any of the at least one write request, and after issuance of the at least one read request, the cycle arbitration control issues each of the at least one write request consecutively to the system memory via the system memory bus before issuance of further read requests. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein the local cache selects a portion of the second data for eviction and determines whether the portion of second data is still in use, and if it is determined that the portion of second data is still in use, the local cache stalls issuance of the portion of second data and selects a further portion of the second data for eviction. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference>, wherein the cycle arbitration control determines, by monitoring the write back buffer, if any of the second data in the write back buffer is targeted to a memory location in the system memory equivalent to a memory location to which one of the at least one read requests is targeted, and if it is determined that any of the second data is targeted to a memory location equivalent to a memory location to which one of the at least one read requests is targeted, the cycle arbitration control causes issuance of at least one write request to send the second data associated with the shared memory location to system memory. </claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 14</dependent-claim-reference>, wherein if the cycle arbitration control determines that none of the second data is targeted to a memory location in system memory equivalent to a memory location to which one of the at least one read request is targeted, the local cache allocates entries for the first data, and if the second data has been updated, the local cache evicts the second data to the write back buffer. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 12</dependent-claim-reference>, wherein a number of the at least one read request consecutively issued by the cycle arbitration control is equivalent to a number of second data entries stored by the write back buffer. </claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference>, wherein before issuance of the at least one read request, the cycle arbitration control determines whether a read request cycle should be issued in accordance with a local cache mode, the cycle arbitration control also determining if the write back buffer is full, and if it is determined that the write back buffer is full, the cycle arbitration control instructing the write back buffer to issue the second data to system memory until the write back buffer clears. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The computer system of <dependent-claim-reference depends_on="CLM-00011">claim 17</dependent-claim-reference>, wherein if the local cache mode is mode 1, the cycle arbitration control sends the at least one read request to system memory before determining whether the write back buffer is full. </claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. An article comprising a computer-readable medium which stores computer-executable instructions for causing a computer system coupled to a system memory to: 
+<claim-text>allocate memory capacity for a write back buffer; </claim-text>
+<claim-text>prepare to receive first data from a system memory in accordance with at least one read request by evicting, if a local cache is full, previously stored second data to a write back buffer; </claim-text>
+<claim-text>issue the at least one read request to the system memory via a system memory bus; and </claim-text>
+<claim-text>after issuance of the at least one read request, issue at least one write request to send the second data in the write back buffer to the system memory via the system memory bus. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference>, further causing a computer system coupled to system memory to: 
+<claim-text>issue each of the at least one read request consecutively before issuance of any of the at least one write request; and </claim-text>
+<claim-text>after issuance of the at least one read request, issue each of the at least one write request consecutively before issuance of further read requests. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, further causing a computer system coupled to system memory to: 
+<claim-text>select a portion of the second data for eviction; </claim-text>
+<claim-text>determine if the portion of the second data is still in use; and </claim-text>
+<claim-text>if it is determined that the portion of the second data is still in use: 
+<claim-text>stall issuance of the portion of the second data; and </claim-text>
+<claim-text>select a further portion of the second data for eviction. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 21</dependent-claim-reference>, further causing a computer system coupled to system memory to: 
+<claim-text>determine if any of the second data in the write back buffer is targeted to a memory location in system memory equivalent to a memory location to which one of the at least one read requests is targeted; and </claim-text>
+<claim-text>if it is determined that any of the second data is targeted to a memory location equivalent to a memory location to which one of the at least one read requests is targeted: 
+<claim-text>issue at least one write request to send the second data associated with the shared memory location to system memory. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference>, further causing a computer system coupled to system memory to: 
+<claim-text>if is determined that none of the second data is targeted to a memory location in system memory equivalent to a memory location to which one of the at least one read request is targeted: 
+<claim-text>allocate entries in the local cache for the first data; and </claim-text>
+<claim-text>if the second data has been updated, evict the second data to the write back buffer. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 20</dependent-claim-reference>, wherein a number of the at least one read request consecutively issued is equivalent to a number of second data entries stored by the write back buffer. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 23</dependent-claim-reference>, further causing a computer system coupled to system memory to: 
+<claim-text>before issuance of the at least one read request, determine whether a read request cycle should be issued in accordance with a local cache mode; </claim-text>
+<claim-text>determine if the write back buffer is full; and </claim-text>
+<claim-text>if it is determined that the write back buffer is full, issue the second data in the write back buffer to system memory until the write back buffer clears. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The article of <dependent-claim-reference depends_on="CLM-00022">claim 26</dependent-claim-reference>, further causing a computer system coupled to system memory to: 
+<claim-text>if the local cache mode is mode 1, send the at least one read request to system memory before determining whether the write back buffer is full. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. A method of optimizing system memory bus bandwidth comprising: 
+<claim-text>separately grouping read requests from write requests in an issuance sequence by use of a write back buffer, the write back buffer temporarily to store data evicted from a local cache; and </claim-text>
+<claim-text>issuing separate groups of at least one read request and at least one write request in accordance with a local cache mode; </claim-text>
+<claim-text>wherein: 
+<claim-text>in a first local cache mode, equal numbers of groups of at least one read request and groups of at least one write request are issued to system memory, </claim-text>
+<claim-text>in a second local cache mode, one or more groups of at least one write request are issued to system memory, and </claim-text>
+<claim-text>in an alternating mode, for each group of at least one read request that is issued to system memory, one or more groups of at least one write request are issued to system memory. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00022">claim 27</dependent-claim-reference>, wherein selected data is evicted to the write back buffer by the local cache if the following are true: 
+<claim-text>(a) the local cache is full; </claim-text>
+<claim-text>(b) the selected data is not being used; and </claim-text>
+<claim-text>(c) the selected data has been updated.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005234A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005234A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005234A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005234A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005234A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005234A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

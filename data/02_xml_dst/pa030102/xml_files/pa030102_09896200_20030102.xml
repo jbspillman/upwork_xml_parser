@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005307A1-20030102-D00000.TIF SYSTEM "US20030005307A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005307A1-20030102-D00001.TIF SYSTEM "US20030005307A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005307A1-20030102-D00002.TIF SYSTEM "US20030005307A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005307A1-20030102-D00003.TIF SYSTEM "US20030005307A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005307A1-20030102-D00004.TIF SYSTEM "US20030005307A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005307A1-20030102-D00005.TIF SYSTEM "US20030005307A1-20030102-D00005.TIF" NDATA TIF>
+<!ENTITY US20030005307A1-20030102-D00006.TIF SYSTEM "US20030005307A1-20030102-D00006.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005307</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09896200</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010630</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>H04L009/00</ipc>
+</classification-ipc-primary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>713</class>
+<subclass>182000</subclass>
+</uspc>
+</classification-us-primary>
+</classification-us>
+<title-of-invention>Apparatus for wildcarded security policy and method therefor</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Timothy</given-name>
+<middle-name>Simon</middle-name>
+<family-name>Bartley</family-name>
+</name>
+<residence>
+<residence-non-us>
+<city>WestBurleigh</city>
+<country-code>AU</country-code>
+</residence-non-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+</inventors>
+<assignee>
+<organization-name>International Business Machines Corporation</organization-name>
+<address>
+<city>Armonk</city>
+<state>NY</state>
+</address>
+<assignee-type>03</assignee-type>
+</assignee>
+<correspondence-address>
+<name-1>Barry S. Newberger</name-1>
+<name-2></name-2>
+<address>
+<address-1>5400 Renaissance Tower</address-1>
+<address-2>1201 Elm Street</address-2>
+<city>Dallas</city>
+<state>TX</state>
+<postalcode>75270</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">An apparatus and method for wildcarded security policy are implemented. These include associating wildcarded resource identifiers with a corresponding security policy. A resource identifier received in an access request is matched to one of a list of said wildcarded resource identifiers, Matching is determined in accordance with a predetermined set of precedence values, each precedence value of the set corresponding to a predetermined wildcard element. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">TECHNICAL FIELD </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> The present invention relates in general to data processing systems, and in particular to security policies associated with protected resources in a data processing system in which regular expressions are used to represent the name of a set of protected resources and determining which policy to apply to an actual resource where the descriptor of the actual resources matches multiple regular expressions. </paragraph>
+</section>
+<section>
+<heading lvl="1">BACKGROUND INFORMATION </heading>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> Modem data processing systems, particularly in a multi-user environment, employ access control measures to or otherwise manage access to resources available to the users of the system. These control measures may manage data access, event routing, and task authorization, for example. The set of rules that determine which users, or possibly groups of users, can access a particular resource with respect to these activities may often be referred to as &ldquo;policies.&rdquo; For example, referring to <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, there is shown therein an illustrative a multiuser system <highlight><bold>100</bold></highlight> in which a plurality of clients <highlight><bold>102</bold></highlight> are connected to a server <highlight><bold>106</bold></highlight> via network <highlight><bold>110</bold></highlight>. Network <highlight><bold>110</bold></highlight> may be a local area network (LAN), wide area network (WAN) or the Internet, for example. It would be appreciated that the principles of the present invention to be discussed hereinbelow are not predicated on a particular network architecture. Server <highlight><bold>106</bold></highlight> may provide, for example, application services, exemplified by database management system (DBMS)<highlight><bold>108</bold></highlight> and database (DB) <highlight><bold>115</bold></highlight> to clients <highlight><bold>102</bold></highlight>, and data access, exemplified by FTP server <highlight><bold>117</bold></highlight> and file storage <highlight><bold>119</bold></highlight>. (An artisan of ordinary skill would recognize that an FTP server is an application that enables users to download or upload files from a specified directory or group of directories using the F(ile) T(ransfer) P(rotocol), an Internet standard for the exchange of files.) </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> Typically, a policy may be associated with each resource identifier. For example, a file on a FTP server may be a resource that is available to users in accordance with a particular policy. In other words, the file may be accessible only to a limited class of users, such as, users who are registered licensees of a software product, for example. Thus, a file with a filename filename 1 in a directory named foo and a subdirectory of foo named bar would be identified by the pathname foo&bsol;bar&bsol;filename 1. In general, subdirectory bar may contain n files say filename 1, filename 2, . . . , filename n. Associated with each of these files may be a policy for managing user access to these files. However, subsets of files filename 1, filename 2, . . . , filename n may have the same policy. Similarly, with respect to system resources, generally, subsets, or classes, of resources, each of which is uniquely identified, may never-the-less, have the same policy associated therewith. Nevertheless, each resource is associated with a policy even though the policies may be the same for a multiplicity of the resources. Thus, there is a need in the art for a mechanism by which a multiplicity, or set, of resources in a data processing system may be associated with a common policy. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The aforementioned needs are addressed by the present invention. Accordingly there is provided, A wildcarded security policy method. The method includes associating wildcarded resource identifiers with a corresponding security policy. A resource identifier received in an access request is matched to one of a list of said wildcarded resource identifiers, Matching is determined in accordance with a predetermined set of precedence values, each precedence value of the set corresponding to a predetermined wildcard element. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> The foregoing has outlined rather broadly the features and technical advantages of the present invention in order that the detailed description of the invention that follows may be better understood. Additional features and advantages of the invention will be described hereinafter which form the subject of the claims of the invention. </paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> For a more complete understanding of the present invention, and the advantages thereof, reference is now made to the following descriptions taken in conjunction with the accompanying drawings, in which: </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates, in block diagram form, a simplimulti-user environment which may be used in conjunction with the present invention; </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> illustrates, in block diagram form, a data processing system in accordance with an embodiment of the present invention; </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrates, in flow chart form, a methodology in accordance with an embodiment of the present invention; </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrates, in further detail, a portion of the methodology of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>; </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrates, in flow chart form, a sorting methodology which may be used in conjunction with the methodology of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>; and </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 6</cross-reference> illustrates a precedence table which may be used in conjunction with the methodology of <cross-reference target="DRAWINGS">FIG. 5</cross-reference>. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION </heading>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> In the following description, numerous specific details are set forth to provide a thorough understanding of the present invention. For example, file, and other descriptors, may be identified by particular character strings, however, it would be recognized by those of ordinary skill in the art that the present invention may be practiced without such specific details. In other instances, well-known circuits have been shown in block diagram form in order not to obscure the present invention in unnecessary detail. </paragraph>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> Refer now to <cross-reference target="DRAWINGS">FIG. 2</cross-reference> which illustrates a Server <highlight><bold>106</bold></highlight> in accordance with the principles of the present invention, in further detail. Server <highlight><bold>106</bold></highlight> may include a central processing unit (CPU) <highlight><bold>210</bold></highlight> coupled to various other components by system bus <highlight><bold>212</bold></highlight>. An operating system <highlight><bold>240</bold></highlight> runs on CPU <highlight><bold>210</bold></highlight> and provides control and coordinates the function of the various components in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>. Application <highlight><bold>250</bold></highlight> includes widcarded policies in accordance with the principles of the present invention and which will be described further in conjunction further with FIGS. <highlight><bold>3</bold></highlight>-<highlight><bold>6</bold></highlight> hereinbelow. Application <highlight><bold>250</bold></highlight> runs in conjunction with operating system <highlight><bold>240</bold></highlight>, which coordinates the internal functions of Server <highlight><bold>106</bold></highlight>, as would be understood by those of ordinary skill in the art. Additionally, read only memory (ROM) <highlight><bold>216</bold></highlight> is coupled to system bus <highlight><bold>212</bold></highlight> and includes a basic input/output system (BIOS) that control certain basic functions of server <highlight><bold>106</bold></highlight>. Random access memory (RAM) <highlight><bold>214</bold></highlight>, disk adapter <highlight><bold>218</bold></highlight> and communications adapter <highlight><bold>234</bold></highlight> are also coupled to system bus <highlight><bold>212</bold></highlight>. It should be noted that software components including operating system <highlight><bold>240</bold></highlight> and application <highlight><bold>250</bold></highlight> are loaded into RAM <highlight><bold>214</bold></highlight> which is the computer systems main memory. Disk adapter <highlight><bold>218</bold></highlight> maybe a Universal Serial Bus (USB) or other adapter that communicates with disk units <highlight><bold>220</bold></highlight>. It is noted that the program of the present invention may reside in disk unit <highlight><bold>220</bold></highlight> and loaded into RAM <highlight><bold>214</bold></highlight> by operating system <highlight><bold>240</bold></highlight>, as required. Communications adapter <highlight><bold>234</bold></highlight> interconnect bus <highlight><bold>212</bold></highlight> with a network, such as network <highlight><bold>110</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> Implementations of the invention include implementations as a computer system programmed to execute the method or methods described herein, and as a computer program product. According to the computer system implementations, sets of instructions for executing the method or methods are resident in the random access memory <highlight><bold>214</bold></highlight> of one or more computer systems configured generally as described above. And to require by Server <highlight><bold>106</bold></highlight>, the set of instructions may be stored as a computer program product in another computer memory, for example in disk drive <highlight><bold>220</bold></highlight> (which may include a removable memory such as an optical disk or floppy disk for eventual use in disk drive <highlight><bold>220</bold></highlight>). Furthermore, the computer program product can also be stored in another computer and transmitted when desired to the work station by a network or by an external network such as the Internet. One skilled in the art would appreciate that the physical storage of the sets of instructions physically changes the medium upon which it is stored so that the medium carries computerable information. The change may be electrical, magnetic, chemical or some other physical change. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> Refer now to <cross-reference target="DRAWINGS">FIG. 3</cross-reference> illustrating a flow chart of methodology <highlight><bold>300</bold></highlight> for access control using policies associated with sets of resources. Typically, resources are identified by a name, which constitutes an alphanumeric character stream. In an embodiment of the present invention, the association of a set of resources having a common security policy may be made by the use of an identifier that constitutes alphanumeric characters as well as special characters, in particular, regular expressions. In an embodiment of the present invention, regular expressions may be a pattern or stream as used in the Unix operating system (OS) specification. (Persons of ordinary skill in the art would recognize Unix as a multi-tasking operating system available on a wide range of platforms.) Identifiers including regular expressions may be referred to herein as &ldquo;wildcarded&rdquo; resource identifiers, or simply, wildcarded identifiers. </paragraph>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> In step <highlight><bold>302</bold></highlight>, policies corresponding to sets of resources are associated with the corresponding wildcarded resource identifiers. In step <highlight><bold>304</bold></highlight>, an access request is received from, for example a client such as one of clients <highlight><bold>102</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 1</cross-reference>. The access request may be received by a server, for example Server <highlight><bold>106</bold></highlight>, including software which performs one or more of the steps of methodology <highlight><bold>300</bold></highlight>. In the access request received in <highlight><bold>304</bold></highlight>, is a resource identifier. In steps <highlight><bold>306</bold></highlight>-<highlight><bold>316</bold></highlight>, methodology <highlight><bold>300</bold></highlight> determines a grant or denial of access in accordance with the policies based on a match between the resource identifier received in the request and the wildcarded resource identifiers associated with the policies in accordance with step <highlight><bold>302</bold></highlight>. </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> For each wildcarded policy, that is a policy associated with a wildcarded identifier step <highlight><bold>306</bold></highlight>, in step <highlight><bold>308</bold></highlight>, the resource identifier received in the request and the wildcarded identifiers are matched. Matching of resource identifiers with wildcarded identifiers will be discussed further in conjunction with <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> In step <highlight><bold>310</bold></highlight>, the corresponding policy is retrieved, and in step <highlight><bold>312</bold></highlight> a determination is made, based on the policy, to grant or deny access. The request received in step <highlight><bold>304</bold></highlight> includes an identifier for the user making the request, and the user identifier may be compared with the retrieved policy. If the user making the request is authorized in accordance with the policy to make the request, the request is responded to in step <highlight><bold>314</bold></highlight>. Otherwise, the user making the request is unauthorized, and access is denied, step <highlight><bold>316</bold></highlight>. </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> Refer now to <cross-reference target="DRAWINGS">FIG. 4</cross-reference> illustrating step <highlight><bold>308</bold></highlight> of <cross-reference target="DRAWINGS">FIG. 3</cross-reference> in further detail. In step <highlight><bold>402</bold></highlight>, a direction for matching is selected. Note that the specificity for matching a wildcarded identifier and the received resource identifier depends on the type of resource, and its concomitant identifier format. For example, a pathname to a file resource is measured from right to left. Thus, a wildcarded identifier for a file, that is, a wildcarded pathname such as /File/usr/local/test/foo* is more specific than a wildcarded pathname /File/usr/local/test/f*. Conversely, a wildcarded identifier for an Internet host, that is a wildcarded hostname, have specificity measured from left to right. Thus, for example, a wildcarded hostname *.ibm.com is considered more specific than *.com, and a wildcarded hostnamefoo.*.ibm.com may be taken to be more specific than a wildcarded hostname foo.bar.*.com. </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> In step <highlight><bold>404</bold></highlight>, a loop over wildcarded identifiers for the particular resource being accessed is performed. The resource identifier in the request received in step <highlight><bold>304</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, is matched against each wildcarded identifier in a list, ordered by a predetermined set of precedence rules. (Ordering of wildcarded identifiers will be discussed in conjunction with <cross-reference target="DRAWINGS">FIG. 5</cross-reference> herein below.) In step <highlight><bold>404</bold></highlight>, while a match has not been obtained, the identifier (ID) of the resource requested is compared with each regular expression in the ordered list. Note that, as would be recognized by those of ordinary skill in the art, that matching algorithms for matching regular expressions are known in the art, particularly, with respect to utilities available in the Unix OS. The ordered list of wildcarded identifiers maybe ordered in accordance with a predetermined precedence, as will be discussed hereinbelow, whereby conflicts between matches between more than one wildcarded identifier and the requested resource identifier are resolved. In matching against the ordered list of wildcarded identifiers in which the list is ordered from highest to lowest precedence, the policy associated with the wildcarded identifier having the highest precedence is returned with the first match found. When a match is found, step <highlight><bold>404</bold></highlight> proceeds by the &ldquo;False&rdquo; branch to step <highlight><bold>310</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> Refer now to <cross-reference target="DRAWINGS">FIG. 5</cross-reference> illustrating methodology <highlight><bold>500</bold></highlight> for generating an ordered list of wildcarded identifiers. In step <highlight><bold>502</bold></highlight>, a wildcarded identifier list is generated. In order list of wildcarded identifiers may be generated in accordance with the principles of the present invention by steps <highlight><bold>504</bold></highlight>-<highlight><bold>518</bold></highlight> in conjunction with a sorting routine such as are known in the data processing art. Once such routine is known as a Heapsort. See e.g. WILLIAM H. PRESS ET AL., NUMERICAL RECIPES 229-232 (1986). Other sorting routines, known in the art, which may be used are insertion techniques. See id. at 227-229. In each of these, a pairwise ordering of wildcarded indentifiers are relatively ordered, thus, in step <highlight><bold>504</bold></highlight>, a pair of wildcarded identifiers to be relatively ordered is selected in accordance with the particular sorting algorithm being used. The relative ordering is then established in accordance with steps <highlight><bold>506</bold></highlight>-<highlight><bold>514</bold></highlight>. </paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In step <highlight><bold>506</bold></highlight>, the first element in each identifier of the pair selected in step <highlight><bold>504</bold></highlight> are selected. The first element of each identifier of the pair is selected in accordance with the direction for matching selected in step <highlight><bold>402</bold></highlight>, <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. In step <highlight><bold>508</bold></highlight>, it is determined if the elements selected have the same precedence. The precedence is determined in accordance with a precedence table. A precedence table which may be used in an embodiment of the present invention as shown in <cross-reference target="DRAWINGS">FIG. 6</cross-reference>. Wildcard elements are listed in decreasing precedence in column <highlight><bold>604</bold></highlight> of table <highlight><bold>600</bold></highlight>. (For the purpose herein, a &ldquo;character range&rdquo; refers to some finite set of characters. When matching a resource string if a character, when being matched against a corresponding character range element in the wildcarded identifier, a match is said to occur if the character is the resource string is contained in the set of characters represented by the character range. Additionally, any wildcarded identifier element maybe marked as repeating in which case the element will match one or more occurrences of matching characters in the resource identifier.) A precedence value is associated with each type of wildcard element, as shown in column <highlight><bold>602</bold></highlight> of table <highlight><bold>600</bold></highlight>. Note that lower numerical precedence values are associated with higher precedence, and conversely higher numerical precedence values are associated with elements having lower precedence in the embodiment of the present invention corresponding to table <highlight><bold>600</bold></highlight>. However, an embodiment of the present invention in which higher numerical precedence are associated with wildcard elements having higher precedence could be used, and such embodiments which fall within the spirit and scope of the present invention. (These alternative embodiments would correspond to, for example, in the ordering algorithm being used to correspond with a binary relationship &ldquo;greater than&rdquo; between pairwise elements, and a binary relationship &ldquo;less than&rdquo; between element pairs, respectively.) Returning to <cross-reference target="DRAWINGS">FIG. 5</cross-reference>, if, in step <highlight><bold>608</bold></highlight>, the element pairs being compared have the same precedence, that in step <highlight><bold>610</bold></highlight> the next elements in each identifier of the pair are selected, step <highlight><bold>510</bold></highlight> and compared by returning to step <highlight><bold>508</bold></highlight>. In other words, process <highlight><bold>500</bold></highlight> loop through elements of each identifier pair until a mismatch in precedence is found. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> On finding a mismatch, one element of the pair necessarily has a higher precedence than the other, and in step <highlight><bold>512</bold></highlight> are ordered in accordance with their precedence. In step <highlight><bold>514</bold></highlight> the result is returned to the sorting procedure being used, for example, Heapsort, as discussed hereinabove. Process <highlight><bold>500</bold></highlight> then loops in accordance with the sorting procedure being used, by returning to step <highlight><bold>504</bold></highlight>, until in step <highlight><bold>516</bold></highlight> the list is sorted. In step <highlight><bold>518</bold></highlight>, process <highlight><bold>500</bold></highlight> terminates on completion of the sort. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> The sorted list of wildcarded identifiers may then be used in conjunction with the methodology of <cross-reference target="DRAWINGS">FIG. 3</cross-reference>. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> Although the present invention and its advantages have been described in detail, it should be understood that various changes, substitutions and alterations can be made herein without departing from the spirit and scope of the invention as defined by the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<heading lvl="1">What is claimed is: </heading>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A security policy method comprising the steps of: 
+<claim-text>associating wildcarded resource identifiers with a corresponding security policy; and </claim-text>
+<claim-text>matching a resource identifier received in an access request to one of a list of said wildcarded resource identifiers, wherein said matching is determined in accordance with a predetermined set of precedence values, each precedence value of said set corresponding to a predetermined wildcard element. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein each predetermined wildcard element comprises a regular expression element. </claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> further comprising the step of selecting, in response to a security policy associated with a wildcarded identifier from said matching step, one of a grant of access to a requested resource corresponding to said resource identifier and a denial of access to said requested resource. </claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said list of said wildcarded resource identifiers comprises an ordered list of wilddcarded resource identifiers, said ordered list being ordered in accordance with said predetermined set of precedence values. </claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> wherein said step of matching said resource identifier received in said access request comprises the steps of: 
+<claim-text>sequentially comparing said resource identifier received in said access request with each wildcarded resource identifier in said ordered list; </claim-text>
+<claim-text>in response to a comparison, terminating said comparing step, returning a policy associated with a wildcarded identifier from said comparing step. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference> further comprising the step of ordering a list of wildcarded resource identifiers to generate said list of ordered wildcarded resource identifiers. </claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00006">claim 6</dependent-claim-reference> wherein said step of ordering a list of wildcarded resource identifiers includes the steps of: 
+<claim-text>selecting a pair of wildcarded identifiers from a list in accordance with a predetermined sorting process; </claim-text>
+<claim-text>sequentially selecting elements in each identifier of said pair of wildcarded identifiers; </claim-text>
+<claim-text>comparing a first precedence value corresponding to a first one of a selected element of said pair of wildcarded identifiers and a second precedence value corresponding to a second one of a selected element of said pair of wildcarded identifiers, wherein said first precedence value and said second precedence value each comprise a predetermined value from said set of precedence values; and </claim-text>
+<claim-text>if said first precedence value and said second precedence value corresponding are not equal, ordering said pair of wildcarded identifiers according to said first precedence value and said second precedence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00007">claim 7</dependent-claim-reference> further comprising the step of returning said pair of wildcarded identifiers from said ordering step to said preselected sorting process. </claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference> wherein said set of precedence values comprises: 
+<claim-text>a first precedence value having a highest precedence corresponding to an exact character, </claim-text>
+<claim-text>a second precedence value having a next lower precedence from said first precedence value, corresponding to a character range; </claim-text>
+<claim-text>a third precedence value, having a next lower precedence from said second precedence value, corresponding to any character; </claim-text>
+<claim-text>a fourth precedence value, having a next lower precedence from said third precedence value, corresponding to a repeating exact character; </claim-text>
+<claim-text>a fifth precedence value, having a next lower precedence from said fourth precedence value, corresponding to a repeating character range; and </claim-text>
+<claim-text>a sixth precedence value, having a next lower precedence from said fifth precedence value, corresponding to any character string, and wherein said sixth precedence value comprises a lowest precedence value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00010">
+<claim-text><highlight><bold>10</bold></highlight>. A security policy system comprising: 
+<claim-text>circuitry operable for associating wildcarded resource identifiers with a corresponding security policy; and </claim-text>
+<claim-text>circuitry operable for associating wildcarded resource identifiers with a corresponding security policy matching a resource identifier received in an access request to one of a list of said wildcarded resource identifiers, wherein said matching is determined in accordance with a predetermined set of precedence values, each precedence value of said set corresponding to a predetermined wildcard element. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00011">
+<claim-text><highlight><bold>11</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein each predetermined wildcard element comprises a regular expression element. </claim-text>
+</claim>
+<claim id="CLM-00012">
+<claim-text><highlight><bold>12</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> further comprising circuitry operable for selecting, in response to a security policy associated with a wildcarded identifier from said matching step, one of a grant of access to a requested resource corresponding to said resource identifier and a denial of access to said requested resource. </claim-text>
+</claim>
+<claim id="CLM-00013">
+<claim-text><highlight><bold>13</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein said list of said wildcarded resource identifiers comprises an ordered list of wildedcarded resource identifiers, said ordered list being ordered in accordance with said predetermined set of precedence values. </claim-text>
+</claim>
+<claim id="CLM-00014">
+<claim-text><highlight><bold>14</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> wherein said circuitry operable for matching said resource identifier received in said access request comprises: 
+<claim-text>circuitry operable for sequentially comparing said resource identifier received in said access request with each wildcarded resource identifier in said ordered list; </claim-text>
+<claim-text>circuitry operable for, in response to a comparison, terminating said comparing step, returning a policy associated with a wildcarded identifier from said comparing step. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00015">
+<claim-text><highlight><bold>15</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 13</dependent-claim-reference> further comprising circuitry operable for ordering a list of wildcarded resource identifiers to generate said list of ordered wildcarded resource identifiers. </claim-text>
+</claim>
+<claim id="CLM-00016">
+<claim-text><highlight><bold>16</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 15</dependent-claim-reference> wherein said step of ordering a list of wildcarded resource identifiers includes: 
+<claim-text>circuitry operable for selecting a pair of wildcarded identifiers from a list in accordance with a predetermined sorting process; </claim-text>
+<claim-text>circuitry operable for sequentially selecting elements in each identifier of said pair of wildcarded identifiers; </claim-text>
+<claim-text>circuitry operable for comparing a first precedence value corresponding to a first one of a selected element of said pair of wildcarded identifiers and a second precedence value corresponding to a second one of a selected element of said pair of wildcarded identifiers, wherein said first precedence value and said second precedence value each comprise a predetermined value from said set of precedence values; and </claim-text>
+<claim-text>circuitry operable for, if said first precedence value and said second precedence value corresponding are not equal, ordering said pair of wildcarded identifiers according to said first precedence value and said second precedence value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00017">
+<claim-text><highlight><bold>17</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 16</dependent-claim-reference> further comprising the cicruitry operable for returning said pair of wildcarded identifiers from said ordering step to said preselected sorting process. </claim-text>
+</claim>
+<claim id="CLM-00018">
+<claim-text><highlight><bold>18</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00011">claim 10</dependent-claim-reference> wherein said set of precedence values comprises: 
+<claim-text>a first precedence value having a highest precedence corresponding to an exact character, a second precedence value have a next lower precedence from said first precedence value, corresponding to a character range; </claim-text>
+<claim-text>a third precedence value, having a next lower precedence from said second precedence value, corresponding to any character; </claim-text>
+<claim-text>a fourth precedence value, having a next lower precedence from said third precedence value, corresponding to a repeating exact character; </claim-text>
+<claim-text>a fifth precedence value, having a next lower precedence from said fourth precedence value, corresponding to a repeating character range; and </claim-text>
+<claim-text>a sixth precedence value, having a next lower precedence from said fifth precedence value, corresponding to any character string, and wherein said sixth precedence value comprises a lowest precedence value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00019">
+<claim-text><highlight><bold>19</bold></highlight>. A computer program product in a machine readable medium of expression including programming for wildcarding security policies comprising programming instructions for performing the steps of: 
+<claim-text>associating wildcarded resource identifiers with a corresponding security policy; and </claim-text>
+<claim-text>matching a resource identifier received in an access request to one of a list of said wildcarded resource identifiers, wherein said matching is determined in accordance with a predetermined set of precedence values, each precedence value of said set corresponding to a predetermined wildcard element. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00020">
+<claim-text><highlight><bold>20</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein each predetermined wildcard element comprises a regular expression element. </claim-text>
+</claim>
+<claim id="CLM-00021">
+<claim-text><highlight><bold>21</bold></highlight>. The method of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> further comprising programming instructions for performing the step of selecting, in response to a security policy associated with a wildcarded identifier from said matching step, one of a grant of access to a requested resource corresponding to said resource identifier and a denial of access to said requested resource. </claim-text>
+</claim>
+<claim id="CLM-00022">
+<claim-text><highlight><bold>22</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein said list of said wildcarded resource identifiers comprises an ordered list of wildedcarded resource identifiers, said ordered list being ordered in accordance with said predetermined set of precedence values. </claim-text>
+</claim>
+<claim id="CLM-00023">
+<claim-text><highlight><bold>23</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> wherein said program of instructions for performing the step of matching said resource identifier received in said access request comprises a program of instructions for performing the steps of: 
+<claim-text>sequentially comparing said resource identifier received in said access request with each wildcarded resource identifier in said ordered list; </claim-text>
+<claim-text>in response to a comparison, terminating said comparing step, returning a policy associated with a wildcarded identifier from said comparing step. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00024">
+<claim-text><highlight><bold>24</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 22</dependent-claim-reference> further comprising programming instructions for performing the step of ordering a list of wildcarded resource identifiers to generate said list of ordered wildcarded resource identifiers. </claim-text>
+</claim>
+<claim id="CLM-00025">
+<claim-text><highlight><bold>25</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 24</dependent-claim-reference> wherein said programming instructions for performing the step of ordering a list of wildcarded resource identifiers includes programming instructions for performing the steps of: 
+<claim-text>selecting a pair of wildcarded identifiers from a list in accordance with a predetermined sorting process; </claim-text>
+<claim-text>sequentially selecting elements in each identifier of said pair of wildcarded identifiers; </claim-text>
+<claim-text>comparing a first precedence value corresponding to a first one of a selected element of said pair of wildcarded identifiers and a second precedence value corresponding to a second one of a selected element of said pair of wildcarded identifiers, wherein said first precedence value and said second precedence value each comprise a predetermined value from said set of precedence values; and </claim-text>
+<claim-text>if said first precedence value and said second precedence value corresponding are not equal, ordering said pair of wildcarded identifiers according to said first precedence value and said second precedence. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00026">
+<claim-text><highlight><bold>26</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00022">claim 25</dependent-claim-reference> further comprising programming instructions for performing the step of returning said pair of wildcarded identifiers from said ordering step to said preselected sorting process. </claim-text>
+</claim>
+<claim id="CLM-00027">
+<claim-text><highlight><bold>27</bold></highlight>. The program product of <dependent-claim-reference depends_on="CLM-00011">claim 19</dependent-claim-reference> wherein said set of precedence values comprises: 
+<claim-text>a first precedence value having a highest precedence corresponding to an exact character, </claim-text>
+<claim-text>a second precedence value have a next lower precedence from said first precedence value, corresponding to a character range; </claim-text>
+<claim-text>a third precedence value, having a next lower precedence from said second precedence value, corresponding to any character; </claim-text>
+<claim-text>a fourth precedence value, having a next lower precedence from said third precedence value, corresponding to a repeating exact character; </claim-text>
+<claim-text>a fifth precedence value, having a next lower precedence from said fourth precedence value, corresponding to a repeating character range; and </claim-text>
+<claim-text>a sixth precedence value, having a next lower precedence from said fifth precedence value, corresponding to any character string, and wherein said sixth precedence value comprises a lowest precedence value. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00028">
+<claim-text><highlight><bold>28</bold></highlight>. A security policy method comprising the steps of: 
+<claim-text>associating wildcarded resource identifiers with a corresponding security policy; and </claim-text>
+<claim-text>matching a resource identifier received in an access request to one of a list of said wildcarded resource identifiers, wherein said matching is determined in accordance with a predetermined set of precedence values, each precedence value of said set corresponding to a predetermined wildcard element, wherein each predetermined wildcard element comprises a regular expression element; </claim-text>
+<claim-text>selecting, in response to a security policy associated with a wildcarded identifier from said matching step, one of a grant of access to a requested resource corresponding to said resource identifier and a denial of access to said requested resource, and wherein said list of said wildcarded resource identifiers comprises an ordered list of wildedcarded resource identifiers, said ordered list being ordered in accordance with said predetermined set of precedence values.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005307A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005307A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005307A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005307A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005307A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005307A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00006">
+<image id="EMI-D00006" file="US20030005307A1-20030102-D00006.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>

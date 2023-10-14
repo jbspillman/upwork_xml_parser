@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE patent-application-publication SYSTEM "pap-v16-2002-01-01.dtd" [
+<!ENTITY US20030005116A1-20030102-D00000.TIF SYSTEM "US20030005116A1-20030102-D00000.TIF" NDATA TIF>
+<!ENTITY US20030005116A1-20030102-D00001.TIF SYSTEM "US20030005116A1-20030102-D00001.TIF" NDATA TIF>
+<!ENTITY US20030005116A1-20030102-D00002.TIF SYSTEM "US20030005116A1-20030102-D00002.TIF" NDATA TIF>
+<!ENTITY US20030005116A1-20030102-D00003.TIF SYSTEM "US20030005116A1-20030102-D00003.TIF" NDATA TIF>
+<!ENTITY US20030005116A1-20030102-D00004.TIF SYSTEM "US20030005116A1-20030102-D00004.TIF" NDATA TIF>
+<!ENTITY US20030005116A1-20030102-D00005.TIF SYSTEM "US20030005116A1-20030102-D00005.TIF" NDATA TIF>
+]>
+<patent-application-publication>
+<subdoc-bibliographic-information>
+<document-id>
+<doc-number>20030005116</doc-number>
+<kind-code>A1</kind-code>
+<document-date>20030102</document-date>
+</document-id>
+<publication-filing-type>new</publication-filing-type>
+<domestic-filing-data>
+<application-number>
+<doc-number>09894016</doc-number>
+</application-number>
+<application-number-series-code>09</application-number-series-code>
+<filing-date>20010628</filing-date>
+</domestic-filing-data>
+<technical-information>
+<classification-ipc>
+<classification-ipc-primary>
+<ipc>G06F015/173</ipc>
+</classification-ipc-primary>
+<classification-ipc-secondary>
+<ipc>G06F009/00</ipc>
+</classification-ipc-secondary>
+<classification-ipc-edition>07</classification-ipc-edition>
+</classification-ipc>
+<classification-us>
+<classification-us-primary>
+<uspc>
+<class>709</class>
+<subclass>225000</subclass>
+</uspc>
+</classification-us-primary>
+<classification-us-secondary>
+<uspc>
+<class>709</class>
+<subclass>105000</subclass>
+</uspc>
+</classification-us-secondary>
+</classification-us>
+<title-of-invention>Method, system and computer program product for hierarchical load balancing</title-of-invention>
+</technical-information>
+<inventors>
+<first-named-inventor>
+<name>
+<given-name>Jeffrey</given-name>
+<middle-name>Scott</middle-name>
+<family-name>Chase</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Durham</city>
+<state>NC</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</first-named-inventor>
+<inventor>
+<name>
+<given-name>Ronald</given-name>
+<middle-name>P.</middle-name>
+<family-name>Doyle</family-name>
+</name>
+<residence>
+<residence-us>
+<city>Raleigh</city>
+<state>NC</state>
+<country-code>US</country-code>
+</residence-us>
+</residence>
+<authority-applicant>INV</authority-applicant>
+</inventor>
+</inventors>
+<correspondence-address>
+<name-1>Mark D. Simpson, Esquire</name-1>
+<name-2>Synnestvedt &amp; Lechner</name-2>
+<address>
+<address-1>2600 Aramark Tower</address-1>
+<address-2>1101 Market Street</address-2>
+<city>Philadelphia</city>
+<state>PA</state>
+<postalcode>19107-2950</postalcode>
+<country>
+<country-code>US</country-code>
+</country>
+</address>
+</correspondence-address>
+</subdoc-bibliographic-information>
+<subdoc-abstract>
+<paragraph id="A-0001" lvl="0">An improved load balancing method, system, and computer program product handles popular object requests using a front-end cache, and hashing is applied only to the requests in the stream that were not handled by the front-end cache. A cache (e.g., a web proxy cache) is placed in front of a Level <highlight><bold>7 </bold></highlight>switch, such that the cache services the popular requests from the cache based on the content of the request (e.g., based on the portion of an HTTP request following the domain name). The remaining requests are hashed and then routed to the back-end server. This allows the requests that make it past the cache to still be routed to the back-end server and take advantage of the efficiencies provided therefrom. </paragraph>
+<paragraph id="A-0002" lvl="0">Preferably, a Level <highlight><bold>4 </bold></highlight>switch is placed in front of a plurality of web proxy caches, each of which are in turn placed in front of a respective Level <highlight><bold>7 </bold></highlight>switch, each of which are connected to a respective server farm, so that incoming web requests are handled on a round robin basis (or other SLB technique) before being sent to the cache, thus improving the throughput from the server farms to the requesting clients. </paragraph>
+</subdoc-abstract>
+<subdoc-description>
+<summary-of-invention>
+<section>
+<heading lvl="1">BACKGROUND OF THE INVENTION </heading>
+<paragraph id="P-0001" lvl="0"><number>&lsqb;0001&rsqb;</number> 1. Field of the Invention </paragraph>
+<paragraph id="P-0002" lvl="0"><number>&lsqb;0002&rsqb;</number> The present invention relates generally to an improved system, method, and computer program product for providing load balancing. A more particular aspect is related to a system, method, and computer program product for hierarchical load balancing, wherein frequently requested objects (e.g., web objects) are handled by a front end cache and objects not in the cache are routed to back-end servers. The popular requests are serviced directly from the cache and the remaining requests are &ldquo;URL hashed&rdquo; to determine the destination server in a known manner. </paragraph>
+<paragraph id="P-0003" lvl="0"><number>&lsqb;0003&rsqb;</number> 2. Background of the Invention </paragraph>
+<paragraph id="P-0004" lvl="0"><number>&lsqb;0004&rsqb;</number> The traffic on the World Wide Web (&ldquo;The Web&rdquo;) is increasing exponentially. The Web is used for a multitude of tasks, including information gathering, electronic commerce, communication, and news dissemination. As a result of this high traffic volume, systems have been developed to distribute Web traffic to minimize waiting time for users. </paragraph>
+<paragraph id="P-0005" lvl="0"><number>&lsqb;0005&rsqb;</number> Many of today&apos;s web sites are hosted on server farms, where a number of servers are grouped together to serve web requests as they arrive. To avoid overloading individual servers within the farm, load balancing techniques balance the load across servers so that the best total throughput of the farm and smallest response delay for the user is achieved. Typically, a &ldquo;server switch&rdquo; performs request distribution for the server farms, utilizing various techniques for determining the destination server to handle the request. One such technique, called Server Load Balancing (SLB), monitors at short, periodic intervals the load of the servers in the farm and distributes incoming requests to the least loaded server. </paragraph>
+<paragraph id="P-0006" lvl="0"><number>&lsqb;0006&rsqb;</number> Content Based Routing (CBR) takes advantage of information in the request to assist in the server selection. The term &ldquo;hashing&rdquo; is used throughout the present application generally to CBR and specifically to any form of routing which examines part or all of the content of a request and then routes the request based on the content. &ldquo;URL hashing&rdquo; is one form of hashing which exploits the &ldquo;locality&rdquo; of the request stream by examining the request information and sending requests to a server that has previously served this request. While this may result in sending the request to a server that is not the least-loaded server, it may require less overall work for the entire server farm. </paragraph>
+<paragraph id="P-0007" lvl="0"><number>&lsqb;0007&rsqb;</number> The term &ldquo;URL&rdquo; stands for &ldquo;Universal Resource Locator&rdquo; and is a method for naming web objects in the Internet. Using a URL, a user of the Internet can connect to a file on any computer connected to the Internet anywhere in the world. A typical URL is a string expression conforming to the following convention: protocol://host name/folder or directory on host/name of file or document. For example, the URL &ldquo;http://www.ibm.com/products&rdquo; is parsed as follows. The &ldquo;http&rdquo; stands for the &ldquo;HyperText Transport Protocol&rdquo;. This directs the browser (e.g., Internet Explorer or Netscape) to use the http protocol when accessing the document. The &ldquo;www.ibm.com&rdquo; is the host name for the IBM main website. As is well-known, each host name is associated with an IP address via the Domain Name System (DNS), which returns an address corresponding to the host name. For example, an IP address associated with www.ibm.com is &ldquo;0.1.0.7&rdquo;. </paragraph>
+<paragraph id="P-0008" lvl="0"><number>&lsqb;0008&rsqb;</number> The &ldquo;/products/&rdquo; means that there is a folder or subdirectory on the IBM website called &ldquo;Products&rdquo;. Although not shown, within that folder there may be multiple file names, and by adding one of these file names to the URL the computer inputting the URL will be directed to that file. </paragraph>
+<paragraph id="P-0009" lvl="0"><number>&lsqb;0009&rsqb;</number> When using URL hashing, the URL is hashed to give it a unique numerical value, which values are assigned to the URL and stored in a table. Each incoming URL is hashed and sent to a particular server and the identification of that server is stored in the table with the hash value; when the hashed value of an incoming URL matches that of a stored hash value in the table, the request is sent to the same server that it was previously sent to. </paragraph>
+<paragraph id="P-0010" lvl="0"><number>&lsqb;0010&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> illustrates a load balancing system <highlight><bold>100</bold></highlight> in accordance with the prior art. A network <highlight><bold>105</bold></highlight> of computer work stations <highlight><bold>110</bold></highlight><highlight><italic>a</italic></highlight>, <highlight><bold>110</bold></highlight><highlight><italic>b</italic></highlight>, <highlight><bold>110</bold></highlight><highlight><italic>c</italic></highlight>, and <highlight><bold>110</bold></highlight><highlight><italic>d </italic></highlight>are connected to a network connection <highlight><bold>112</bold></highlight> (e.g., the Internet) in a known manner. It is understood that although a network <highlight><bold>105</bold></highlight> of four computer work stations <highlight><bold>110</bold></highlight><highlight><italic>a</italic></highlight>-<highlight><bold>110</bold></highlight><highlight><italic>d </italic></highlight>are shown in <cross-reference target="DRAWINGS">FIG. 1, a</cross-reference> single computer work station connected to the Internet or many more computer work stations than the four shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference> may be utilized to equal effect. </paragraph>
+<paragraph id="P-0011" lvl="0"><number>&lsqb;0011&rsqb;</number> A URL hashing switch <highlight><bold>114</bold></highlight> (e.g., a hashing switch from the &ldquo;ServerIron&rdquo; family of switches manufactured by Foundry Networks) is coupled between the network connection <highlight><bold>112</bold></highlight> and a server farm <highlight><bold>116</bold></highlight>. In the example shown in <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the server farm <highlight><bold>116</bold></highlight> comprises plural servers <highlight><bold>118</bold></highlight><highlight><italic>a</italic></highlight>, <highlight><bold>118</bold></highlight><highlight><italic>b</italic></highlight>, <highlight><bold>118</bold></highlight><highlight><italic>c</italic></highlight>, and <highlight><bold>118</bold></highlight><highlight><italic>d</italic></highlight>. In accordance with this prior art system, when a user of the computer network <highlight><bold>105</bold></highlight> inputs a URL into a web browser executing on, for example, work station <highlight><bold>110</bold></highlight><highlight><italic>a</italic></highlight>, the URL is transmitted over the Internet in a known manner and is received by URL hashing switch <highlight><bold>114</bold></highlight>. In accordance with this prior art technique, URL hashing switch <highlight><bold>114</bold></highlight> hashes the URL and stores the URL in a table. Using the system of <cross-reference target="DRAWINGS">FIG. 1</cross-reference>, the URL hashing switch <highlight><bold>114</bold></highlight> &ldquo;decides&rdquo; which server in server farm <highlight><bold>116</bold></highlight> will handle each incoming URL, based on its hash value. The URL hashing switch <highlight><bold>114</bold></highlight> may be pre-configured to direct certain hash values to certain servers, or the hash values can be assigned to servers as the requests arrive based on standard SLB techniques. </paragraph>
+<paragraph id="P-0012" lvl="0"><number>&lsqb;0012&rsqb;</number> Some known load balancing methods involve placing a front-end processor before the server farm to distribute the load among the back-end servers by keeping track of the load of the back end servers and routing requests to the least-loaded server, while also exploiting the locality of the request stream by routing repeat requests to the same server. Locality-Aware Request Distribution (LARD) is one such system. Other methods have focused on front-end processors that perform level <highlight><bold>4</bold></highlight> switching (TCP level switching) to balance the load at back-end servers using a round robin technique. These systems may also store load information about the back-end servers and use this load information to improve upon the round robin scheduling (which would otherwise not consider the load of the servers). The IBM Network Dispatche&trade; is one such system implemented in software. Other vendors implement these types of systems in switches. Level <highlight><bold>4</bold></highlight> switching techniques do not attempt to take advantage of the locality of the request stream, meaning that requests that may already have been processed by one server for a client may be sent to a different server for a different client. </paragraph>
+<paragraph id="P-0013" lvl="0"><number>&lsqb;0013&rsqb;</number> While each of the above methods operate reasonably well, each method involves sending the request through a routing switch for determining to which server to send the request. </paragraph>
+</section>
+<section>
+<heading lvl="1">SUMMARY OF THE INVENTION </heading>
+<paragraph id="P-0014" lvl="0"><number>&lsqb;0014&rsqb;</number> The present invention provides an improved load balancing method, system, and computer program product in which popular requests are handled by a front-end cache, and hashing is applied only to the requests in the stream that were not handled by the front-end cache. </paragraph>
+<paragraph id="P-0015" lvl="0"><number>&lsqb;0015&rsqb;</number> In a preferred embodiment, a web proxy cache is placed in front of a Level <highlight><bold>7</bold></highlight> switch, such that the web proxy cache services the popular requests from the cache based on the URL, i.e., based on the portion of the HTTP request following the domain name. The remaining requests are URL-hashed and then routed to the backend server. This allows the requests that make it past the web proxy cache to still be routed to the back-end server cache and take advantage of the efficiencies provided therefrom. Preferably the web proxy cache and the Level <highlight><bold>7</bold></highlight> hashing switch are combined as a single functional element, either in hardware or software. </paragraph>
+<paragraph id="P-0016" lvl="0"><number>&lsqb;0016&rsqb;</number> In a more preferred embodiment, a Level <highlight><bold>4</bold></highlight> switch is placed in front of a plurality of web proxy caches, each of which are in turn placed in front of (or combined with) a respective Level <highlight><bold>7</bold></highlight> switch, each of which are connected to a respective server farm, so that incoming web requests are handled on a round robin basis before being sent to the web proxy cache, thus improving the throughput from the server farms to the requesting clients.</paragraph>
+</section>
+</summary-of-invention>
+<brief-description-of-drawings>
+<section>
+<heading lvl="1">BRIEF DESCRIPTION OF THE DRAWINGS </heading>
+<paragraph id="P-0017" lvl="0"><number>&lsqb;0017&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 1</cross-reference> is a block diagram of a load balancing system in accordance with the prior art; </paragraph>
+<paragraph id="P-0018" lvl="0"><number>&lsqb;0018&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of an improved load balancing system in accordance with the present invention; </paragraph>
+<paragraph id="P-0019" lvl="0"><number>&lsqb;0019&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of an example of a Caching/Hashing Switch <highlight><bold>214</bold></highlight> in accordance with the present invention; </paragraph>
+<paragraph id="P-0020" lvl="0"><number>&lsqb;0020&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is a block diagram of a hierarchical load balancing system in accordance with the present invention; and </paragraph>
+<paragraph id="P-0021" lvl="0"><number>&lsqb;0021&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flow chart illustrating the basic steps carried out in accordance with the present invention. </paragraph>
+</section>
+</brief-description-of-drawings>
+<detailed-description>
+<section>
+<heading lvl="1">DETAILED DESCRIPTION OF THE PREFERRED EMBODIMENTS </heading>
+<paragraph id="P-0022" lvl="0"><number>&lsqb;0022&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 2</cross-reference> is a block diagram of an improved load balancing system in accordance with the present invention. Referring to <cross-reference target="DRAWINGS">FIG. 2, a</cross-reference> group of clients <highlight><bold>205</bold></highlight>, comprising for example, plural workstations <highlight><bold>210</bold></highlight><highlight><italic>a</italic></highlight>, <highlight><bold>210</bold></highlight><highlight><italic>b</italic></highlight>, <highlight><bold>210</bold></highlight><highlight><italic>c</italic></highlight>, and <highlight><bold>210</bold></highlight><highlight><italic>d </italic></highlight>is connected via network connection <highlight><bold>212</bold></highlight> (e.g., the Internet), to a &ldquo;Caching/Hashing Switch&rdquo; (CHS) <highlight><bold>214</bold></highlight>, which is in turn connected to a server farm <highlight><bold>216</bold></highlight> comprising, for example, plural web servers <highlight><bold>218</bold></highlight><highlight><italic>a</italic></highlight>, <highlight><bold>218</bold></highlight><highlight><italic>b</italic></highlight>, <highlight><bold>218</bold></highlight><highlight><italic>c</italic></highlight>, and <highlight><bold>218</bold></highlight><highlight><italic>d. </italic></highlight></paragraph>
+<paragraph id="P-0023" lvl="0"><number>&lsqb;0023&rsqb;</number> In accordance with the present invention, CHS <highlight><bold>214</bold></highlight> performs both a caching and switching function. It is understood, however, that the same novel functionality can be accomplished using a cache situated in front of a separate hashing switch. When a request is received for the first time by CHS <highlight><bold>214</bold></highlight>, the requested object will not be found in the cache. The term &ldquo;object&rdquo; as used herein refers generally to files, HTML responses, or any other content that a client might request from a server. The request is then hashed using known hashing techniques and sent to the destination server. The requested object is delivered to the CHS <highlight><bold>214</bold></highlight> where it is stored, and a copy of the requested object is sent on to the requesting client. </paragraph>
+<paragraph id="P-0024" lvl="0"><number>&lsqb;0024&rsqb;</number> For subsequent requests for objects that have previously been requested, they will be either served directly from the cache if they are still present (e.g., if the storage period for the cache, relative to the request, has not expired) or they are hashed again and sent to the same server that served them the first time. </paragraph>
+<paragraph id="P-0025" lvl="0"><number>&lsqb;0025&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 3</cross-reference> is a block diagram of an example of a combined CHS <highlight><bold>214</bold></highlight> in accordance with the present invention. Referring now to <cross-reference target="DRAWINGS">FIG. 3</cross-reference>, CHS <highlight><bold>214</bold></highlight> comprises a single caching/hashing element, i.e., it is a single functional element having a built-in web caching and URL hashing function. How to build these combined functions into a single functional element will be apparent to those skilled in the art. </paragraph>
+<paragraph id="P-0026" lvl="0"><number>&lsqb;0026&rsqb;</number> CHS <highlight><bold>214</bold></highlight> includes a web proxy cache <highlight><bold>330</bold></highlight> and a URL-hashing switch <highlight><bold>332</bold></highlight>. The web proxy cache <highlight><bold>330</bold></highlight> is coupled to the client side via the network connection and is also coupled to the URL-hashing switch <highlight><bold>332</bold></highlight>. URL-hashing switch <highlight><bold>332</bold></highlight> is in turn connected to the server farm via connection <highlight><bold>336</bold></highlight>. By configuring the CHS <highlight><bold>214</bold></highlight> to first satisfy any web requests from the web proxy cache <highlight><bold>320</bold></highlight> (by looking for the requested object in the cache) and, if a &ldquo;cache-miss&rdquo; occurs, only then sending the request on to the URL-hashing switch <highlight><bold>332</bold></highlight> via connection <highlight><bold>334</bold></highlight>, previously requested popular web requests are satisfied without having to burden the server farm, thereby increasing the efficiency of the overall operation of the system. Configuration of these functions can be accomplished by any known methodology; for example, it is well within the ordinary skill of a programmer to be able to write software code to control the CHS <highlight><bold>214</bold></highlight> so that stored objects for which requests are received are satisfied by return of the cached object, and to hash the request and forward it to the server farm to be satisfied only if the requested object is not found in the cache. </paragraph>
+<paragraph id="P-0027" lvl="0"><number>&lsqb;0027&rsqb;</number> In a preferred embodiment, a hierarchical system is employed as shown in <cross-reference target="DRAWINGS">FIG. 4</cross-reference>. The system illustrated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> will help minimize server farm throughput &ldquo;bottlenecks&rdquo; that may occur due to having a proxy cache at the front end of the system. As shown in <cross-reference target="DRAWINGS">FIG. 4, a</cross-reference> Level <highlight><bold>4</bold></highlight> switch <highlight><bold>440</bold></highlight> is employed between the client devices <highlight><bold>405</bold></highlight>/Network Connection <highlight><bold>412</bold></highlight> and multiple CHS&apos;s <highlight><bold>414</bold></highlight> and server farms <highlight><bold>416</bold></highlight> as shown. Level <highlight><bold>4</bold></highlight> switch <highlight><bold>440</bold></highlight> performs round robin routing (or any other SLB technique) to the CHS&apos;s <highlight><bold>414</bold></highlight>. A benefit of this approach is that the Level <highlight><bold>4</bold></highlight> switches can be bought &ldquo;off the shelf&rdquo; and combined with the CHS of the present invention (or a functional equivalent thereof) to provide greater scalability. The system illustrated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is arbitrarily scalable because more CHS elements may be added between the Level <highlight><bold>4</bold></highlight> switch and the server farms (and thus additional server farms may also be added). </paragraph>
+<paragraph id="P-0028" lvl="0"><number>&lsqb;0028&rsqb;</number> <cross-reference target="DRAWINGS">FIG. 5</cross-reference> is a flowchart illustrating the basic steps of operation of the present invention. At step <highlight><bold>502</bold></highlight>, a request for a web object is received by the CHS (<highlight><bold>214</bold></highlight> in <cross-reference target="DRAWINGS">FIG. 2</cross-reference>) and at step <highlight><bold>504</bold></highlight>, the web proxy cache of the CHS is searched to determine if the requested object is stored therein (step <highlight><bold>506</bold></highlight>). If the object is already stored in the web proxy cache, at step <highlight><bold>510</bold></highlight> the object is immediately returned to the client directly from the web proxy cache, with no need to burden the server with fulfilling the request, and the process ends at step <highlight><bold>516</bold></highlight>. </paragraph>
+<paragraph id="P-0029" lvl="0"><number>&lsqb;0029&rsqb;</number> On the other hand, if, at step <highlight><bold>506</bold></highlight> it is determined that the object is not in the web proxy cache, at step <highlight><bold>508</bold></highlight> the URL of the object is hashed in a known manner and, at step <highlight><bold>512</bold></highlight>, the hash value is sent to the destination server. At step <highlight><bold>514</bold></highlight>, upon receipt of the object request, in the form of the hash value, the server returns the object to the web proxy cache, stores the object in the web proxy cache for future reference, and then sends the requested object to the requesting client. Finally, at step <highlight><bold>516</bold></highlight> the process ends. </paragraph>
+<paragraph id="P-0030" lvl="0"><number>&lsqb;0030&rsqb;</number> The process utilized by the hierarchical system illustrated in <cross-reference target="DRAWINGS">FIG. 4</cross-reference> is essentially identical, except that, prior to delivery of the web object request from the client, the requests pass through Level <highlight><bold>4</bold></highlight> switch <highlight><bold>440</bold></highlight> which performs conventional round robin routing to the individual cache/switches <highlight><bold>414</bold></highlight>. </paragraph>
+<paragraph id="P-0031" lvl="0"><number>&lsqb;0031&rsqb;</number> Using the approach of the present invention, client connections are always terminated in the web proxy cache and the URL hashing may be performed on each HTTP request not found in the web proxy cache for determining which back end server to route the request to. This means that even with HTTP 1.1, it is possible to balance the load at the http request level and to take advantage of the locality of each request. HTTP 1.1 added extensions to the HTTP protocol, one of which allowed multiple requests to flow over a single connection from client to web (or web proxy) server. This invention allows requests within the single connection to be routed independently. </paragraph>
+<paragraph id="P-0032" lvl="0"><number>&lsqb;0032&rsqb;</number> By handling &ldquo;popular&rdquo; web requests using a front-end cache and then utilizing hashing techniques for the un-cached requests, the load-balancing for the remaining requests can be maximized, and the system overall is arbitrarily scalable since, as described above, more CHS&apos;s may be added behind the Level <highlight><bold>4</bold></highlight> switch and more back-end servers may be added behind the additional CHS&apos;s. </paragraph>
+<paragraph id="P-0033" lvl="0"><number>&lsqb;0033&rsqb;</number> Although the present invention has been described with respect to a specific preferred embodiment thereof, various changes and modifications may be suggested to one skilled in the art and it is intended that the present invention encompass such changes and modifications as fall within the scope of the appended claims. </paragraph>
+</section>
+</detailed-description>
+</subdoc-description>
+<subdoc-claims>
+<claim id="CLM-00001">
+<claim-text><highlight><bold>1</bold></highlight>. A system for improved load balancing in a client/server environment, comprising: 
+<claim-text>at least one caching/hashing switch (CHS) coupled between clients and servers in said client/server environment, said CHS storing previously-requested objects; </claim-text>
+<claim-text>wherein object requests for objects stored in said CHS are satisfied immediately from said CHS. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00002">
+<claim-text><highlight><bold>2</bold></highlight>. The systems of <dependent-claim-reference depends_on="CLM-00001">claim 1</dependent-claim-reference>, wherein said CHS also hashes object requests, and wherein: 
+<claim-text>object requests which are not stored in said CHS are hashed; </claim-text>
+<claim-text>each of said hashed object requests are forwarded to a respective server on which each requested object is stored; </claim-text>
+<claim-text>each of said requested objects is forwarded to said CHS and stored thereon; and </claim-text>
+<claim-text>a copy of each of said requested objects is returned to a respective client requesting said object. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00003">
+<claim-text><highlight><bold>3</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said objects are web objects and wherein said CHS comprises: 
+<claim-text>a web proxy cache; and </claim-text>
+<claim-text>a URL-hashing switch coupled to said web proxy cache. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00004">
+<claim-text><highlight><bold>4</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00002">claim 2</dependent-claim-reference>, wherein said objects are web objects and wherein said CHS comprises: 
+<claim-text>software means configured to operate as a web proxy cache for storing retrieved web objects; and </claim-text>
+<claim-text>software means configured to operate as a URL-hashing switch, for hashing said web object requests and forwarding said hashed web object requests to said respective servers. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00005">
+<claim-text><highlight><bold>5</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said client/server environment comprises a plurality of clients coupled to at least one server farm via a network connection. </claim-text>
+</claim>
+<claim id="CLM-00006">
+<claim-text><highlight><bold>6</bold></highlight>. The system of <dependent-claim-reference depends_on="CLM-00004">claim 4</dependent-claim-reference>, wherein said client server environment comprises a plurality of clients coupled to a plurality of server farms via a network connection, and wherein each of said server farms has a CHS associated therewith, and wherein said system further comprises: 
+<claim-text>a Level <highlight><bold>4</bold></highlight> switch coupled between said network connection and said CHS&apos;s. </claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00007">
+<claim-text><highlight><bold>7</bold></highlight>. A method of improved load balancing in a client/server environment, comprising the steps of: 
+<claim-text>receiving an object request from a client; </claim-text>
+<claim-text>determining if the object requested by said object request is stored in a cache coupled between said client and a server farm; </claim-text>
+<claim-text>if said object is stored in said cache, immediately returning a copy of said object to said client; and </claim-text>
+<claim-text>if said object is not stored in said cache, then: 
+<claim-text>hashing said object request; </claim-text>
+<claim-text>forwarding said hashed object request to said server farm; </claim-text>
+<claim-text>forwarding said requested object from said server farm to said cache for storage; and </claim-text>
+<claim-text>returning a copy of said requested object to said client. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00008">
+<claim-text><highlight><bold>8</bold></highlight>. A computer program product for providing improved load balancing in a client/server environment, comprising: 
+<claim-text>means for receiving an object request from a client; </claim-text>
+<claim-text>means for determining if the object requested by said object request is stored in a cache coupled between said client and a server farm; </claim-text>
+<claim-text>means for immediately returning a copy of said object to said client if said object is stored in said cache; and </claim-text>
+<claim-text>means for: 
+<claim-text>hashing said object request; </claim-text>
+<claim-text>forwarding said hashed object request to said server farm; </claim-text>
+<claim-text>forwarding said requested object from said server farm to said cache for storage; and </claim-text>
+<claim-text>returning a copy of said requested object to said client, if said object is not stored in said cache. </claim-text>
+</claim-text>
+</claim-text>
+</claim>
+<claim id="CLM-00009">
+<claim-text><highlight><bold>9</bold></highlight>. An improvement to a load balancing system in a client/server environment having at least one client and a plurality of servers coupled via a network connection, and a hashing switch coupled between said network connection and said plurality of servers, said improvement comprising: 
+<claim-text>a cache coupled between said network connection and said hashing switch, said cache storing previously requested objects and configured to satisfy requests for said previously requested objects without passing said requests to said hashing switch.</claim-text>
+</claim-text>
+</claim>
+</subdoc-claims>
+<subdoc-drawings id="DRAWINGS">
+<heading lvl="0" align="CENTER">Drawings</heading>
+<representative-figure>3</representative-figure>
+<figure id="figure-D00000">
+<image id="EMI-D00000" file="US20030005116A1-20030102-D00000.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00001">
+<image id="EMI-D00001" file="US20030005116A1-20030102-D00001.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00002">
+<image id="EMI-D00002" file="US20030005116A1-20030102-D00002.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00003">
+<image id="EMI-D00003" file="US20030005116A1-20030102-D00003.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00004">
+<image id="EMI-D00004" file="US20030005116A1-20030102-D00004.TIF" imf="TIFF" ti="DR"/>
+</figure>
+<figure id="figure-D00005">
+<image id="EMI-D00005" file="US20030005116A1-20030102-D00005.TIF" imf="TIFF" ti="DR"/>
+</figure>
+</subdoc-drawings>
+</patent-application-publication>
