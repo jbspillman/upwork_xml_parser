@@ -23,3 +23,6 @@ Each zipped  file contains about 4000 XML files that are concatenated together t
    See example file attached. 
    What I request from potential programmers is a projected cost and deliverable date including the number hours you 
    see the task taking and your hourly rate or fixed rate.
+
+# To Do:
+ - Add routines to keep track of...
